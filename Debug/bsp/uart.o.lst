@@ -1,0 +1,803 @@
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.file	"uart.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.section	.text.uart1_init,"ax",%progbits
+  19              		.align	2
+  20              		.thumb
+  21              		.thumb_func
+  23              	uart1_init:
+  24              	.LFB29:
+  25              		.file 1 "../bsp/uart.c"
+   1:../bsp/uart.c **** /*
+   2:../bsp/uart.c **** ***************************************************************************************************
+   3:../bsp/uart.c **** *
+   4:../bsp/uart.c **** *                                            UART INTERFACE
+   5:../bsp/uart.c **** *
+   6:../bsp/uart.c **** * Filename      : uart.c
+   7:../bsp/uart.c **** * Version       : V1.00
+   8:../bsp/uart.c **** * Programmer(s) : Palladin
+   9:../bsp/uart.c **** ***************************************************************************************************
+  10:../bsp/uart.c **** */
+  11:../bsp/uart.c **** 
+  12:../bsp/uart.c **** 
+  13:../bsp/uart.c **** /*
+  14:../bsp/uart.c **** ***************************************************************************************************
+  15:../bsp/uart.c **** *                                             INCLUDE FILES
+  16:../bsp/uart.c **** ***************************************************************************************************
+  17:../bsp/uart.c **** */
+  18:../bsp/uart.c **** #include "uart.h"
+  19:../bsp/uart.c **** 
+  20:../bsp/uart.c **** 
+  21:../bsp/uart.c **** #include "stm32f10x.h"
+  22:../bsp/uart.c **** 
+  23:../bsp/uart.c **** #include "stm32f10x_gpio.h"
+  24:../bsp/uart.c **** #include "stm32f10x_rcc.h"
+  25:../bsp/uart.c **** #include "stm32f10x_usart.h"
+  26:../bsp/uart.c **** 
+  27:../bsp/uart.c **** #include "gpio_init.h"
+  28:../bsp/uart.c **** //#include "fifo_buffer.h"
+  29:../bsp/uart.c **** 
+  30:../bsp/uart.c **** /*
+  31:../bsp/uart.c **** ***************************************************************************************************
+  32:../bsp/uart.c **** *                                            LOCAL DEFINES
+  33:../bsp/uart.c **** ***************************************************************************************************
+  34:../bsp/uart.c **** */
+  35:../bsp/uart.c **** 
+  36:../bsp/uart.c **** 
+  37:../bsp/uart.c **** /*
+  38:../bsp/uart.c **** ***************************************************************************************************
+  39:../bsp/uart.c **** *                                           LOCAL CONSTANTS
+  40:../bsp/uart.c **** ***************************************************************************************************
+  41:../bsp/uart.c **** */
+  42:../bsp/uart.c **** 
+  43:../bsp/uart.c **** 
+  44:../bsp/uart.c **** /*
+  45:../bsp/uart.c **** ***************************************************************************************************
+  46:../bsp/uart.c **** *                                          LOCAL DATA TYPES
+  47:../bsp/uart.c **** ***************************************************************************************************
+  48:../bsp/uart.c **** */
+  49:../bsp/uart.c **** 
+  50:../bsp/uart.c **** 
+  51:../bsp/uart.c **** /*
+  52:../bsp/uart.c **** ***************************************************************************************************
+  53:../bsp/uart.c **** *                                            LOCAL TABLES
+  54:../bsp/uart.c **** ***************************************************************************************************
+  55:../bsp/uart.c **** */
+  56:../bsp/uart.c **** 
+  57:../bsp/uart.c **** 
+  58:../bsp/uart.c **** /*
+  59:../bsp/uart.c **** ***************************************************************************************************
+  60:../bsp/uart.c **** *                                       LOCAL GLOBAL VARIABLES
+  61:../bsp/uart.c **** ***************************************************************************************************
+  62:../bsp/uart.c **** */
+  63:../bsp/uart.c **** 
+  64:../bsp/uart.c **** 
+  65:../bsp/uart.c **** 
+  66:../bsp/uart.c **** /*
+  67:../bsp/uart.c **** ***************************************************************************************************
+  68:../bsp/uart.c **** *                                      LOCAL FUNCTION PROTOTYPES
+  69:../bsp/uart.c **** ***************************************************************************************************
+  70:../bsp/uart.c **** */
+  71:../bsp/uart.c **** static void  uart1_init(u32 baud_rate);
+  72:../bsp/uart.c **** static void  uart2_init(u32 baud_rate);
+  73:../bsp/uart.c **** 
+  74:../bsp/uart.c **** /*
+  75:../bsp/uart.c **** ***************************************************************************************************
+  76:../bsp/uart.c **** *                                     LOCAL CONFIGURATION ERRORS
+  77:../bsp/uart.c **** ***************************************************************************************************
+  78:../bsp/uart.c **** */
+  79:../bsp/uart.c **** 
+  80:../bsp/uart.c **** /*
+  81:../bsp/uart.c **** ***************************************************************************************************
+  82:../bsp/uart.c **** *                                           LOCAL FUNCTIONS
+  83:../bsp/uart.c **** ***************************************************************************************************
+  84:../bsp/uart.c **** */
+  85:../bsp/uart.c **** 
+  86:../bsp/uart.c **** /*
+  87:../bsp/uart.c **** ***************************************************************************************************
+  88:../bsp/uart.c **** *                                          Uart1Init()
+  89:../bsp/uart.c **** *
+  90:../bsp/uart.c **** * Description : Initialize a serial port for communication.
+  91:../bsp/uart.c **** *
+  92:../bsp/uart.c **** * Argument(s) : baud_rate           The desire RS232 baud rate.
+  93:../bsp/uart.c **** *
+  94:../bsp/uart.c **** * Return(s)   : none.
+  95:../bsp/uart.c **** *
+  96:../bsp/uart.c **** * Caller(s)   : Application.
+  97:../bsp/uart.c **** *
+  98:../bsp/uart.c **** * Note(s)     : none.
+  99:../bsp/uart.c **** ***************************************************************************************************
+ 100:../bsp/uart.c **** */
+ 101:../bsp/uart.c **** 
+ 102:../bsp/uart.c **** static void  uart1_init (u32 baud_rate) {
+  26              		.loc 1 102 0
+  27              		.cfi_startproc
+  28              		@ args = 0, pretend = 0, frame = 32
+  29              		@ frame_needed = 1, uses_anonymous_args = 0
+  30 0000 80B5     		push	{r7, lr}
+  31              		.cfi_def_cfa_offset 8
+  32              		.cfi_offset 7, -8
+  33              		.cfi_offset 14, -4
+  34 0002 88B0     		sub	sp, sp, #32
+  35              		.cfi_def_cfa_offset 40
+  36 0004 00AF     		add	r7, sp, #0
+  37              		.cfi_def_cfa_register 7
+  38 0006 7860     		str	r0, [r7, #4]
+ 103:../bsp/uart.c **** 
+ 104:../bsp/uart.c **** 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_AFIO | RCC_APB2Periph_USART1, ENABLE)
+  39              		.loc 1 104 0
+  40 0008 44F20500 		movw	r0, #16389
+  41 000c 0121     		movs	r1, #1
+  42 000e FFF7FEFF 		bl	RCC_APB2PeriphClockCmd
+ 105:../bsp/uart.c **** 
+ 106:../bsp/uart.c **** 	GPIO_InitTypeDef uart1_gpio;
+ 107:../bsp/uart.c **** 	uart1_gpio.GPIO_Pin = GPIO_Pin_10;                               /* UART1 RX pin */
+  43              		.loc 1 107 0
+  44 0012 4FF48063 		mov	r3, #1024
+  45 0016 BB83     		strh	r3, [r7, #28]	@ movhi
+ 108:../bsp/uart.c **** 	uart1_gpio.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+  46              		.loc 1 108 0
+  47 0018 0423     		movs	r3, #4
+  48 001a FB77     		strb	r3, [r7, #31]
+ 109:../bsp/uart.c **** 	GPIO_Init(GPIOA, &uart1_gpio);
+  49              		.loc 1 109 0
+  50 001c 07F11C03 		add	r3, r7, #28
+  51 0020 4FF40060 		mov	r0, #2048
+  52 0024 C4F20100 		movt	r0, 16385
+  53 0028 1946     		mov	r1, r3
+  54 002a FFF7FEFF 		bl	GPIO_Init
+ 110:../bsp/uart.c **** 
+ 111:../bsp/uart.c **** 	uart1_gpio.GPIO_Pin = GPIO_Pin_9;                                /* UART1 TX pin */
+  55              		.loc 1 111 0
+  56 002e 4FF40073 		mov	r3, #512
+  57 0032 BB83     		strh	r3, [r7, #28]	@ movhi
+ 112:../bsp/uart.c **** 	uart1_gpio.GPIO_Mode = GPIO_Mode_AF_PP;
+  58              		.loc 1 112 0
+  59 0034 1823     		movs	r3, #24
+  60 0036 FB77     		strb	r3, [r7, #31]
+ 113:../bsp/uart.c **** 	uart1_gpio.GPIO_Speed = GPIO_Speed_50MHz;
+  61              		.loc 1 113 0
+  62 0038 0323     		movs	r3, #3
+  63 003a BB77     		strb	r3, [r7, #30]
+ 114:../bsp/uart.c **** 	GPIO_Init(GPIOA, &uart1_gpio);
+  64              		.loc 1 114 0
+  65 003c 07F11C03 		add	r3, r7, #28
+  66 0040 4FF40060 		mov	r0, #2048
+  67 0044 C4F20100 		movt	r0, 16385
+  68 0048 1946     		mov	r1, r3
+  69 004a FFF7FEFF 		bl	GPIO_Init
+ 115:../bsp/uart.c **** 
+ 116:../bsp/uart.c ****     USART_InitTypeDef uart1;
+ 117:../bsp/uart.c ****     uart1.USART_BaudRate = baud_rate;
+  70              		.loc 1 117 0
+  71 004e 7B68     		ldr	r3, [r7, #4]
+  72 0050 FB60     		str	r3, [r7, #12]
+ 118:../bsp/uart.c ****     uart1.USART_WordLength = USART_WordLength_8b;
+  73              		.loc 1 118 0
+  74 0052 0023     		movs	r3, #0
+  75 0054 3B82     		strh	r3, [r7, #16]	@ movhi
+ 119:../bsp/uart.c ****     uart1.USART_StopBits = USART_StopBits_1;
+  76              		.loc 1 119 0
+  77 0056 0023     		movs	r3, #0
+  78 0058 7B82     		strh	r3, [r7, #18]	@ movhi
+ 120:../bsp/uart.c ****     uart1.USART_Parity = USART_Parity_No;
+  79              		.loc 1 120 0
+  80 005a 0023     		movs	r3, #0
+  81 005c BB82     		strh	r3, [r7, #20]	@ movhi
+ 121:../bsp/uart.c ****     uart1.USART_Mode = USART_Mode_Tx | USART_Mode_Rx;
+  82              		.loc 1 121 0
+  83 005e 0C23     		movs	r3, #12
+  84 0060 FB82     		strh	r3, [r7, #22]	@ movhi
+ 122:../bsp/uart.c ****     uart1.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+  85              		.loc 1 122 0
+  86 0062 0023     		movs	r3, #0
+  87 0064 3B83     		strh	r3, [r7, #24]	@ movhi
+ 123:../bsp/uart.c **** 
+ 124:../bsp/uart.c ****     USART_Init(USART1, &uart1);
+  88              		.loc 1 124 0
+  89 0066 07F10C03 		add	r3, r7, #12
+  90 006a 4FF46050 		mov	r0, #14336
+  91 006e C4F20100 		movt	r0, 16385
+  92 0072 1946     		mov	r1, r3
+  93 0074 FFF7FEFF 		bl	USART_Init
+ 125:../bsp/uart.c **** 
+ 126:../bsp/uart.c ****     #if UART1_RX_INTERRAPT_ENABLE
+ 127:../bsp/uart.c ****         USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
+ 128:../bsp/uart.c ****         NVIC_EnableIRQ(USART1_IRQn);
+ 129:../bsp/uart.c ****     #endif
+ 130:../bsp/uart.c ****     #if UART1_TX_INTERRAPT_ENABLE
+ 131:../bsp/uart.c ****         USART_ITConfig(USART1, USART_IT_TXE, ENABLE);
+ 132:../bsp/uart.c ****         NVIC_EnableIRQ(USART1_IRQn);
+ 133:../bsp/uart.c ****     #endif
+ 134:../bsp/uart.c **** 
+ 135:../bsp/uart.c ****     USART_Cmd(USART1, ENABLE);
+  94              		.loc 1 135 0
+  95 0078 4FF46050 		mov	r0, #14336
+  96 007c C4F20100 		movt	r0, 16385
+  97 0080 0121     		movs	r1, #1
+  98 0082 FFF7FEFF 		bl	USART_Cmd
+ 136:../bsp/uart.c **** }
+  99              		.loc 1 136 0
+ 100 0086 2037     		adds	r7, r7, #32
+ 101 0088 BD46     		mov	sp, r7
+ 102              		@ sp needed
+ 103 008a 80BD     		pop	{r7, pc}
+ 104              		.cfi_endproc
+ 105              	.LFE29:
+ 107              		.section	.text.uart2_init,"ax",%progbits
+ 108              		.align	2
+ 109              		.thumb
+ 110              		.thumb_func
+ 112              	uart2_init:
+ 113              	.LFB30:
+ 137:../bsp/uart.c **** 
+ 138:../bsp/uart.c **** /*
+ 139:../bsp/uart.c **** ***************************************************************************************************
+ 140:../bsp/uart.c **** *                                          Uart2Init()
+ 141:../bsp/uart.c **** *
+ 142:../bsp/uart.c **** * Description : Initialize a serial port for communication.
+ 143:../bsp/uart.c **** *
+ 144:../bsp/uart.c **** * Argument(s) : baud_rate           The desire RS232 baud rate.
+ 145:../bsp/uart.c **** *
+ 146:../bsp/uart.c **** * Return(s)   : none.
+ 147:../bsp/uart.c **** *
+ 148:../bsp/uart.c **** * Caller(s)   : Application.
+ 149:../bsp/uart.c **** *
+ 150:../bsp/uart.c **** * Note(s)     : none.
+ 151:../bsp/uart.c **** ***************************************************************************************************
+ 152:../bsp/uart.c **** */
+ 153:../bsp/uart.c **** 
+ 154:../bsp/uart.c **** static void  uart2_init (u32 baud_rate) {
+ 114              		.loc 1 154 0
+ 115              		.cfi_startproc
+ 116              		@ args = 0, pretend = 0, frame = 32
+ 117              		@ frame_needed = 1, uses_anonymous_args = 0
+ 118 0000 80B5     		push	{r7, lr}
+ 119              		.cfi_def_cfa_offset 8
+ 120              		.cfi_offset 7, -8
+ 121              		.cfi_offset 14, -4
+ 122 0002 88B0     		sub	sp, sp, #32
+ 123              		.cfi_def_cfa_offset 40
+ 124 0004 00AF     		add	r7, sp, #0
+ 125              		.cfi_def_cfa_register 7
+ 126 0006 7860     		str	r0, [r7, #4]
+ 155:../bsp/uart.c **** 
+ 156:../bsp/uart.c **** 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_AFIO, ENABLE);
+ 127              		.loc 1 156 0
+ 128 0008 0520     		movs	r0, #5
+ 129 000a 0121     		movs	r1, #1
+ 130 000c FFF7FEFF 		bl	RCC_APB2PeriphClockCmd
+ 157:../bsp/uart.c **** 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE);
+ 131              		.loc 1 157 0
+ 132 0010 4FF40030 		mov	r0, #131072
+ 133 0014 0121     		movs	r1, #1
+ 134 0016 FFF7FEFF 		bl	RCC_APB1PeriphClockCmd
+ 158:../bsp/uart.c **** 
+ 159:../bsp/uart.c **** 	GPIO_InitTypeDef uart2_gpio;
+ 160:../bsp/uart.c **** 	uart2_gpio.GPIO_Pin = GPIO_Pin_3;                               /* UART2 RX pin */
+ 135              		.loc 1 160 0
+ 136 001a 0823     		movs	r3, #8
+ 137 001c BB83     		strh	r3, [r7, #28]	@ movhi
+ 161:../bsp/uart.c **** 	uart2_gpio.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+ 138              		.loc 1 161 0
+ 139 001e 0423     		movs	r3, #4
+ 140 0020 FB77     		strb	r3, [r7, #31]
+ 162:../bsp/uart.c **** 	GPIO_Init(GPIOA, &uart2_gpio);
+ 141              		.loc 1 162 0
+ 142 0022 07F11C03 		add	r3, r7, #28
+ 143 0026 4FF40060 		mov	r0, #2048
+ 144 002a C4F20100 		movt	r0, 16385
+ 145 002e 1946     		mov	r1, r3
+ 146 0030 FFF7FEFF 		bl	GPIO_Init
+ 163:../bsp/uart.c **** 
+ 164:../bsp/uart.c **** 	uart2_gpio.GPIO_Pin = GPIO_Pin_2;                                /* UART2 TX pin */
+ 147              		.loc 1 164 0
+ 148 0034 0423     		movs	r3, #4
+ 149 0036 BB83     		strh	r3, [r7, #28]	@ movhi
+ 165:../bsp/uart.c **** 	uart2_gpio.GPIO_Mode = GPIO_Mode_AF_PP;
+ 150              		.loc 1 165 0
+ 151 0038 1823     		movs	r3, #24
+ 152 003a FB77     		strb	r3, [r7, #31]
+ 166:../bsp/uart.c **** 	uart2_gpio.GPIO_Speed = GPIO_Speed_50MHz;
+ 153              		.loc 1 166 0
+ 154 003c 0323     		movs	r3, #3
+ 155 003e BB77     		strb	r3, [r7, #30]
+ 167:../bsp/uart.c **** 	GPIO_Init(GPIOA, &uart2_gpio);
+ 156              		.loc 1 167 0
+ 157 0040 07F11C03 		add	r3, r7, #28
+ 158 0044 4FF40060 		mov	r0, #2048
+ 159 0048 C4F20100 		movt	r0, 16385
+ 160 004c 1946     		mov	r1, r3
+ 161 004e FFF7FEFF 		bl	GPIO_Init
+ 168:../bsp/uart.c **** 
+ 169:../bsp/uart.c ****     USART_InitTypeDef uart2;
+ 170:../bsp/uart.c ****     uart2.USART_BaudRate = baud_rate;
+ 162              		.loc 1 170 0
+ 163 0052 7B68     		ldr	r3, [r7, #4]
+ 164 0054 FB60     		str	r3, [r7, #12]
+ 171:../bsp/uart.c ****     uart2.USART_WordLength = USART_WordLength_8b;
+ 165              		.loc 1 171 0
+ 166 0056 0023     		movs	r3, #0
+ 167 0058 3B82     		strh	r3, [r7, #16]	@ movhi
+ 172:../bsp/uart.c ****     uart2.USART_StopBits = USART_StopBits_1;
+ 168              		.loc 1 172 0
+ 169 005a 0023     		movs	r3, #0
+ 170 005c 7B82     		strh	r3, [r7, #18]	@ movhi
+ 173:../bsp/uart.c ****     uart2.USART_Parity = USART_Parity_No;
+ 171              		.loc 1 173 0
+ 172 005e 0023     		movs	r3, #0
+ 173 0060 BB82     		strh	r3, [r7, #20]	@ movhi
+ 174:../bsp/uart.c ****     uart2.USART_Mode = USART_Mode_Tx | USART_Mode_Rx;
+ 174              		.loc 1 174 0
+ 175 0062 0C23     		movs	r3, #12
+ 176 0064 FB82     		strh	r3, [r7, #22]	@ movhi
+ 175:../bsp/uart.c ****     uart2.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+ 177              		.loc 1 175 0
+ 178 0066 0023     		movs	r3, #0
+ 179 0068 3B83     		strh	r3, [r7, #24]	@ movhi
+ 176:../bsp/uart.c **** 
+ 177:../bsp/uart.c ****     USART_Init(USART2, &uart2);
+ 180              		.loc 1 177 0
+ 181 006a 07F10C03 		add	r3, r7, #12
+ 182 006e 4FF48840 		mov	r0, #17408
+ 183 0072 C4F20000 		movt	r0, 16384
+ 184 0076 1946     		mov	r1, r3
+ 185 0078 FFF7FEFF 		bl	USART_Init
+ 178:../bsp/uart.c **** 
+ 179:../bsp/uart.c ****     #if UART2_RX_INTERRAPT_ENABLE
+ 180:../bsp/uart.c ****         USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
+ 181:../bsp/uart.c ****         NVIC_EnableIRQ(USART2_IRQn);
+ 182:../bsp/uart.c ****     #endif
+ 183:../bsp/uart.c ****     #if UART2_TX_INTERRAPT_ENABLE
+ 184:../bsp/uart.c ****         USART_ITConfig(USART2, USART_IT_TXE, ENABLE);
+ 185:../bsp/uart.c ****         NVIC_EnableIRQ(USART2_IRQn);
+ 186:../bsp/uart.c ****     #endif
+ 187:../bsp/uart.c **** 
+ 188:../bsp/uart.c ****     USART_Cmd(USART2, ENABLE);
+ 186              		.loc 1 188 0
+ 187 007c 4FF48840 		mov	r0, #17408
+ 188 0080 C4F20000 		movt	r0, 16384
+ 189 0084 0121     		movs	r1, #1
+ 190 0086 FFF7FEFF 		bl	USART_Cmd
+ 189:../bsp/uart.c **** }
+ 191              		.loc 1 189 0
+ 192 008a 2037     		adds	r7, r7, #32
+ 193 008c BD46     		mov	sp, r7
+ 194              		@ sp needed
+ 195 008e 80BD     		pop	{r7, pc}
+ 196              		.cfi_endproc
+ 197              	.LFE30:
+ 199              		.section	.text.UartInit,"ax",%progbits
+ 200              		.align	2
+ 201              		.global	UartInit
+ 202              		.thumb
+ 203              		.thumb_func
+ 205              	UartInit:
+ 206              	.LFB31:
+ 190:../bsp/uart.c **** 
+ 191:../bsp/uart.c **** /*
+ 192:../bsp/uart.c **** ***************************************************************************************************
+ 193:../bsp/uart.c **** ***************************************************************************************************
+ 194:../bsp/uart.c **** **                                         GLOBAL FUNCTIONS
+ 195:../bsp/uart.c **** ***************************************************************************************************
+ 196:../bsp/uart.c **** ***************************************************************************************************
+ 197:../bsp/uart.c **** */
+ 198:../bsp/uart.c **** 
+ 199:../bsp/uart.c **** 
+ 200:../bsp/uart.c **** 
+ 201:../bsp/uart.c **** /*
+ 202:../bsp/uart.c **** ***************************************************************************************************
+ 203:../bsp/uart.c **** *                                          UartInit()
+ 204:../bsp/uart.c **** *
+ 205:../bsp/uart.c **** * Description : Initialize a serial port for communication.
+ 206:../bsp/uart.c **** *
+ 207:../bsp/uart.c **** * Argument(s) : baud_rate           The desire RS232 baud rate.
+ 208:../bsp/uart.c **** *
+ 209:../bsp/uart.c **** * Return(s)   : none.
+ 210:../bsp/uart.c **** *
+ 211:../bsp/uart.c **** * Caller(s)   : Application.
+ 212:../bsp/uart.c **** *
+ 213:../bsp/uart.c **** * Note(s)     : none.
+ 214:../bsp/uart.c **** ***************************************************************************************************
+ 215:../bsp/uart.c **** */
+ 216:../bsp/uart.c **** 
+ 217:../bsp/uart.c **** void UartInit (uart_t number_uart, u32 baud_rate) {
+ 207              		.loc 1 217 0
+ 208              		.cfi_startproc
+ 209              		@ args = 0, pretend = 0, frame = 8
+ 210              		@ frame_needed = 1, uses_anonymous_args = 0
+ 211 0000 80B5     		push	{r7, lr}
+ 212              		.cfi_def_cfa_offset 8
+ 213              		.cfi_offset 7, -8
+ 214              		.cfi_offset 14, -4
+ 215 0002 82B0     		sub	sp, sp, #8
+ 216              		.cfi_def_cfa_offset 16
+ 217 0004 00AF     		add	r7, sp, #0
+ 218              		.cfi_def_cfa_register 7
+ 219 0006 0346     		mov	r3, r0
+ 220 0008 3960     		str	r1, [r7]
+ 221 000a FB71     		strb	r3, [r7, #7]
+ 218:../bsp/uart.c **** 
+ 219:../bsp/uart.c **** 	switch (number_uart)
+ 222              		.loc 1 219 0
+ 223 000c FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 224 000e 012B     		cmp	r3, #1
+ 225 0010 02D0     		beq	.L5
+ 226 0012 022B     		cmp	r3, #2
+ 227 0014 04D0     		beq	.L6
+ 228 0016 07E0     		b	.L3
+ 229              	.L5:
+ 220:../bsp/uart.c **** 	{
+ 221:../bsp/uart.c **** 		case UART1: uart1_init(baud_rate);
+ 230              		.loc 1 221 0
+ 231 0018 3868     		ldr	r0, [r7]
+ 232 001a FFF7FEFF 		bl	uart1_init
+ 222:../bsp/uart.c **** 		break;
+ 233              		.loc 1 222 0
+ 234 001e 03E0     		b	.L3
+ 235              	.L6:
+ 223:../bsp/uart.c **** 		case UART2: uart2_init(baud_rate);
+ 236              		.loc 1 223 0
+ 237 0020 3868     		ldr	r0, [r7]
+ 238 0022 FFF7FEFF 		bl	uart2_init
+ 224:../bsp/uart.c **** 		break;
+ 239              		.loc 1 224 0
+ 240 0026 00BF     		nop
+ 241              	.L3:
+ 225:../bsp/uart.c **** //		case UART3: Uart3Init(baud_rate);
+ 226:../bsp/uart.c **** //		break;
+ 227:../bsp/uart.c **** 	}
+ 228:../bsp/uart.c **** }
+ 242              		.loc 1 228 0
+ 243 0028 0837     		adds	r7, r7, #8
+ 244 002a BD46     		mov	sp, r7
+ 245              		@ sp needed
+ 246 002c 80BD     		pop	{r7, pc}
+ 247              		.cfi_endproc
+ 248              	.LFE31:
+ 250 002e 00BF     		.section	.text.UartReadByte,"ax",%progbits
+ 251              		.align	2
+ 252              		.global	UartReadByte
+ 253              		.thumb
+ 254              		.thumb_func
+ 256              	UartReadByte:
+ 257              	.LFB32:
+ 229:../bsp/uart.c **** 
+ 230:../bsp/uart.c **** /*
+ 231:../bsp/uart.c **** ***************************************************************************************************
+ 232:../bsp/uart.c **** *                                                UartReadByte()
+ 233:../bsp/uart.c **** *
+ 234:../bsp/uart.c **** * Description : Receive a single byte.
+ 235:../bsp/uart.c **** *
+ 236:../bsp/uart.c **** * Argument(s) : number of UART.
+ 237:../bsp/uart.c **** *
+ 238:../bsp/uart.c **** * Return(s)   : The received byte.
+ 239:../bsp/uart.c **** *
+ 240:../bsp/uart.c **** * Caller(s)   : Application.
+ 241:../bsp/uart.c **** *
+ 242:../bsp/uart.c **** * Note(s)     : 
+ 243:../bsp/uart.c **** ***************************************************************************************************
+ 244:../bsp/uart.c **** */
+ 245:../bsp/uart.c **** u8  UartReadByte (uart_t number_uart) {
+ 258              		.loc 1 245 0
+ 259              		.cfi_startproc
+ 260              		@ args = 0, pretend = 0, frame = 16
+ 261              		@ frame_needed = 1, uses_anonymous_args = 0
+ 262 0000 80B5     		push	{r7, lr}
+ 263              		.cfi_def_cfa_offset 8
+ 264              		.cfi_offset 7, -8
+ 265              		.cfi_offset 14, -4
+ 266 0002 84B0     		sub	sp, sp, #16
+ 267              		.cfi_def_cfa_offset 24
+ 268 0004 00AF     		add	r7, sp, #0
+ 269              		.cfi_def_cfa_register 7
+ 270 0006 0346     		mov	r3, r0
+ 271 0008 FB71     		strb	r3, [r7, #7]
+ 246:../bsp/uart.c **** 
+ 247:../bsp/uart.c **** 	u8 data;
+ 248:../bsp/uart.c **** 	if (number_uart == UART1) {
+ 272              		.loc 1 248 0
+ 273 000a FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 274 000c 012B     		cmp	r3, #1
+ 275 000e 11D1     		bne	.L8
+ 249:../bsp/uart.c **** 		if (USART_GetFlagStatus(USART1, USART_FLAG_RXNE))
+ 276              		.loc 1 249 0
+ 277 0010 4FF46050 		mov	r0, #14336
+ 278 0014 C4F20100 		movt	r0, 16385
+ 279 0018 2021     		movs	r1, #32
+ 280 001a FFF7FEFF 		bl	USART_GetFlagStatus
+ 281 001e 0346     		mov	r3, r0
+ 282 0020 002B     		cmp	r3, #0
+ 283 0022 07D0     		beq	.L8
+ 250:../bsp/uart.c ****             data = (USART_ReceiveData(USART1));
+ 284              		.loc 1 250 0
+ 285 0024 4FF46050 		mov	r0, #14336
+ 286 0028 C4F20100 		movt	r0, 16385
+ 287 002c FFF7FEFF 		bl	USART_ReceiveData
+ 288 0030 0346     		mov	r3, r0
+ 289 0032 FB73     		strb	r3, [r7, #15]
+ 290              	.L8:
+ 251:../bsp/uart.c **** //        USART_ClearFlag(USART1, USART_FLAG_RXNE);
+ 252:../bsp/uart.c **** 	}
+ 253:../bsp/uart.c **** 	if (number_uart == UART2) {
+ 291              		.loc 1 253 0
+ 292 0034 FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 293 0036 022B     		cmp	r3, #2
+ 294 0038 11D1     		bne	.L9
+ 254:../bsp/uart.c **** 		if (USART_GetFlagStatus(USART2, USART_FLAG_RXNE))
+ 295              		.loc 1 254 0
+ 296 003a 4FF48840 		mov	r0, #17408
+ 297 003e C4F20000 		movt	r0, 16384
+ 298 0042 2021     		movs	r1, #32
+ 299 0044 FFF7FEFF 		bl	USART_GetFlagStatus
+ 300 0048 0346     		mov	r3, r0
+ 301 004a 002B     		cmp	r3, #0
+ 302 004c 07D0     		beq	.L9
+ 255:../bsp/uart.c **** 	        data = (USART_ReceiveData(USART2));
+ 303              		.loc 1 255 0
+ 304 004e 4FF48840 		mov	r0, #17408
+ 305 0052 C4F20000 		movt	r0, 16384
+ 306 0056 FFF7FEFF 		bl	USART_ReceiveData
+ 307 005a 0346     		mov	r3, r0
+ 308 005c FB73     		strb	r3, [r7, #15]
+ 309              	.L9:
+ 256:../bsp/uart.c **** //	    USART_ClearFlag(USART2, USART_FLAG_RXNE);
+ 257:../bsp/uart.c **** 	}
+ 258:../bsp/uart.c **** return (data);
+ 310              		.loc 1 258 0
+ 311 005e FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 259:../bsp/uart.c **** }
+ 312              		.loc 1 259 0
+ 313 0060 1846     		mov	r0, r3
+ 314 0062 1037     		adds	r7, r7, #16
+ 315 0064 BD46     		mov	sp, r7
+ 316              		@ sp needed
+ 317 0066 80BD     		pop	{r7, pc}
+ 318              		.cfi_endproc
+ 319              	.LFE32:
+ 321              		.section	.text.UartWrByte,"ax",%progbits
+ 322              		.align	2
+ 323              		.global	UartWrByte
+ 324              		.thumb
+ 325              		.thumb_func
+ 327              	UartWrByte:
+ 328              	.LFB33:
+ 260:../bsp/uart.c **** 
+ 261:../bsp/uart.c **** /*
+ 262:../bsp/uart.c **** ***************************************************************************************************
+ 263:../bsp/uart.c **** *                                                UartWrByte()
+ 264:../bsp/uart.c **** *
+ 265:../bsp/uart.c **** * Description : Writes a single byte to a serial port.
+ 266:../bsp/uart.c **** *
+ 267:../bsp/uart.c **** * Argument(s) : tx_byte     The character to output.
+ 268:../bsp/uart.c **** *
+ 269:../bsp/uart.c **** * Return(s)   : none.
+ 270:../bsp/uart.c **** *
+ 271:../bsp/uart.c **** * Caller(s)   : Application.
+ 272:../bsp/uart.c **** *
+ 273:../bsp/uart.c **** * Note(s)     : none.
+ 274:../bsp/uart.c **** ***************************************************************************************************
+ 275:../bsp/uart.c **** */
+ 276:../bsp/uart.c **** void  UartWrByte (uart_t number_uart, u8 c) {
+ 329              		.loc 1 276 0
+ 330              		.cfi_startproc
+ 331              		@ args = 0, pretend = 0, frame = 8
+ 332              		@ frame_needed = 1, uses_anonymous_args = 0
+ 333 0000 80B5     		push	{r7, lr}
+ 334              		.cfi_def_cfa_offset 8
+ 335              		.cfi_offset 7, -8
+ 336              		.cfi_offset 14, -4
+ 337 0002 82B0     		sub	sp, sp, #8
+ 338              		.cfi_def_cfa_offset 16
+ 339 0004 00AF     		add	r7, sp, #0
+ 340              		.cfi_def_cfa_register 7
+ 341 0006 0246     		mov	r2, r0
+ 342 0008 0B46     		mov	r3, r1
+ 343 000a FA71     		strb	r2, [r7, #7]
+ 344 000c BB71     		strb	r3, [r7, #6]
+ 277:../bsp/uart.c **** 
+ 278:../bsp/uart.c **** 	if (number_uart == UART1) {
+ 345              		.loc 1 278 0
+ 346 000e FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 347 0010 012B     		cmp	r3, #1
+ 348 0012 13D1     		bne	.L12
+ 279:../bsp/uart.c **** 	    while (USART_GetFlagStatus(USART1, USART_FLAG_TXE) == RESET);
+ 349              		.loc 1 279 0
+ 350 0014 00BF     		nop
+ 351              	.L13:
+ 352              		.loc 1 279 0 is_stmt 0 discriminator 1
+ 353 0016 4FF46050 		mov	r0, #14336
+ 354 001a C4F20100 		movt	r0, 16385
+ 355 001e 8021     		movs	r1, #128
+ 356 0020 FFF7FEFF 		bl	USART_GetFlagStatus
+ 357 0024 0346     		mov	r3, r0
+ 358 0026 002B     		cmp	r3, #0
+ 359 0028 F5D0     		beq	.L13
+ 280:../bsp/uart.c **** 	        USART_SendData(USART1, c);
+ 360              		.loc 1 280 0 is_stmt 1
+ 361 002a BB79     		ldrb	r3, [r7, #6]	@ zero_extendqisi2
+ 362 002c 9BB2     		uxth	r3, r3
+ 363 002e 4FF46050 		mov	r0, #14336
+ 364 0032 C4F20100 		movt	r0, 16385
+ 365 0036 1946     		mov	r1, r3
+ 366 0038 FFF7FEFF 		bl	USART_SendData
+ 367              	.L12:
+ 281:../bsp/uart.c **** 	}
+ 282:../bsp/uart.c **** 
+ 283:../bsp/uart.c **** 	if (number_uart == UART2) {
+ 368              		.loc 1 283 0
+ 369 003c FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 370 003e 022B     		cmp	r3, #2
+ 371 0040 13D1     		bne	.L11
+ 284:../bsp/uart.c **** 	    while (USART_GetFlagStatus(USART2, USART_FLAG_TXE) == RESET);
+ 372              		.loc 1 284 0
+ 373 0042 00BF     		nop
+ 374              	.L15:
+ 375              		.loc 1 284 0 is_stmt 0 discriminator 1
+ 376 0044 4FF48840 		mov	r0, #17408
+ 377 0048 C4F20000 		movt	r0, 16384
+ 378 004c 8021     		movs	r1, #128
+ 379 004e FFF7FEFF 		bl	USART_GetFlagStatus
+ 380 0052 0346     		mov	r3, r0
+ 381 0054 002B     		cmp	r3, #0
+ 382 0056 F5D0     		beq	.L15
+ 285:../bsp/uart.c **** 	        USART_SendData(USART2, c);
+ 383              		.loc 1 285 0 is_stmt 1
+ 384 0058 BB79     		ldrb	r3, [r7, #6]	@ zero_extendqisi2
+ 385 005a 9BB2     		uxth	r3, r3
+ 386 005c 4FF48840 		mov	r0, #17408
+ 387 0060 C4F20000 		movt	r0, 16384
+ 388 0064 1946     		mov	r1, r3
+ 389 0066 FFF7FEFF 		bl	USART_SendData
+ 390              	.L11:
+ 286:../bsp/uart.c **** 	}
+ 287:../bsp/uart.c **** }
+ 391              		.loc 1 287 0
+ 392 006a 0837     		adds	r7, r7, #8
+ 393 006c BD46     		mov	sp, r7
+ 394              		@ sp needed
+ 395 006e 80BD     		pop	{r7, pc}
+ 396              		.cfi_endproc
+ 397              	.LFE33:
+ 399              		.section	.text.UartWrStr,"ax",%progbits
+ 400              		.align	2
+ 401              		.global	UartWrStr
+ 402              		.thumb
+ 403              		.thumb_func
+ 405              	UartWrStr:
+ 406              	.LFB34:
+ 288:../bsp/uart.c **** 
+ 289:../bsp/uart.c **** 
+ 290:../bsp/uart.c **** /*
+ 291:../bsp/uart.c **** ***************************************************************************************************
+ 292:../bsp/uart.c **** *                                                UartWrStr()
+ 293:../bsp/uart.c **** *
+ 294:../bsp/uart.c **** * Description : Transmits a string.
+ 295:../bsp/uart.c **** *
+ 296:../bsp/uart.c **** * Argument(s) : p_str       Pointer to the string that will be transmitted.
+ 297:../bsp/uart.c **** *
+ 298:../bsp/uart.c **** * Caller(s)   : Application.
+ 299:../bsp/uart.c **** *
+ 300:../bsp/uart.c **** * Return(s)   : none.
+ 301:../bsp/uart.c **** *
+ 302:../bsp/uart.c **** * Note(s)     : none.
+ 303:../bsp/uart.c **** ***************************************************************************************************
+ 304:../bsp/uart.c **** */
+ 305:../bsp/uart.c **** void  UartWrStr (uart_t number_uart, u8  *p_str) {
+ 407              		.loc 1 305 0
+ 408              		.cfi_startproc
+ 409              		@ args = 0, pretend = 0, frame = 8
+ 410              		@ frame_needed = 1, uses_anonymous_args = 0
+ 411 0000 80B5     		push	{r7, lr}
+ 412              		.cfi_def_cfa_offset 8
+ 413              		.cfi_offset 7, -8
+ 414              		.cfi_offset 14, -4
+ 415 0002 82B0     		sub	sp, sp, #8
+ 416              		.cfi_def_cfa_offset 16
+ 417 0004 00AF     		add	r7, sp, #0
+ 418              		.cfi_def_cfa_register 7
+ 419 0006 0346     		mov	r3, r0
+ 420 0008 3960     		str	r1, [r7]
+ 421 000a FB71     		strb	r3, [r7, #7]
+ 422              	.L19:
+ 306:../bsp/uart.c ****     
+ 307:../bsp/uart.c ****     while (1) {
+ 308:../bsp/uart.c ****         if (!(*p_str)) {
+ 423              		.loc 1 308 0
+ 424 000c 3B68     		ldr	r3, [r7]
+ 425 000e 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 426 0010 002B     		cmp	r3, #0
+ 427 0012 00D1     		bne	.L17
+ 309:../bsp/uart.c ****             break;
+ 428              		.loc 1 309 0
+ 429 0014 09E0     		b	.L20
+ 430              	.L17:
+ 310:../bsp/uart.c ****         }
+ 311:../bsp/uart.c ****         UartWrByte(number_uart, *(p_str++));
+ 431              		.loc 1 311 0
+ 432 0016 3B68     		ldr	r3, [r7]
+ 433 0018 5A1C     		adds	r2, r3, #1
+ 434 001a 3A60     		str	r2, [r7]
+ 435 001c 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 436 001e FA79     		ldrb	r2, [r7, #7]	@ zero_extendqisi2
+ 437 0020 1046     		mov	r0, r2
+ 438 0022 1946     		mov	r1, r3
+ 439 0024 FFF7FEFF 		bl	UartWrByte
+ 312:../bsp/uart.c ****     }
+ 440              		.loc 1 312 0
+ 441 0028 F0E7     		b	.L19
+ 442              	.L20:
+ 313:../bsp/uart.c ****     
+ 314:../bsp/uart.c **** }
+ 443              		.loc 1 314 0
+ 444 002a 0837     		adds	r7, r7, #8
+ 445 002c BD46     		mov	sp, r7
+ 446              		@ sp needed
+ 447 002e 80BD     		pop	{r7, pc}
+ 448              		.cfi_endproc
+ 449              	.LFE34:
+ 451              		.text
+ 452              	.Letext0:
+ 453              		.file 2 "c:\\tools\\arm-none-eabi\\include\\stdint.h"
+ 454              		.file 3 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/stm32f10x.h"
+ 455              		.file 4 "../bsp/uart.h"
+ 456              		.file 5 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\StdPeripheralDriver\\inc/stm32f10
+ 457              		.file 6 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\StdPeripheralDriver\\inc/stm32f10
+ 458              		.file 7 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/core_cm3.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 uart.c
+C:\Users\Alex\AppData\Local\Temp\cciREKUN.s:19     .text.uart1_init:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cciREKUN.s:23     .text.uart1_init:00000000 uart1_init
+C:\Users\Alex\AppData\Local\Temp\cciREKUN.s:108    .text.uart2_init:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cciREKUN.s:112    .text.uart2_init:00000000 uart2_init
+C:\Users\Alex\AppData\Local\Temp\cciREKUN.s:200    .text.UartInit:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cciREKUN.s:205    .text.UartInit:00000000 UartInit
+C:\Users\Alex\AppData\Local\Temp\cciREKUN.s:251    .text.UartReadByte:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cciREKUN.s:256    .text.UartReadByte:00000000 UartReadByte
+C:\Users\Alex\AppData\Local\Temp\cciREKUN.s:322    .text.UartWrByte:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cciREKUN.s:327    .text.UartWrByte:00000000 UartWrByte
+C:\Users\Alex\AppData\Local\Temp\cciREKUN.s:400    .text.UartWrStr:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cciREKUN.s:405    .text.UartWrStr:00000000 UartWrStr
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.1.98ffea2db242cfdb58f411f7407f2b59
+                           .group:00000000 wm4.stm32f10x.h.51.b859cb68ed44ee02c916b41cb8c68f1c
+                           .group:00000000 wm4.core_cm3.h.25.d35e9a9b04ec4aaebae9bf79fff061f9
+                           .group:00000000 wm4.newlib.h.8.384a112feabb3bef7b573ae48cde2e3b
+                           .group:00000000 wm4.features.h.22.6a4ca7cd053637cc1d0db6c16f39b2d7
+                           .group:00000000 wm4.config.h.183.aa62afef667fb61d15fa64c48beb2f14
+                           .group:00000000 wm4._ansi.h.23.5644b60c990a4800b02a6e654e88f93a
+                           .group:00000000 wm4.stdint.h.20.54ad762faa59e3c05491630641c8d8bf
+                           .group:00000000 wm4.core_cm3.h.113.b286929a54d33b4c8909a7132437b244
+                           .group:00000000 wm4.stm32f10x.h.522.a925aafc848b1f088438cf0e9b167b78
+                           .group:00000000 wm4.stm32f10x_conf.h.2.f1a8c33f0a763aeef696fee38b2b2dbc
+                           .group:00000000 wm4.stm32f10x.h.8304.f7d8ad90959e99679b3257267c3aadfe
+                           .group:00000000 wm4.fifo_buffer.h.2.a9dd64dba064f149d60ec513aeb95643
+                           .group:00000000 wm4.uart.h.41.5eb520a3b4b68680e686a054d8cd56d0
+                           .group:00000000 wm4.stm32f10x_gpio.h.25.80c981af0e637567395034c576cfb3ce
+                           .group:00000000 wm4.stm32f10x_rcc.h.25.fe8897e7491f2eb0cff54551d08eb765
+                           .group:00000000 wm4.stm32f10x_usart.h.25.29629c699b65db3f3efd3561f66b0bf6
+                           .group:00000000 wm4.gpio_init.h.2.a6dd96fdaf98737019b1d0402db0d0ee
+
+UNDEFINED SYMBOLS
+RCC_APB2PeriphClockCmd
+GPIO_Init
+USART_Init
+USART_Cmd
+RCC_APB1PeriphClockCmd
+USART_GetFlagStatus
+USART_ReceiveData
+USART_SendData

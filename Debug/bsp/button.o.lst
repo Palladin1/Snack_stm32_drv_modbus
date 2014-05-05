@@ -1,0 +1,668 @@
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.file	"button.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.section	.data.button_gpio_port,"aw",%progbits
+  19              		.align	2
+  22              	button_gpio_port:
+  23 0000 000C0140 		.word	1073810432
+  24 0004 00100140 		.word	1073811456
+  25 0008 00080140 		.word	1073809408
+  26 000c 00080140 		.word	1073809408
+  27 0010 00080140 		.word	1073809408
+  28 0014 00080140 		.word	1073809408
+  29 0018 00080140 		.word	1073809408
+  30 001c 00080140 		.word	1073809408
+  31              		.section	.data.button_gpio_pin,"aw",%progbits
+  32              		.align	2
+  35              	button_gpio_pin:
+  36 0000 0001     		.short	256
+  37 0002 0002     		.short	512
+  38 0004 0001     		.short	256
+  39 0006 0008     		.short	2048
+  40 0008 0010     		.short	4096
+  41 000a 0020     		.short	8192
+  42 000c 0040     		.short	16384
+  43 000e 0080     		.short	-32768
+  44              		.comm	Button,128,4
+  45              		.section	.text.ButtonInit,"ax",%progbits
+  46              		.align	2
+  47              		.global	ButtonInit
+  48              		.thumb
+  49              		.thumb_func
+  51              	ButtonInit:
+  52              	.LFB29:
+  53              		.file 1 "../bsp/button.c"
+   1:../bsp/button.c **** /**
+   2:../bsp/button.c **** * @file led.c
+   3:../bsp/button.c **** * @brief LED board support package
+   4:../bsp/button.c **** */
+   5:../bsp/button.c **** #include "button.h"
+   6:../bsp/button.c **** 
+   7:../bsp/button.c **** #include "stm32f10x.h"
+   8:../bsp/button.c **** 
+   9:../bsp/button.c **** #include "stm32f10x_gpio.h"
+  10:../bsp/button.c **** #include "stm32f10x_rcc.h"
+  11:../bsp/button.c **** 
+  12:../bsp/button.c **** #include "gpio_init.h"
+  13:../bsp/button.c **** 
+  14:../bsp/button.c **** #include "portmacro.h"
+  15:../bsp/button.c **** 
+  16:../bsp/button.c **** 
+  17:../bsp/button.c **** static GPIO_TypeDef *button_gpio_port[] = {
+  18:../bsp/button.c ****     [0] = GPIOB,
+  19:../bsp/button.c ****     [1] = GPIOC,
+  20:../bsp/button.c ****     [2] = GPIOA,
+  21:../bsp/button.c ****     [3] = GPIOA,
+  22:../bsp/button.c ****     [4] = GPIOA,
+  23:../bsp/button.c ****     [5] = GPIOA,
+  24:../bsp/button.c ****     [6] = GPIOA,
+  25:../bsp/button.c ****     [7] = GPIOA
+  26:../bsp/button.c **** };
+  27:../bsp/button.c **** 
+  28:../bsp/button.c **** static uint16_t button_gpio_pin[] = {
+  29:../bsp/button.c ****     [0] = GPIO_Pin_8,
+  30:../bsp/button.c ****     [1] = GPIO_Pin_9,
+  31:../bsp/button.c ****     [2] = GPIO_Pin_8,
+  32:../bsp/button.c ****     [3] = GPIO_Pin_11,
+  33:../bsp/button.c ****     [4] = GPIO_Pin_12,
+  34:../bsp/button.c ****     [5] = GPIO_Pin_13,
+  35:../bsp/button.c ****     [6] = GPIO_Pin_14,
+  36:../bsp/button.c ****     [7] = GPIO_Pin_15
+  37:../bsp/button.c **** };
+  38:../bsp/button.c **** 
+  39:../bsp/button.c **** 
+  40:../bsp/button.c ****  btn_t Button[BUTTONS_NAMBER];
+  41:../bsp/button.c **** 
+  42:../bsp/button.c **** /**
+  43:../bsp/button.c **** * low level hardware initialization
+  44:../bsp/button.c **** */
+  45:../bsp/button.c **** void ButtonInit(void)
+  46:../bsp/button.c **** {
+  54              		.loc 1 46 0
+  55              		.cfi_startproc
+  56              		@ args = 0, pretend = 0, frame = 8
+  57              		@ frame_needed = 1, uses_anonymous_args = 0
+  58 0000 80B5     		push	{r7, lr}
+  59              		.cfi_def_cfa_offset 8
+  60              		.cfi_offset 7, -8
+  61              		.cfi_offset 14, -4
+  62 0002 82B0     		sub	sp, sp, #8
+  63              		.cfi_def_cfa_offset 16
+  64 0004 00AF     		add	r7, sp, #0
+  65              		.cfi_def_cfa_register 7
+  47:../bsp/button.c **** 
+  48:../bsp/button.c ****     // Enable GPIO Clock
+  49:../bsp/button.c ****     RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO | RCC_APB2Periph_GPIOB, ENABLE);
+  66              		.loc 1 49 0
+  67 0006 0920     		movs	r0, #9
+  68 0008 0121     		movs	r1, #1
+  69 000a FFF7FEFF 		bl	RCC_APB2PeriphClockCmd
+  50:../bsp/button.c ****     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
+  70              		.loc 1 50 0
+  71 000e 1020     		movs	r0, #16
+  72 0010 0121     		movs	r1, #1
+  73 0012 FFF7FEFF 		bl	RCC_APB2PeriphClockCmd
+  51:../bsp/button.c ****     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+  74              		.loc 1 51 0
+  75 0016 0420     		movs	r0, #4
+  76 0018 0121     		movs	r1, #1
+  77 001a FFF7FEFF 		bl	RCC_APB2PeriphClockCmd
+  52:../bsp/button.c **** 
+  53:../bsp/button.c ****     GPIO_PinRemapConfig(GPIO_Remap_SWJ_Disable, ENABLE);
+  78              		.loc 1 53 0
+  79 001e 4FF48060 		mov	r0, #1024
+  80 0022 C0F23000 		movt	r0, 48
+  81 0026 0121     		movs	r1, #1
+  82 0028 FFF7FEFF 		bl	GPIO_PinRemapConfig
+  54:../bsp/button.c **** 
+  55:../bsp/button.c ****     //Initialize the button pins as an input
+  56:../bsp/button.c **** ///*
+  57:../bsp/button.c ****     GPIO_MULTI_INIT(PIN_DIP_STATE, GPIO_MODE_INPUT_PULL_UP);
+  83              		.loc 1 57 0
+  84 002c 4FF44063 		mov	r3, #3072
+  85 0030 C4F20103 		movt	r3, 16385
+  86 0034 4FF48072 		mov	r2, #256
+  87 0038 1A61     		str	r2, [r3, #16]
+  88 003a 4FF44063 		mov	r3, #3072
+  89 003e C4F20103 		movt	r3, 16385
+  90 0042 4FF44062 		mov	r2, #3072
+  91 0046 C4F20102 		movt	r2, 16385
+  92 004a 5268     		ldr	r2, [r2, #4]
+  93 004c 22F00F02 		bic	r2, r2, #15
+  94 0050 42F00802 		orr	r2, r2, #8
+  95 0054 5A60     		str	r2, [r3, #4]
+  58:../bsp/button.c ****     GPIO_MULTI_INIT(PIN_BUTTON1, GPIO_MODE_INPUT_PULL_UP);
+  96              		.loc 1 58 0
+  97 0056 4FF48053 		mov	r3, #4096
+  98 005a C4F20103 		movt	r3, 16385
+  99 005e 4FF40072 		mov	r2, #512
+ 100 0062 1A61     		str	r2, [r3, #16]
+ 101 0064 4FF48053 		mov	r3, #4096
+ 102 0068 C4F20103 		movt	r3, 16385
+ 103 006c 4FF48052 		mov	r2, #4096
+ 104 0070 C4F20102 		movt	r2, 16385
+ 105 0074 5268     		ldr	r2, [r2, #4]
+ 106 0076 22F0F002 		bic	r2, r2, #240
+ 107 007a 42F08002 		orr	r2, r2, #128
+ 108 007e 5A60     		str	r2, [r3, #4]
+  59:../bsp/button.c **** 
+  60:../bsp/button.c ****     GPIO_MULTI_INIT(PIN_BUTTON2, GPIO_MODE_INPUT_PULL_UP);
+ 109              		.loc 1 60 0
+ 110 0080 4FF40063 		mov	r3, #2048
+ 111 0084 C4F20103 		movt	r3, 16385
+ 112 0088 4FF48072 		mov	r2, #256
+ 113 008c 1A61     		str	r2, [r3, #16]
+ 114 008e 4FF40063 		mov	r3, #2048
+ 115 0092 C4F20103 		movt	r3, 16385
+ 116 0096 4FF40062 		mov	r2, #2048
+ 117 009a C4F20102 		movt	r2, 16385
+ 118 009e 5268     		ldr	r2, [r2, #4]
+ 119 00a0 22F00F02 		bic	r2, r2, #15
+ 120 00a4 42F00802 		orr	r2, r2, #8
+ 121 00a8 5A60     		str	r2, [r3, #4]
+  61:../bsp/button.c ****     GPIO_MULTI_INIT(PIN_BUTTON3, GPIO_MODE_INPUT_PULL_UP);
+ 122              		.loc 1 61 0
+ 123 00aa 4FF40063 		mov	r3, #2048
+ 124 00ae C4F20103 		movt	r3, 16385
+ 125 00b2 4FF40062 		mov	r2, #2048
+ 126 00b6 1A61     		str	r2, [r3, #16]
+ 127 00b8 4FF40063 		mov	r3, #2048
+ 128 00bc C4F20103 		movt	r3, 16385
+ 129 00c0 4FF40062 		mov	r2, #2048
+ 130 00c4 C4F20102 		movt	r2, 16385
+ 131 00c8 5268     		ldr	r2, [r2, #4]
+ 132 00ca 22F47042 		bic	r2, r2, #61440
+ 133 00ce 42F40042 		orr	r2, r2, #32768
+ 134 00d2 5A60     		str	r2, [r3, #4]
+  62:../bsp/button.c ****     GPIO_MULTI_INIT(PIN_BUTTON4, GPIO_MODE_INPUT_PULL_UP);
+ 135              		.loc 1 62 0
+ 136 00d4 4FF40063 		mov	r3, #2048
+ 137 00d8 C4F20103 		movt	r3, 16385
+ 138 00dc 4FF48052 		mov	r2, #4096
+ 139 00e0 1A61     		str	r2, [r3, #16]
+ 140 00e2 4FF40063 		mov	r3, #2048
+ 141 00e6 C4F20103 		movt	r3, 16385
+ 142 00ea 4FF40062 		mov	r2, #2048
+ 143 00ee C4F20102 		movt	r2, 16385
+ 144 00f2 5268     		ldr	r2, [r2, #4]
+ 145 00f4 22F47022 		bic	r2, r2, #983040
+ 146 00f8 42F40022 		orr	r2, r2, #524288
+ 147 00fc 5A60     		str	r2, [r3, #4]
+  63:../bsp/button.c **** //TODO: need the comment delete below for the program work version. That is SWD pins//
+  64:../bsp/button.c ****     GPIO_MULTI_INIT(PIN_BUTTON5, GPIO_MODE_INPUT_PULL_UP);
+ 148              		.loc 1 64 0
+ 149 00fe 4FF40063 		mov	r3, #2048
+ 150 0102 C4F20103 		movt	r3, 16385
+ 151 0106 4FF40052 		mov	r2, #8192
+ 152 010a 1A61     		str	r2, [r3, #16]
+ 153 010c 4FF40063 		mov	r3, #2048
+ 154 0110 C4F20103 		movt	r3, 16385
+ 155 0114 4FF40062 		mov	r2, #2048
+ 156 0118 C4F20102 		movt	r2, 16385
+ 157 011c 5268     		ldr	r2, [r2, #4]
+ 158 011e 22F47002 		bic	r2, r2, #15728640
+ 159 0122 42F40002 		orr	r2, r2, #8388608
+ 160 0126 5A60     		str	r2, [r3, #4]
+  65:../bsp/button.c ****     GPIO_MULTI_INIT(PIN_BUTTON6, GPIO_MODE_INPUT_PULL_UP);
+ 161              		.loc 1 65 0
+ 162 0128 4FF40063 		mov	r3, #2048
+ 163 012c C4F20103 		movt	r3, 16385
+ 164 0130 4FF48042 		mov	r2, #16384
+ 165 0134 1A61     		str	r2, [r3, #16]
+ 166 0136 4FF40063 		mov	r3, #2048
+ 167 013a C4F20103 		movt	r3, 16385
+ 168 013e 4FF40062 		mov	r2, #2048
+ 169 0142 C4F20102 		movt	r2, 16385
+ 170 0146 5268     		ldr	r2, [r2, #4]
+ 171 0148 22F07062 		bic	r2, r2, #251658240
+ 172 014c 42F00062 		orr	r2, r2, #134217728
+ 173 0150 5A60     		str	r2, [r3, #4]
+  66:../bsp/button.c ****     GPIO_MULTI_INIT(PIN_BUTTON7, GPIO_MODE_INPUT_PULL_UP);
+ 174              		.loc 1 66 0
+ 175 0152 4FF40063 		mov	r3, #2048
+ 176 0156 C4F20103 		movt	r3, 16385
+ 177 015a 4FF40042 		mov	r2, #32768
+ 178 015e 1A61     		str	r2, [r3, #16]
+ 179 0160 4FF40063 		mov	r3, #2048
+ 180 0164 C4F20103 		movt	r3, 16385
+ 181 0168 4FF40062 		mov	r2, #2048
+ 182 016c C4F20102 		movt	r2, 16385
+ 183 0170 5268     		ldr	r2, [r2, #4]
+ 184 0172 22F07042 		bic	r2, r2, #-268435456
+ 185 0176 42F00042 		orr	r2, r2, #-2147483648
+ 186 017a 5A60     		str	r2, [r3, #4]
+  67:../bsp/button.c **** //*/
+  68:../bsp/button.c **** 
+  69:../bsp/button.c ****    u32 i;
+  70:../bsp/button.c ****    for (i = 0; i < BUTTONS_NAMBER; i++) {
+ 187              		.loc 1 70 0
+ 188 017c 0023     		movs	r3, #0
+ 189 017e 7B60     		str	r3, [r7, #4]
+ 190 0180 29E0     		b	.L2
+ 191              	.L3:
+  71:../bsp/button.c **** 
+  72:../bsp/button.c **** 	  // if ((i != 5) || (i != 6)) //TODO: need the comment delete below for the program work version.
+  73:../bsp/button.c ****        //    GPIO_MULTI_INIT(button_gpio_port[i], button_gpio_pin[i], GPIO_MODE_INPUT_PULL_UP);
+  74:../bsp/button.c **** 
+  75:../bsp/button.c ****        Button[i].press_state = RESET;
+ 192              		.loc 1 75 0 discriminator 2
+ 193 0182 40F20003 		movw	r3, #:lower16:Button
+ 194 0186 C0F20003 		movt	r3, #:upper16:Button
+ 195 018a 7A68     		ldr	r2, [r7, #4]
+ 196 018c 1201     		lsls	r2, r2, #4
+ 197 018e 1344     		add	r3, r3, r2
+ 198 0190 0833     		adds	r3, r3, #8
+ 199 0192 0022     		movs	r2, #0
+ 200 0194 1A60     		str	r2, [r3]
+  76:../bsp/button.c ****        Button[i].synchro_flg = RESET;
+ 201              		.loc 1 76 0 discriminator 2
+ 202 0196 40F20003 		movw	r3, #:lower16:Button
+ 203 019a C0F20003 		movt	r3, #:upper16:Button
+ 204 019e 7A68     		ldr	r2, [r7, #4]
+ 205 01a0 1201     		lsls	r2, r2, #4
+ 206 01a2 1344     		add	r3, r3, r2
+ 207 01a4 0833     		adds	r3, r3, #8
+ 208 01a6 0022     		movs	r2, #0
+ 209 01a8 5A71     		strb	r2, [r3, #5]
+  77:../bsp/button.c ****        Button[i].idle_state  = SET;
+ 210              		.loc 1 77 0 discriminator 2
+ 211 01aa 40F20003 		movw	r3, #:lower16:Button
+ 212 01ae C0F20003 		movt	r3, #:upper16:Button
+ 213 01b2 7A68     		ldr	r2, [r7, #4]
+ 214 01b4 1201     		lsls	r2, r2, #4
+ 215 01b6 1344     		add	r3, r3, r2
+ 216 01b8 0122     		movs	r2, #1
+ 217 01ba 1A71     		strb	r2, [r3, #4]
+  78:../bsp/button.c ****        Button[i].still_pressed = RESET;
+ 218              		.loc 1 78 0 discriminator 2
+ 219 01bc 40F20003 		movw	r3, #:lower16:Button
+ 220 01c0 C0F20003 		movt	r3, #:upper16:Button
+ 221 01c4 7A68     		ldr	r2, [r7, #4]
+ 222 01c6 1201     		lsls	r2, r2, #4
+ 223 01c8 1344     		add	r3, r3, r2
+ 224 01ca 0833     		adds	r3, r3, #8
+ 225 01cc 0022     		movs	r2, #0
+ 226 01ce 1A71     		strb	r2, [r3, #4]
+  70:../bsp/button.c **** 
+ 227              		.loc 1 70 0 discriminator 2
+ 228 01d0 7B68     		ldr	r3, [r7, #4]
+ 229 01d2 0133     		adds	r3, r3, #1
+ 230 01d4 7B60     		str	r3, [r7, #4]
+ 231              	.L2:
+  70:../bsp/button.c **** 
+ 232              		.loc 1 70 0 is_stmt 0 discriminator 1
+ 233 01d6 7B68     		ldr	r3, [r7, #4]
+ 234 01d8 072B     		cmp	r3, #7
+ 235 01da D2D9     		bls	.L3
+  79:../bsp/button.c ****    }
+  80:../bsp/button.c **** 
+  81:../bsp/button.c **** }
+ 236              		.loc 1 81 0 is_stmt 1
+ 237 01dc 0837     		adds	r7, r7, #8
+ 238 01de BD46     		mov	sp, r7
+ 239              		@ sp needed
+ 240 01e0 80BD     		pop	{r7, pc}
+ 241              		.cfi_endproc
+ 242              	.LFE29:
+ 244 01e2 00BF     		.section	.text.ButtonSkan,"ax",%progbits
+ 245              		.align	2
+ 246              		.global	ButtonSkan
+ 247              		.thumb
+ 248              		.thumb_func
+ 250              	ButtonSkan:
+ 251              	.LFB30:
+  82:../bsp/button.c **** 
+  83:../bsp/button.c **** void ButtonSkan (u32 call_period)
+  84:../bsp/button.c **** {
+ 252              		.loc 1 84 0
+ 253              		.cfi_startproc
+ 254              		@ args = 0, pretend = 0, frame = 16
+ 255              		@ frame_needed = 1, uses_anonymous_args = 0
+ 256 0000 80B5     		push	{r7, lr}
+ 257              		.cfi_def_cfa_offset 8
+ 258              		.cfi_offset 7, -8
+ 259              		.cfi_offset 14, -4
+ 260 0002 84B0     		sub	sp, sp, #16
+ 261              		.cfi_def_cfa_offset 24
+ 262 0004 00AF     		add	r7, sp, #0
+ 263              		.cfi_def_cfa_register 7
+ 264 0006 7860     		str	r0, [r7, #4]
+  85:../bsp/button.c **** 	u32 i;
+  86:../bsp/button.c **** 	for (i = 0; i < BUTTONS_NAMBER; i++) {
+ 265              		.loc 1 86 0
+ 266 0008 0023     		movs	r3, #0
+ 267 000a FB60     		str	r3, [r7, #12]
+ 268 000c 73E0     		b	.L5
+ 269              	.L9:
+  87:../bsp/button.c **** 	    if (GPIO_ReadInputDataBit(button_gpio_port[i], button_gpio_pin[i]) != Button[i].idle_state) {
+ 270              		.loc 1 87 0
+ 271 000e 40F20003 		movw	r3, #:lower16:button_gpio_port
+ 272 0012 C0F20003 		movt	r3, #:upper16:button_gpio_port
+ 273 0016 FA68     		ldr	r2, [r7, #12]
+ 274 0018 53F82220 		ldr	r2, [r3, r2, lsl #2]
+ 275 001c 40F20003 		movw	r3, #:lower16:button_gpio_pin
+ 276 0020 C0F20003 		movt	r3, #:upper16:button_gpio_pin
+ 277 0024 F968     		ldr	r1, [r7, #12]
+ 278 0026 33F81130 		ldrh	r3, [r3, r1, lsl #1]
+ 279 002a 1046     		mov	r0, r2
+ 280 002c 1946     		mov	r1, r3
+ 281 002e FFF7FEFF 		bl	GPIO_ReadInputDataBit
+ 282 0032 0346     		mov	r3, r0
+ 283 0034 1A46     		mov	r2, r3
+ 284 0036 40F20003 		movw	r3, #:lower16:Button
+ 285 003a C0F20003 		movt	r3, #:upper16:Button
+ 286 003e F968     		ldr	r1, [r7, #12]
+ 287 0040 0901     		lsls	r1, r1, #4
+ 288 0042 0B44     		add	r3, r3, r1
+ 289 0044 1B79     		ldrb	r3, [r3, #4]	@ zero_extendqisi2
+ 290 0046 9A42     		cmp	r2, r3
+ 291 0048 3FD0     		beq	.L6
+  88:../bsp/button.c **** 
+  89:../bsp/button.c **** 	    	if (Button[i].still_pressed == RESET) {
+ 292              		.loc 1 89 0
+ 293 004a 40F20003 		movw	r3, #:lower16:Button
+ 294 004e C0F20003 		movt	r3, #:upper16:Button
+ 295 0052 FA68     		ldr	r2, [r7, #12]
+ 296 0054 1201     		lsls	r2, r2, #4
+ 297 0056 1344     		add	r3, r3, r2
+ 298 0058 0833     		adds	r3, r3, #8
+ 299 005a 1B79     		ldrb	r3, [r3, #4]	@ zero_extendqisi2
+ 300 005c 002B     		cmp	r3, #0
+ 301 005e 47D1     		bne	.L8
+  90:../bsp/button.c **** 	    		Button[i].cur_cnt += call_period;
+ 302              		.loc 1 90 0
+ 303 0060 40F20003 		movw	r3, #:lower16:Button
+ 304 0064 C0F20003 		movt	r3, #:upper16:Button
+ 305 0068 FA68     		ldr	r2, [r7, #12]
+ 306 006a 1201     		lsls	r2, r2, #4
+ 307 006c 1344     		add	r3, r3, r2
+ 308 006e 1A68     		ldr	r2, [r3]
+ 309 0070 7B68     		ldr	r3, [r7, #4]
+ 310 0072 1A44     		add	r2, r2, r3
+ 311 0074 40F20003 		movw	r3, #:lower16:Button
+ 312 0078 C0F20003 		movt	r3, #:upper16:Button
+ 313 007c F968     		ldr	r1, [r7, #12]
+ 314 007e 0901     		lsls	r1, r1, #4
+ 315 0080 0B44     		add	r3, r3, r1
+ 316 0082 1A60     		str	r2, [r3]
+  91:../bsp/button.c **** 
+  92:../bsp/button.c **** 	    		if (Button[i].cur_cnt >= BUTTONS_BOUNCE_TIME_MS) {
+ 317              		.loc 1 92 0
+ 318 0084 40F20003 		movw	r3, #:lower16:Button
+ 319 0088 C0F20003 		movt	r3, #:upper16:Button
+ 320 008c FA68     		ldr	r2, [r7, #12]
+ 321 008e 1201     		lsls	r2, r2, #4
+ 322 0090 1344     		add	r3, r3, r2
+ 323 0092 1B68     		ldr	r3, [r3]
+ 324 0094 312B     		cmp	r3, #49
+ 325 0096 2BD9     		bls	.L8
+  93:../bsp/button.c **** 
+  94:../bsp/button.c **** //	    			Button[i].synchro_flg = SET;
+  95:../bsp/button.c **** 	    			portENTER_CRITICAL();
+ 326              		.loc 1 95 0
+ 327 0098 FFF7FEFF 		bl	vPortEnterCritical
+  96:../bsp/button.c ****                     Button[i].press_state = SET;
+ 328              		.loc 1 96 0
+ 329 009c 40F20003 		movw	r3, #:lower16:Button
+ 330 00a0 C0F20003 		movt	r3, #:upper16:Button
+ 331 00a4 FA68     		ldr	r2, [r7, #12]
+ 332 00a6 1201     		lsls	r2, r2, #4
+ 333 00a8 1344     		add	r3, r3, r2
+ 334 00aa 0833     		adds	r3, r3, #8
+ 335 00ac 0122     		movs	r2, #1
+ 336 00ae 1A60     		str	r2, [r3]
+  97:../bsp/button.c ****                     portEXIT_CRITICAL();
+ 337              		.loc 1 97 0
+ 338 00b0 FFF7FEFF 		bl	vPortExitCritical
+  98:../bsp/button.c ****  //                   Button[i].synchro_flg = RESET;
+  99:../bsp/button.c **** 
+ 100:../bsp/button.c ****                     Button[i].still_pressed = SET;
+ 339              		.loc 1 100 0
+ 340 00b4 40F20003 		movw	r3, #:lower16:Button
+ 341 00b8 C0F20003 		movt	r3, #:upper16:Button
+ 342 00bc FA68     		ldr	r2, [r7, #12]
+ 343 00be 1201     		lsls	r2, r2, #4
+ 344 00c0 1344     		add	r3, r3, r2
+ 345 00c2 0833     		adds	r3, r3, #8
+ 346 00c4 0122     		movs	r2, #1
+ 347 00c6 1A71     		strb	r2, [r3, #4]
+ 348 00c8 12E0     		b	.L8
+ 349              	.L6:
+ 101:../bsp/button.c **** 	    	    }
+ 102:../bsp/button.c **** 	    	}
+ 103:../bsp/button.c **** 	    }
+ 104:../bsp/button.c **** 	    else {
+ 105:../bsp/button.c **** 	    	Button[i].cur_cnt = RESET;
+ 350              		.loc 1 105 0
+ 351 00ca 40F20003 		movw	r3, #:lower16:Button
+ 352 00ce C0F20003 		movt	r3, #:upper16:Button
+ 353 00d2 FA68     		ldr	r2, [r7, #12]
+ 354 00d4 1201     		lsls	r2, r2, #4
+ 355 00d6 1344     		add	r3, r3, r2
+ 356 00d8 0022     		movs	r2, #0
+ 357 00da 1A60     		str	r2, [r3]
+ 106:../bsp/button.c **** 	    	Button[i].still_pressed = RESET;
+ 358              		.loc 1 106 0
+ 359 00dc 40F20003 		movw	r3, #:lower16:Button
+ 360 00e0 C0F20003 		movt	r3, #:upper16:Button
+ 361 00e4 FA68     		ldr	r2, [r7, #12]
+ 362 00e6 1201     		lsls	r2, r2, #4
+ 363 00e8 1344     		add	r3, r3, r2
+ 364 00ea 0833     		adds	r3, r3, #8
+ 365 00ec 0022     		movs	r2, #0
+ 366 00ee 1A71     		strb	r2, [r3, #4]
+ 367              	.L8:
+  86:../bsp/button.c **** 	    if (GPIO_ReadInputDataBit(button_gpio_port[i], button_gpio_pin[i]) != Button[i].idle_state) {
+ 368              		.loc 1 86 0
+ 369 00f0 FB68     		ldr	r3, [r7, #12]
+ 370 00f2 0133     		adds	r3, r3, #1
+ 371 00f4 FB60     		str	r3, [r7, #12]
+ 372              	.L5:
+  86:../bsp/button.c **** 	    if (GPIO_ReadInputDataBit(button_gpio_port[i], button_gpio_pin[i]) != Button[i].idle_state) {
+ 373              		.loc 1 86 0 is_stmt 0 discriminator 1
+ 374 00f6 FB68     		ldr	r3, [r7, #12]
+ 375 00f8 072B     		cmp	r3, #7
+ 376 00fa 88D9     		bls	.L9
+ 107:../bsp/button.c **** 	    }
+ 108:../bsp/button.c **** 	}
+ 109:../bsp/button.c **** }
+ 377              		.loc 1 109 0 is_stmt 1
+ 378 00fc 1037     		adds	r7, r7, #16
+ 379 00fe BD46     		mov	sp, r7
+ 380              		@ sp needed
+ 381 0100 80BD     		pop	{r7, pc}
+ 382              		.cfi_endproc
+ 383              	.LFE30:
+ 385 0102 00BF     		.section	.text.ButtonSkanGet,"ax",%progbits
+ 386              		.align	2
+ 387              		.global	ButtonSkanGet
+ 388              		.thumb
+ 389              		.thumb_func
+ 391              	ButtonSkanGet:
+ 392              	.LFB31:
+ 110:../bsp/button.c **** 
+ 111:../bsp/button.c **** 
+ 112:../bsp/button.c **** u8 ButtonSkanGet (btn_name_t btn_number)
+ 113:../bsp/button.c **** {
+ 393              		.loc 1 113 0
+ 394              		.cfi_startproc
+ 395              		@ args = 0, pretend = 0, frame = 16
+ 396              		@ frame_needed = 1, uses_anonymous_args = 0
+ 397 0000 80B5     		push	{r7, lr}
+ 398              		.cfi_def_cfa_offset 8
+ 399              		.cfi_offset 7, -8
+ 400              		.cfi_offset 14, -4
+ 401 0002 84B0     		sub	sp, sp, #16
+ 402              		.cfi_def_cfa_offset 24
+ 403 0004 00AF     		add	r7, sp, #0
+ 404              		.cfi_def_cfa_register 7
+ 405 0006 0346     		mov	r3, r0
+ 406 0008 FB71     		strb	r3, [r7, #7]
+ 114:../bsp/button.c ****     u8 btn_status = 0;
+ 407              		.loc 1 114 0
+ 408 000a 0023     		movs	r3, #0
+ 409 000c FB73     		strb	r3, [r7, #15]
+ 115:../bsp/button.c **** 
+ 116:../bsp/button.c **** //    while (Button[btn_number].synchro_flg == SET);
+ 117:../bsp/button.c ****     portENTER_CRITICAL();
+ 410              		.loc 1 117 0
+ 411 000e FFF7FEFF 		bl	vPortEnterCritical
+ 118:../bsp/button.c ****     btn_status = Button[btn_number].press_state;
+ 412              		.loc 1 118 0
+ 413 0012 FA79     		ldrb	r2, [r7, #7]	@ zero_extendqisi2
+ 414 0014 40F20003 		movw	r3, #:lower16:Button
+ 415 0018 C0F20003 		movt	r3, #:upper16:Button
+ 416 001c 1201     		lsls	r2, r2, #4
+ 417 001e 1344     		add	r3, r3, r2
+ 418 0020 0833     		adds	r3, r3, #8
+ 419 0022 1B68     		ldr	r3, [r3]
+ 420 0024 FB73     		strb	r3, [r7, #15]
+ 119:../bsp/button.c ****     Button[btn_number].press_state = 0;
+ 421              		.loc 1 119 0
+ 422 0026 FA79     		ldrb	r2, [r7, #7]	@ zero_extendqisi2
+ 423 0028 40F20003 		movw	r3, #:lower16:Button
+ 424 002c C0F20003 		movt	r3, #:upper16:Button
+ 425 0030 1201     		lsls	r2, r2, #4
+ 426 0032 1344     		add	r3, r3, r2
+ 427 0034 0833     		adds	r3, r3, #8
+ 428 0036 0022     		movs	r2, #0
+ 429 0038 1A60     		str	r2, [r3]
+ 120:../bsp/button.c ****     portEXIT_CRITICAL();
+ 430              		.loc 1 120 0
+ 431 003a FFF7FEFF 		bl	vPortExitCritical
+ 121:../bsp/button.c **** 
+ 122:../bsp/button.c **** return btn_status;
+ 432              		.loc 1 122 0
+ 433 003e FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 123:../bsp/button.c **** }
+ 434              		.loc 1 123 0
+ 435 0040 1846     		mov	r0, r3
+ 436 0042 1037     		adds	r7, r7, #16
+ 437 0044 BD46     		mov	sp, r7
+ 438              		@ sp needed
+ 439 0046 80BD     		pop	{r7, pc}
+ 440              		.cfi_endproc
+ 441              	.LFE31:
+ 443              		.section	.text.ButtonClear,"ax",%progbits
+ 444              		.align	2
+ 445              		.global	ButtonClear
+ 446              		.thumb
+ 447              		.thumb_func
+ 449              	ButtonClear:
+ 450              	.LFB32:
+ 124:../bsp/button.c **** 
+ 125:../bsp/button.c **** void ButtonClear (void)
+ 126:../bsp/button.c **** {
+ 451              		.loc 1 126 0
+ 452              		.cfi_startproc
+ 453              		@ args = 0, pretend = 0, frame = 8
+ 454              		@ frame_needed = 1, uses_anonymous_args = 0
+ 455              		@ link register save eliminated.
+ 456 0000 80B4     		push	{r7}
+ 457              		.cfi_def_cfa_offset 4
+ 458              		.cfi_offset 7, -4
+ 459 0002 83B0     		sub	sp, sp, #12
+ 460              		.cfi_def_cfa_offset 16
+ 461 0004 00AF     		add	r7, sp, #0
+ 462              		.cfi_def_cfa_register 7
+ 127:../bsp/button.c ****     u16 btn_cnt;
+ 128:../bsp/button.c **** 
+ 129:../bsp/button.c ****     for ( btn_cnt = 0; btn_cnt < BUTTONS_NAMBER; btn_cnt++) {
+ 463              		.loc 1 129 0
+ 464 0006 0023     		movs	r3, #0
+ 465 0008 FB80     		strh	r3, [r7, #6]	@ movhi
+ 466 000a 0CE0     		b	.L13
+ 467              	.L14:
+ 130:../bsp/button.c **** 
+ 131:../bsp/button.c ****         Button[btn_cnt].press_state = 0;
+ 468              		.loc 1 131 0 discriminator 2
+ 469 000c FA88     		ldrh	r2, [r7, #6]
+ 470 000e 40F20003 		movw	r3, #:lower16:Button
+ 471 0012 C0F20003 		movt	r3, #:upper16:Button
+ 472 0016 1201     		lsls	r2, r2, #4
+ 473 0018 1344     		add	r3, r3, r2
+ 474 001a 0833     		adds	r3, r3, #8
+ 475 001c 0022     		movs	r2, #0
+ 476 001e 1A60     		str	r2, [r3]
+ 129:../bsp/button.c **** 
+ 477              		.loc 1 129 0 discriminator 2
+ 478 0020 FB88     		ldrh	r3, [r7, #6]
+ 479 0022 0133     		adds	r3, r3, #1
+ 480 0024 FB80     		strh	r3, [r7, #6]	@ movhi
+ 481              	.L13:
+ 129:../bsp/button.c **** 
+ 482              		.loc 1 129 0 is_stmt 0 discriminator 1
+ 483 0026 FB88     		ldrh	r3, [r7, #6]
+ 484 0028 072B     		cmp	r3, #7
+ 485 002a EFD9     		bls	.L14
+ 132:../bsp/button.c ****     }
+ 133:../bsp/button.c **** 
+ 134:../bsp/button.c **** }
+ 486              		.loc 1 134 0 is_stmt 1
+ 487 002c 0C37     		adds	r7, r7, #12
+ 488 002e BD46     		mov	sp, r7
+ 489              		@ sp needed
+ 490 0030 5DF8047B 		ldr	r7, [sp], #4
+ 491 0034 7047     		bx	lr
+ 492              		.cfi_endproc
+ 493              	.LFE32:
+ 495 0036 00BF     		.text
+ 496              	.Letext0:
+ 497              		.file 2 "c:\\tools\\arm-none-eabi\\include\\stdint.h"
+ 498              		.file 3 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/stm32f10x.h"
+ 499              		.file 4 "../bsp/button.h"
+ 500              		.file 5 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/core_cm3.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 button.c
+C:\Users\Alex\AppData\Local\Temp\ccGL716Y.s:19     .data.button_gpio_port:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccGL716Y.s:22     .data.button_gpio_port:00000000 button_gpio_port
+C:\Users\Alex\AppData\Local\Temp\ccGL716Y.s:32     .data.button_gpio_pin:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccGL716Y.s:35     .data.button_gpio_pin:00000000 button_gpio_pin
+                            *COM*:00000080 Button
+C:\Users\Alex\AppData\Local\Temp\ccGL716Y.s:46     .text.ButtonInit:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccGL716Y.s:51     .text.ButtonInit:00000000 ButtonInit
+C:\Users\Alex\AppData\Local\Temp\ccGL716Y.s:245    .text.ButtonSkan:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccGL716Y.s:250    .text.ButtonSkan:00000000 ButtonSkan
+C:\Users\Alex\AppData\Local\Temp\ccGL716Y.s:386    .text.ButtonSkanGet:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccGL716Y.s:391    .text.ButtonSkanGet:00000000 ButtonSkanGet
+C:\Users\Alex\AppData\Local\Temp\ccGL716Y.s:444    .text.ButtonClear:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccGL716Y.s:449    .text.ButtonClear:00000000 ButtonClear
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.1.98ffea2db242cfdb58f411f7407f2b59
+                           .group:00000000 wm4.stm32f10x.h.51.b859cb68ed44ee02c916b41cb8c68f1c
+                           .group:00000000 wm4.core_cm3.h.25.d35e9a9b04ec4aaebae9bf79fff061f9
+                           .group:00000000 wm4.newlib.h.8.384a112feabb3bef7b573ae48cde2e3b
+                           .group:00000000 wm4.features.h.22.6a4ca7cd053637cc1d0db6c16f39b2d7
+                           .group:00000000 wm4.config.h.183.aa62afef667fb61d15fa64c48beb2f14
+                           .group:00000000 wm4._ansi.h.23.5644b60c990a4800b02a6e654e88f93a
+                           .group:00000000 wm4.stdint.h.20.54ad762faa59e3c05491630641c8d8bf
+                           .group:00000000 wm4.core_cm3.h.113.b286929a54d33b4c8909a7132437b244
+                           .group:00000000 wm4.stm32f10x.h.522.a925aafc848b1f088438cf0e9b167b78
+                           .group:00000000 wm4.stm32f10x_conf.h.2.f1a8c33f0a763aeef696fee38b2b2dbc
+                           .group:00000000 wm4.stm32f10x.h.8304.f7d8ad90959e99679b3257267c3aadfe
+                           .group:00000000 wm4.button.h.9.94017a5a40bed793f907d478eb718088
+                           .group:00000000 wm4.stm32f10x_gpio.h.25.80c981af0e637567395034c576cfb3ce
+                           .group:00000000 wm4.stm32f10x_rcc.h.25.fe8897e7491f2eb0cff54551d08eb765
+                           .group:00000000 wm4.gpio_init.h.2.a6dd96fdaf98737019b1d0402db0d0ee
+                           .group:00000000 wm4.portmacro.h.56.a47bdd86bc36d334ca6056492e2d709f
+
+UNDEFINED SYMBOLS
+RCC_APB2PeriphClockCmd
+GPIO_PinRemapConfig
+GPIO_ReadInputDataBit
+vPortEnterCritical
+vPortExitCritical

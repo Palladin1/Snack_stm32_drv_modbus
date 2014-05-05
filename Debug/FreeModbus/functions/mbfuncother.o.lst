@@ -1,0 +1,342 @@
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.file	"mbfuncother.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.section	.bss.ucMBSlaveID,"aw",%nobits
+  19              		.align	2
+  22              	ucMBSlaveID:
+  23 0000 00000000 		.space	32
+  23      00000000 
+  23      00000000 
+  23      00000000 
+  23      00000000 
+  24              		.section	.bss.usMBSlaveIDLen,"aw",%nobits
+  25              		.align	1
+  28              	usMBSlaveIDLen:
+  29 0000 0000     		.space	2
+  30              		.section	.text.eMBSetSlaveID,"ax",%progbits
+  31              		.align	2
+  32              		.global	eMBSetSlaveID
+  33              		.thumb
+  34              		.thumb_func
+  36              	eMBSetSlaveID:
+  37              	.LFB29:
+  38              		.file 1 "../FreeModbus/functions/mbfuncother.c"
+   1:../FreeModbus/functions/mbfuncother.c **** /* 
+   2:../FreeModbus/functions/mbfuncother.c ****  * FreeModbus Libary: A portable Modbus implementation for Modbus ASCII/RTU.
+   3:../FreeModbus/functions/mbfuncother.c ****  * Copyright (c) 2006 Christian Walter <wolti@sil.at>
+   4:../FreeModbus/functions/mbfuncother.c ****  * All rights reserved.
+   5:../FreeModbus/functions/mbfuncother.c ****  *
+   6:../FreeModbus/functions/mbfuncother.c ****  * Redistribution and use in source and binary forms, with or without
+   7:../FreeModbus/functions/mbfuncother.c ****  * modification, are permitted provided that the following conditions
+   8:../FreeModbus/functions/mbfuncother.c ****  * are met:
+   9:../FreeModbus/functions/mbfuncother.c ****  * 1. Redistributions of source code must retain the above copyright
+  10:../FreeModbus/functions/mbfuncother.c ****  *    notice, this list of conditions and the following disclaimer.
+  11:../FreeModbus/functions/mbfuncother.c ****  * 2. Redistributions in binary form must reproduce the above copyright
+  12:../FreeModbus/functions/mbfuncother.c ****  *    notice, this list of conditions and the following disclaimer in the
+  13:../FreeModbus/functions/mbfuncother.c ****  *    documentation and/or other materials provided with the distribution.
+  14:../FreeModbus/functions/mbfuncother.c ****  * 3. The name of the author may not be used to endorse or promote products
+  15:../FreeModbus/functions/mbfuncother.c ****  *    derived from this software without specific prior written permission.
+  16:../FreeModbus/functions/mbfuncother.c ****  *
+  17:../FreeModbus/functions/mbfuncother.c ****  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+  18:../FreeModbus/functions/mbfuncother.c ****  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+  19:../FreeModbus/functions/mbfuncother.c ****  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+  20:../FreeModbus/functions/mbfuncother.c ****  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+  21:../FreeModbus/functions/mbfuncother.c ****  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+  22:../FreeModbus/functions/mbfuncother.c ****  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  23:../FreeModbus/functions/mbfuncother.c ****  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  24:../FreeModbus/functions/mbfuncother.c ****  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  25:../FreeModbus/functions/mbfuncother.c ****  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+  26:../FreeModbus/functions/mbfuncother.c ****  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  27:../FreeModbus/functions/mbfuncother.c ****  *
+  28:../FreeModbus/functions/mbfuncother.c ****  * File: $Id: mbfuncother.c,v 1.8 2006/12/07 22:10:34 wolti Exp $
+  29:../FreeModbus/functions/mbfuncother.c ****  */
+  30:../FreeModbus/functions/mbfuncother.c **** 
+  31:../FreeModbus/functions/mbfuncother.c **** /* ----------------------- System includes ----------------------------------*/
+  32:../FreeModbus/functions/mbfuncother.c **** #include "stdlib.h"
+  33:../FreeModbus/functions/mbfuncother.c **** #include "string.h"
+  34:../FreeModbus/functions/mbfuncother.c **** 
+  35:../FreeModbus/functions/mbfuncother.c **** /* ----------------------- Platform includes --------------------------------*/
+  36:../FreeModbus/functions/mbfuncother.c **** #include "port.h"
+  37:../FreeModbus/functions/mbfuncother.c **** 
+  38:../FreeModbus/functions/mbfuncother.c **** /* ----------------------- Modbus includes ----------------------------------*/
+  39:../FreeModbus/functions/mbfuncother.c **** #include "mb.h"
+  40:../FreeModbus/functions/mbfuncother.c **** #include "mbframe.h"
+  41:../FreeModbus/functions/mbfuncother.c **** #include "mbproto.h"
+  42:../FreeModbus/functions/mbfuncother.c **** #include "mbconfig.h"
+  43:../FreeModbus/functions/mbfuncother.c **** 
+  44:../FreeModbus/functions/mbfuncother.c **** #if MB_FUNC_OTHER_REP_SLAVEID_ENABLED > 0
+  45:../FreeModbus/functions/mbfuncother.c **** 
+  46:../FreeModbus/functions/mbfuncother.c **** /* ----------------------- Static variables ---------------------------------*/
+  47:../FreeModbus/functions/mbfuncother.c **** static UCHAR    ucMBSlaveID[MB_FUNC_OTHER_REP_SLAVEID_BUF];
+  48:../FreeModbus/functions/mbfuncother.c **** static USHORT   usMBSlaveIDLen;
+  49:../FreeModbus/functions/mbfuncother.c **** 
+  50:../FreeModbus/functions/mbfuncother.c **** /* ----------------------- Start implementation -----------------------------*/
+  51:../FreeModbus/functions/mbfuncother.c **** 
+  52:../FreeModbus/functions/mbfuncother.c **** eMBErrorCode
+  53:../FreeModbus/functions/mbfuncother.c **** eMBSetSlaveID( UCHAR ucSlaveID, BOOL xIsRunning,
+  54:../FreeModbus/functions/mbfuncother.c ****                UCHAR const *pucAdditional, USHORT usAdditionalLen )
+  55:../FreeModbus/functions/mbfuncother.c **** {
+  39              		.loc 1 55 0
+  40              		.cfi_startproc
+  41              		@ args = 0, pretend = 0, frame = 16
+  42              		@ frame_needed = 1, uses_anonymous_args = 0
+  43 0000 80B5     		push	{r7, lr}
+  44              		.cfi_def_cfa_offset 8
+  45              		.cfi_offset 7, -8
+  46              		.cfi_offset 14, -4
+  47 0002 84B0     		sub	sp, sp, #16
+  48              		.cfi_def_cfa_offset 24
+  49 0004 00AF     		add	r7, sp, #0
+  50              		.cfi_def_cfa_register 7
+  51 0006 3A60     		str	r2, [r7]
+  52 0008 0246     		mov	r2, r0
+  53 000a FA71     		strb	r2, [r7, #7]
+  54 000c 0A46     		mov	r2, r1
+  55 000e BA71     		strb	r2, [r7, #6]
+  56 0010 BB80     		strh	r3, [r7, #4]	@ movhi
+  56:../FreeModbus/functions/mbfuncother.c ****     eMBErrorCode    eStatus = MB_ENOERR;
+  57              		.loc 1 56 0
+  58 0012 0023     		movs	r3, #0
+  59 0014 FB73     		strb	r3, [r7, #15]
+  57:../FreeModbus/functions/mbfuncother.c **** 
+  58:../FreeModbus/functions/mbfuncother.c ****     /* the first byte and second byte in the buffer is reserved for
+  59:../FreeModbus/functions/mbfuncother.c ****      * the parameter ucSlaveID and the running flag. The rest of
+  60:../FreeModbus/functions/mbfuncother.c ****      * the buffer is available for additional data. */
+  61:../FreeModbus/functions/mbfuncother.c ****     if( usAdditionalLen + 2 < MB_FUNC_OTHER_REP_SLAVEID_BUF )
+  60              		.loc 1 61 0
+  61 0016 BB88     		ldrh	r3, [r7, #4]
+  62 0018 0233     		adds	r3, r3, #2
+  63 001a 1F2B     		cmp	r3, #31
+  64 001c 53DC     		bgt	.L2
+  62:../FreeModbus/functions/mbfuncother.c ****     {
+  63:../FreeModbus/functions/mbfuncother.c ****         usMBSlaveIDLen = 0;
+  65              		.loc 1 63 0
+  66 001e 40F20003 		movw	r3, #:lower16:usMBSlaveIDLen
+  67 0022 C0F20003 		movt	r3, #:upper16:usMBSlaveIDLen
+  68 0026 0022     		movs	r2, #0
+  69 0028 1A80     		strh	r2, [r3]	@ movhi
+  64:../FreeModbus/functions/mbfuncother.c ****         ucMBSlaveID[usMBSlaveIDLen++] = ucSlaveID;
+  70              		.loc 1 64 0
+  71 002a 40F20003 		movw	r3, #:lower16:usMBSlaveIDLen
+  72 002e C0F20003 		movt	r3, #:upper16:usMBSlaveIDLen
+  73 0032 1B88     		ldrh	r3, [r3]
+  74 0034 1A46     		mov	r2, r3
+  75 0036 531C     		adds	r3, r2, #1
+  76 0038 99B2     		uxth	r1, r3
+  77 003a 40F20003 		movw	r3, #:lower16:usMBSlaveIDLen
+  78 003e C0F20003 		movt	r3, #:upper16:usMBSlaveIDLen
+  79 0042 1980     		strh	r1, [r3]	@ movhi
+  80 0044 40F20003 		movw	r3, #:lower16:ucMBSlaveID
+  81 0048 C0F20003 		movt	r3, #:upper16:ucMBSlaveID
+  82 004c F979     		ldrb	r1, [r7, #7]
+  83 004e 9954     		strb	r1, [r3, r2]
+  65:../FreeModbus/functions/mbfuncother.c ****         ucMBSlaveID[usMBSlaveIDLen++] = ( UCHAR )( xIsRunning ? 0xFF : 0x00 );
+  84              		.loc 1 65 0
+  85 0050 40F20003 		movw	r3, #:lower16:usMBSlaveIDLen
+  86 0054 C0F20003 		movt	r3, #:upper16:usMBSlaveIDLen
+  87 0058 1B88     		ldrh	r3, [r3]
+  88 005a 1A46     		mov	r2, r3
+  89 005c 531C     		adds	r3, r2, #1
+  90 005e 99B2     		uxth	r1, r3
+  91 0060 40F20003 		movw	r3, #:lower16:usMBSlaveIDLen
+  92 0064 C0F20003 		movt	r3, #:upper16:usMBSlaveIDLen
+  93 0068 1980     		strh	r1, [r3]	@ movhi
+  94 006a 1146     		mov	r1, r2
+  95 006c BB79     		ldrb	r3, [r7, #6]	@ zero_extendqisi2
+  96 006e 002B     		cmp	r3, #0
+  97 0070 01D0     		beq	.L3
+  98              		.loc 1 65 0 is_stmt 0 discriminator 1
+  99 0072 FF22     		movs	r2, #255
+ 100 0074 00E0     		b	.L4
+ 101              	.L3:
+ 102              		.loc 1 65 0 discriminator 2
+ 103 0076 0022     		movs	r2, #0
+ 104              	.L4:
+ 105              		.loc 1 65 0 discriminator 3
+ 106 0078 40F20003 		movw	r3, #:lower16:ucMBSlaveID
+ 107 007c C0F20003 		movt	r3, #:upper16:ucMBSlaveID
+ 108 0080 5A54     		strb	r2, [r3, r1]
+  66:../FreeModbus/functions/mbfuncother.c ****         if( usAdditionalLen > 0 )
+ 109              		.loc 1 66 0 is_stmt 1 discriminator 3
+ 110 0082 BB88     		ldrh	r3, [r7, #4]
+ 111 0084 002B     		cmp	r3, #0
+ 112 0086 20D0     		beq	.L6
+  67:../FreeModbus/functions/mbfuncother.c ****         {
+  68:../FreeModbus/functions/mbfuncother.c ****             memcpy( &ucMBSlaveID[usMBSlaveIDLen], pucAdditional,
+ 113              		.loc 1 68 0
+ 114 0088 40F20003 		movw	r3, #:lower16:usMBSlaveIDLen
+ 115 008c C0F20003 		movt	r3, #:upper16:usMBSlaveIDLen
+ 116 0090 1B88     		ldrh	r3, [r3]
+ 117 0092 1A46     		mov	r2, r3
+ 118 0094 40F20003 		movw	r3, #:lower16:ucMBSlaveID
+ 119 0098 C0F20003 		movt	r3, #:upper16:ucMBSlaveID
+ 120 009c 1A44     		add	r2, r2, r3
+ 121 009e BB88     		ldrh	r3, [r7, #4]
+ 122 00a0 1046     		mov	r0, r2
+ 123 00a2 3968     		ldr	r1, [r7]
+ 124 00a4 1A46     		mov	r2, r3
+ 125 00a6 FFF7FEFF 		bl	memcpy
+  69:../FreeModbus/functions/mbfuncother.c ****                     ( size_t )usAdditionalLen );
+  70:../FreeModbus/functions/mbfuncother.c ****             usMBSlaveIDLen += usAdditionalLen;
+ 126              		.loc 1 70 0
+ 127 00aa 40F20003 		movw	r3, #:lower16:usMBSlaveIDLen
+ 128 00ae C0F20003 		movt	r3, #:upper16:usMBSlaveIDLen
+ 129 00b2 1A88     		ldrh	r2, [r3]
+ 130 00b4 BB88     		ldrh	r3, [r7, #4]	@ movhi
+ 131 00b6 1344     		add	r3, r3, r2
+ 132 00b8 9AB2     		uxth	r2, r3
+ 133 00ba 40F20003 		movw	r3, #:lower16:usMBSlaveIDLen
+ 134 00be C0F20003 		movt	r3, #:upper16:usMBSlaveIDLen
+ 135 00c2 1A80     		strh	r2, [r3]	@ movhi
+ 136 00c4 01E0     		b	.L6
+ 137              	.L2:
+  71:../FreeModbus/functions/mbfuncother.c ****         }
+  72:../FreeModbus/functions/mbfuncother.c ****     }
+  73:../FreeModbus/functions/mbfuncother.c ****     else
+  74:../FreeModbus/functions/mbfuncother.c ****     {
+  75:../FreeModbus/functions/mbfuncother.c ****         eStatus = MB_ENORES;
+ 138              		.loc 1 75 0
+ 139 00c6 0423     		movs	r3, #4
+ 140 00c8 FB73     		strb	r3, [r7, #15]
+ 141              	.L6:
+  76:../FreeModbus/functions/mbfuncother.c ****     }
+  77:../FreeModbus/functions/mbfuncother.c ****     return eStatus;
+ 142              		.loc 1 77 0
+ 143 00ca FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+  78:../FreeModbus/functions/mbfuncother.c **** }
+ 144              		.loc 1 78 0
+ 145 00cc 1846     		mov	r0, r3
+ 146 00ce 1037     		adds	r7, r7, #16
+ 147 00d0 BD46     		mov	sp, r7
+ 148              		@ sp needed
+ 149 00d2 80BD     		pop	{r7, pc}
+ 150              		.cfi_endproc
+ 151              	.LFE29:
+ 153              		.section	.text.eMBFuncReportSlaveID,"ax",%progbits
+ 154              		.align	2
+ 155              		.global	eMBFuncReportSlaveID
+ 156              		.thumb
+ 157              		.thumb_func
+ 159              	eMBFuncReportSlaveID:
+ 160              	.LFB30:
+  79:../FreeModbus/functions/mbfuncother.c **** 
+  80:../FreeModbus/functions/mbfuncother.c **** eMBException
+  81:../FreeModbus/functions/mbfuncother.c **** eMBFuncReportSlaveID( UCHAR * pucFrame, USHORT * usLen )
+  82:../FreeModbus/functions/mbfuncother.c **** {
+ 161              		.loc 1 82 0
+ 162              		.cfi_startproc
+ 163              		@ args = 0, pretend = 0, frame = 8
+ 164              		@ frame_needed = 1, uses_anonymous_args = 0
+ 165 0000 80B5     		push	{r7, lr}
+ 166              		.cfi_def_cfa_offset 8
+ 167              		.cfi_offset 7, -8
+ 168              		.cfi_offset 14, -4
+ 169 0002 82B0     		sub	sp, sp, #8
+ 170              		.cfi_def_cfa_offset 16
+ 171 0004 00AF     		add	r7, sp, #0
+ 172              		.cfi_def_cfa_register 7
+ 173 0006 7860     		str	r0, [r7, #4]
+ 174 0008 3960     		str	r1, [r7]
+  83:../FreeModbus/functions/mbfuncother.c ****     memcpy( &pucFrame[MB_PDU_DATA_OFF], &ucMBSlaveID[0], ( size_t )usMBSlaveIDLen );
+ 175              		.loc 1 83 0
+ 176 000a 7B68     		ldr	r3, [r7, #4]
+ 177 000c 5A1C     		adds	r2, r3, #1
+ 178 000e 40F20003 		movw	r3, #:lower16:usMBSlaveIDLen
+ 179 0012 C0F20003 		movt	r3, #:upper16:usMBSlaveIDLen
+ 180 0016 1B88     		ldrh	r3, [r3]
+ 181 0018 1046     		mov	r0, r2
+ 182 001a 40F20001 		movw	r1, #:lower16:ucMBSlaveID
+ 183 001e C0F20001 		movt	r1, #:upper16:ucMBSlaveID
+ 184 0022 1A46     		mov	r2, r3
+ 185 0024 FFF7FEFF 		bl	memcpy
+  84:../FreeModbus/functions/mbfuncother.c ****     *usLen = ( USHORT )( MB_PDU_DATA_OFF + usMBSlaveIDLen );
+ 186              		.loc 1 84 0
+ 187 0028 40F20003 		movw	r3, #:lower16:usMBSlaveIDLen
+ 188 002c C0F20003 		movt	r3, #:upper16:usMBSlaveIDLen
+ 189 0030 1B88     		ldrh	r3, [r3]
+ 190 0032 0133     		adds	r3, r3, #1
+ 191 0034 9AB2     		uxth	r2, r3
+ 192 0036 3B68     		ldr	r3, [r7]
+ 193 0038 1A80     		strh	r2, [r3]	@ movhi
+  85:../FreeModbus/functions/mbfuncother.c ****     return MB_EX_NONE;
+ 194              		.loc 1 85 0
+ 195 003a 0023     		movs	r3, #0
+  86:../FreeModbus/functions/mbfuncother.c **** }
+ 196              		.loc 1 86 0
+ 197 003c 1846     		mov	r0, r3
+ 198 003e 0837     		adds	r7, r7, #8
+ 199 0040 BD46     		mov	sp, r7
+ 200              		@ sp needed
+ 201 0042 80BD     		pop	{r7, pc}
+ 202              		.cfi_endproc
+ 203              	.LFE30:
+ 205              		.text
+ 206              	.Letext0:
+ 207              		.file 2 "c:\\tools\\lib\\gcc\\arm-none-eabi\\4.8.1\\include\\stddef.h"
+ 208              		.file 3 "c:\\tools\\arm-none-eabi\\include\\stdint.h"
+ 209              		.file 4 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\stm32/port.h"
+ 210              		.file 5 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\include/mbproto.h"
+ 211              		.file 6 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\include/mb.h"
+ 212              		.file 7 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/core_cm3.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 mbfuncother.c
+C:\Users\Alex\AppData\Local\Temp\ccptX0QU.s:19     .bss.ucMBSlaveID:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccptX0QU.s:22     .bss.ucMBSlaveID:00000000 ucMBSlaveID
+C:\Users\Alex\AppData\Local\Temp\ccptX0QU.s:25     .bss.usMBSlaveIDLen:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccptX0QU.s:28     .bss.usMBSlaveIDLen:00000000 usMBSlaveIDLen
+C:\Users\Alex\AppData\Local\Temp\ccptX0QU.s:31     .text.eMBSetSlaveID:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccptX0QU.s:36     .text.eMBSetSlaveID:00000000 eMBSetSlaveID
+C:\Users\Alex\AppData\Local\Temp\ccptX0QU.s:154    .text.eMBFuncReportSlaveID:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccptX0QU.s:159    .text.eMBFuncReportSlaveID:00000000 eMBFuncReportSlaveID
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.1.98ffea2db242cfdb58f411f7407f2b59
+                           .group:00000000 wm4.newlib.h.8.384a112feabb3bef7b573ae48cde2e3b
+                           .group:00000000 wm4.features.h.22.6a4ca7cd053637cc1d0db6c16f39b2d7
+                           .group:00000000 wm4.config.h.183.aa62afef667fb61d15fa64c48beb2f14
+                           .group:00000000 wm4._ansi.h.23.5644b60c990a4800b02a6e654e88f93a
+                           .group:00000000 wm4.stdlib.h.18.8bab2fb43ac4e90235390733c30a4530
+                           .group:00000000 wm4.stddef.h.184.aa65fb7281d578229bbad41b91862635
+                           .group:00000000 wm4._default_types.h.6.5e12cd604db8ce00b62bb2f02708eaf3
+                           .group:00000000 wm4.lock.h.2.9bc98482741e5e2a9450b12934a684ea
+                           .group:00000000 wm4._types.h.59.db8450f33c1f6150c0372fa1091a887a
+                           .group:00000000 wm4.stddef.h.348.9a99de77b6ba3b4278b57e9cc6d6e349
+                           .group:00000000 wm4.reent.h.16.567d760e6ae9ad7f917851a308bd7a57
+                           .group:00000000 wm4.alloca.h.8.dfc0c703c47ec3e69746825b17d9e66d
+                           .group:00000000 wm4.stdlib.h.55.7091a050e07f1c4abd225630fe3d62f1
+                           .group:00000000 wm4.stddef.h.39.d0197034aa5fd947cae140b9289e6734
+                           .group:00000000 wm4.stdint.h.10.90b695f550ca6cc3fb08fa83baf01e05
+                           .group:00000000 wm4.cdefs.h.56.efab90f4d89fbc41d6b3a5c5fb0d3d0f
+                           .group:00000000 wm4.string.h.15.dab3980bf35408a4c507182805e2de3a
+                           .group:00000000 wm4.stddef.h.158.a7efb00f6cbc6f43213b50e183c9830c
+                           .group:00000000 wm4.string.h.126.6ff3aa59129e7f66b2c273baf353e066
+                           .group:00000000 wm4.stm32f10x_conf.h.2.f1a8c33f0a763aeef696fee38b2b2dbc
+                           .group:00000000 wm4.mbconfig.h.33.2e295d4ff98bc723e2405a40490b5ddb
+                           .group:00000000 wm4.assert.h.11.060c3dc511517628fd4f958fa9448dce
+                           .group:00000000 wm4.inttypes.h.14.48280a9a5aa6f2f2d5302e2988897736
+                           .group:00000000 wm4.inttypes.h.24.8137491c6995c2cb5d25f9bab92d7f64
+                           .group:00000000 wm4.stm32f10x.h.51.b859cb68ed44ee02c916b41cb8c68f1c
+                           .group:00000000 wm4.core_cm3.h.25.119fe996be41b62fbd915b59177e39d1
+                           .group:00000000 wm4.stm32f10x.h.522.a925aafc848b1f088438cf0e9b167b78
+                           .group:00000000 wm4.stm32f10x.h.8304.f7d8ad90959e99679b3257267c3aadfe
+                           .group:00000000 wm4.stm32f10x_rcc.h.25.fe8897e7491f2eb0cff54551d08eb765
+                           .group:00000000 wm4.portmacro.h.56.a47bdd86bc36d334ca6056492e2d709f
+                           .group:00000000 wm4.port.h.38.e5d12e3086604499e6922efe9c85cac5
+                           .group:00000000 wm4.mbproto.h.32.da85c2bdd9bdb84e975a92c999a4b490
+                           .group:00000000 wm4.mbframe.h.32.cb3fc2a5a44fcaf8fe721dce49a4ba3c
+
+UNDEFINED SYMBOLS
+memcpy

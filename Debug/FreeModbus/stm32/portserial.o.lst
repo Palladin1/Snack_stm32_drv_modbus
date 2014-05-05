@@ -1,0 +1,45 @@
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.file	"portserial.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              	.Letext0:
+  19              		.file 1 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/core_cm3.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 portserial.c
+                           .group:00000000 wm4.1.98ffea2db242cfdb58f411f7407f2b59
+                           .group:00000000 wm4.stm32f10x_conf.h.2.f1a8c33f0a763aeef696fee38b2b2dbc
+                           .group:00000000 wm4.mbconfig.h.33.2e295d4ff98bc723e2405a40490b5ddb
+                           .group:00000000 wm4.newlib.h.8.384a112feabb3bef7b573ae48cde2e3b
+                           .group:00000000 wm4.features.h.22.6a4ca7cd053637cc1d0db6c16f39b2d7
+                           .group:00000000 wm4.config.h.183.aa62afef667fb61d15fa64c48beb2f14
+                           .group:00000000 wm4._ansi.h.23.5644b60c990a4800b02a6e654e88f93a
+                           .group:00000000 wm4.assert.h.11.060c3dc511517628fd4f958fa9448dce
+                           .group:00000000 wm4.stdint.h.20.54ad762faa59e3c05491630641c8d8bf
+                           .group:00000000 wm4.stddef.h.263.49e44f5ee9cdd8820580fc4aa239e32a
+                           .group:00000000 wm4.inttypes.h.24.8137491c6995c2cb5d25f9bab92d7f64
+                           .group:00000000 wm4.stm32f10x.h.51.b859cb68ed44ee02c916b41cb8c68f1c
+                           .group:00000000 wm4.core_cm3.h.25.119fe996be41b62fbd915b59177e39d1
+                           .group:00000000 wm4.stm32f10x.h.522.a925aafc848b1f088438cf0e9b167b78
+                           .group:00000000 wm4.stm32f10x.h.8304.f7d8ad90959e99679b3257267c3aadfe
+                           .group:00000000 wm4.stm32f10x_rcc.h.25.fe8897e7491f2eb0cff54551d08eb765
+                           .group:00000000 wm4.portmacro.h.56.a47bdd86bc36d334ca6056492e2d709f
+                           .group:00000000 wm4.port.h.38.e5d12e3086604499e6922efe9c85cac5
+                           .group:00000000 wm4.mbproto.h.32.da85c2bdd9bdb84e975a92c999a4b490
+                           .group:00000000 wm4.stm32f10x_usart.h.25.29629c699b65db3f3efd3561f66b0bf6
+                           .group:00000000 wm4.stm32f10x_gpio.h.25.80c981af0e637567395034c576cfb3ce
+                           .group:00000000 wm4.misc.h.25.068e106f368fa5369a681ef57c106f4b
+
+NO UNDEFINED SYMBOLS

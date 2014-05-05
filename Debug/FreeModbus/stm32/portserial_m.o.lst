@@ -1,0 +1,739 @@
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.file	"portserial_m.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.section	.text.vMBMasterPortSerialEnable,"ax",%progbits
+  19              		.align	2
+  20              		.global	vMBMasterPortSerialEnable
+  21              		.thumb
+  22              		.thumb_func
+  24              	vMBMasterPortSerialEnable:
+  25              	.LFB29:
+  26              		.file 1 "../FreeModbus/stm32/portserial_m.c"
+   1:../FreeModbus/stm32/portserial_m.c **** /*
+   2:../FreeModbus/stm32/portserial_m.c ****  * FreeModbus Libary: STM32 Port
+   3:../FreeModbus/stm32/portserial_m.c ****  * Copyright (C) 2013 Armink <armink.ztl@gmail.com>
+   4:../FreeModbus/stm32/portserial_m.c ****  *
+   5:../FreeModbus/stm32/portserial_m.c ****  * This library is free software; you can redistribute it and/or
+   6:../FreeModbus/stm32/portserial_m.c ****  * modify it under the terms of the GNU Lesser General Public
+   7:../FreeModbus/stm32/portserial_m.c ****  * License as published by the Free Software Foundation; either
+   8:../FreeModbus/stm32/portserial_m.c ****  * version 2.1 of the License, or (at your option) any later version.
+   9:../FreeModbus/stm32/portserial_m.c ****  *
+  10:../FreeModbus/stm32/portserial_m.c ****  * This library is distributed in the hope that it will be useful,
+  11:../FreeModbus/stm32/portserial_m.c ****  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  12:../FreeModbus/stm32/portserial_m.c ****  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  13:../FreeModbus/stm32/portserial_m.c ****  * Lesser General Public License for more details.
+  14:../FreeModbus/stm32/portserial_m.c ****  *
+  15:../FreeModbus/stm32/portserial_m.c ****  * You should have received a copy of the GNU Lesser General Public
+  16:../FreeModbus/stm32/portserial_m.c ****  * License along with this library; if not, write to the Free Software
+  17:../FreeModbus/stm32/portserial_m.c ****  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+  18:../FreeModbus/stm32/portserial_m.c ****  *
+  19:../FreeModbus/stm32/portserial_m.c ****  * File: $Id: portserial_m.c,v 1.60 2013/08/13 15:07:05 Armink add Master Functions $
+  20:../FreeModbus/stm32/portserial_m.c ****  */
+  21:../FreeModbus/stm32/portserial_m.c **** 
+  22:../FreeModbus/stm32/portserial_m.c **** #include "port.h"
+  23:../FreeModbus/stm32/portserial_m.c **** 
+  24:../FreeModbus/stm32/portserial_m.c **** /* ----------------------- Modbus includes ----------------------------------*/
+  25:../FreeModbus/stm32/portserial_m.c **** #include "mb.h"
+  26:../FreeModbus/stm32/portserial_m.c **** #include "mbport.h"
+  27:../FreeModbus/stm32/portserial_m.c **** 
+  28:../FreeModbus/stm32/portserial_m.c **** #include "stm32f10x_usart.h"
+  29:../FreeModbus/stm32/portserial_m.c **** #include "stm32f10x_gpio.h"
+  30:../FreeModbus/stm32/portserial_m.c **** #include "misc.h"
+  31:../FreeModbus/stm32/portserial_m.c **** 
+  32:../FreeModbus/stm32/portserial_m.c **** #if MB_MASTER_RTU_ENABLED > 0 || MB_MASTER_ASCII_ENABLED > 0
+  33:../FreeModbus/stm32/portserial_m.c **** /* ----------------------- static functions ---------------------------------*/
+  34:../FreeModbus/stm32/portserial_m.c **** static void prvvUARTTxReadyISR(void);
+  35:../FreeModbus/stm32/portserial_m.c **** static void prvvUARTRxISR(void);
+  36:../FreeModbus/stm32/portserial_m.c **** /* ----------------------- Start implementation -----------------------------*/
+  37:../FreeModbus/stm32/portserial_m.c **** 
+  38:../FreeModbus/stm32/portserial_m.c **** void vMBMasterPortSerialEnable(BOOL xRxEnable, BOOL xTxEnable)
+  39:../FreeModbus/stm32/portserial_m.c **** {
+  27              		.loc 1 39 0
+  28              		.cfi_startproc
+  29              		@ args = 0, pretend = 0, frame = 8
+  30              		@ frame_needed = 1, uses_anonymous_args = 0
+  31 0000 80B5     		push	{r7, lr}
+  32              		.cfi_def_cfa_offset 8
+  33              		.cfi_offset 7, -8
+  34              		.cfi_offset 14, -4
+  35 0002 82B0     		sub	sp, sp, #8
+  36              		.cfi_def_cfa_offset 16
+  37 0004 00AF     		add	r7, sp, #0
+  38              		.cfi_def_cfa_register 7
+  39 0006 0246     		mov	r2, r0
+  40 0008 0B46     		mov	r3, r1
+  41 000a FA71     		strb	r2, [r7, #7]
+  42 000c BB71     		strb	r3, [r7, #6]
+  40:../FreeModbus/stm32/portserial_m.c **** 	if (xRxEnable)
+  43              		.loc 1 40 0
+  44 000e FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+  45 0010 002B     		cmp	r3, #0
+  46 0012 09D0     		beq	.L2
+  41:../FreeModbus/stm32/portserial_m.c **** 	{
+  42:../FreeModbus/stm32/portserial_m.c **** 		/* 485通信时，等待串口移位寄存器中的数据发送完成后，再去使能485的接收、失能485的发送
+  43:../FreeModbus/stm32/portserial_m.c **** 		 * 该延时时间可以结合CPU主频及串口波特率做适当调整
+  44:../FreeModbus/stm32/portserial_m.c **** 		 * */
+  45:../FreeModbus/stm32/portserial_m.c **** 		//vMBDelay(1000);
+  46:../FreeModbus/stm32/portserial_m.c **** 		//MASTER_RS485_RECEIVE_MODE;
+  47:../FreeModbus/stm32/portserial_m.c **** 		USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
+  47              		.loc 1 47 0
+  48 0014 4FF46050 		mov	r0, #14336
+  49 0018 C4F20100 		movt	r0, 16385
+  50 001c 40F22551 		movw	r1, #1317
+  51 0020 0122     		movs	r2, #1
+  52 0022 FFF7FEFF 		bl	USART_ITConfig
+  53 0026 08E0     		b	.L3
+  54              	.L2:
+  48:../FreeModbus/stm32/portserial_m.c **** 	}
+  49:../FreeModbus/stm32/portserial_m.c **** 	else
+  50:../FreeModbus/stm32/portserial_m.c **** 	{
+  51:../FreeModbus/stm32/portserial_m.c **** 		//MASTER_RS485_SEND_MODE;
+  52:../FreeModbus/stm32/portserial_m.c **** 		USART_ITConfig(USART1, USART_IT_RXNE, DISABLE);
+  55              		.loc 1 52 0
+  56 0028 4FF46050 		mov	r0, #14336
+  57 002c C4F20100 		movt	r0, 16385
+  58 0030 40F22551 		movw	r1, #1317
+  59 0034 0022     		movs	r2, #0
+  60 0036 FFF7FEFF 		bl	USART_ITConfig
+  61              	.L3:
+  53:../FreeModbus/stm32/portserial_m.c **** 	}
+  54:../FreeModbus/stm32/portserial_m.c **** 	if (xTxEnable)
+  62              		.loc 1 54 0
+  63 003a BB79     		ldrb	r3, [r7, #6]	@ zero_extendqisi2
+  64 003c 002B     		cmp	r3, #0
+  65 003e 09D0     		beq	.L4
+  55:../FreeModbus/stm32/portserial_m.c **** 	{
+  56:../FreeModbus/stm32/portserial_m.c **** 		USART_ITConfig(USART1, USART_IT_TXE, ENABLE);
+  66              		.loc 1 56 0
+  67 0040 4FF46050 		mov	r0, #14336
+  68 0044 C4F20100 		movt	r0, 16385
+  69 0048 40F22771 		movw	r1, #1831
+  70 004c 0122     		movs	r2, #1
+  71 004e FFF7FEFF 		bl	USART_ITConfig
+  72 0052 08E0     		b	.L1
+  73              	.L4:
+  57:../FreeModbus/stm32/portserial_m.c **** 	}
+  58:../FreeModbus/stm32/portserial_m.c **** 	else
+  59:../FreeModbus/stm32/portserial_m.c **** 	{
+  60:../FreeModbus/stm32/portserial_m.c **** 		USART_ITConfig(USART1, USART_IT_TXE, DISABLE);
+  74              		.loc 1 60 0
+  75 0054 4FF46050 		mov	r0, #14336
+  76 0058 C4F20100 		movt	r0, 16385
+  77 005c 40F22771 		movw	r1, #1831
+  78 0060 0022     		movs	r2, #0
+  79 0062 FFF7FEFF 		bl	USART_ITConfig
+  80              	.L1:
+  61:../FreeModbus/stm32/portserial_m.c **** 	}
+  62:../FreeModbus/stm32/portserial_m.c **** }
+  81              		.loc 1 62 0
+  82 0066 0837     		adds	r7, r7, #8
+  83 0068 BD46     		mov	sp, r7
+  84              		@ sp needed
+  85 006a 80BD     		pop	{r7, pc}
+  86              		.cfi_endproc
+  87              	.LFE29:
+  89              		.section	.text.vMBMasterPortClose,"ax",%progbits
+  90              		.align	2
+  91              		.global	vMBMasterPortClose
+  92              		.thumb
+  93              		.thumb_func
+  95              	vMBMasterPortClose:
+  96              	.LFB30:
+  63:../FreeModbus/stm32/portserial_m.c **** 
+  64:../FreeModbus/stm32/portserial_m.c **** void vMBMasterPortClose(void)
+  65:../FreeModbus/stm32/portserial_m.c **** {
+  97              		.loc 1 65 0
+  98              		.cfi_startproc
+  99              		@ args = 0, pretend = 0, frame = 0
+ 100              		@ frame_needed = 1, uses_anonymous_args = 0
+ 101 0000 80B5     		push	{r7, lr}
+ 102              		.cfi_def_cfa_offset 8
+ 103              		.cfi_offset 7, -8
+ 104              		.cfi_offset 14, -4
+ 105 0002 00AF     		add	r7, sp, #0
+ 106              		.cfi_def_cfa_register 7
+  66:../FreeModbus/stm32/portserial_m.c **** 	USART_ITConfig(USART1, USART_IT_TXE | USART_IT_RXNE, DISABLE);
+ 107              		.loc 1 66 0
+ 108 0004 4FF46050 		mov	r0, #14336
+ 109 0008 C4F20100 		movt	r0, 16385
+ 110 000c 40F22771 		movw	r1, #1831
+ 111 0010 0022     		movs	r2, #0
+ 112 0012 FFF7FEFF 		bl	USART_ITConfig
+  67:../FreeModbus/stm32/portserial_m.c **** 	USART_Cmd(USART1, DISABLE);
+ 113              		.loc 1 67 0
+ 114 0016 4FF46050 		mov	r0, #14336
+ 115 001a C4F20100 		movt	r0, 16385
+ 116 001e 0021     		movs	r1, #0
+ 117 0020 FFF7FEFF 		bl	USART_Cmd
+  68:../FreeModbus/stm32/portserial_m.c **** }
+ 118              		.loc 1 68 0
+ 119 0024 80BD     		pop	{r7, pc}
+ 120              		.cfi_endproc
+ 121              	.LFE30:
+ 123 0026 00BF     		.section	.text.xMBMasterPortSerialInit,"ax",%progbits
+ 124              		.align	2
+ 125              		.global	xMBMasterPortSerialInit
+ 126              		.thumb
+ 127              		.thumb_func
+ 129              	xMBMasterPortSerialInit:
+ 130              	.LFB31:
+  69:../FreeModbus/stm32/portserial_m.c **** //默认一个从机 串口1 波特率可设置  奇偶检验可设置
+  70:../FreeModbus/stm32/portserial_m.c **** BOOL xMBMasterPortSerialInit(UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits,
+  71:../FreeModbus/stm32/portserial_m.c **** 		eMBParity eParity)
+  72:../FreeModbus/stm32/portserial_m.c **** {
+ 131              		.loc 1 72 0
+ 132              		.cfi_startproc
+ 133              		@ args = 0, pretend = 0, frame = 32
+ 134              		@ frame_needed = 1, uses_anonymous_args = 0
+ 135 0000 80B5     		push	{r7, lr}
+ 136              		.cfi_def_cfa_offset 8
+ 137              		.cfi_offset 7, -8
+ 138              		.cfi_offset 14, -4
+ 139 0002 88B0     		sub	sp, sp, #32
+ 140              		.cfi_def_cfa_offset 40
+ 141 0004 00AF     		add	r7, sp, #0
+ 142              		.cfi_def_cfa_register 7
+ 143 0006 3960     		str	r1, [r7]
+ 144 0008 0146     		mov	r1, r0
+ 145 000a F971     		strb	r1, [r7, #7]
+ 146 000c BA71     		strb	r2, [r7, #6]
+ 147 000e 7B71     		strb	r3, [r7, #5]
+  73:../FreeModbus/stm32/portserial_m.c **** 	GPIO_InitTypeDef GPIO_InitStructure;
+  74:../FreeModbus/stm32/portserial_m.c **** 	USART_InitTypeDef USART_InitStructure;
+  75:../FreeModbus/stm32/portserial_m.c **** 	NVIC_InitTypeDef NVIC_InitStructure;
+  76:../FreeModbus/stm32/portserial_m.c **** 	//======================时钟初始化=======================================
+  77:../FreeModbus/stm32/portserial_m.c **** 	RCC_APB2PeriphClockCmd(
+ 148              		.loc 1 77 0
+ 149 0010 44F20C00 		movw	r0, #16396
+ 150 0014 0121     		movs	r1, #1
+ 151 0016 FFF7FEFF 		bl	RCC_APB2PeriphClockCmd
+  78:../FreeModbus/stm32/portserial_m.c **** 			RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOB | RCC_APB2Periph_USART1,
+  79:../FreeModbus/stm32/portserial_m.c **** 			ENABLE);
+  80:../FreeModbus/stm32/portserial_m.c **** 	//======================IO初始化=======================================	
+  81:../FreeModbus/stm32/portserial_m.c **** 	//USART1_TX
+  82:../FreeModbus/stm32/portserial_m.c **** 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+ 152              		.loc 1 82 0
+ 153 001a 0323     		movs	r3, #3
+ 154 001c BB77     		strb	r3, [r7, #30]
+  83:../FreeModbus/stm32/portserial_m.c **** 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+ 155              		.loc 1 83 0
+ 156 001e 1823     		movs	r3, #24
+ 157 0020 FB77     		strb	r3, [r7, #31]
+  84:../FreeModbus/stm32/portserial_m.c **** 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
+ 158              		.loc 1 84 0
+ 159 0022 4FF40073 		mov	r3, #512
+ 160 0026 BB83     		strh	r3, [r7, #28]	@ movhi
+  85:../FreeModbus/stm32/portserial_m.c **** 	GPIO_Init(GPIOA, &GPIO_InitStructure);
+ 161              		.loc 1 85 0
+ 162 0028 07F11C03 		add	r3, r7, #28
+ 163 002c 4FF40060 		mov	r0, #2048
+ 164 0030 C4F20100 		movt	r0, 16385
+ 165 0034 1946     		mov	r1, r3
+ 166 0036 FFF7FEFF 		bl	GPIO_Init
+  86:../FreeModbus/stm32/portserial_m.c **** 	//USART1_RX
+  87:../FreeModbus/stm32/portserial_m.c **** 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+ 167              		.loc 1 87 0
+ 168 003a 0423     		movs	r3, #4
+ 169 003c FB77     		strb	r3, [r7, #31]
+  88:../FreeModbus/stm32/portserial_m.c **** 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
+ 170              		.loc 1 88 0
+ 171 003e 4FF48063 		mov	r3, #1024
+ 172 0042 BB83     		strh	r3, [r7, #28]	@ movhi
+  89:../FreeModbus/stm32/portserial_m.c **** 	GPIO_Init(GPIOA, &GPIO_InitStructure);
+ 173              		.loc 1 89 0
+ 174 0044 07F11C03 		add	r3, r7, #28
+ 175 0048 4FF40060 		mov	r0, #2048
+ 176 004c C4F20100 		movt	r0, 16385
+ 177 0050 1946     		mov	r1, r3
+ 178 0052 FFF7FEFF 		bl	GPIO_Init
+  90:../FreeModbus/stm32/portserial_m.c **** 	//配置485发送和接收模式
+  91:../FreeModbus/stm32/portserial_m.c **** //    TODO   暂时先写B13 等之后组网测试时再修改
+  92:../FreeModbus/stm32/portserial_m.c **** 	//GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+  93:../FreeModbus/stm32/portserial_m.c **** 	//GPIO_InitStructure.GPIO_Pin = GPIO_Pin_13;
+  94:../FreeModbus/stm32/portserial_m.c **** 	//GPIO_Init(GPIOB, &GPIO_InitStructure);
+  95:../FreeModbus/stm32/portserial_m.c **** 	//======================串口初始化=======================================
+  96:../FreeModbus/stm32/portserial_m.c **** 	USART_InitStructure.USART_BaudRate = ulBaudRate;
+ 179              		.loc 1 96 0
+ 180 0056 3B68     		ldr	r3, [r7]
+ 181 0058 FB60     		str	r3, [r7, #12]
+  97:../FreeModbus/stm32/portserial_m.c **** 	//设置校验模式
+  98:../FreeModbus/stm32/portserial_m.c **** 	switch (eParity)
+ 182              		.loc 1 98 0
+ 183 005a 7B79     		ldrb	r3, [r7, #5]	@ zero_extendqisi2
+ 184 005c 012B     		cmp	r3, #1
+ 185 005e 08D0     		beq	.L9
+ 186 0060 022B     		cmp	r3, #2
+ 187 0062 0DD0     		beq	.L10
+ 188 0064 002B     		cmp	r3, #0
+ 189 0066 12D1     		bne	.L16
+  99:../FreeModbus/stm32/portserial_m.c **** 	{
+ 100:../FreeModbus/stm32/portserial_m.c **** 	case MB_PAR_NONE: //无校验
+ 101:../FreeModbus/stm32/portserial_m.c **** 		USART_InitStructure.USART_Parity = USART_Parity_No;
+ 190              		.loc 1 101 0
+ 191 0068 0023     		movs	r3, #0
+ 192 006a BB82     		strh	r3, [r7, #20]	@ movhi
+ 102:../FreeModbus/stm32/portserial_m.c **** 		USART_InitStructure.USART_WordLength = USART_WordLength_8b;
+ 193              		.loc 1 102 0
+ 194 006c 0023     		movs	r3, #0
+ 195 006e 3B82     		strh	r3, [r7, #16]	@ movhi
+ 103:../FreeModbus/stm32/portserial_m.c **** 		break;
+ 196              		.loc 1 103 0
+ 197 0070 0FE0     		b	.L12
+ 198              	.L9:
+ 104:../FreeModbus/stm32/portserial_m.c **** 	case MB_PAR_ODD: //奇校验
+ 105:../FreeModbus/stm32/portserial_m.c **** 		USART_InitStructure.USART_Parity = USART_Parity_Odd;
+ 199              		.loc 1 105 0
+ 200 0072 4FF4C063 		mov	r3, #1536
+ 201 0076 BB82     		strh	r3, [r7, #20]	@ movhi
+ 106:../FreeModbus/stm32/portserial_m.c **** 		USART_InitStructure.USART_WordLength = USART_WordLength_9b;
+ 202              		.loc 1 106 0
+ 203 0078 4FF48053 		mov	r3, #4096
+ 204 007c 3B82     		strh	r3, [r7, #16]	@ movhi
+ 107:../FreeModbus/stm32/portserial_m.c **** 		break;
+ 205              		.loc 1 107 0
+ 206 007e 08E0     		b	.L12
+ 207              	.L10:
+ 108:../FreeModbus/stm32/portserial_m.c **** 	case MB_PAR_EVEN: //偶校验
+ 109:../FreeModbus/stm32/portserial_m.c **** 		USART_InitStructure.USART_Parity = USART_Parity_Even;
+ 208              		.loc 1 109 0
+ 209 0080 4FF48063 		mov	r3, #1024
+ 210 0084 BB82     		strh	r3, [r7, #20]	@ movhi
+ 110:../FreeModbus/stm32/portserial_m.c **** 		USART_InitStructure.USART_WordLength = USART_WordLength_9b;
+ 211              		.loc 1 110 0
+ 212 0086 4FF48053 		mov	r3, #4096
+ 213 008a 3B82     		strh	r3, [r7, #16]	@ movhi
+ 111:../FreeModbus/stm32/portserial_m.c **** 		break;
+ 214              		.loc 1 111 0
+ 215 008c 01E0     		b	.L12
+ 216              	.L16:
+ 112:../FreeModbus/stm32/portserial_m.c **** 	default:
+ 113:../FreeModbus/stm32/portserial_m.c **** 		return FALSE;
+ 217              		.loc 1 113 0
+ 218 008e 0023     		movs	r3, #0
+ 219 0090 39E0     		b	.L15
+ 220              	.L12:
+ 114:../FreeModbus/stm32/portserial_m.c **** 	}
+ 115:../FreeModbus/stm32/portserial_m.c **** 
+ 116:../FreeModbus/stm32/portserial_m.c **** 	USART_InitStructure.USART_StopBits = USART_StopBits_1;
+ 221              		.loc 1 116 0
+ 222 0092 0023     		movs	r3, #0
+ 223 0094 7B82     		strh	r3, [r7, #18]	@ movhi
+ 117:../FreeModbus/stm32/portserial_m.c **** 	USART_InitStructure.USART_HardwareFlowControl =
+ 224              		.loc 1 117 0
+ 225 0096 0023     		movs	r3, #0
+ 226 0098 3B83     		strh	r3, [r7, #24]	@ movhi
+ 118:../FreeModbus/stm32/portserial_m.c **** 			USART_HardwareFlowControl_None;
+ 119:../FreeModbus/stm32/portserial_m.c **** 	USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
+ 227              		.loc 1 119 0
+ 228 009a 0C23     		movs	r3, #12
+ 229 009c FB82     		strh	r3, [r7, #22]	@ movhi
+ 120:../FreeModbus/stm32/portserial_m.c **** 	if (ucPORT != 1)
+ 230              		.loc 1 120 0
+ 231 009e FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 232 00a0 012B     		cmp	r3, #1
+ 233 00a2 01D0     		beq	.L14
+ 121:../FreeModbus/stm32/portserial_m.c **** 		return FALSE;
+ 234              		.loc 1 121 0
+ 235 00a4 0023     		movs	r3, #0
+ 236 00a6 2EE0     		b	.L15
+ 237              	.L14:
+ 122:../FreeModbus/stm32/portserial_m.c **** 
+ 123:../FreeModbus/stm32/portserial_m.c **** 	ENTER_CRITICAL_SECTION(); //关全局中断
+ 238              		.loc 1 123 0
+ 239 00a8 FFF7FEFF 		bl	vPortEnterCritical
+ 124:../FreeModbus/stm32/portserial_m.c **** 
+ 125:../FreeModbus/stm32/portserial_m.c **** 	USART_Init(USART1, &USART_InitStructure);
+ 240              		.loc 1 125 0
+ 241 00ac 07F10C03 		add	r3, r7, #12
+ 242 00b0 4FF46050 		mov	r0, #14336
+ 243 00b4 C4F20100 		movt	r0, 16385
+ 244 00b8 1946     		mov	r1, r3
+ 245 00ba FFF7FEFF 		bl	USART_Init
+ 126:../FreeModbus/stm32/portserial_m.c **** 	USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
+ 246              		.loc 1 126 0
+ 247 00be 4FF46050 		mov	r0, #14336
+ 248 00c2 C4F20100 		movt	r0, 16385
+ 249 00c6 40F22551 		movw	r1, #1317
+ 250 00ca 0122     		movs	r2, #1
+ 251 00cc FFF7FEFF 		bl	USART_ITConfig
+ 127:../FreeModbus/stm32/portserial_m.c **** 	USART_Cmd(USART1, ENABLE);
+ 252              		.loc 1 127 0
+ 253 00d0 4FF46050 		mov	r0, #14336
+ 254 00d4 C4F20100 		movt	r0, 16385
+ 255 00d8 0121     		movs	r1, #1
+ 256 00da FFF7FEFF 		bl	USART_Cmd
+ 128:../FreeModbus/stm32/portserial_m.c **** 
+ 129:../FreeModbus/stm32/portserial_m.c **** 	//=====================中断初始化======================================
+ 130:../FreeModbus/stm32/portserial_m.c **** 	//设置NVIC优先级分组为Group2：0-3抢占式优先级，0-3的响应式优先级
+ 131:../FreeModbus/stm32/portserial_m.c **** 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
+ 257              		.loc 1 131 0
+ 258 00de 4FF4A060 		mov	r0, #1280
+ 259 00e2 FFF7FEFF 		bl	NVIC_PriorityGroupConfig
+ 132:../FreeModbus/stm32/portserial_m.c **** 	NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQn;
+ 260              		.loc 1 132 0
+ 261 00e6 2523     		movs	r3, #37
+ 262 00e8 3B72     		strb	r3, [r7, #8]
+ 133:../FreeModbus/stm32/portserial_m.c **** 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+ 263              		.loc 1 133 0
+ 264 00ea 0023     		movs	r3, #0
+ 265 00ec 7B72     		strb	r3, [r7, #9]
+ 134:../FreeModbus/stm32/portserial_m.c **** 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
+ 266              		.loc 1 134 0
+ 267 00ee 0123     		movs	r3, #1
+ 268 00f0 BB72     		strb	r3, [r7, #10]
+ 135:../FreeModbus/stm32/portserial_m.c **** 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+ 269              		.loc 1 135 0
+ 270 00f2 0123     		movs	r3, #1
+ 271 00f4 FB72     		strb	r3, [r7, #11]
+ 136:../FreeModbus/stm32/portserial_m.c **** 	NVIC_Init(&NVIC_InitStructure);
+ 272              		.loc 1 136 0
+ 273 00f6 07F10803 		add	r3, r7, #8
+ 274 00fa 1846     		mov	r0, r3
+ 275 00fc FFF7FEFF 		bl	NVIC_Init
+ 137:../FreeModbus/stm32/portserial_m.c **** 
+ 138:../FreeModbus/stm32/portserial_m.c **** 	EXIT_CRITICAL_SECTION(); //开全局中断
+ 276              		.loc 1 138 0
+ 277 0100 FFF7FEFF 		bl	vPortExitCritical
+ 139:../FreeModbus/stm32/portserial_m.c **** 
+ 140:../FreeModbus/stm32/portserial_m.c **** 	return TRUE;
+ 278              		.loc 1 140 0
+ 279 0104 0123     		movs	r3, #1
+ 280              	.L15:
+ 141:../FreeModbus/stm32/portserial_m.c **** }
+ 281              		.loc 1 141 0
+ 282 0106 1846     		mov	r0, r3
+ 283 0108 2037     		adds	r7, r7, #32
+ 284 010a BD46     		mov	sp, r7
+ 285              		@ sp needed
+ 286 010c 80BD     		pop	{r7, pc}
+ 287              		.cfi_endproc
+ 288              	.LFE31:
+ 290 010e 00BF     		.section	.text.xMBMasterPortSerialPutByte,"ax",%progbits
+ 291              		.align	2
+ 292              		.global	xMBMasterPortSerialPutByte
+ 293              		.thumb
+ 294              		.thumb_func
+ 296              	xMBMasterPortSerialPutByte:
+ 297              	.LFB32:
+ 142:../FreeModbus/stm32/portserial_m.c **** 
+ 143:../FreeModbus/stm32/portserial_m.c **** BOOL xMBMasterPortSerialPutByte(CHAR ucByte)
+ 144:../FreeModbus/stm32/portserial_m.c **** {
+ 298              		.loc 1 144 0
+ 299              		.cfi_startproc
+ 300              		@ args = 0, pretend = 0, frame = 8
+ 301              		@ frame_needed = 1, uses_anonymous_args = 0
+ 302 0000 80B5     		push	{r7, lr}
+ 303              		.cfi_def_cfa_offset 8
+ 304              		.cfi_offset 7, -8
+ 305              		.cfi_offset 14, -4
+ 306 0002 82B0     		sub	sp, sp, #8
+ 307              		.cfi_def_cfa_offset 16
+ 308 0004 00AF     		add	r7, sp, #0
+ 309              		.cfi_def_cfa_register 7
+ 310 0006 0346     		mov	r3, r0
+ 311 0008 FB71     		strb	r3, [r7, #7]
+ 145:../FreeModbus/stm32/portserial_m.c **** 	USART_SendData(USART1, ucByte);
+ 312              		.loc 1 145 0
+ 313 000a FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 314 000c 9BB2     		uxth	r3, r3
+ 315 000e 4FF46050 		mov	r0, #14336
+ 316 0012 C4F20100 		movt	r0, 16385
+ 317 0016 1946     		mov	r1, r3
+ 318 0018 FFF7FEFF 		bl	USART_SendData
+ 146:../FreeModbus/stm32/portserial_m.c **** 	return TRUE;
+ 319              		.loc 1 146 0
+ 320 001c 0123     		movs	r3, #1
+ 147:../FreeModbus/stm32/portserial_m.c **** }
+ 321              		.loc 1 147 0
+ 322 001e 1846     		mov	r0, r3
+ 323 0020 0837     		adds	r7, r7, #8
+ 324 0022 BD46     		mov	sp, r7
+ 325              		@ sp needed
+ 326 0024 80BD     		pop	{r7, pc}
+ 327              		.cfi_endproc
+ 328              	.LFE32:
+ 330 0026 00BF     		.section	.text.xMBMasterPortSerialGetByte,"ax",%progbits
+ 331              		.align	2
+ 332              		.global	xMBMasterPortSerialGetByte
+ 333              		.thumb
+ 334              		.thumb_func
+ 336              	xMBMasterPortSerialGetByte:
+ 337              	.LFB33:
+ 148:../FreeModbus/stm32/portserial_m.c **** 
+ 149:../FreeModbus/stm32/portserial_m.c **** BOOL xMBMasterPortSerialGetByte(CHAR * pucByte)
+ 150:../FreeModbus/stm32/portserial_m.c **** {
+ 338              		.loc 1 150 0
+ 339              		.cfi_startproc
+ 340              		@ args = 0, pretend = 0, frame = 8
+ 341              		@ frame_needed = 1, uses_anonymous_args = 0
+ 342 0000 80B5     		push	{r7, lr}
+ 343              		.cfi_def_cfa_offset 8
+ 344              		.cfi_offset 7, -8
+ 345              		.cfi_offset 14, -4
+ 346 0002 82B0     		sub	sp, sp, #8
+ 347              		.cfi_def_cfa_offset 16
+ 348 0004 00AF     		add	r7, sp, #0
+ 349              		.cfi_def_cfa_register 7
+ 350 0006 7860     		str	r0, [r7, #4]
+ 151:../FreeModbus/stm32/portserial_m.c **** 	*pucByte = USART_ReceiveData(USART1);
+ 351              		.loc 1 151 0
+ 352 0008 4FF46050 		mov	r0, #14336
+ 353 000c C4F20100 		movt	r0, 16385
+ 354 0010 FFF7FEFF 		bl	USART_ReceiveData
+ 355 0014 0346     		mov	r3, r0
+ 356 0016 DAB2     		uxtb	r2, r3
+ 357 0018 7B68     		ldr	r3, [r7, #4]
+ 358 001a 1A70     		strb	r2, [r3]
+ 152:../FreeModbus/stm32/portserial_m.c **** 	return TRUE;
+ 359              		.loc 1 152 0
+ 360 001c 0123     		movs	r3, #1
+ 153:../FreeModbus/stm32/portserial_m.c **** }
+ 361              		.loc 1 153 0
+ 362 001e 1846     		mov	r0, r3
+ 363 0020 0837     		adds	r7, r7, #8
+ 364 0022 BD46     		mov	sp, r7
+ 365              		@ sp needed
+ 366 0024 80BD     		pop	{r7, pc}
+ 367              		.cfi_endproc
+ 368              	.LFE33:
+ 370 0026 00BF     		.section	.text.prvvUARTTxReadyISR,"ax",%progbits
+ 371              		.align	2
+ 372              		.thumb
+ 373              		.thumb_func
+ 375              	prvvUARTTxReadyISR:
+ 376              	.LFB34:
+ 154:../FreeModbus/stm32/portserial_m.c **** 
+ 155:../FreeModbus/stm32/portserial_m.c **** /* 
+ 156:../FreeModbus/stm32/portserial_m.c ****  * Create an interrupt handler for the transmit buffer empty interrupt
+ 157:../FreeModbus/stm32/portserial_m.c ****  * (or an equivalent) for your target processor. This function should then
+ 158:../FreeModbus/stm32/portserial_m.c ****  * call pxMBFrameCBTransmitterEmpty( ) which tells the protocol stack that
+ 159:../FreeModbus/stm32/portserial_m.c ****  * a new character can be sent. The protocol stack will then call 
+ 160:../FreeModbus/stm32/portserial_m.c ****  * xMBPortSerialPutByte( ) to send the character.
+ 161:../FreeModbus/stm32/portserial_m.c ****  */
+ 162:../FreeModbus/stm32/portserial_m.c **** void prvvUARTTxReadyISR(void)
+ 163:../FreeModbus/stm32/portserial_m.c **** {
+ 377              		.loc 1 163 0
+ 378              		.cfi_startproc
+ 379              		@ args = 0, pretend = 0, frame = 0
+ 380              		@ frame_needed = 1, uses_anonymous_args = 0
+ 381 0000 80B5     		push	{r7, lr}
+ 382              		.cfi_def_cfa_offset 8
+ 383              		.cfi_offset 7, -8
+ 384              		.cfi_offset 14, -4
+ 385 0002 00AF     		add	r7, sp, #0
+ 386              		.cfi_def_cfa_register 7
+ 164:../FreeModbus/stm32/portserial_m.c **** 	pxMBMasterFrameCBTransmitterEmpty();
+ 387              		.loc 1 164 0
+ 388 0004 40F20003 		movw	r3, #:lower16:pxMBMasterFrameCBTransmitterEmpty
+ 389 0008 C0F20003 		movt	r3, #:upper16:pxMBMasterFrameCBTransmitterEmpty
+ 390 000c 1B68     		ldr	r3, [r3]
+ 391 000e 9847     		blx	r3
+ 165:../FreeModbus/stm32/portserial_m.c **** }
+ 392              		.loc 1 165 0
+ 393 0010 80BD     		pop	{r7, pc}
+ 394              		.cfi_endproc
+ 395              	.LFE34:
+ 397 0012 00BF     		.section	.text.prvvUARTRxISR,"ax",%progbits
+ 398              		.align	2
+ 399              		.thumb
+ 400              		.thumb_func
+ 402              	prvvUARTRxISR:
+ 403              	.LFB35:
+ 166:../FreeModbus/stm32/portserial_m.c **** 
+ 167:../FreeModbus/stm32/portserial_m.c **** /* 
+ 168:../FreeModbus/stm32/portserial_m.c ****  * Create an interrupt handler for the receive interrupt for your target
+ 169:../FreeModbus/stm32/portserial_m.c ****  * processor. This function should then call pxMBFrameCBByteReceived( ). The
+ 170:../FreeModbus/stm32/portserial_m.c ****  * protocol stack will then call xMBPortSerialGetByte( ) to retrieve the
+ 171:../FreeModbus/stm32/portserial_m.c ****  * character.
+ 172:../FreeModbus/stm32/portserial_m.c ****  */
+ 173:../FreeModbus/stm32/portserial_m.c **** void prvvUARTRxISR(void)
+ 174:../FreeModbus/stm32/portserial_m.c **** {
+ 404              		.loc 1 174 0
+ 405              		.cfi_startproc
+ 406              		@ args = 0, pretend = 0, frame = 0
+ 407              		@ frame_needed = 1, uses_anonymous_args = 0
+ 408 0000 80B5     		push	{r7, lr}
+ 409              		.cfi_def_cfa_offset 8
+ 410              		.cfi_offset 7, -8
+ 411              		.cfi_offset 14, -4
+ 412 0002 00AF     		add	r7, sp, #0
+ 413              		.cfi_def_cfa_register 7
+ 175:../FreeModbus/stm32/portserial_m.c **** 	pxMBMasterFrameCBByteReceived();
+ 414              		.loc 1 175 0
+ 415 0004 40F20003 		movw	r3, #:lower16:pxMBMasterFrameCBByteReceived
+ 416 0008 C0F20003 		movt	r3, #:upper16:pxMBMasterFrameCBByteReceived
+ 417 000c 1B68     		ldr	r3, [r3]
+ 418 000e 9847     		blx	r3
+ 176:../FreeModbus/stm32/portserial_m.c **** }
+ 419              		.loc 1 176 0
+ 420 0010 80BD     		pop	{r7, pc}
+ 421              		.cfi_endproc
+ 422              	.LFE35:
+ 424 0012 00BF     		.section	.text.USART1_IRQHandler,"ax",%progbits
+ 425              		.align	2
+ 426              		.global	USART1_IRQHandler
+ 427              		.thumb
+ 428              		.thumb_func
+ 430              	USART1_IRQHandler:
+ 431              	.LFB36:
+ 177:../FreeModbus/stm32/portserial_m.c **** /*******************************************************************************
+ 178:../FreeModbus/stm32/portserial_m.c ****  * Function Name  : USART1_IRQHandler
+ 179:../FreeModbus/stm32/portserial_m.c ****  * Description    : This function handles USART1 global interrupt request.
+ 180:../FreeModbus/stm32/portserial_m.c ****  * Input          : None
+ 181:../FreeModbus/stm32/portserial_m.c ****  * Output         : None
+ 182:../FreeModbus/stm32/portserial_m.c ****  * Return         : None
+ 183:../FreeModbus/stm32/portserial_m.c ****  *******************************************************************************/
+ 184:../FreeModbus/stm32/portserial_m.c **** void USART1_IRQHandler(void)
+ 185:../FreeModbus/stm32/portserial_m.c **** {
+ 432              		.loc 1 185 0
+ 433              		.cfi_startproc
+ 434              		@ args = 0, pretend = 0, frame = 0
+ 435              		@ frame_needed = 1, uses_anonymous_args = 0
+ 436 0000 80B5     		push	{r7, lr}
+ 437              		.cfi_def_cfa_offset 8
+ 438              		.cfi_offset 7, -8
+ 439              		.cfi_offset 14, -4
+ 440 0002 00AF     		add	r7, sp, #0
+ 441              		.cfi_def_cfa_register 7
+ 186:../FreeModbus/stm32/portserial_m.c **** 	//溢出错误
+ 187:../FreeModbus/stm32/portserial_m.c **** 	if (USART_GetFlagStatus(USART1, USART_FLAG_ORE) == SET)
+ 442              		.loc 1 187 0
+ 443 0004 4FF46050 		mov	r0, #14336
+ 444 0008 C4F20100 		movt	r0, 16385
+ 445 000c 0821     		movs	r1, #8
+ 446 000e FFF7FEFF 		bl	USART_GetFlagStatus
+ 447 0012 0346     		mov	r3, r0
+ 448 0014 012B     		cmp	r3, #1
+ 449 0016 01D1     		bne	.L24
+ 188:../FreeModbus/stm32/portserial_m.c **** 	{
+ 189:../FreeModbus/stm32/portserial_m.c **** 		prvvUARTRxISR();
+ 450              		.loc 1 189 0
+ 451 0018 FFF7FEFF 		bl	prvvUARTRxISR
+ 452              	.L24:
+ 190:../FreeModbus/stm32/portserial_m.c **** 	}
+ 191:../FreeModbus/stm32/portserial_m.c **** 	//接收中断
+ 192:../FreeModbus/stm32/portserial_m.c **** 	if (USART_GetITStatus(USART1, USART_IT_RXNE) == SET)
+ 453              		.loc 1 192 0
+ 454 001c 4FF46050 		mov	r0, #14336
+ 455 0020 C4F20100 		movt	r0, 16385
+ 456 0024 40F22551 		movw	r1, #1317
+ 457 0028 FFF7FEFF 		bl	USART_GetITStatus
+ 458 002c 0346     		mov	r3, r0
+ 459 002e 012B     		cmp	r3, #1
+ 460 0030 09D1     		bne	.L25
+ 193:../FreeModbus/stm32/portserial_m.c **** 	{
+ 194:../FreeModbus/stm32/portserial_m.c **** 		USART_ClearITPendingBit(USART1, USART_IT_RXNE);
+ 461              		.loc 1 194 0
+ 462 0032 4FF46050 		mov	r0, #14336
+ 463 0036 C4F20100 		movt	r0, 16385
+ 464 003a 40F22551 		movw	r1, #1317
+ 465 003e FFF7FEFF 		bl	USART_ClearITPendingBit
+ 195:../FreeModbus/stm32/portserial_m.c **** 		prvvUARTRxISR();
+ 466              		.loc 1 195 0
+ 467 0042 FFF7FEFF 		bl	prvvUARTRxISR
+ 468              	.L25:
+ 196:../FreeModbus/stm32/portserial_m.c **** 	}
+ 197:../FreeModbus/stm32/portserial_m.c **** 	//发送中断
+ 198:../FreeModbus/stm32/portserial_m.c **** 	if (USART_GetITStatus(USART1, USART_IT_TXE) == SET)
+ 469              		.loc 1 198 0
+ 470 0046 4FF46050 		mov	r0, #14336
+ 471 004a C4F20100 		movt	r0, 16385
+ 472 004e 40F22771 		movw	r1, #1831
+ 473 0052 FFF7FEFF 		bl	USART_GetITStatus
+ 474 0056 0346     		mov	r3, r0
+ 475 0058 012B     		cmp	r3, #1
+ 476 005a 01D1     		bne	.L23
+ 199:../FreeModbus/stm32/portserial_m.c **** 	{
+ 200:../FreeModbus/stm32/portserial_m.c **** 		prvvUARTTxReadyISR();
+ 477              		.loc 1 200 0
+ 478 005c FFF7FEFF 		bl	prvvUARTTxReadyISR
+ 479              	.L23:
+ 201:../FreeModbus/stm32/portserial_m.c **** 	}
+ 202:../FreeModbus/stm32/portserial_m.c **** }
+ 480              		.loc 1 202 0
+ 481 0060 80BD     		pop	{r7, pc}
+ 482              		.cfi_endproc
+ 483              	.LFE36:
+ 485 0062 00BF     		.text
+ 486              	.Letext0:
+ 487              		.file 2 "c:\\tools\\arm-none-eabi\\include\\stdint.h"
+ 488              		.file 3 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/stm32f10x.h"
+ 489              		.file 4 "../FreeModbus/stm32/port.h"
+ 490              		.file 5 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\include/mbport.h"
+ 491              		.file 6 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\StdPeripheralDriver\\inc/stm32f10
+ 492              		.file 7 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\StdPeripheralDriver\\inc/stm32f10
+ 493              		.file 8 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\StdPeripheralDriver\\inc/misc.h"
+ 494              		.file 9 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/core_cm3.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 portserial_m.c
+C:\Users\Alex\AppData\Local\Temp\ccZCubLP.s:19     .text.vMBMasterPortSerialEnable:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccZCubLP.s:24     .text.vMBMasterPortSerialEnable:00000000 vMBMasterPortSerialEnable
+C:\Users\Alex\AppData\Local\Temp\ccZCubLP.s:90     .text.vMBMasterPortClose:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccZCubLP.s:95     .text.vMBMasterPortClose:00000000 vMBMasterPortClose
+C:\Users\Alex\AppData\Local\Temp\ccZCubLP.s:124    .text.xMBMasterPortSerialInit:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccZCubLP.s:129    .text.xMBMasterPortSerialInit:00000000 xMBMasterPortSerialInit
+C:\Users\Alex\AppData\Local\Temp\ccZCubLP.s:291    .text.xMBMasterPortSerialPutByte:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccZCubLP.s:296    .text.xMBMasterPortSerialPutByte:00000000 xMBMasterPortSerialPutByte
+C:\Users\Alex\AppData\Local\Temp\ccZCubLP.s:331    .text.xMBMasterPortSerialGetByte:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccZCubLP.s:336    .text.xMBMasterPortSerialGetByte:00000000 xMBMasterPortSerialGetByte
+C:\Users\Alex\AppData\Local\Temp\ccZCubLP.s:371    .text.prvvUARTTxReadyISR:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccZCubLP.s:375    .text.prvvUARTTxReadyISR:00000000 prvvUARTTxReadyISR
+C:\Users\Alex\AppData\Local\Temp\ccZCubLP.s:398    .text.prvvUARTRxISR:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccZCubLP.s:402    .text.prvvUARTRxISR:00000000 prvvUARTRxISR
+C:\Users\Alex\AppData\Local\Temp\ccZCubLP.s:425    .text.USART1_IRQHandler:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccZCubLP.s:430    .text.USART1_IRQHandler:00000000 USART1_IRQHandler
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.1.98ffea2db242cfdb58f411f7407f2b59
+                           .group:00000000 wm4.stm32f10x_conf.h.2.f1a8c33f0a763aeef696fee38b2b2dbc
+                           .group:00000000 wm4.mbconfig.h.33.2e295d4ff98bc723e2405a40490b5ddb
+                           .group:00000000 wm4.newlib.h.8.384a112feabb3bef7b573ae48cde2e3b
+                           .group:00000000 wm4.features.h.22.6a4ca7cd053637cc1d0db6c16f39b2d7
+                           .group:00000000 wm4.config.h.183.aa62afef667fb61d15fa64c48beb2f14
+                           .group:00000000 wm4._ansi.h.23.5644b60c990a4800b02a6e654e88f93a
+                           .group:00000000 wm4.assert.h.11.060c3dc511517628fd4f958fa9448dce
+                           .group:00000000 wm4.stdint.h.20.54ad762faa59e3c05491630641c8d8bf
+                           .group:00000000 wm4.stddef.h.263.49e44f5ee9cdd8820580fc4aa239e32a
+                           .group:00000000 wm4.inttypes.h.24.8137491c6995c2cb5d25f9bab92d7f64
+                           .group:00000000 wm4.stm32f10x.h.51.b859cb68ed44ee02c916b41cb8c68f1c
+                           .group:00000000 wm4.core_cm3.h.25.119fe996be41b62fbd915b59177e39d1
+                           .group:00000000 wm4.stm32f10x.h.522.a925aafc848b1f088438cf0e9b167b78
+                           .group:00000000 wm4.stm32f10x.h.8304.f7d8ad90959e99679b3257267c3aadfe
+                           .group:00000000 wm4.stm32f10x_rcc.h.25.fe8897e7491f2eb0cff54551d08eb765
+                           .group:00000000 wm4.portmacro.h.56.a47bdd86bc36d334ca6056492e2d709f
+                           .group:00000000 wm4.port.h.38.e5d12e3086604499e6922efe9c85cac5
+                           .group:00000000 wm4.mbproto.h.32.da85c2bdd9bdb84e975a92c999a4b490
+                           .group:00000000 wm4.stm32f10x_usart.h.25.29629c699b65db3f3efd3561f66b0bf6
+                           .group:00000000 wm4.stm32f10x_gpio.h.25.80c981af0e637567395034c576cfb3ce
+                           .group:00000000 wm4.misc.h.25.068e106f368fa5369a681ef57c106f4b
+
+UNDEFINED SYMBOLS
+USART_ITConfig
+USART_Cmd
+RCC_APB2PeriphClockCmd
+GPIO_Init
+vPortEnterCritical
+USART_Init
+NVIC_PriorityGroupConfig
+NVIC_Init
+vPortExitCritical
+USART_SendData
+USART_ReceiveData
+pxMBMasterFrameCBTransmitterEmpty
+pxMBMasterFrameCBByteReceived
+USART_GetFlagStatus
+USART_GetITStatus
+USART_ClearITPendingBit

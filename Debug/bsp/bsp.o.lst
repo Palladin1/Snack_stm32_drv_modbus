@@ -1,0 +1,214 @@
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.file	"bsp.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.section	.text.bsp_init,"ax",%progbits
+  19              		.align	2
+  20              		.global	bsp_init
+  21              		.thumb
+  22              		.thumb_func
+  24              	bsp_init:
+  25              	.LFB29:
+  26              		.file 1 "../bsp/bsp.c"
+   1:../bsp/bsp.c  **** #include "bsp.h"
+   2:../bsp/bsp.c  **** 
+   3:../bsp/bsp.c  **** #include "led.h"
+   4:../bsp/bsp.c  **** #include "lcd.h"
+   5:../bsp/bsp.c  **** 
+   6:../bsp/bsp.c  **** #include "button.h"
+   7:../bsp/bsp.c  **** #include "nv9usb.h"
+   8:../bsp/bsp.c  **** 
+   9:../bsp/bsp.c  **** 
+  10:../bsp/bsp.c  **** #include "stm32f10x.h"
+  11:../bsp/bsp.c  **** 
+  12:../bsp/bsp.c  **** #include "stm32f10x_gpio.h"
+  13:../bsp/bsp.c  **** #include "stm32f10x_rcc.h"
+  14:../bsp/bsp.c  **** #include "stm32f10x_usart.h"
+  15:../bsp/bsp.c  **** 
+  16:../bsp/bsp.c  **** #include "gpio_init.h"
+  17:../bsp/bsp.c  **** 
+  18:../bsp/bsp.c  **** void bsp_pin_init (void);
+  19:../bsp/bsp.c  **** 
+  20:../bsp/bsp.c  **** 
+  21:../bsp/bsp.c  **** int bsp_init (void)
+  22:../bsp/bsp.c  **** {
+  27              		.loc 1 22 0
+  28              		.cfi_startproc
+  29              		@ args = 0, pretend = 0, frame = 8
+  30              		@ frame_needed = 1, uses_anonymous_args = 0
+  31 0000 80B5     		push	{r7, lr}
+  32              		.cfi_def_cfa_offset 8
+  33              		.cfi_offset 7, -8
+  34              		.cfi_offset 14, -4
+  35 0002 82B0     		sub	sp, sp, #8
+  36              		.cfi_def_cfa_offset 16
+  37 0004 00AF     		add	r7, sp, #0
+  38              		.cfi_def_cfa_register 7
+  23:../bsp/bsp.c  ****    int32_t retval = 0;
+  39              		.loc 1 23 0
+  40 0006 0023     		movs	r3, #0
+  41 0008 7B60     		str	r3, [r7, #4]
+  24:../bsp/bsp.c  **** 
+  25:../bsp/bsp.c  ****    LedInit();
+  42              		.loc 1 25 0
+  43 000a FFF7FEFF 		bl	LedInit
+  26:../bsp/bsp.c  **** 
+  27:../bsp/bsp.c  **** /*
+  28:../bsp/bsp.c  ****    UartInit(UART1, 19200);
+  29:../bsp/bsp.c  ****    UartInit(UART2, 19200);
+  30:../bsp/bsp.c  **** 
+  31:../bsp/bsp.c  **** 
+  32:../bsp/bsp.c  **** 
+  33:../bsp/bsp.c  **** 
+  34:../bsp/bsp.c  **** 
+  35:../bsp/bsp.c  ****    ButtonInit();
+  36:../bsp/bsp.c  ****    LcdInit();
+  37:../bsp/bsp.c  **** 
+  38:../bsp/bsp.c  ****    ValidatorInit(90, 110);
+  39:../bsp/bsp.c  **** 
+  40:../bsp/bsp.c  ****    bsp_pin_init();
+  41:../bsp/bsp.c  **** */
+  42:../bsp/bsp.c  **** return retval;
+  44              		.loc 1 42 0
+  45 000e 7B68     		ldr	r3, [r7, #4]
+  43:../bsp/bsp.c  **** }
+  46              		.loc 1 43 0
+  47 0010 1846     		mov	r0, r3
+  48 0012 0837     		adds	r7, r7, #8
+  49 0014 BD46     		mov	sp, r7
+  50              		@ sp needed
+  51 0016 80BD     		pop	{r7, pc}
+  52              		.cfi_endproc
+  53              	.LFE29:
+  55              		.section	.text.bsp_pin_init,"ax",%progbits
+  56              		.align	2
+  57              		.global	bsp_pin_init
+  58              		.thumb
+  59              		.thumb_func
+  61              	bsp_pin_init:
+  62              	.LFB30:
+  44:../bsp/bsp.c  **** 
+  45:../bsp/bsp.c  **** void bsp_pin_init (void)
+  46:../bsp/bsp.c  **** {
+  63              		.loc 1 46 0
+  64              		.cfi_startproc
+  65              		@ args = 0, pretend = 0, frame = 0
+  66              		@ frame_needed = 1, uses_anonymous_args = 0
+  67 0000 80B5     		push	{r7, lr}
+  68              		.cfi_def_cfa_offset 8
+  69              		.cfi_offset 7, -8
+  70              		.cfi_offset 14, -4
+  71 0002 00AF     		add	r7, sp, #0
+  72              		.cfi_def_cfa_register 7
+  47:../bsp/bsp.c  ****     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC | RCC_APB2Periph_GPIOA, ENABLE);
+  73              		.loc 1 47 0
+  74 0004 1420     		movs	r0, #20
+  75 0006 0121     		movs	r1, #1
+  76 0008 FFF7FEFF 		bl	RCC_APB2PeriphClockCmd
+  48:../bsp/bsp.c  **** 
+  49:../bsp/bsp.c  ****     GPIO_MULTI_INIT(PIN_BUZZER, GPIO_MODE_OUTPUT2_PUSH_PULL_DOWN);
+  77              		.loc 1 49 0
+  78 000c 4FF48053 		mov	r3, #4096
+  79 0010 C4F20103 		movt	r3, 16385
+  80 0014 4FF40052 		mov	r2, #8192
+  81 0018 5A61     		str	r2, [r3, #20]
+  82 001a 4FF48053 		mov	r3, #4096
+  83 001e C4F20103 		movt	r3, 16385
+  84 0022 4FF48052 		mov	r2, #4096
+  85 0026 C4F20102 		movt	r2, 16385
+  86 002a 5268     		ldr	r2, [r2, #4]
+  87 002c 22F47002 		bic	r2, r2, #15728640
+  88 0030 42F40012 		orr	r2, r2, #2097152
+  89 0034 5A60     		str	r2, [r3, #4]
+  50:../bsp/bsp.c  **** 
+  51:../bsp/bsp.c  ****     GPIO_MULTI_INIT(PIN_RS485, GPIO_MODE_OUTPUT2_PUSH_PULL_UP);
+  90              		.loc 1 51 0
+  91 0036 4FF40063 		mov	r3, #2048
+  92 003a C4F20103 		movt	r3, 16385
+  93 003e 0222     		movs	r2, #2
+  94 0040 1A61     		str	r2, [r3, #16]
+  95 0042 4FF40063 		mov	r3, #2048
+  96 0046 C4F20103 		movt	r3, 16385
+  97 004a 4FF40062 		mov	r2, #2048
+  98 004e C4F20102 		movt	r2, 16385
+  99 0052 1268     		ldr	r2, [r2]
+ 100 0054 22F0F002 		bic	r2, r2, #240
+ 101 0058 42F02002 		orr	r2, r2, #32
+ 102 005c 1A60     		str	r2, [r3]
+  52:../bsp/bsp.c  **** 
+  53:../bsp/bsp.c  ****     /*initialization backup registers*/
+  54:../bsp/bsp.c  ****     RCC->APB1ENR |= RCC_APB1ENR_PWREN | RCC_APB1ENR_BKPEN; // Backup and Power interface clock enab
+ 103              		.loc 1 54 0
+ 104 005e 4FF48053 		mov	r3, #4096
+ 105 0062 C4F20203 		movt	r3, 16386
+ 106 0066 4FF48052 		mov	r2, #4096
+ 107 006a C4F20202 		movt	r2, 16386
+ 108 006e D269     		ldr	r2, [r2, #28]
+ 109 0070 42F0C052 		orr	r2, r2, #402653184
+ 110 0074 DA61     		str	r2, [r3, #28]
+  55:../bsp/bsp.c  ****     PWR->CR |= PWR_CR_DBP;                                 // Disable Backup Domain write protectio
+ 111              		.loc 1 55 0
+ 112 0076 4FF4E043 		mov	r3, #28672
+ 113 007a C4F20003 		movt	r3, 16384
+ 114 007e 4FF4E042 		mov	r2, #28672
+ 115 0082 C4F20002 		movt	r2, 16384
+ 116 0086 1268     		ldr	r2, [r2]
+ 117 0088 42F48072 		orr	r2, r2, #256
+ 118 008c 1A60     		str	r2, [r3]
+  56:../bsp/bsp.c  **** }
+ 119              		.loc 1 56 0
+ 120 008e 80BD     		pop	{r7, pc}
+ 121              		.cfi_endproc
+ 122              	.LFE30:
+ 124              		.text
+ 125              	.Letext0:
+ 126              		.file 2 "c:\\tools\\arm-none-eabi\\include\\stdint.h"
+ 127              		.file 3 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/stm32f10x.h"
+ 128              		.file 4 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/core_cm3.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 bsp.c
+C:\Users\Alex\AppData\Local\Temp\ccctbfxg.s:19     .text.bsp_init:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccctbfxg.s:24     .text.bsp_init:00000000 bsp_init
+C:\Users\Alex\AppData\Local\Temp\ccctbfxg.s:56     .text.bsp_pin_init:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccctbfxg.s:61     .text.bsp_pin_init:00000000 bsp_pin_init
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.1.98ffea2db242cfdb58f411f7407f2b59
+                           .group:00000000 wm4.stm32f10x.h.51.b859cb68ed44ee02c916b41cb8c68f1c
+                           .group:00000000 wm4.core_cm3.h.25.d35e9a9b04ec4aaebae9bf79fff061f9
+                           .group:00000000 wm4.newlib.h.8.384a112feabb3bef7b573ae48cde2e3b
+                           .group:00000000 wm4.features.h.22.6a4ca7cd053637cc1d0db6c16f39b2d7
+                           .group:00000000 wm4.config.h.183.aa62afef667fb61d15fa64c48beb2f14
+                           .group:00000000 wm4._ansi.h.23.5644b60c990a4800b02a6e654e88f93a
+                           .group:00000000 wm4.stdint.h.20.54ad762faa59e3c05491630641c8d8bf
+                           .group:00000000 wm4.core_cm3.h.113.b286929a54d33b4c8909a7132437b244
+                           .group:00000000 wm4.stm32f10x.h.522.a925aafc848b1f088438cf0e9b167b78
+                           .group:00000000 wm4.stm32f10x_conf.h.2.f1a8c33f0a763aeef696fee38b2b2dbc
+                           .group:00000000 wm4.stm32f10x.h.8304.f7d8ad90959e99679b3257267c3aadfe
+                           .group:00000000 wm4.fifo_buffer.h.2.a9dd64dba064f149d60ec513aeb95643
+                           .group:00000000 wm4.uart.h.41.5eb520a3b4b68680e686a054d8cd56d0
+                           .group:00000000 wm4.bsp.h.11.3d7a85c77566d5901ae0285eb87b0f91
+                           .group:00000000 wm4.stm32f10x_gpio.h.25.80c981af0e637567395034c576cfb3ce
+                           .group:00000000 wm4.stm32f10x_rcc.h.25.fe8897e7491f2eb0cff54551d08eb765
+                           .group:00000000 wm4.gpio_init.h.2.a6dd96fdaf98737019b1d0402db0d0ee
+                           .group:00000000 wm4.led.h.28.2becc48c20363ad4690378d5dc88818c
+                           .group:00000000 wm4.lcd.h.19.92dfc076f5378a235891573c392997cf
+                           .group:00000000 wm4.button.h.9.94017a5a40bed793f907d478eb718088
+                           .group:00000000 wm4.nv9usb.h.19.66a3c246a4b6dba66a3717c5de5d1133
+                           .group:00000000 wm4.stm32f10x_usart.h.25.29629c699b65db3f3efd3561f66b0bf6
+
+UNDEFINED SYMBOLS
+LedInit
+RCC_APB2PeriphClockCmd

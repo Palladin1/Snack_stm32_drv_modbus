@@ -1,0 +1,557 @@
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.file	"main.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.comm	xDataGetQueue,4,4
+  19              		.comm	DataBuf,30,4
+  20              		.global	name0
+  21              		.section	.data.name0,"aw",%progbits
+  22              		.align	2
+  25              	name0:
+  26 0000 D1EDB3EA 		.ascii	"\321\355\263\352\345\360\361\000"
+  26      E5F0F100 
+  27 0008 00000000 		.space	8
+  27      00000000 
+  28              		.global	name7
+  29              		.section	.data.name7,"aw",%progbits
+  30              		.align	2
+  33              	name7:
+  34 0000 4D617273 		.ascii	"Mars\000"
+  34      00
+  35 0005 00000000 		.space	11
+  35      00000000 
+  35      000000
+  36              		.global	name1
+  37              		.section	.data.name1,"aw",%progbits
+  38              		.align	2
+  41              	name1:
+  42 0000 536E696B 		.ascii	"Snikers\000"
+  42      65727300 
+  43 0008 00000000 		.space	8
+  43      00000000 
+  44              		.global	gLedCnt
+  45              		.section	.data.gLedCnt,"aw",%progbits
+  46              		.align	1
+  49              	gLedCnt:
+  50 0000 0A00     		.short	10
+  51              		.section	.rodata
+  52              		.align	2
+  53              	.LC0:
+  54 0000 5461736B 		.ascii	"Task 1\000"
+  54      203100
+  55 0007 00       		.align	2
+  56              	.LC1:
+  57 0008 5461736B 		.ascii	"Task 2\000"
+  57      203200
+  58 000f 00       		.section	.text.main,"ax",%progbits
+  59              		.align	2
+  60              		.global	main
+  61              		.thumb
+  62              		.thumb_func
+  64              	main:
+  65              	.LFB29:
+  66              		.file 1 "../main.c"
+   1:../main.c     **** /*
+   2:../main.c     **** ***************************************************************************************************
+   3:../main.c     **** *
+   4:../main.c     **** *                                            EXAMPLE CODE
+   5:../main.c     **** *
+   6:../main.c     **** *
+   7:../main.c     **** * Filename      : main.c
+   8:../main.c     **** * Version       : V1.00
+   9:../main.c     **** * Programmer(s) : Palladin
+  10:../main.c     **** ***************************************************************************************************
+  11:../main.c     **** */
+  12:../main.c     **** 
+  13:../main.c     **** /*
+  14:../main.c     **** ***************************************************************************************************
+  15:../main.c     **** *                                             INCLUDE FILES
+  16:../main.c     **** ***************************************************************************************************
+  17:../main.c     **** */
+  18:../main.c     **** #include <includes.h>
+  19:../main.c     **** 
+  20:../main.c     **** /*
+  21:../main.c     **** ***************************************************************************************************
+  22:../main.c     **** *                                             LOCAL DEFINES
+  23:../main.c     **** ***************************************************************************************************
+  24:../main.c     **** */
+  25:../main.c     **** 
+  26:../main.c     **** 
+  27:../main.c     **** 
+  28:../main.c     **** 
+  29:../main.c     **** //#define REG_INPUT_START 1001
+  30:../main.c     **** //#define REG_INPUT_NREGS 4
+  31:../main.c     **** 
+  32:../main.c     **** 
+  33:../main.c     **** /*
+  34:../main.c     **** ***************************************************************************************************
+  35:../main.c     **** *                                            LOCAL VARIABLES
+  36:../main.c     **** ***************************************************************************************************
+  37:../main.c     **** */
+  38:../main.c     **** xQueueHandle     xDataGetQueue;
+  39:../main.c     **** 
+  40:../main.c     **** //static USHORT   usRegInputStart = REG_INPUT_START;
+  41:../main.c     **** //static USHORT   usRegInputBuf[REG_INPUT_NREGS];
+  42:../main.c     **** 
+  43:../main.c     **** //xSemaphoreHandle xCamDataSemaphoreHandle;
+  44:../main.c     **** 
+  45:../main.c     **** 
+  46:../main.c     ****  u8 DataBuf[30];
+  47:../main.c     **** 
+  48:../main.c     ****  //snack_t Snack;
+  49:../main.c     **** 
+  50:../main.c     ****  u8 name0[16] = "Снікерс";
+  51:../main.c     ****  u8 name7[16] = "Mars";
+  52:../main.c     ****  u8 name1[16] = "Snikers";
+  53:../main.c     **** 
+  54:../main.c     ****  u16 gLedCnt = 10;
+  55:../main.c     **** 
+  56:../main.c     **** 
+  57:../main.c     **** /*
+  58:../main.c     **** ***************************************************************************************************
+  59:../main.c     **** *                                         FUNCTION PROTOTYPES
+  60:../main.c     **** ***************************************************************************************************
+  61:../main.c     **** */
+  62:../main.c     **** 
+  63:../main.c     **** void vTask1( void *pvParameters );
+  64:../main.c     **** void vTask2( void *pvParameters );
+  65:../main.c     **** //void vTask3( void *pvParameters );
+  66:../main.c     **** 
+  67:../main.c     **** /*
+  68:../main.c     **** ***************************************************************************************************
+  69:../main.c     **** *                                                main()
+  70:../main.c     **** *
+  71:../main.c     **** * Description : This is the standard entry point for C code.
+  72:../main.c     **** *
+  73:../main.c     **** * Arguments   : none
+  74:../main.c     **** *
+  75:../main.c     **** * Returns     : none
+  76:../main.c     **** ***************************************************************************************************
+  77:../main.c     **** */
+  78:../main.c     **** 
+  79:../main.c     **** int main( void )
+  80:../main.c     **** {
+  67              		.loc 1 80 0
+  68              		.cfi_startproc
+  69              		@ args = 0, pretend = 0, frame = 0
+  70              		@ frame_needed = 1, uses_anonymous_args = 0
+  71 0000 80B5     		push	{r7, lr}
+  72              		.cfi_def_cfa_offset 8
+  73              		.cfi_offset 7, -8
+  74              		.cfi_offset 14, -4
+  75 0002 84B0     		sub	sp, sp, #16
+  76              		.cfi_def_cfa_offset 24
+  77 0004 04AF     		add	r7, sp, #16
+  78              		.cfi_def_cfa 7, 8
+  81:../main.c     **** 
+  82:../main.c     **** 	bsp_init();
+  79              		.loc 1 82 0
+  80 0006 FFF7FEFF 		bl	bsp_init
+  83:../main.c     **** 
+  84:../main.c     **** 	//xDataGetQueue  = xQueueCreate(5, sizeof(cmd_t *));
+  85:../main.c     **** 	xDataGetQueue  = xQueueCreate(5, 6);
+  81              		.loc 1 85 0
+  82 000a 0520     		movs	r0, #5
+  83 000c 0621     		movs	r1, #6
+  84 000e 0022     		movs	r2, #0
+  85 0010 FFF7FEFF 		bl	xQueueGenericCreate
+  86 0014 0246     		mov	r2, r0
+  87 0016 40F20003 		movw	r3, #:lower16:xDataGetQueue
+  88 001a C0F20003 		movt	r3, #:upper16:xDataGetQueue
+  89 001e 1A60     		str	r2, [r3]
+  86:../main.c     **** 
+  87:../main.c     **** 
+  88:../main.c     **** 	xTaskCreate( vTask1, (signed char*) "Task 1", configMINIMAL_STACK_SIZE + 150, NULL, 1, NULL );
+  90              		.loc 1 88 0
+  91 0020 0123     		movs	r3, #1
+  92 0022 0093     		str	r3, [sp]
+  93 0024 0023     		movs	r3, #0
+  94 0026 0193     		str	r3, [sp, #4]
+  95 0028 0023     		movs	r3, #0
+  96 002a 0293     		str	r3, [sp, #8]
+  97 002c 0023     		movs	r3, #0
+  98 002e 0393     		str	r3, [sp, #12]
+  99 0030 40F20000 		movw	r0, #:lower16:vTask1
+ 100 0034 C0F20000 		movt	r0, #:upper16:vTask1
+ 101 0038 40F20001 		movw	r1, #:lower16:.LC0
+ 102 003c C0F20001 		movt	r1, #:upper16:.LC0
+ 103 0040 4FF48772 		mov	r2, #270
+ 104 0044 0023     		movs	r3, #0
+ 105 0046 FFF7FEFF 		bl	xTaskGenericCreate
+  89:../main.c     **** 	xTaskCreate( vTask2, (signed char*) "Task 2", configMINIMAL_STACK_SIZE + 300, NULL, 1, NULL );
+ 106              		.loc 1 89 0
+ 107 004a 0123     		movs	r3, #1
+ 108 004c 0093     		str	r3, [sp]
+ 109 004e 0023     		movs	r3, #0
+ 110 0050 0193     		str	r3, [sp, #4]
+ 111 0052 0023     		movs	r3, #0
+ 112 0054 0293     		str	r3, [sp, #8]
+ 113 0056 0023     		movs	r3, #0
+ 114 0058 0393     		str	r3, [sp, #12]
+ 115 005a 40F20000 		movw	r0, #:lower16:vTask2
+ 116 005e C0F20000 		movt	r0, #:upper16:vTask2
+ 117 0062 40F20001 		movw	r1, #:lower16:.LC1
+ 118 0066 C0F20001 		movt	r1, #:upper16:.LC1
+ 119 006a 4FF4D272 		mov	r2, #420
+ 120 006e 0023     		movs	r3, #0
+ 121 0070 FFF7FEFF 		bl	xTaskGenericCreate
+  90:../main.c     **** //	xTaskCreate( vTask3, (signed char*) "Task 3", configMINIMAL_STACK_SIZE + 100, NULL, 1, NULL );
+  91:../main.c     **** 
+  92:../main.c     **** 	/* Запуск шедулера, после чего задачи запустятся на выполнение. */
+  93:../main.c     **** 	vTaskStartScheduler();
+ 122              		.loc 1 93 0
+ 123 0074 FFF7FEFF 		bl	vTaskStartScheduler
+ 124              	.L2:
+  94:../main.c     **** 
+  95:../main.c     **** 	for( ;; );
+ 125              		.loc 1 95 0 discriminator 1
+ 126 0078 FEE7     		b	.L2
+ 127              		.cfi_endproc
+ 128              	.LFE29:
+ 130 007a 00BF     		.section	.text.vTask1,"ax",%progbits
+ 131              		.align	2
+ 132              		.global	vTask1
+ 133              		.thumb
+ 134              		.thumb_func
+ 136              	vTask1:
+ 137              	.LFB30:
+  96:../main.c     **** return (0);
+  97:../main.c     **** }
+  98:../main.c     **** 
+  99:../main.c     **** /*
+ 100:../main.c     **** ***************************************************************************************************
+ 101:../main.c     **** *                                          LedInit()
+ 102:../main.c     **** *
+ 103:../main.c     **** * Description : Init the ports for leds
+ 104:../main.c     **** *
+ 105:../main.c     **** * Argument(s) : none
+ 106:../main.c     **** *
+ 107:../main.c     **** * Return(s)   : none
+ 108:../main.c     **** *
+ 109:../main.c     **** * Caller(s)   : main()
+ 110:../main.c     **** *
+ 111:../main.c     **** * Note(s)     : none.
+ 112:../main.c     **** ***************************************************************************************************
+ 113:../main.c     **** */
+ 114:../main.c     **** void vTask1( void *pvParameters )
+ 115:../main.c     **** {
+ 138              		.loc 1 115 0
+ 139              		.cfi_startproc
+ 140              		@ args = 0, pretend = 0, frame = 8
+ 141              		@ frame_needed = 1, uses_anonymous_args = 0
+ 142 0000 80B5     		push	{r7, lr}
+ 143              		.cfi_def_cfa_offset 8
+ 144              		.cfi_offset 7, -8
+ 145              		.cfi_offset 14, -4
+ 146 0002 82B0     		sub	sp, sp, #8
+ 147              		.cfi_def_cfa_offset 16
+ 148 0004 00AF     		add	r7, sp, #0
+ 149              		.cfi_def_cfa_register 7
+ 150 0006 7860     		str	r0, [r7, #4]
+ 151              	.L5:
+ 116:../main.c     **** 	  static u32 cnt = 10;
+ 117:../main.c     **** 
+ 118:../main.c     **** 	    for( ;; )
+ 119:../main.c     **** 	    {
+ 120:../main.c     **** 	        cnt--;
+ 152              		.loc 1 120 0
+ 153 0008 40F20003 		movw	r3, #:lower16:cnt.6960
+ 154 000c C0F20003 		movt	r3, #:upper16:cnt.6960
+ 155 0010 1B68     		ldr	r3, [r3]
+ 156 0012 5A1E     		subs	r2, r3, #1
+ 157 0014 40F20003 		movw	r3, #:lower16:cnt.6960
+ 158 0018 C0F20003 		movt	r3, #:upper16:cnt.6960
+ 159 001c 1A60     		str	r2, [r3]
+ 121:../main.c     **** 	    	if (cnt == 0) {
+ 160              		.loc 1 121 0
+ 161 001e 40F20003 		movw	r3, #:lower16:cnt.6960
+ 162 0022 C0F20003 		movt	r3, #:upper16:cnt.6960
+ 163 0026 1B68     		ldr	r3, [r3]
+ 164 0028 002B     		cmp	r3, #0
+ 165 002a 12D1     		bne	.L4
+ 122:../main.c     **** 	    		LedToggle(LED_STATUS);
+ 166              		.loc 1 122 0
+ 167 002c 4FF48050 		mov	r0, #4096
+ 168 0030 C4F20100 		movt	r0, 16385
+ 169 0034 4FF40071 		mov	r1, #512
+ 170 0038 FFF7FEFF 		bl	LedToggle
+ 123:../main.c     **** 	    		cnt = gLedCnt;
+ 171              		.loc 1 123 0
+ 172 003c 40F20003 		movw	r3, #:lower16:gLedCnt
+ 173 0040 C0F20003 		movt	r3, #:upper16:gLedCnt
+ 174 0044 1B88     		ldrh	r3, [r3]
+ 175 0046 1A46     		mov	r2, r3
+ 176 0048 40F20003 		movw	r3, #:lower16:cnt.6960
+ 177 004c C0F20003 		movt	r3, #:upper16:cnt.6960
+ 178 0050 1A60     		str	r2, [r3]
+ 179              	.L4:
+ 124:../main.c     **** 	    		//USART_SendData(USART1, 'A');
+ 125:../main.c     **** 	    	}
+ 126:../main.c     **** 
+ 127:../main.c     ****     	//ValidatorPulseProcessing(5 / portTICK_RATE_MS);
+ 128:../main.c     ****     	//ButtonSkan(5 / portTICK_RATE_MS);
+ 129:../main.c     **** 	    	 eMBMasterReqWriteCoil( 10, 101, 0xFF00, (1) );
+ 180              		.loc 1 129 0
+ 181 0052 0A20     		movs	r0, #10
+ 182 0054 6521     		movs	r1, #101
+ 183 0056 4FF47F42 		mov	r2, #65280
+ 184 005a 0123     		movs	r3, #1
+ 185 005c FFF7FEFF 		bl	eMBMasterReqWriteCoil
+ 130:../main.c     ****         vTaskDelay(50 / portTICK_RATE_MS);
+ 186              		.loc 1 130 0
+ 187 0060 3220     		movs	r0, #50
+ 188 0062 FFF7FEFF 		bl	vTaskDelay
+ 131:../main.c     ****     }
+ 189              		.loc 1 131 0
+ 190 0066 CFE7     		b	.L5
+ 191              		.cfi_endproc
+ 192              	.LFE30:
+ 194              		.section	.text.vTask2,"ax",%progbits
+ 195              		.align	2
+ 196              		.global	vTask2
+ 197              		.thumb
+ 198              		.thumb_func
+ 200              	vTask2:
+ 201              	.LFB31:
+ 132:../main.c     **** 
+ 133:../main.c     ****     vTaskDelete (NULL);
+ 134:../main.c     **** }
+ 135:../main.c     **** 
+ 136:../main.c     **** 
+ 137:../main.c     **** 
+ 138:../main.c     **** void vTask2( void *pvParameters )
+ 139:../main.c     **** {
+ 202              		.loc 1 139 0
+ 203              		.cfi_startproc
+ 204              		@ args = 0, pretend = 0, frame = 520
+ 205              		@ frame_needed = 1, uses_anonymous_args = 0
+ 206 0000 80B5     		push	{r7, lr}
+ 207              		.cfi_def_cfa_offset 8
+ 208              		.cfi_offset 7, -8
+ 209              		.cfi_offset 14, -4
+ 210 0002 ADF5027D 		sub	sp, sp, #520
+ 211              		.cfi_def_cfa_offset 528
+ 212 0006 00AF     		add	r7, sp, #0
+ 213              		.cfi_def_cfa_register 7
+ 214 0008 3B1D     		adds	r3, r7, #4
+ 215 000a 1860     		str	r0, [r3]
+ 140:../main.c     **** 
+ 141:../main.c     **** 
+ 142:../main.c     **** //	extern uint16_t   ucSDiscInBuf[]  ;
+ 143:../main.c     **** //	extern uint16_t   ucSCoilBuf[]    ;
+ 144:../main.c     **** //	extern uint16_t   usSRegInBuf[]   ;
+ 145:../main.c     **** //	extern uint16_t   usSRegHoldBuf[] ;
+ 146:../main.c     **** 
+ 147:../main.c     **** //	extern uint16_t   usMRegInBuf[16][];
+ 148:../main.c     **** 
+ 149:../main.c     **** 	eMBErrorCode    eStatus;
+ 150:../main.c     **** 	uint16_t errorCount = 0;
+ 216              		.loc 1 150 0
+ 217 000c 0023     		movs	r3, #0
+ 218 000e A7F80632 		strh	r3, [r7, #518]	@ movhi
+ 151:../main.c     **** 
+ 152:../main.c     **** 	//eStatus = eMBInit( MB_RTU, 10, UART1, 19200, 0 );
+ 153:../main.c     **** 	vMBMasterSetDestAddress( 10 );
+ 219              		.loc 1 153 0
+ 220 0012 0A20     		movs	r0, #10
+ 221 0014 FFF7FEFF 		bl	vMBMasterSetDestAddress
+ 154:../main.c     **** 	eStatus = eMBMasterInit(MB_RTU, UART1, 19200,  MB_PAR_NONE);
+ 222              		.loc 1 154 0
+ 223 0018 0020     		movs	r0, #0
+ 224 001a 0121     		movs	r1, #1
+ 225 001c 4FF49642 		mov	r2, #19200
+ 226 0020 0023     		movs	r3, #0
+ 227 0022 FFF7FEFF 		bl	eMBMasterInit
+ 228 0026 0346     		mov	r3, r0
+ 229 0028 87F80532 		strb	r3, [r7, #517]
+ 155:../main.c     **** 
+ 156:../main.c     **** 	/* Enable the Modbus Protocol Stack. */
+ 157:../main.c     **** 	//eStatus = eMBEnable(  );
+ 158:../main.c     **** 	eStatus = eMBMasterEnable();
+ 230              		.loc 1 158 0
+ 231 002c FFF7FEFF 		bl	eMBMasterEnable
+ 232 0030 0346     		mov	r3, r0
+ 233 0032 87F80532 		strb	r3, [r7, #517]
+ 159:../main.c     **** 
+ 160:../main.c     **** 	if ( eStatus == MB_ENOERR) {
+ 161:../main.c     **** 
+ 162:../main.c     **** 	}
+ 163:../main.c     **** 
+ 164:../main.c     **** 	eMBMasterReqErrCode    errorCode = MB_MRE_NO_ERR;
+ 234              		.loc 1 164 0
+ 235 0036 0023     		movs	r3, #0
+ 236 0038 87F80432 		strb	r3, [r7, #516]
+ 165:../main.c     **** 
+ 166:../main.c     **** 	USHORT  usModbusUserData[253];
+ 167:../main.c     **** 	usModbusUserData[1] = 10;
+ 237              		.loc 1 167 0
+ 238 003c 07F10803 		add	r3, r7, #8
+ 239 0040 0A22     		movs	r2, #10
+ 240 0042 5A80     		strh	r2, [r3, #2]	@ movhi
+ 241              	.L8:
+ 168:../main.c     **** 
+ 169:../main.c     **** 
+ 170:../main.c     **** 
+ 171:../main.c     ****     for( ;; )
+ 172:../main.c     ****     {
+ 173:../main.c     **** 
+ 174:../main.c     ****     	//( void )eMBPoll(  );
+ 175:../main.c     ****     	( void )eMBMasterPoll(  );
+ 242              		.loc 1 175 0
+ 243 0044 FFF7FEFF 		bl	eMBMasterPoll
+ 176:../main.c     ****     	/* Here we simply count the number of poll cycles. */
+ 177:../main.c     ****     	//usSRegInBuf[0]++;
+ 178:../main.c     ****     	//if ( usSRegInBuf[0] == 65535)
+ 179:../main.c     ****     	//    usSRegInBuf[0] = 0;
+ 180:../main.c     **** 
+ 181:../main.c     **** //    	if ( usSRegInBuf[1] > 0)
+ 182:../main.c     **** //    		gLedCnt = usSRegInBuf[1];
+ 183:../main.c     **** 
+ 184:../main.c     **** 
+ 185:../main.c     ****     	//usSRegInBuf[1] = 'Z';
+ 186:../main.c     ****     	//usSRegInBuf[2] = 44;
+ 187:../main.c     **** 
+ 188:../main.c     ****     	//errorCode = eMBMasterReqReadInputRegister(10,100,4, (-1));
+ 189:../main.c     ****     	//errorCode = eMBMasterReqWriteCoil( 10, 100, 0xFF00, (1) );
+ 190:../main.c     ****     	if (errorCode != MB_MRE_NO_ERR) {
+ 244              		.loc 1 190 0
+ 245 0048 97F80432 		ldrb	r3, [r7, #516]	@ zero_extendqisi2
+ 246 004c 002B     		cmp	r3, #0
+ 247 004e 04D0     		beq	.L7
+ 191:../main.c     ****     	    errorCount++;
+ 248              		.loc 1 191 0
+ 249 0050 B7F80632 		ldrh	r3, [r7, #518]
+ 250 0054 0133     		adds	r3, r3, #1
+ 251 0056 A7F80632 		strh	r3, [r7, #518]	@ movhi
+ 252              	.L7:
+ 192:../main.c     ****     	}
+ 193:../main.c     **** 
+ 194:../main.c     ****      	vTaskDelay(1 / portTICK_RATE_MS);
+ 253              		.loc 1 194 0
+ 254 005a 0120     		movs	r0, #1
+ 255 005c FFF7FEFF 		bl	vTaskDelay
+ 195:../main.c     ****     }
+ 256              		.loc 1 195 0
+ 257 0060 F0E7     		b	.L8
+ 258              		.cfi_endproc
+ 259              	.LFE31:
+ 261 0062 00BF     		.section	.data.cnt.6960,"aw",%progbits
+ 262              		.align	2
+ 265              	cnt.6960:
+ 266 0000 0A000000 		.word	10
+ 267              		.text
+ 268              	.Letext0:
+ 269              		.file 2 "c:\\tools\\arm-none-eabi\\include\\stdint.h"
+ 270              		.file 3 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeRTOS\\Source\\portable\\GCC\\ARM_CM3/por
+ 271              		.file 4 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeRTOS\\Source\\include/queue.h"
+ 272              		.file 5 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/stm32f10x.h"
+ 273              		.file 6 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\stm32/port.h"
+ 274              		.file 7 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\include/mbport.h"
+ 275              		.file 8 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\include/mb.h"
+ 276              		.file 9 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\include/mb_m.h"
+ 277              		.file 10 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/core_cm3.h"
+ 278              		.file 11 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\bsp/uart.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 main.c
+                            *COM*:00000004 xDataGetQueue
+                            *COM*:0000001e DataBuf
+C:\Users\Alex\AppData\Local\Temp\ccdFPDMH.s:25     .data.name0:00000000 name0
+C:\Users\Alex\AppData\Local\Temp\ccdFPDMH.s:22     .data.name0:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccdFPDMH.s:33     .data.name7:00000000 name7
+C:\Users\Alex\AppData\Local\Temp\ccdFPDMH.s:30     .data.name7:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccdFPDMH.s:41     .data.name1:00000000 name1
+C:\Users\Alex\AppData\Local\Temp\ccdFPDMH.s:38     .data.name1:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccdFPDMH.s:49     .data.gLedCnt:00000000 gLedCnt
+C:\Users\Alex\AppData\Local\Temp\ccdFPDMH.s:46     .data.gLedCnt:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccdFPDMH.s:52     .rodata:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccdFPDMH.s:53     .rodata:00000000 .LC0
+C:\Users\Alex\AppData\Local\Temp\ccdFPDMH.s:56     .rodata:00000008 .LC1
+C:\Users\Alex\AppData\Local\Temp\ccdFPDMH.s:59     .text.main:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccdFPDMH.s:64     .text.main:00000000 main
+C:\Users\Alex\AppData\Local\Temp\ccdFPDMH.s:136    .text.vTask1:00000000 vTask1
+C:\Users\Alex\AppData\Local\Temp\ccdFPDMH.s:200    .text.vTask2:00000000 vTask2
+C:\Users\Alex\AppData\Local\Temp\ccdFPDMH.s:131    .text.vTask1:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccdFPDMH.s:265    .data.cnt.6960:00000000 cnt.6960
+C:\Users\Alex\AppData\Local\Temp\ccdFPDMH.s:195    .text.vTask2:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccdFPDMH.s:262    .data.cnt.6960:00000000 $d
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.1.98ffea2db242cfdb58f411f7407f2b59
+                           .group:00000000 wm4.newlib.h.8.384a112feabb3bef7b573ae48cde2e3b
+                           .group:00000000 wm4.features.h.22.6a4ca7cd053637cc1d0db6c16f39b2d7
+                           .group:00000000 wm4.config.h.183.aa62afef667fb61d15fa64c48beb2f14
+                           .group:00000000 wm4._ansi.h.23.5644b60c990a4800b02a6e654e88f93a
+                           .group:00000000 wm4.stdio.h.31.7c0e28c411445f3f9c5b11accf882760
+                           .group:00000000 wm4.stddef.h.184.159df79b4ca79c76561572a55985524c
+                           .group:00000000 wm4.stdarg.h.34.3a23a216c0c293b3d2ea2e89281481e6
+                           .group:00000000 wm4._default_types.h.6.5e12cd604db8ce00b62bb2f02708eaf3
+                           .group:00000000 wm4.lock.h.2.9bc98482741e5e2a9450b12934a684ea
+                           .group:00000000 wm4._types.h.59.db8450f33c1f6150c0372fa1091a887a
+                           .group:00000000 wm4.stddef.h.348.9a99de77b6ba3b4278b57e9cc6d6e349
+                           .group:00000000 wm4.reent.h.16.567d760e6ae9ad7f917851a308bd7a57
+                           .group:00000000 wm4.types.h.23.0d949686bbcadd1621462d4fa1f884f9
+                           .group:00000000 wm4.stddef.h.39.7e3d906ac58942e0b374c527445f5de5
+                           .group:00000000 wm4.types.h.2.e9cec8c90ab35f77d9f499e06ae02400
+                           .group:00000000 wm4.types.h.80.5759fe41f87f5211a5952dfb1fc64f19
+                           .group:00000000 wm4.stdio.h.2.4aa87247282eca6c8f36f9de33d8df1a
+                           .group:00000000 wm4.stdio.h.64.f9f1bb6b0d3d7e12f6a27968d859709c
+                           .group:00000000 wm4.stdint.h.10.90b695f550ca6cc3fb08fa83baf01e05
+                           .group:00000000 wm4.cdefs.h.56.efab90f4d89fbc41d6b3a5c5fb0d3d0f
+                           .group:00000000 wm4.string.h.15.dab3980bf35408a4c507182805e2de3a
+                           .group:00000000 wm4.stddef.h.158.a7efb00f6cbc6f43213b50e183c9830c
+                           .group:00000000 wm4.string.h.126.6ff3aa59129e7f66b2c273baf353e066
+                           .group:00000000 wm4.projdefs.h.55.cdae9ead80b5a2ac004f41bb277aad45
+                           .group:00000000 wm4.FreeRTOSConfig.h.64.0af6644bda3c4312e69b231c06f0909a
+                           .group:00000000 wm4.portmacro.h.56.a47bdd86bc36d334ca6056492e2d709f
+                           .group:00000000 wm4.portable.h.311.02653c2286cc0addcb8e7b32211fdde5
+                           .group:00000000 wm4.mpu_wrappers.h.55.46a4a008a193040c38098e9a5f07ff9d
+                           .group:00000000 wm4.FreeRTOS.h.132.e7bb8eabd42aedb15fb3c1f00c9886e6
+                           .group:00000000 wm4.list.h.84.e713c47e239b06424d7c93968625e34d
+                           .group:00000000 wm4.task.h.73.4db227e33e5981749a1e912949d705ee
+                           .group:00000000 wm4.queue.h.56.d30cbf78b4df45b04f1fec6b73fe4a6d
+                           .group:00000000 wm4.semphr.h.65.e235346c84e619da2e443d77f6b744b8
+                           .group:00000000 wm4.stm32f10x.h.51.b859cb68ed44ee02c916b41cb8c68f1c
+                           .group:00000000 wm4.core_cm3.h.25.119fe996be41b62fbd915b59177e39d1
+                           .group:00000000 wm4.stm32f10x.h.522.a925aafc848b1f088438cf0e9b167b78
+                           .group:00000000 wm4.stm32f10x_conf.h.2.f1a8c33f0a763aeef696fee38b2b2dbc
+                           .group:00000000 wm4.stm32f10x.h.8304.f7d8ad90959e99679b3257267c3aadfe
+                           .group:00000000 wm4.stm32f10x_rcc.h.25.fe8897e7491f2eb0cff54551d08eb765
+                           .group:00000000 wm4.stm32f10x_gpio.h.25.80c981af0e637567395034c576cfb3ce
+                           .group:00000000 wm4.stm32f10x_usart.h.25.29629c699b65db3f3efd3561f66b0bf6
+                           .group:00000000 wm4.fifo_buffer.h.2.a9dd64dba064f149d60ec513aeb95643
+                           .group:00000000 wm4.uart.h.41.5eb520a3b4b68680e686a054d8cd56d0
+                           .group:00000000 wm4.bsp.h.11.3d7a85c77566d5901ae0285eb87b0f91
+                           .group:00000000 wm4.gpio_init.h.2.a6dd96fdaf98737019b1d0402db0d0ee
+                           .group:00000000 wm4.led.h.28.2becc48c20363ad4690378d5dc88818c
+                           .group:00000000 wm4.mbconfig.h.33.2e295d4ff98bc723e2405a40490b5ddb
+                           .group:00000000 wm4.assert.h.11.060c3dc511517628fd4f958fa9448dce
+                           .group:00000000 wm4.inttypes.h.14.48280a9a5aa6f2f2d5302e2988897736
+                           .group:00000000 wm4.inttypes.h.24.8137491c6995c2cb5d25f9bab92d7f64
+                           .group:00000000 wm4.port.h.38.e5d12e3086604499e6922efe9c85cac5
+                           .group:00000000 wm4.mbproto.h.32.da85c2bdd9bdb84e975a92c999a4b490
+                           .group:00000000 wm4.mb_m.h.32.f0c90bdd8de56a09521e2eefafb4f11f
+
+UNDEFINED SYMBOLS
+bsp_init
+xQueueGenericCreate
+xTaskGenericCreate
+vTaskStartScheduler
+LedToggle
+eMBMasterReqWriteCoil
+vTaskDelay
+vMBMasterSetDestAddress
+eMBMasterInit
+eMBMasterEnable
+eMBMasterPoll

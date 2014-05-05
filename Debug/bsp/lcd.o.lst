@@ -1,0 +1,1743 @@
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.file	"lcd.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.global	convert_font_to_ua
+  19              		.section	.rodata.convert_font_to_ua,"a",%progbits
+  20              		.align	2
+  23              	convert_font_to_ua:
+  24 0000 00       		.byte	0
+  25 0001 01       		.byte	1
+  26 0002 02       		.byte	2
+  27 0003 03       		.byte	3
+  28 0004 04       		.byte	4
+  29 0005 05       		.byte	5
+  30 0006 06       		.byte	6
+  31 0007 07       		.byte	7
+  32 0008 08       		.byte	8
+  33 0009 09       		.byte	9
+  34 000a 0A       		.byte	10
+  35 000b 0B       		.byte	11
+  36 000c 0C       		.byte	12
+  37 000d 0D       		.byte	13
+  38 000e 0E       		.byte	14
+  39 000f 0F       		.byte	15
+  40 0010 10       		.byte	16
+  41 0011 11       		.byte	17
+  42 0012 12       		.byte	18
+  43 0013 13       		.byte	19
+  44 0014 14       		.byte	20
+  45 0015 15       		.byte	21
+  46 0016 16       		.byte	22
+  47 0017 17       		.byte	23
+  48 0018 18       		.byte	24
+  49 0019 19       		.byte	25
+  50 001a 1A       		.byte	26
+  51 001b 1B       		.byte	27
+  52 001c 1C       		.byte	28
+  53 001d 1D       		.byte	29
+  54 001e 1E       		.byte	30
+  55 001f 1F       		.byte	31
+  56 0020 20       		.byte	32
+  57 0021 21       		.byte	33
+  58 0022 22       		.byte	34
+  59 0023 23       		.byte	35
+  60 0024 24       		.byte	36
+  61 0025 25       		.byte	37
+  62 0026 26       		.byte	38
+  63 0027 27       		.byte	39
+  64 0028 28       		.byte	40
+  65 0029 29       		.byte	41
+  66 002a 2A       		.byte	42
+  67 002b 2B       		.byte	43
+  68 002c 2C       		.byte	44
+  69 002d 2D       		.byte	45
+  70 002e 2E       		.byte	46
+  71 002f 2F       		.byte	47
+  72 0030 30       		.byte	48
+  73 0031 31       		.byte	49
+  74 0032 32       		.byte	50
+  75 0033 33       		.byte	51
+  76 0034 34       		.byte	52
+  77 0035 35       		.byte	53
+  78 0036 36       		.byte	54
+  79 0037 37       		.byte	55
+  80 0038 38       		.byte	56
+  81 0039 39       		.byte	57
+  82 003a 3A       		.byte	58
+  83 003b 3B       		.byte	59
+  84 003c 3C       		.byte	60
+  85 003d 3D       		.byte	61
+  86 003e 3E       		.byte	62
+  87 003f 3F       		.byte	63
+  88 0040 40       		.byte	64
+  89 0041 41       		.byte	65
+  90 0042 42       		.byte	66
+  91 0043 43       		.byte	67
+  92 0044 44       		.byte	68
+  93 0045 45       		.byte	69
+  94 0046 46       		.byte	70
+  95 0047 47       		.byte	71
+  96 0048 48       		.byte	72
+  97 0049 49       		.byte	73
+  98 004a 4A       		.byte	74
+  99 004b 4B       		.byte	75
+ 100 004c 4C       		.byte	76
+ 101 004d 4D       		.byte	77
+ 102 004e 4E       		.byte	78
+ 103 004f 4F       		.byte	79
+ 104 0050 50       		.byte	80
+ 105 0051 51       		.byte	81
+ 106 0052 52       		.byte	82
+ 107 0053 53       		.byte	83
+ 108 0054 54       		.byte	84
+ 109 0055 55       		.byte	85
+ 110 0056 56       		.byte	86
+ 111 0057 57       		.byte	87
+ 112 0058 58       		.byte	88
+ 113 0059 59       		.byte	89
+ 114 005a 5A       		.byte	90
+ 115 005b 5B       		.byte	91
+ 116 005c 5C       		.byte	92
+ 117 005d 5D       		.byte	93
+ 118 005e 5E       		.byte	94
+ 119 005f 5F       		.byte	95
+ 120 0060 60       		.byte	96
+ 121 0061 61       		.byte	97
+ 122 0062 62       		.byte	98
+ 123 0063 63       		.byte	99
+ 124 0064 64       		.byte	100
+ 125 0065 65       		.byte	101
+ 126 0066 66       		.byte	102
+ 127 0067 67       		.byte	103
+ 128 0068 68       		.byte	104
+ 129 0069 69       		.byte	105
+ 130 006a 6A       		.byte	106
+ 131 006b 6B       		.byte	107
+ 132 006c 6C       		.byte	108
+ 133 006d 6D       		.byte	109
+ 134 006e 6E       		.byte	110
+ 135 006f 6F       		.byte	111
+ 136 0070 70       		.byte	112
+ 137 0071 71       		.byte	113
+ 138 0072 72       		.byte	114
+ 139 0073 73       		.byte	115
+ 140 0074 74       		.byte	116
+ 141 0075 75       		.byte	117
+ 142 0076 76       		.byte	118
+ 143 0077 77       		.byte	119
+ 144 0078 78       		.byte	120
+ 145 0079 79       		.byte	121
+ 146 007a 7A       		.byte	122
+ 147 007b 7B       		.byte	123
+ 148 007c 7C       		.byte	124
+ 149 007d 7D       		.byte	125
+ 150 007e 7E       		.byte	126
+ 151 007f 7F       		.byte	127
+ 152 0080 80       		.byte	-128
+ 153 0081 81       		.byte	-127
+ 154 0082 82       		.byte	-126
+ 155 0083 83       		.byte	-125
+ 156 0084 84       		.byte	-124
+ 157 0085 85       		.byte	-123
+ 158 0086 86       		.byte	-122
+ 159 0087 87       		.byte	-121
+ 160 0088 88       		.byte	-120
+ 161 0089 89       		.byte	-119
+ 162 008a 8A       		.byte	-118
+ 163 008b 8B       		.byte	-117
+ 164 008c 8C       		.byte	-116
+ 165 008d 8D       		.byte	-115
+ 166 008e 8E       		.byte	-114
+ 167 008f 8F       		.byte	-113
+ 168 0090 90       		.byte	-112
+ 169 0091 91       		.byte	-111
+ 170 0092 92       		.byte	-110
+ 171 0093 93       		.byte	-109
+ 172 0094 94       		.byte	-108
+ 173 0095 95       		.byte	-107
+ 174 0096 96       		.byte	-106
+ 175 0097 97       		.byte	-105
+ 176 0098 98       		.byte	-104
+ 177 0099 99       		.byte	-103
+ 178 009a 9A       		.byte	-102
+ 179 009b 9B       		.byte	-101
+ 180 009c 9C       		.byte	-100
+ 181 009d 9D       		.byte	-99
+ 182 009e 9E       		.byte	-98
+ 183 009f 9F       		.byte	-97
+ 184 00a0 A0       		.byte	-96
+ 185 00a1 A1       		.byte	-95
+ 186 00a2 A2       		.byte	-94
+ 187 00a3 A3       		.byte	-93
+ 188 00a4 A4       		.byte	-92
+ 189 00a5 A5       		.byte	-91
+ 190 00a6 A6       		.byte	-90
+ 191 00a7 A7       		.byte	-89
+ 192 00a8 A2       		.byte	-94
+ 193 00a9 A9       		.byte	-87
+ 194 00aa 02       		.byte	2
+ 195 00ab AB       		.byte	-85
+ 196 00ac AC       		.byte	-84
+ 197 00ad AD       		.byte	-83
+ 198 00ae AE       		.byte	-82
+ 199 00af 00       		.byte	0
+ 200 00b0 B0       		.byte	-80
+ 201 00b1 B1       		.byte	-79
+ 202 00b2 04       		.byte	4
+ 203 00b3 05       		.byte	5
+ 204 00b4 B4       		.byte	-76
+ 205 00b5 B5       		.byte	-75
+ 206 00b6 B6       		.byte	-74
+ 207 00b7 B7       		.byte	-73
+ 208 00b8 B5       		.byte	-75
+ 209 00b9 B9       		.byte	-71
+ 210 00ba 03       		.byte	3
+ 211 00bb BB       		.byte	-69
+ 212 00bc BC       		.byte	-68
+ 213 00bd BD       		.byte	-67
+ 214 00be BE       		.byte	-66
+ 215 00bf 01       		.byte	1
+ 216 00c0 41       		.byte	65
+ 217 00c1 A0       		.byte	-96
+ 218 00c2 42       		.byte	66
+ 219 00c3 A1       		.byte	-95
+ 220 00c4 E0       		.byte	-32
+ 221 00c5 45       		.byte	69
+ 222 00c6 A3       		.byte	-93
+ 223 00c7 A4       		.byte	-92
+ 224 00c8 A5       		.byte	-91
+ 225 00c9 A6       		.byte	-90
+ 226 00ca 4B       		.byte	75
+ 227 00cb A7       		.byte	-89
+ 228 00cc 4D       		.byte	77
+ 229 00cd 48       		.byte	72
+ 230 00ce 4F       		.byte	79
+ 231 00cf A8       		.byte	-88
+ 232 00d0 50       		.byte	80
+ 233 00d1 43       		.byte	67
+ 234 00d2 54       		.byte	84
+ 235 00d3 A9       		.byte	-87
+ 236 00d4 AA       		.byte	-86
+ 237 00d5 58       		.byte	88
+ 238 00d6 E1       		.byte	-31
+ 239 00d7 AB       		.byte	-85
+ 240 00d8 AC       		.byte	-84
+ 241 00d9 E2       		.byte	-30
+ 242 00da AD       		.byte	-83
+ 243 00db AE       		.byte	-82
+ 244 00dc 62       		.byte	98
+ 245 00dd AF       		.byte	-81
+ 246 00de B0       		.byte	-80
+ 247 00df B1       		.byte	-79
+ 248 00e0 61       		.byte	97
+ 249 00e1 B2       		.byte	-78
+ 250 00e2 B3       		.byte	-77
+ 251 00e3 B4       		.byte	-76
+ 252 00e4 E3       		.byte	-29
+ 253 00e5 65       		.byte	101
+ 254 00e6 B6       		.byte	-74
+ 255 00e7 B7       		.byte	-73
+ 256 00e8 B8       		.byte	-72
+ 257 00e9 B9       		.byte	-71
+ 258 00ea BA       		.byte	-70
+ 259 00eb BB       		.byte	-69
+ 260 00ec BC       		.byte	-68
+ 261 00ed BD       		.byte	-67
+ 262 00ee 6F       		.byte	111
+ 263 00ef BE       		.byte	-66
+ 264 00f0 70       		.byte	112
+ 265 00f1 63       		.byte	99
+ 266 00f2 BF       		.byte	-65
+ 267 00f3 79       		.byte	121
+ 268 00f4 E4       		.byte	-28
+ 269 00f5 78       		.byte	120
+ 270 00f6 E5       		.byte	-27
+ 271 00f7 C0       		.byte	-64
+ 272 00f8 C1       		.byte	-63
+ 273 00f9 E6       		.byte	-26
+ 274 00fa C2       		.byte	-62
+ 275 00fb C3       		.byte	-61
+ 276 00fc C4       		.byte	-60
+ 277 00fd C5       		.byte	-59
+ 278 00fe C6       		.byte	-58
+ 279 00ff C7       		.byte	-57
+ 280              		.global	symbol_ua_1
+ 281              		.section	.rodata.symbol_ua_1,"a",%progbits
+ 282              		.align	2
+ 285              	symbol_ua_1:
+ 286 0000 0A       		.byte	10
+ 287 0001 0E       		.byte	14
+ 288 0002 04       		.byte	4
+ 289 0003 04       		.byte	4
+ 290 0004 04       		.byte	4
+ 291 0005 04       		.byte	4
+ 292 0006 0E       		.byte	14
+ 293 0007 00       		.byte	0
+ 294              		.global	symbol_ua_2
+ 295              		.section	.rodata.symbol_ua_2,"a",%progbits
+ 296              		.align	2
+ 299              	symbol_ua_2:
+ 300 0000 0A       		.byte	10
+ 301 0001 00       		.byte	0
+ 302 0002 04       		.byte	4
+ 303 0003 04       		.byte	4
+ 304 0004 04       		.byte	4
+ 305 0005 04       		.byte	4
+ 306 0006 04       		.byte	4
+ 307 0007 00       		.byte	0
+ 308              		.global	symbol_ua_3
+ 309              		.section	.rodata.symbol_ua_3,"a",%progbits
+ 310              		.align	2
+ 313              	symbol_ua_3:
+ 314 0000 0E       		.byte	14
+ 315 0001 11       		.byte	17
+ 316 0002 10       		.byte	16
+ 317 0003 1C       		.byte	28
+ 318 0004 10       		.byte	16
+ 319 0005 11       		.byte	17
+ 320 0006 0E       		.byte	14
+ 321 0007 00       		.byte	0
+ 322              		.global	symbol_ua_4
+ 323              		.section	.rodata.symbol_ua_4,"a",%progbits
+ 324              		.align	2
+ 327              	symbol_ua_4:
+ 328 0000 00       		.byte	0
+ 329 0001 00       		.byte	0
+ 330 0002 0E       		.byte	14
+ 331 0003 11       		.byte	17
+ 332 0004 1C       		.byte	28
+ 333 0005 11       		.byte	17
+ 334 0006 0E       		.byte	14
+ 335 0007 00       		.byte	0
+ 336              		.global	symbol_ua_5
+ 337              		.section	.rodata.symbol_ua_5,"a",%progbits
+ 338              		.align	2
+ 341              	symbol_ua_5:
+ 342 0000 00       		.byte	0
+ 343 0001 0E       		.byte	14
+ 344 0002 04       		.byte	4
+ 345 0003 04       		.byte	4
+ 346 0004 04       		.byte	4
+ 347 0005 04       		.byte	4
+ 348 0006 0E       		.byte	14
+ 349 0007 00       		.byte	0
+ 350              		.global	symbol_ua_6
+ 351              		.section	.rodata.symbol_ua_6,"a",%progbits
+ 352              		.align	2
+ 355              	symbol_ua_6:
+ 356 0000 04       		.byte	4
+ 357 0001 00       		.byte	0
+ 358 0002 04       		.byte	4
+ 359 0003 04       		.byte	4
+ 360 0004 04       		.byte	4
+ 361 0005 04       		.byte	4
+ 362 0006 04       		.byte	4
+ 363 0007 00       		.byte	0
+ 364              		.section	.text.lcd_add_some_symbol,"ax",%progbits
+ 365              		.align	2
+ 366              		.global	lcd_add_some_symbol
+ 367              		.thumb
+ 368              		.thumb_func
+ 370              	lcd_add_some_symbol:
+ 371              	.LFB29:
+ 372              		.file 1 "../bsp/lcd.c"
+   1:../bsp/lcd.c  **** /*
+   2:../bsp/lcd.c  **** ***************************************************************************************************
+   3:../bsp/lcd.c  **** *
+   4:../bsp/lcd.c  **** *                                           LCD WH1602 INTERFACE
+   5:../bsp/lcd.c  **** *
+   6:../bsp/lcd.c  **** * Filename      : lcd.h
+   7:../bsp/lcd.c  **** * Version       : V1.00
+   8:../bsp/lcd.c  **** * Programmer(s) : Palladin
+   9:../bsp/lcd.c  **** ***************************************************************************************************
+  10:../bsp/lcd.c  **** */
+  11:../bsp/lcd.c  **** 
+  12:../bsp/lcd.c  **** 
+  13:../bsp/lcd.c  **** /*
+  14:../bsp/lcd.c  **** ***************************************************************************************************
+  15:../bsp/lcd.c  **** *                                             INCLUDE FILES
+  16:../bsp/lcd.c  **** ***************************************************************************************************
+  17:../bsp/lcd.c  **** */
+  18:../bsp/lcd.c  **** #include "lcd.h"
+  19:../bsp/lcd.c  **** 
+  20:../bsp/lcd.c  **** #include "stm32f10x.h"
+  21:../bsp/lcd.c  **** 
+  22:../bsp/lcd.c  **** #include "stm32f10x_gpio.h"
+  23:../bsp/lcd.c  **** #include "stm32f10x_rcc.h"
+  24:../bsp/lcd.c  **** 
+  25:../bsp/lcd.c  **** #include "gpio_init.h"
+  26:../bsp/lcd.c  **** 
+  27:../bsp/lcd.c  **** /*
+  28:../bsp/lcd.c  **** ***************************************************************************************************
+  29:../bsp/lcd.c  **** *                                            LOCAL DEFINES
+  30:../bsp/lcd.c  **** ***************************************************************************************************
+  31:../bsp/lcd.c  **** */
+  32:../bsp/lcd.c  **** 
+  33:../bsp/lcd.c  **** 
+  34:../bsp/lcd.c  **** /*
+  35:../bsp/lcd.c  **** ***************************************************************************************************
+  36:../bsp/lcd.c  **** *                                           LOCAL CONSTANTS
+  37:../bsp/lcd.c  **** ***************************************************************************************************
+  38:../bsp/lcd.c  **** */
+  39:../bsp/lcd.c  **** 
+  40:../bsp/lcd.c  **** 
+  41:../bsp/lcd.c  **** /*
+  42:../bsp/lcd.c  **** ***************************************************************************************************
+  43:../bsp/lcd.c  **** *                                          LOCAL DATA TYPES
+  44:../bsp/lcd.c  **** ***************************************************************************************************
+  45:../bsp/lcd.c  **** */
+  46:../bsp/lcd.c  **** 
+  47:../bsp/lcd.c  **** 
+  48:../bsp/lcd.c  **** /*
+  49:../bsp/lcd.c  **** ***************************************************************************************************
+  50:../bsp/lcd.c  **** *                                            LOCAL TABLES
+  51:../bsp/lcd.c  **** ***************************************************************************************************
+  52:../bsp/lcd.c  **** */
+  53:../bsp/lcd.c  **** //массив для русских символов
+  54:../bsp/lcd.c  **** /*
+  55:../bsp/lcd.c  **** const u8 convert_HD44780[256] =
+  56:../bsp/lcd.c  **** {
+  57:../bsp/lcd.c  **** 0x41,0xA0,0x42,0xA1,0xE0,0x45,0xA3,0xA4,
+  58:../bsp/lcd.c  **** 0xA5,0xA6,0x4B,0xA7,0x4D,0x48,0x4F,0xA8,
+  59:../bsp/lcd.c  **** 0x50,0x43,0x54,0xA9,0xAA,0x58,0xE1,0xAB,
+  60:../bsp/lcd.c  **** 0xAC,0xE2,0xAD,0xAE,0xAD,0xAF,0xB0,0xB1,
+  61:../bsp/lcd.c  **** 0x61,0xB2,0xB3,0xB4,0xE3,0x65,0xB6,0xB7,
+  62:../bsp/lcd.c  **** 0xB8,0xB9,0xBA,0xBB,0xBC,0xBD,0x6F,0xBE,
+  63:../bsp/lcd.c  **** 0x70,0x63,0xBF,0x79,0xE4,0x78,0xE5,0xC0,
+  64:../bsp/lcd.c  **** 0xC1,0xE6,0xC2,0xC3,0xC4,0xC5,0xC6,0xC7
+  65:../bsp/lcd.c  **** };
+  66:../bsp/lcd.c  **** */
+  67:../bsp/lcd.c  **** 
+  68:../bsp/lcd.c  **** 
+  69:../bsp/lcd.c  **** const u8 convert_font_to_ua[256] =
+  70:../bsp/lcd.c  **** {
+  71:../bsp/lcd.c  ****         0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0A,0x0B,0x0C,0x0D,0x0E,0x0F,
+  72:../bsp/lcd.c  ****         0x10,0x11,0x12,0x13,0x14,0x15,0x16,0x17,0x18,0x19,0x1A,0x1B,0x1C,0x1D,0x1E,0x1F,
+  73:../bsp/lcd.c  ****         0x20,0x21,0x22,0x23,0x24,0x25,0x26,0x27,0x28,0x29,0x2A,0x2B,0x2C,0x2D,0x2E,0x2F,
+  74:../bsp/lcd.c  ****         0x30,0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x39,0x3A,0x3B,0x3C,0x3D,0x3E,0x3F,
+  75:../bsp/lcd.c  ****         0x40,0x41,0x42,0x43,0x44,0x45,0x46,0x47,0x48,0x49,0x4A,0x4B,0x4C,0x4D,0x4E,0x4F,
+  76:../bsp/lcd.c  ****         0x50,0x51,0x52,0x53,0x54,0x55,0x56,0x57,0x58,0x59,0x5A,0x5B,0x5C,0x5D,0x5E,0x5F,
+  77:../bsp/lcd.c  ****         0x60,0x61,0x62,0x63,0x64,0x65,0x66,0x67,0x68,0x69,0x6A,0x6B,0x6C,0x6D,0x6E,0x6F,
+  78:../bsp/lcd.c  ****         0x70,0x71,0x72,0x73,0x74,0x75,0x76,0x77,0x78,0x79,0x7A,0x7B,0x7C,0x7D,0x7E,0x7F,
+  79:../bsp/lcd.c  ****         0x80,0x81,0x82,0x83,0x84,0x85,0x86,0x87,0x88,0x89,0x8A,0x8B,0x8C,0x8D,0x8E,0x8F,
+  80:../bsp/lcd.c  ****         0x90,0x91,0x92,0x93,0x94,0x95,0x96,0x97,0x98,0x99,0x9A,0x9B,0x9C,0x9D,0x9E,0x9F,
+  81:../bsp/lcd.c  ****         0xA0,0xA1,0xA2,0xA3,0xA4,0xA5,0xA6,0xA7,0xA2,0xA9,/*0xAA*/0x02/**/,0xAB,0xAC,0xAD,0xAE,/*0x
+  82:../bsp/lcd.c  ****         0xB0,0xB1,/*0xB2*/0x04/**/,/*0xB3*/0x05/**/,0xB4,0xB5,0xB6,0xB7,0xB5,0xB9,/*0xBA*/0x03/**/,
+  83:../bsp/lcd.c  ****         0x41,0xA0,0x42,0xA1,0xE0,0x45,0xA3,0xA4,0xA5,0xA6,0x4B,0xA7,0x4D,0x48,0x4F,0xA8,
+  84:../bsp/lcd.c  ****         0x50,0x43,0x54,0xA9,0xAA,0x58,0xE1,0xAB,0xAC,0xE2,0xAD,0xAE,0x62,0xAF,0xB0,0xB1,
+  85:../bsp/lcd.c  ****         0x61,0xB2,0xB3,0xB4,0xE3,0x65,0xB6,0xB7,0xB8,0xB9,0xBA,0xBB,0xBC,0xBD,0x6F,0xBE,
+  86:../bsp/lcd.c  ****         0x70,0x63,0xBF,0x79,0xE4,0x78,0xE5,0xC0,0xC1,0xE6,0xC2,0xC3,0xC4,0xC5,0xC6,0xC7
+  87:../bsp/lcd.c  **** };
+  88:../bsp/lcd.c  **** 
+  89:../bsp/lcd.c  **** /*Symbol - */
+  90:../bsp/lcd.c  **** const u8 symbol_ua_1[8] =
+  91:../bsp/lcd.c  **** {
+  92:../bsp/lcd.c  **** 	0b00001010,
+  93:../bsp/lcd.c  **** 	0b00001110,
+  94:../bsp/lcd.c  **** 	0b00000100,
+  95:../bsp/lcd.c  **** 	0b00000100,
+  96:../bsp/lcd.c  **** 	0b00000100,
+  97:../bsp/lcd.c  **** 	0b00000100,
+  98:../bsp/lcd.c  **** 	0b00001110,
+  99:../bsp/lcd.c  **** 	0b00000000
+ 100:../bsp/lcd.c  **** };
+ 101:../bsp/lcd.c  **** /*Symbol - */
+ 102:../bsp/lcd.c  **** const u8 symbol_ua_2[8] =
+ 103:../bsp/lcd.c  **** {
+ 104:../bsp/lcd.c  **** 	0b00001010,
+ 105:../bsp/lcd.c  **** 	0b00000000,
+ 106:../bsp/lcd.c  **** 	0b00000100,
+ 107:../bsp/lcd.c  **** 	0b00000100,
+ 108:../bsp/lcd.c  **** 	0b00000100,
+ 109:../bsp/lcd.c  **** 	0b00000100,
+ 110:../bsp/lcd.c  **** 	0b00000100,
+ 111:../bsp/lcd.c  **** 	0b00000000
+ 112:../bsp/lcd.c  **** };
+ 113:../bsp/lcd.c  **** /*Symbol - */
+ 114:../bsp/lcd.c  **** const u8 symbol_ua_3[8] =
+ 115:../bsp/lcd.c  **** {
+ 116:../bsp/lcd.c  **** 	0b00001110,
+ 117:../bsp/lcd.c  **** 	0b00010001,
+ 118:../bsp/lcd.c  **** 	0b00010000,
+ 119:../bsp/lcd.c  **** 	0b00011100,
+ 120:../bsp/lcd.c  **** 	0b00010000,
+ 121:../bsp/lcd.c  **** 	0b00010001,
+ 122:../bsp/lcd.c  **** 	0b00001110,
+ 123:../bsp/lcd.c  **** 	0b00000000
+ 124:../bsp/lcd.c  **** };
+ 125:../bsp/lcd.c  **** /*Symbol - */
+ 126:../bsp/lcd.c  **** const u8 symbol_ua_4[8] =
+ 127:../bsp/lcd.c  **** {
+ 128:../bsp/lcd.c  **** 	0b00000000,
+ 129:../bsp/lcd.c  **** 	0b00000000,
+ 130:../bsp/lcd.c  **** 	0b00001110,
+ 131:../bsp/lcd.c  **** 	0b00010001,
+ 132:../bsp/lcd.c  **** 	0b00011100,
+ 133:../bsp/lcd.c  **** 	0b00010001,
+ 134:../bsp/lcd.c  **** 	0b00001110,
+ 135:../bsp/lcd.c  **** 	0b00000000
+ 136:../bsp/lcd.c  **** };
+ 137:../bsp/lcd.c  **** /*Symbol - */
+ 138:../bsp/lcd.c  **** const u8 symbol_ua_5[8] =
+ 139:../bsp/lcd.c  **** {
+ 140:../bsp/lcd.c  **** 	0b00000000,
+ 141:../bsp/lcd.c  **** 	0b00001110,
+ 142:../bsp/lcd.c  **** 	0b00000100,
+ 143:../bsp/lcd.c  **** 	0b00000100,
+ 144:../bsp/lcd.c  **** 	0b00000100,
+ 145:../bsp/lcd.c  **** 	0b00000100,
+ 146:../bsp/lcd.c  **** 	0b00001110,
+ 147:../bsp/lcd.c  **** 	0b00000000
+ 148:../bsp/lcd.c  **** };
+ 149:../bsp/lcd.c  **** /*Symbol - */
+ 150:../bsp/lcd.c  **** const u8 symbol_ua_6[8] =
+ 151:../bsp/lcd.c  **** {
+ 152:../bsp/lcd.c  **** 	0b00000100,
+ 153:../bsp/lcd.c  **** 	0b00000000,
+ 154:../bsp/lcd.c  **** 	0b00000100,
+ 155:../bsp/lcd.c  **** 	0b00000100,
+ 156:../bsp/lcd.c  **** 	0b00000100,
+ 157:../bsp/lcd.c  **** 	0b00000100,
+ 158:../bsp/lcd.c  **** 	0b00000100,
+ 159:../bsp/lcd.c  **** 	0b00000000
+ 160:../bsp/lcd.c  **** };
+ 161:../bsp/lcd.c  **** 
+ 162:../bsp/lcd.c  **** 
+ 163:../bsp/lcd.c  **** 
+ 164:../bsp/lcd.c  **** /*
+ 165:../bsp/lcd.c  **** ***************************************************************************************************
+ 166:../bsp/lcd.c  **** *                                       LOCAL GLOBAL VARIABLES
+ 167:../bsp/lcd.c  **** ***************************************************************************************************
+ 168:../bsp/lcd.c  **** */
+ 169:../bsp/lcd.c  **** 
+ 170:../bsp/lcd.c  **** 
+ 171:../bsp/lcd.c  **** 
+ 172:../bsp/lcd.c  **** /*
+ 173:../bsp/lcd.c  **** ***************************************************************************************************
+ 174:../bsp/lcd.c  **** *                                      LOCAL FUNCTION PROTOTYPES
+ 175:../bsp/lcd.c  **** ***************************************************************************************************
+ 176:../bsp/lcd.c  **** */
+ 177:../bsp/lcd.c  **** static void lcd_hw_init(void);
+ 178:../bsp/lcd.c  **** static void lcd_write(uint8_t data);
+ 179:../bsp/lcd.c  **** static void lcd_command_write(uint8_t data);
+ 180:../bsp/lcd.c  **** static void lcd_data_write(uint8_t data);
+ 181:../bsp/lcd.c  **** static void delay_ms(u32 a);
+ 182:../bsp/lcd.c  **** 
+ 183:../bsp/lcd.c  **** /*
+ 184:../bsp/lcd.c  **** ***************************************************************************************************
+ 185:../bsp/lcd.c  **** *                                     LOCAL CONFIGURATION ERRORS
+ 186:../bsp/lcd.c  **** ***************************************************************************************************
+ 187:../bsp/lcd.c  **** */
+ 188:../bsp/lcd.c  **** 
+ 189:../bsp/lcd.c  **** /*
+ 190:../bsp/lcd.c  **** ***************************************************************************************************
+ 191:../bsp/lcd.c  **** *                                           LOCAL FUNCTIONS
+ 192:../bsp/lcd.c  **** ***************************************************************************************************
+ 193:../bsp/lcd.c  **** */
+ 194:../bsp/lcd.c  **** /*
+ 195:../bsp/lcd.c  **** u8 lcd_epson_rus(u8 c){
+ 196:../bsp/lcd.c  **** 
+ 197:../bsp/lcd.c  ****    if  (c > 191){
+ 198:../bsp/lcd.c  ****            c= convert_HD44780[c - 192];
+ 199:../bsp/lcd.c  ****    }
+ 200:../bsp/lcd.c  **** 
+ 201:../bsp/lcd.c  **** return c;
+ 202:../bsp/lcd.c  **** }
+ 203:../bsp/lcd.c  **** */
+ 204:../bsp/lcd.c  **** 
+ 205:../bsp/lcd.c  **** void lcd_add_some_symbol (const u8 *symbol)
+ 206:../bsp/lcd.c  **** {
+ 373              		.loc 1 206 0
+ 374              		.cfi_startproc
+ 375              		@ args = 0, pretend = 0, frame = 16
+ 376              		@ frame_needed = 1, uses_anonymous_args = 0
+ 377 0000 80B5     		push	{r7, lr}
+ 378              		.cfi_def_cfa_offset 8
+ 379              		.cfi_offset 7, -8
+ 380              		.cfi_offset 14, -4
+ 381 0002 84B0     		sub	sp, sp, #16
+ 382              		.cfi_def_cfa_offset 24
+ 383 0004 00AF     		add	r7, sp, #0
+ 384              		.cfi_def_cfa_register 7
+ 385 0006 7860     		str	r0, [r7, #4]
+ 207:../bsp/lcd.c  **** 	u8 i;
+ 208:../bsp/lcd.c  **** 	for (i = 0; i < 8; i++) {
+ 386              		.loc 1 208 0
+ 387 0008 0023     		movs	r3, #0
+ 388 000a FB73     		strb	r3, [r7, #15]
+ 389 000c 0CE0     		b	.L2
+ 390              	.L3:
+ 209:../bsp/lcd.c  **** 		delay_ms(1);
+ 391              		.loc 1 209 0 discriminator 2
+ 392 000e 0120     		movs	r0, #1
+ 393 0010 FFF7FEFF 		bl	delay_ms
+ 210:../bsp/lcd.c  **** 		lcd_data_write(symbol[i]);
+ 394              		.loc 1 210 0 discriminator 2
+ 395 0014 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 396 0016 7A68     		ldr	r2, [r7, #4]
+ 397 0018 1344     		add	r3, r3, r2
+ 398 001a 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 399 001c 1846     		mov	r0, r3
+ 400 001e FFF7FEFF 		bl	lcd_data_write
+ 208:../bsp/lcd.c  **** 		delay_ms(1);
+ 401              		.loc 1 208 0 discriminator 2
+ 402 0022 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 403 0024 0133     		adds	r3, r3, #1
+ 404 0026 FB73     		strb	r3, [r7, #15]
+ 405              	.L2:
+ 208:../bsp/lcd.c  **** 		delay_ms(1);
+ 406              		.loc 1 208 0 is_stmt 0 discriminator 1
+ 407 0028 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 408 002a 072B     		cmp	r3, #7
+ 409 002c EFD9     		bls	.L3
+ 211:../bsp/lcd.c  **** 	}
+ 212:../bsp/lcd.c  **** }
+ 410              		.loc 1 212 0 is_stmt 1
+ 411 002e 1037     		adds	r7, r7, #16
+ 412 0030 BD46     		mov	sp, r7
+ 413              		@ sp needed
+ 414 0032 80BD     		pop	{r7, pc}
+ 415              		.cfi_endproc
+ 416              	.LFE29:
+ 418              		.section	.text.lcd_hw_init,"ax",%progbits
+ 419              		.align	2
+ 420              		.thumb
+ 421              		.thumb_func
+ 423              	lcd_hw_init:
+ 424              	.LFB30:
+ 213:../bsp/lcd.c  **** 
+ 214:../bsp/lcd.c  **** /*
+ 215:../bsp/lcd.c  **** ***************************************************************************************************
+ 216:../bsp/lcd.c  **** *                                          lcd_hw_init()
+ 217:../bsp/lcd.c  **** *
+ 218:../bsp/lcd.c  **** * Description : Initialize port for communication.
+ 219:../bsp/lcd.c  **** *
+ 220:../bsp/lcd.c  **** * Argument(s) : none.
+ 221:../bsp/lcd.c  **** *
+ 222:../bsp/lcd.c  **** * Return(s)   : none.
+ 223:../bsp/lcd.c  **** *
+ 224:../bsp/lcd.c  **** * Caller(s)   : Application.
+ 225:../bsp/lcd.c  **** *
+ 226:../bsp/lcd.c  **** * Note(s)     : none.
+ 227:../bsp/lcd.c  **** ***************************************************************************************************
+ 228:../bsp/lcd.c  **** */
+ 229:../bsp/lcd.c  **** 
+ 230:../bsp/lcd.c  **** static void lcd_hw_init(void)
+ 231:../bsp/lcd.c  **** {
+ 425              		.loc 1 231 0
+ 426              		.cfi_startproc
+ 427              		@ args = 0, pretend = 0, frame = 0
+ 428              		@ frame_needed = 1, uses_anonymous_args = 0
+ 429 0000 80B5     		push	{r7, lr}
+ 430              		.cfi_def_cfa_offset 8
+ 431              		.cfi_offset 7, -8
+ 432              		.cfi_offset 14, -4
+ 433 0002 00AF     		add	r7, sp, #0
+ 434              		.cfi_def_cfa_register 7
+ 232:../bsp/lcd.c  ****     // Enable GPIO Clock
+ 233:../bsp/lcd.c  ****     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
+ 435              		.loc 1 233 0
+ 436 0004 0820     		movs	r0, #8
+ 437 0006 0121     		movs	r1, #1
+ 438 0008 FFF7FEFF 		bl	RCC_APB2PeriphClockCmd
+ 234:../bsp/lcd.c  ****     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
+ 439              		.loc 1 234 0
+ 440 000c 1020     		movs	r0, #16
+ 441 000e 0121     		movs	r1, #1
+ 442 0010 FFF7FEFF 		bl	RCC_APB2PeriphClockCmd
+ 235:../bsp/lcd.c  ****     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOD, ENABLE);
+ 443              		.loc 1 235 0
+ 444 0014 2020     		movs	r0, #32
+ 445 0016 0121     		movs	r1, #1
+ 446 0018 FFF7FEFF 		bl	RCC_APB2PeriphClockCmd
+ 236:../bsp/lcd.c  **** 
+ 237:../bsp/lcd.c  ****     // Disable jtag for correct work the PB3 and PB4 pin
+ 238:../bsp/lcd.c  ****     AFIO->MAPR |= AFIO_MAPR_SWJ_CFG_JTAGDISABLE;
+ 447              		.loc 1 238 0
+ 448 001c 0023     		movs	r3, #0
+ 449 001e C4F20103 		movt	r3, 16385
+ 450 0022 0022     		movs	r2, #0
+ 451 0024 C4F20102 		movt	r2, 16385
+ 452 0028 5268     		ldr	r2, [r2, #4]
+ 453 002a 42F00072 		orr	r2, r2, #33554432
+ 454 002e 5A60     		str	r2, [r3, #4]
+ 239:../bsp/lcd.c  **** 
+ 240:../bsp/lcd.c  ****     //Initialize the LCD pins as an output
+ 241:../bsp/lcd.c  ****     GPIO_MULTI_INIT(LCD_PIN_RS, GPIO_MODE_OUTPUT2_PUSH_PULL_UP);
+ 455              		.loc 1 241 0
+ 456 0030 4FF48053 		mov	r3, #4096
+ 457 0034 C4F20103 		movt	r3, 16385
+ 458 0038 4FF48062 		mov	r2, #1024
+ 459 003c 1A61     		str	r2, [r3, #16]
+ 460 003e 4FF48053 		mov	r3, #4096
+ 461 0042 C4F20103 		movt	r3, 16385
+ 462 0046 4FF48052 		mov	r2, #4096
+ 463 004a C4F20102 		movt	r2, 16385
+ 464 004e 5268     		ldr	r2, [r2, #4]
+ 465 0050 22F47062 		bic	r2, r2, #3840
+ 466 0054 42F40072 		orr	r2, r2, #512
+ 467 0058 5A60     		str	r2, [r3, #4]
+ 242:../bsp/lcd.c  ****     GPIO_MULTI_INIT(LCD_PIN_EN, GPIO_MODE_OUTPUT2_PUSH_PULL_UP);
+ 468              		.loc 1 242 0
+ 469 005a 4FF48053 		mov	r3, #4096
+ 470 005e C4F20103 		movt	r3, 16385
+ 471 0062 4FF40062 		mov	r2, #2048
+ 472 0066 1A61     		str	r2, [r3, #16]
+ 473 0068 4FF48053 		mov	r3, #4096
+ 474 006c C4F20103 		movt	r3, 16385
+ 475 0070 4FF48052 		mov	r2, #4096
+ 476 0074 C4F20102 		movt	r2, 16385
+ 477 0078 5268     		ldr	r2, [r2, #4]
+ 478 007a 22F47042 		bic	r2, r2, #61440
+ 479 007e 42F40052 		orr	r2, r2, #8192
+ 480 0082 5A60     		str	r2, [r3, #4]
+ 243:../bsp/lcd.c  ****     GPIO_MULTI_INIT(LCD_PIN_D7, GPIO_MODE_OUTPUT2_PUSH_PULL_UP);
+ 481              		.loc 1 243 0
+ 482 0084 4FF44063 		mov	r3, #3072
+ 483 0088 C4F20103 		movt	r3, 16385
+ 484 008c 4FF40072 		mov	r2, #512
+ 485 0090 1A61     		str	r2, [r3, #16]
+ 486 0092 4FF44063 		mov	r3, #3072
+ 487 0096 C4F20103 		movt	r3, 16385
+ 488 009a 4FF44062 		mov	r2, #3072
+ 489 009e C4F20102 		movt	r2, 16385
+ 490 00a2 5268     		ldr	r2, [r2, #4]
+ 491 00a4 22F0F002 		bic	r2, r2, #240
+ 492 00a8 42F02002 		orr	r2, r2, #32
+ 493 00ac 5A60     		str	r2, [r3, #4]
+ 244:../bsp/lcd.c  ****     GPIO_MULTI_INIT(LCD_PIN_D6, GPIO_MODE_OUTPUT2_PUSH_PULL_UP);
+ 494              		.loc 1 244 0
+ 495 00ae 4FF44063 		mov	r3, #3072
+ 496 00b2 C4F20103 		movt	r3, 16385
+ 497 00b6 8022     		movs	r2, #128
+ 498 00b8 1A61     		str	r2, [r3, #16]
+ 499 00ba 4FF44063 		mov	r3, #3072
+ 500 00be C4F20103 		movt	r3, 16385
+ 501 00c2 4FF44062 		mov	r2, #3072
+ 502 00c6 C4F20102 		movt	r2, 16385
+ 503 00ca 1268     		ldr	r2, [r2]
+ 504 00cc 22F07042 		bic	r2, r2, #-268435456
+ 505 00d0 42F00052 		orr	r2, r2, #536870912
+ 506 00d4 1A60     		str	r2, [r3]
+ 245:../bsp/lcd.c  ****     GPIO_MULTI_INIT(LCD_PIN_D5, GPIO_MODE_OUTPUT2_PUSH_PULL_UP);
+ 507              		.loc 1 245 0
+ 508 00d6 4FF44063 		mov	r3, #3072
+ 509 00da C4F20103 		movt	r3, 16385
+ 510 00de 4022     		movs	r2, #64
+ 511 00e0 1A61     		str	r2, [r3, #16]
+ 512 00e2 4FF44063 		mov	r3, #3072
+ 513 00e6 C4F20103 		movt	r3, 16385
+ 514 00ea 4FF44062 		mov	r2, #3072
+ 515 00ee C4F20102 		movt	r2, 16385
+ 516 00f2 1268     		ldr	r2, [r2]
+ 517 00f4 22F07062 		bic	r2, r2, #251658240
+ 518 00f8 42F00072 		orr	r2, r2, #33554432
+ 519 00fc 1A60     		str	r2, [r3]
+ 246:../bsp/lcd.c  ****     GPIO_MULTI_INIT(LCD_PIN_D4, GPIO_MODE_OUTPUT2_PUSH_PULL_UP);
+ 520              		.loc 1 246 0
+ 521 00fe 4FF44063 		mov	r3, #3072
+ 522 0102 C4F20103 		movt	r3, 16385
+ 523 0106 2022     		movs	r2, #32
+ 524 0108 1A61     		str	r2, [r3, #16]
+ 525 010a 4FF44063 		mov	r3, #3072
+ 526 010e C4F20103 		movt	r3, 16385
+ 527 0112 4FF44062 		mov	r2, #3072
+ 528 0116 C4F20102 		movt	r2, 16385
+ 529 011a 1268     		ldr	r2, [r2]
+ 530 011c 22F47002 		bic	r2, r2, #15728640
+ 531 0120 42F40012 		orr	r2, r2, #2097152
+ 532 0124 1A60     		str	r2, [r3]
+ 247:../bsp/lcd.c  ****     GPIO_MULTI_INIT(LCD_PIN_D3, GPIO_MODE_OUTPUT2_PUSH_PULL_UP);
+ 533              		.loc 1 247 0
+ 534 0126 4FF44063 		mov	r3, #3072
+ 535 012a C4F20103 		movt	r3, 16385
+ 536 012e 1022     		movs	r2, #16
+ 537 0130 1A61     		str	r2, [r3, #16]
+ 538 0132 4FF44063 		mov	r3, #3072
+ 539 0136 C4F20103 		movt	r3, 16385
+ 540 013a 4FF44062 		mov	r2, #3072
+ 541 013e C4F20102 		movt	r2, 16385
+ 542 0142 1268     		ldr	r2, [r2]
+ 543 0144 22F47022 		bic	r2, r2, #983040
+ 544 0148 42F40032 		orr	r2, r2, #131072
+ 545 014c 1A60     		str	r2, [r3]
+ 248:../bsp/lcd.c  ****     GPIO_MULTI_INIT(LCD_PIN_D2, GPIO_MODE_OUTPUT2_PUSH_PULL_UP);
+ 546              		.loc 1 248 0
+ 547 014e 4FF44063 		mov	r3, #3072
+ 548 0152 C4F20103 		movt	r3, 16385
+ 549 0156 0822     		movs	r2, #8
+ 550 0158 1A61     		str	r2, [r3, #16]
+ 551 015a 4FF44063 		mov	r3, #3072
+ 552 015e C4F20103 		movt	r3, 16385
+ 553 0162 4FF44062 		mov	r2, #3072
+ 554 0166 C4F20102 		movt	r2, 16385
+ 555 016a 1268     		ldr	r2, [r2]
+ 556 016c 22F47042 		bic	r2, r2, #61440
+ 557 0170 42F40052 		orr	r2, r2, #8192
+ 558 0174 1A60     		str	r2, [r3]
+ 249:../bsp/lcd.c  ****     GPIO_MULTI_INIT(LCD_PIN_D1, GPIO_MODE_OUTPUT2_PUSH_PULL_UP);
+ 559              		.loc 1 249 0
+ 560 0176 4FF4A053 		mov	r3, #5120
+ 561 017a C4F20103 		movt	r3, 16385
+ 562 017e 0422     		movs	r2, #4
+ 563 0180 1A61     		str	r2, [r3, #16]
+ 564 0182 4FF4A053 		mov	r3, #5120
+ 565 0186 C4F20103 		movt	r3, 16385
+ 566 018a 4FF4A052 		mov	r2, #5120
+ 567 018e C4F20102 		movt	r2, 16385
+ 568 0192 1268     		ldr	r2, [r2]
+ 569 0194 22F47062 		bic	r2, r2, #3840
+ 570 0198 42F40072 		orr	r2, r2, #512
+ 571 019c 1A60     		str	r2, [r3]
+ 250:../bsp/lcd.c  ****     GPIO_MULTI_INIT(LCD_PIN_D0, GPIO_MODE_OUTPUT2_PUSH_PULL_UP);
+ 572              		.loc 1 250 0
+ 573 019e 4FF48053 		mov	r3, #4096
+ 574 01a2 C4F20103 		movt	r3, 16385
+ 575 01a6 4FF48052 		mov	r2, #4096
+ 576 01aa 1A61     		str	r2, [r3, #16]
+ 577 01ac 4FF48053 		mov	r3, #4096
+ 578 01b0 C4F20103 		movt	r3, 16385
+ 579 01b4 4FF48052 		mov	r2, #4096
+ 580 01b8 C4F20102 		movt	r2, 16385
+ 581 01bc 5268     		ldr	r2, [r2, #4]
+ 582 01be 22F47022 		bic	r2, r2, #983040
+ 583 01c2 42F40032 		orr	r2, r2, #131072
+ 584 01c6 5A60     		str	r2, [r3, #4]
+ 251:../bsp/lcd.c  **** 
+ 252:../bsp/lcd.c  **** }
+ 585              		.loc 1 252 0
+ 586 01c8 80BD     		pop	{r7, pc}
+ 587              		.cfi_endproc
+ 588              	.LFE30:
+ 590 01ca 00BF     		.section	.text.delay_ms,"ax",%progbits
+ 591              		.align	2
+ 592              		.thumb
+ 593              		.thumb_func
+ 595              	delay_ms:
+ 596              	.LFB31:
+ 253:../bsp/lcd.c  **** 
+ 254:../bsp/lcd.c  **** 
+ 255:../bsp/lcd.c  **** //---Функция задержки---//
+ 256:../bsp/lcd.c  **** static void delay_ms(u32 a)
+ 257:../bsp/lcd.c  **** {
+ 597              		.loc 1 257 0
+ 598              		.cfi_startproc
+ 599              		@ args = 0, pretend = 0, frame = 8
+ 600              		@ frame_needed = 1, uses_anonymous_args = 0
+ 601              		@ link register save eliminated.
+ 602 0000 80B4     		push	{r7}
+ 603              		.cfi_def_cfa_offset 4
+ 604              		.cfi_offset 7, -4
+ 605 0002 83B0     		sub	sp, sp, #12
+ 606              		.cfi_def_cfa_offset 16
+ 607 0004 00AF     		add	r7, sp, #0
+ 608              		.cfi_def_cfa_register 7
+ 609 0006 7860     		str	r0, [r7, #4]
+ 258:../bsp/lcd.c  ****     a *= 24000;
+ 610              		.loc 1 258 0
+ 611 0008 7B68     		ldr	r3, [r7, #4]
+ 612 000a 45F6C052 		movw	r2, #24000
+ 613 000e 02FB03F3 		mul	r3, r2, r3
+ 614 0012 7B60     		str	r3, [r7, #4]
+ 259:../bsp/lcd.c  ****     while(a != 0)
+ 615              		.loc 1 259 0
+ 616 0014 02E0     		b	.L6
+ 617              	.L7:
+ 260:../bsp/lcd.c  ****     {
+ 261:../bsp/lcd.c  ****         a--;
+ 618              		.loc 1 261 0
+ 619 0016 7B68     		ldr	r3, [r7, #4]
+ 620 0018 013B     		subs	r3, r3, #1
+ 621 001a 7B60     		str	r3, [r7, #4]
+ 622              	.L6:
+ 259:../bsp/lcd.c  ****     while(a != 0)
+ 623              		.loc 1 259 0 discriminator 1
+ 624 001c 7B68     		ldr	r3, [r7, #4]
+ 625 001e 002B     		cmp	r3, #0
+ 626 0020 F9D1     		bne	.L7
+ 262:../bsp/lcd.c  ****     }
+ 263:../bsp/lcd.c  **** }
+ 627              		.loc 1 263 0
+ 628 0022 0C37     		adds	r7, r7, #12
+ 629 0024 BD46     		mov	sp, r7
+ 630              		@ sp needed
+ 631 0026 5DF8047B 		ldr	r7, [sp], #4
+ 632 002a 7047     		bx	lr
+ 633              		.cfi_endproc
+ 634              	.LFE31:
+ 636              		.section	.text.lcd_write,"ax",%progbits
+ 637              		.align	2
+ 638              		.thumb
+ 639              		.thumb_func
+ 641              	lcd_write:
+ 642              	.LFB32:
+ 264:../bsp/lcd.c  **** 
+ 265:../bsp/lcd.c  **** /*
+ 266:../bsp/lcd.c  **** ***************************************************************************************************
+ 267:../bsp/lcd.c  **** *                                                lcd_write()
+ 268:../bsp/lcd.c  **** *
+ 269:../bsp/lcd.c  **** * Description : Write data to LCD.
+ 270:../bsp/lcd.c  **** *
+ 271:../bsp/lcd.c  **** * Argument(s) : data.
+ 272:../bsp/lcd.c  **** *
+ 273:../bsp/lcd.c  **** * Return(s)   : none.
+ 274:../bsp/lcd.c  **** *
+ 275:../bsp/lcd.c  **** * Caller(s)   : Application.
+ 276:../bsp/lcd.c  **** *
+ 277:../bsp/lcd.c  **** * Note(s)     :
+ 278:../bsp/lcd.c  **** ***************************************************************************************************
+ 279:../bsp/lcd.c  **** */
+ 280:../bsp/lcd.c  **** static void lcd_write(uint8_t data)
+ 281:../bsp/lcd.c  **** {
+ 643              		.loc 1 281 0
+ 644              		.cfi_startproc
+ 645              		@ args = 0, pretend = 0, frame = 8
+ 646              		@ frame_needed = 1, uses_anonymous_args = 0
+ 647 0000 80B5     		push	{r7, lr}
+ 648              		.cfi_def_cfa_offset 8
+ 649              		.cfi_offset 7, -8
+ 650              		.cfi_offset 14, -4
+ 651 0002 82B0     		sub	sp, sp, #8
+ 652              		.cfi_def_cfa_offset 16
+ 653 0004 00AF     		add	r7, sp, #0
+ 654              		.cfi_def_cfa_register 7
+ 655 0006 0346     		mov	r3, r0
+ 656 0008 FB71     		strb	r3, [r7, #7]
+ 282:../bsp/lcd.c  **** 	(data & (1 << 7)) ? GPIO_SetBits(LCD_PIN_D7) : GPIO_ResetBits(LCD_PIN_D7);
+ 657              		.loc 1 282 0
+ 658 000a FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 659 000c 5BB2     		sxtb	r3, r3
+ 660 000e 002B     		cmp	r3, #0
+ 661 0010 08DA     		bge	.L9
+ 662              		.loc 1 282 0 is_stmt 0 discriminator 1
+ 663 0012 4FF44060 		mov	r0, #3072
+ 664 0016 C4F20100 		movt	r0, 16385
+ 665 001a 4FF40071 		mov	r1, #512
+ 666 001e FFF7FEFF 		bl	GPIO_SetBits
+ 667 0022 07E0     		b	.L10
+ 668              	.L9:
+ 669              		.loc 1 282 0 discriminator 2
+ 670 0024 4FF44060 		mov	r0, #3072
+ 671 0028 C4F20100 		movt	r0, 16385
+ 672 002c 4FF40071 		mov	r1, #512
+ 673 0030 FFF7FEFF 		bl	GPIO_ResetBits
+ 674              	.L10:
+ 283:../bsp/lcd.c  **** 
+ 284:../bsp/lcd.c  **** 	(data & (1 << 6)) ? GPIO_SetBits(LCD_PIN_D6) : GPIO_ResetBits(LCD_PIN_D6);
+ 675              		.loc 1 284 0 is_stmt 1
+ 676 0034 FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 677 0036 03F04003 		and	r3, r3, #64
+ 678 003a 002B     		cmp	r3, #0
+ 679 003c 07D0     		beq	.L11
+ 680              		.loc 1 284 0 is_stmt 0 discriminator 1
+ 681 003e 4FF44060 		mov	r0, #3072
+ 682 0042 C4F20100 		movt	r0, 16385
+ 683 0046 8021     		movs	r1, #128
+ 684 0048 FFF7FEFF 		bl	GPIO_SetBits
+ 685 004c 06E0     		b	.L12
+ 686              	.L11:
+ 687              		.loc 1 284 0 discriminator 2
+ 688 004e 4FF44060 		mov	r0, #3072
+ 689 0052 C4F20100 		movt	r0, 16385
+ 690 0056 8021     		movs	r1, #128
+ 691 0058 FFF7FEFF 		bl	GPIO_ResetBits
+ 692              	.L12:
+ 285:../bsp/lcd.c  **** 
+ 286:../bsp/lcd.c  **** 	(data & (1 << 5)) ? GPIO_SetBits(LCD_PIN_D5) : GPIO_ResetBits(LCD_PIN_D5);
+ 693              		.loc 1 286 0 is_stmt 1
+ 694 005c FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 695 005e 03F02003 		and	r3, r3, #32
+ 696 0062 002B     		cmp	r3, #0
+ 697 0064 07D0     		beq	.L13
+ 698              		.loc 1 286 0 is_stmt 0 discriminator 1
+ 699 0066 4FF44060 		mov	r0, #3072
+ 700 006a C4F20100 		movt	r0, 16385
+ 701 006e 4021     		movs	r1, #64
+ 702 0070 FFF7FEFF 		bl	GPIO_SetBits
+ 703 0074 06E0     		b	.L14
+ 704              	.L13:
+ 705              		.loc 1 286 0 discriminator 2
+ 706 0076 4FF44060 		mov	r0, #3072
+ 707 007a C4F20100 		movt	r0, 16385
+ 708 007e 4021     		movs	r1, #64
+ 709 0080 FFF7FEFF 		bl	GPIO_ResetBits
+ 710              	.L14:
+ 287:../bsp/lcd.c  **** 
+ 288:../bsp/lcd.c  **** 	(data & (1 << 4)) ? GPIO_SetBits(LCD_PIN_D4) : GPIO_ResetBits(LCD_PIN_D4);
+ 711              		.loc 1 288 0 is_stmt 1
+ 712 0084 FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 713 0086 03F01003 		and	r3, r3, #16
+ 714 008a 002B     		cmp	r3, #0
+ 715 008c 07D0     		beq	.L15
+ 716              		.loc 1 288 0 is_stmt 0 discriminator 1
+ 717 008e 4FF44060 		mov	r0, #3072
+ 718 0092 C4F20100 		movt	r0, 16385
+ 719 0096 2021     		movs	r1, #32
+ 720 0098 FFF7FEFF 		bl	GPIO_SetBits
+ 721 009c 06E0     		b	.L16
+ 722              	.L15:
+ 723              		.loc 1 288 0 discriminator 2
+ 724 009e 4FF44060 		mov	r0, #3072
+ 725 00a2 C4F20100 		movt	r0, 16385
+ 726 00a6 2021     		movs	r1, #32
+ 727 00a8 FFF7FEFF 		bl	GPIO_ResetBits
+ 728              	.L16:
+ 289:../bsp/lcd.c  **** 
+ 290:../bsp/lcd.c  **** 	(data & (1 << 3)) ? GPIO_SetBits(LCD_PIN_D3) : GPIO_ResetBits(LCD_PIN_D3);
+ 729              		.loc 1 290 0 is_stmt 1
+ 730 00ac FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 731 00ae 03F00803 		and	r3, r3, #8
+ 732 00b2 002B     		cmp	r3, #0
+ 733 00b4 07D0     		beq	.L17
+ 734              		.loc 1 290 0 is_stmt 0 discriminator 1
+ 735 00b6 4FF44060 		mov	r0, #3072
+ 736 00ba C4F20100 		movt	r0, 16385
+ 737 00be 1021     		movs	r1, #16
+ 738 00c0 FFF7FEFF 		bl	GPIO_SetBits
+ 739 00c4 06E0     		b	.L18
+ 740              	.L17:
+ 741              		.loc 1 290 0 discriminator 2
+ 742 00c6 4FF44060 		mov	r0, #3072
+ 743 00ca C4F20100 		movt	r0, 16385
+ 744 00ce 1021     		movs	r1, #16
+ 745 00d0 FFF7FEFF 		bl	GPIO_ResetBits
+ 746              	.L18:
+ 291:../bsp/lcd.c  **** 
+ 292:../bsp/lcd.c  **** 	(data & (1 << 2)) ? GPIO_SetBits(LCD_PIN_D2) : GPIO_ResetBits(LCD_PIN_D2);
+ 747              		.loc 1 292 0 is_stmt 1
+ 748 00d4 FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 749 00d6 03F00403 		and	r3, r3, #4
+ 750 00da 002B     		cmp	r3, #0
+ 751 00dc 07D0     		beq	.L19
+ 752              		.loc 1 292 0 is_stmt 0 discriminator 1
+ 753 00de 4FF44060 		mov	r0, #3072
+ 754 00e2 C4F20100 		movt	r0, 16385
+ 755 00e6 0821     		movs	r1, #8
+ 756 00e8 FFF7FEFF 		bl	GPIO_SetBits
+ 757 00ec 06E0     		b	.L20
+ 758              	.L19:
+ 759              		.loc 1 292 0 discriminator 2
+ 760 00ee 4FF44060 		mov	r0, #3072
+ 761 00f2 C4F20100 		movt	r0, 16385
+ 762 00f6 0821     		movs	r1, #8
+ 763 00f8 FFF7FEFF 		bl	GPIO_ResetBits
+ 764              	.L20:
+ 293:../bsp/lcd.c  **** 
+ 294:../bsp/lcd.c  **** 	(data & (1 << 1)) ? GPIO_SetBits(LCD_PIN_D1) : GPIO_ResetBits(LCD_PIN_D1);
+ 765              		.loc 1 294 0 is_stmt 1
+ 766 00fc FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 767 00fe 03F00203 		and	r3, r3, #2
+ 768 0102 002B     		cmp	r3, #0
+ 769 0104 07D0     		beq	.L21
+ 770              		.loc 1 294 0 is_stmt 0 discriminator 1
+ 771 0106 4FF4A050 		mov	r0, #5120
+ 772 010a C4F20100 		movt	r0, 16385
+ 773 010e 0421     		movs	r1, #4
+ 774 0110 FFF7FEFF 		bl	GPIO_SetBits
+ 775 0114 06E0     		b	.L22
+ 776              	.L21:
+ 777              		.loc 1 294 0 discriminator 2
+ 778 0116 4FF4A050 		mov	r0, #5120
+ 779 011a C4F20100 		movt	r0, 16385
+ 780 011e 0421     		movs	r1, #4
+ 781 0120 FFF7FEFF 		bl	GPIO_ResetBits
+ 782              	.L22:
+ 295:../bsp/lcd.c  **** 
+ 296:../bsp/lcd.c  **** 	(data & (1 << 0)) ? GPIO_SetBits(LCD_PIN_D0) : GPIO_ResetBits(LCD_PIN_D0);
+ 783              		.loc 1 296 0 is_stmt 1
+ 784 0124 FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 785 0126 03F00103 		and	r3, r3, #1
+ 786 012a 002B     		cmp	r3, #0
+ 787 012c 08D0     		beq	.L23
+ 788              		.loc 1 296 0 is_stmt 0 discriminator 1
+ 789 012e 4FF48050 		mov	r0, #4096
+ 790 0132 C4F20100 		movt	r0, 16385
+ 791 0136 4FF48051 		mov	r1, #4096
+ 792 013a FFF7FEFF 		bl	GPIO_SetBits
+ 793 013e 07E0     		b	.L24
+ 794              	.L23:
+ 795              		.loc 1 296 0 discriminator 2
+ 796 0140 4FF48050 		mov	r0, #4096
+ 797 0144 C4F20100 		movt	r0, 16385
+ 798 0148 4FF48051 		mov	r1, #4096
+ 799 014c FFF7FEFF 		bl	GPIO_ResetBits
+ 800              	.L24:
+ 297:../bsp/lcd.c  **** 
+ 298:../bsp/lcd.c  **** 	GPIO_SetBits(LCD_PIN_EN);
+ 801              		.loc 1 298 0 is_stmt 1
+ 802 0150 4FF48050 		mov	r0, #4096
+ 803 0154 C4F20100 		movt	r0, 16385
+ 804 0158 4FF40061 		mov	r1, #2048
+ 805 015c FFF7FEFF 		bl	GPIO_SetBits
+ 299:../bsp/lcd.c  **** 	delay_ms(1);
+ 806              		.loc 1 299 0
+ 807 0160 0120     		movs	r0, #1
+ 808 0162 FFF7FEFF 		bl	delay_ms
+ 300:../bsp/lcd.c  **** 	GPIO_ResetBits(LCD_PIN_EN);
+ 809              		.loc 1 300 0
+ 810 0166 4FF48050 		mov	r0, #4096
+ 811 016a C4F20100 		movt	r0, 16385
+ 812 016e 4FF40061 		mov	r1, #2048
+ 813 0172 FFF7FEFF 		bl	GPIO_ResetBits
+ 301:../bsp/lcd.c  **** 
+ 302:../bsp/lcd.c  **** 
+ 303:../bsp/lcd.c  **** 	GPIO_SetBits(LCD_PIN_D7);
+ 814              		.loc 1 303 0
+ 815 0176 4FF44060 		mov	r0, #3072
+ 816 017a C4F20100 		movt	r0, 16385
+ 817 017e 4FF40071 		mov	r1, #512
+ 818 0182 FFF7FEFF 		bl	GPIO_SetBits
+ 304:../bsp/lcd.c  **** 	GPIO_SetBits(LCD_PIN_D6);
+ 819              		.loc 1 304 0
+ 820 0186 4FF44060 		mov	r0, #3072
+ 821 018a C4F20100 		movt	r0, 16385
+ 822 018e 8021     		movs	r1, #128
+ 823 0190 FFF7FEFF 		bl	GPIO_SetBits
+ 305:../bsp/lcd.c  **** 	GPIO_SetBits(LCD_PIN_D5);
+ 824              		.loc 1 305 0
+ 825 0194 4FF44060 		mov	r0, #3072
+ 826 0198 C4F20100 		movt	r0, 16385
+ 827 019c 4021     		movs	r1, #64
+ 828 019e FFF7FEFF 		bl	GPIO_SetBits
+ 306:../bsp/lcd.c  **** 	GPIO_SetBits(LCD_PIN_D4);
+ 829              		.loc 1 306 0
+ 830 01a2 4FF44060 		mov	r0, #3072
+ 831 01a6 C4F20100 		movt	r0, 16385
+ 832 01aa 2021     		movs	r1, #32
+ 833 01ac FFF7FEFF 		bl	GPIO_SetBits
+ 307:../bsp/lcd.c  **** 	GPIO_SetBits(LCD_PIN_D3);
+ 834              		.loc 1 307 0
+ 835 01b0 4FF44060 		mov	r0, #3072
+ 836 01b4 C4F20100 		movt	r0, 16385
+ 837 01b8 1021     		movs	r1, #16
+ 838 01ba FFF7FEFF 		bl	GPIO_SetBits
+ 308:../bsp/lcd.c  **** 	GPIO_SetBits(LCD_PIN_D2);
+ 839              		.loc 1 308 0
+ 840 01be 4FF44060 		mov	r0, #3072
+ 841 01c2 C4F20100 		movt	r0, 16385
+ 842 01c6 0821     		movs	r1, #8
+ 843 01c8 FFF7FEFF 		bl	GPIO_SetBits
+ 309:../bsp/lcd.c  **** 	GPIO_SetBits(LCD_PIN_D1);
+ 844              		.loc 1 309 0
+ 845 01cc 4FF4A050 		mov	r0, #5120
+ 846 01d0 C4F20100 		movt	r0, 16385
+ 847 01d4 0421     		movs	r1, #4
+ 848 01d6 FFF7FEFF 		bl	GPIO_SetBits
+ 310:../bsp/lcd.c  **** 	GPIO_SetBits(LCD_PIN_D0);
+ 849              		.loc 1 310 0
+ 850 01da 4FF48050 		mov	r0, #4096
+ 851 01de C4F20100 		movt	r0, 16385
+ 852 01e2 4FF48051 		mov	r1, #4096
+ 853 01e6 FFF7FEFF 		bl	GPIO_SetBits
+ 311:../bsp/lcd.c  **** 
+ 312:../bsp/lcd.c  **** }
+ 854              		.loc 1 312 0
+ 855 01ea 0837     		adds	r7, r7, #8
+ 856 01ec BD46     		mov	sp, r7
+ 857              		@ sp needed
+ 858 01ee 80BD     		pop	{r7, pc}
+ 859              		.cfi_endproc
+ 860              	.LFE32:
+ 862              		.section	.text.lcd_command_write,"ax",%progbits
+ 863              		.align	2
+ 864              		.thumb
+ 865              		.thumb_func
+ 867              	lcd_command_write:
+ 868              	.LFB33:
+ 313:../bsp/lcd.c  **** 
+ 314:../bsp/lcd.c  **** 
+ 315:../bsp/lcd.c  **** /*
+ 316:../bsp/lcd.c  **** ***************************************************************************************************
+ 317:../bsp/lcd.c  **** *                                                lcd_command_write()
+ 318:../bsp/lcd.c  **** *
+ 319:../bsp/lcd.c  **** * Description : Write the command to LCD.
+ 320:../bsp/lcd.c  **** *
+ 321:../bsp/lcd.c  **** * Argument(s) : data.
+ 322:../bsp/lcd.c  **** *
+ 323:../bsp/lcd.c  **** * Return(s)   : none.
+ 324:../bsp/lcd.c  **** *
+ 325:../bsp/lcd.c  **** * Caller(s)   : Application.
+ 326:../bsp/lcd.c  **** *
+ 327:../bsp/lcd.c  **** * Note(s)     :
+ 328:../bsp/lcd.c  **** ***************************************************************************************************
+ 329:../bsp/lcd.c  **** */
+ 330:../bsp/lcd.c  **** static void lcd_command_write(uint8_t data)
+ 331:../bsp/lcd.c  **** {
+ 869              		.loc 1 331 0
+ 870              		.cfi_startproc
+ 871              		@ args = 0, pretend = 0, frame = 8
+ 872              		@ frame_needed = 1, uses_anonymous_args = 0
+ 873 0000 80B5     		push	{r7, lr}
+ 874              		.cfi_def_cfa_offset 8
+ 875              		.cfi_offset 7, -8
+ 876              		.cfi_offset 14, -4
+ 877 0002 82B0     		sub	sp, sp, #8
+ 878              		.cfi_def_cfa_offset 16
+ 879 0004 00AF     		add	r7, sp, #0
+ 880              		.cfi_def_cfa_register 7
+ 881 0006 0346     		mov	r3, r0
+ 882 0008 FB71     		strb	r3, [r7, #7]
+ 332:../bsp/lcd.c  **** 	GPIO_ResetBits(LCD_PIN_RS);
+ 883              		.loc 1 332 0
+ 884 000a 4FF48050 		mov	r0, #4096
+ 885 000e C4F20100 		movt	r0, 16385
+ 886 0012 4FF48061 		mov	r1, #1024
+ 887 0016 FFF7FEFF 		bl	GPIO_ResetBits
+ 333:../bsp/lcd.c  **** 
+ 334:../bsp/lcd.c  **** 	lcd_write(data);
+ 888              		.loc 1 334 0
+ 889 001a FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 890 001c 1846     		mov	r0, r3
+ 891 001e FFF7FEFF 		bl	lcd_write
+ 335:../bsp/lcd.c  **** }
+ 892              		.loc 1 335 0
+ 893 0022 0837     		adds	r7, r7, #8
+ 894 0024 BD46     		mov	sp, r7
+ 895              		@ sp needed
+ 896 0026 80BD     		pop	{r7, pc}
+ 897              		.cfi_endproc
+ 898              	.LFE33:
+ 900              		.section	.text.lcd_data_write,"ax",%progbits
+ 901              		.align	2
+ 902              		.thumb
+ 903              		.thumb_func
+ 905              	lcd_data_write:
+ 906              	.LFB34:
+ 336:../bsp/lcd.c  **** 
+ 337:../bsp/lcd.c  **** /*
+ 338:../bsp/lcd.c  **** ***************************************************************************************************
+ 339:../bsp/lcd.c  **** *                                                lcd_data_write()
+ 340:../bsp/lcd.c  **** *
+ 341:../bsp/lcd.c  **** * Description : Write the data to LCD.
+ 342:../bsp/lcd.c  **** *
+ 343:../bsp/lcd.c  **** * Argument(s) : data.
+ 344:../bsp/lcd.c  **** *
+ 345:../bsp/lcd.c  **** * Return(s)   : none.
+ 346:../bsp/lcd.c  **** *
+ 347:../bsp/lcd.c  **** * Caller(s)   : Application.
+ 348:../bsp/lcd.c  **** *
+ 349:../bsp/lcd.c  **** * Note(s)     :
+ 350:../bsp/lcd.c  **** ***************************************************************************************************
+ 351:../bsp/lcd.c  **** */
+ 352:../bsp/lcd.c  **** static void lcd_data_write(uint8_t data)
+ 353:../bsp/lcd.c  **** {
+ 907              		.loc 1 353 0
+ 908              		.cfi_startproc
+ 909              		@ args = 0, pretend = 0, frame = 8
+ 910              		@ frame_needed = 1, uses_anonymous_args = 0
+ 911 0000 80B5     		push	{r7, lr}
+ 912              		.cfi_def_cfa_offset 8
+ 913              		.cfi_offset 7, -8
+ 914              		.cfi_offset 14, -4
+ 915 0002 82B0     		sub	sp, sp, #8
+ 916              		.cfi_def_cfa_offset 16
+ 917 0004 00AF     		add	r7, sp, #0
+ 918              		.cfi_def_cfa_register 7
+ 919 0006 0346     		mov	r3, r0
+ 920 0008 FB71     		strb	r3, [r7, #7]
+ 354:../bsp/lcd.c  **** 	GPIO_SetBits(LCD_PIN_RS);
+ 921              		.loc 1 354 0
+ 922 000a 4FF48050 		mov	r0, #4096
+ 923 000e C4F20100 		movt	r0, 16385
+ 924 0012 4FF48061 		mov	r1, #1024
+ 925 0016 FFF7FEFF 		bl	GPIO_SetBits
+ 355:../bsp/lcd.c  **** 
+ 356:../bsp/lcd.c  **** 	lcd_write(data);
+ 926              		.loc 1 356 0
+ 927 001a FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 928 001c 1846     		mov	r0, r3
+ 929 001e FFF7FEFF 		bl	lcd_write
+ 357:../bsp/lcd.c  **** }
+ 930              		.loc 1 357 0
+ 931 0022 0837     		adds	r7, r7, #8
+ 932 0024 BD46     		mov	sp, r7
+ 933              		@ sp needed
+ 934 0026 80BD     		pop	{r7, pc}
+ 935              		.cfi_endproc
+ 936              	.LFE34:
+ 938              		.section	.text.LcdInit,"ax",%progbits
+ 939              		.align	2
+ 940              		.global	LcdInit
+ 941              		.thumb
+ 942              		.thumb_func
+ 944              	LcdInit:
+ 945              	.LFB35:
+ 358:../bsp/lcd.c  **** 
+ 359:../bsp/lcd.c  **** 
+ 360:../bsp/lcd.c  **** /*
+ 361:../bsp/lcd.c  **** ***************************************************************************************************
+ 362:../bsp/lcd.c  **** ***************************************************************************************************
+ 363:../bsp/lcd.c  **** **                                         GLOBAL FUNCTIONS
+ 364:../bsp/lcd.c  **** ***************************************************************************************************
+ 365:../bsp/lcd.c  **** ***************************************************************************************************
+ 366:../bsp/lcd.c  **** */
+ 367:../bsp/lcd.c  **** 
+ 368:../bsp/lcd.c  **** 
+ 369:../bsp/lcd.c  **** 
+ 370:../bsp/lcd.c  **** /*
+ 371:../bsp/lcd.c  **** ***************************************************************************************************
+ 372:../bsp/lcd.c  **** *                                          LcdInit()
+ 373:../bsp/lcd.c  **** *
+ 374:../bsp/lcd.c  **** * Description : Initialize a Display.
+ 375:../bsp/lcd.c  **** *
+ 376:../bsp/lcd.c  **** * Argument(s) : baud_rate           The desire RS232 baud rate.
+ 377:../bsp/lcd.c  **** *
+ 378:../bsp/lcd.c  **** * Return(s)   : none.
+ 379:../bsp/lcd.c  **** *
+ 380:../bsp/lcd.c  **** * Caller(s)   : Application.
+ 381:../bsp/lcd.c  **** *
+ 382:../bsp/lcd.c  **** * Note(s)     : none.
+ 383:../bsp/lcd.c  **** ***************************************************************************************************
+ 384:../bsp/lcd.c  **** */
+ 385:../bsp/lcd.c  **** 
+ 386:../bsp/lcd.c  **** void LcdInit (void) {
+ 946              		.loc 1 386 0
+ 947              		.cfi_startproc
+ 948              		@ args = 0, pretend = 0, frame = 0
+ 949              		@ frame_needed = 1, uses_anonymous_args = 0
+ 950 0000 80B5     		push	{r7, lr}
+ 951              		.cfi_def_cfa_offset 8
+ 952              		.cfi_offset 7, -8
+ 953              		.cfi_offset 14, -4
+ 954 0002 00AF     		add	r7, sp, #0
+ 955              		.cfi_def_cfa_register 7
+ 387:../bsp/lcd.c  **** 
+ 388:../bsp/lcd.c  **** 	lcd_hw_init();
+ 956              		.loc 1 388 0
+ 957 0004 FFF7FEFF 		bl	lcd_hw_init
+ 389:../bsp/lcd.c  **** 
+ 390:../bsp/lcd.c  **** //	GPIO_ResetBits(LCD_PIN_EN);
+ 391:../bsp/lcd.c  **** 	GPIO_ResetBits(LCD_PIN_RS);
+ 958              		.loc 1 391 0
+ 959 0008 4FF48050 		mov	r0, #4096
+ 960 000c C4F20100 		movt	r0, 16385
+ 961 0010 4FF48061 		mov	r1, #1024
+ 962 0014 FFF7FEFF 		bl	GPIO_ResetBits
+ 392:../bsp/lcd.c  **** //	GPIO_ResetBits(LCD_PIN_D7);
+ 393:../bsp/lcd.c  **** //	GPIO_ResetBits(LCD_PIN_D6);
+ 394:../bsp/lcd.c  **** //	GPIO_ResetBits(LCD_PIN_D5);
+ 395:../bsp/lcd.c  **** //	GPIO_ResetBits(LCD_PIN_D4);
+ 396:../bsp/lcd.c  **** //	GPIO_ResetBits(LCD_PIN_D3);
+ 397:../bsp/lcd.c  **** //	GPIO_ResetBits(LCD_PIN_D2);
+ 398:../bsp/lcd.c  **** //	GPIO_ResetBits(LCD_PIN_D1);
+ 399:../bsp/lcd.c  **** //	GPIO_ResetBits(LCD_PIN_D0);
+ 400:../bsp/lcd.c  **** 
+ 401:../bsp/lcd.c  **** 	delay_ms(15);
+ 963              		.loc 1 401 0
+ 964 0018 0F20     		movs	r0, #15
+ 965 001a FFF7FEFF 		bl	delay_ms
+ 402:../bsp/lcd.c  **** 
+ 403:../bsp/lcd.c  **** 	lcd_write(LCD_CMD_RESET);
+ 966              		.loc 1 403 0
+ 967 001e 3020     		movs	r0, #48
+ 968 0020 FFF7FEFF 		bl	lcd_write
+ 404:../bsp/lcd.c  **** 	delay_ms(5);
+ 969              		.loc 1 404 0
+ 970 0024 0520     		movs	r0, #5
+ 971 0026 FFF7FEFF 		bl	delay_ms
+ 405:../bsp/lcd.c  **** 
+ 406:../bsp/lcd.c  **** 	lcd_write(LCD_CMD_RESET);
+ 972              		.loc 1 406 0
+ 973 002a 3020     		movs	r0, #48
+ 974 002c FFF7FEFF 		bl	lcd_write
+ 407:../bsp/lcd.c  **** 	delay_ms(1);
+ 975              		.loc 1 407 0
+ 976 0030 0120     		movs	r0, #1
+ 977 0032 FFF7FEFF 		bl	delay_ms
+ 408:../bsp/lcd.c  **** 
+ 409:../bsp/lcd.c  **** 	lcd_write(LCD_CMD_RESET);
+ 978              		.loc 1 409 0
+ 979 0036 3020     		movs	r0, #48
+ 980 0038 FFF7FEFF 		bl	lcd_write
+ 410:../bsp/lcd.c  **** 	delay_ms(1);
+ 981              		.loc 1 410 0
+ 982 003c 0120     		movs	r0, #1
+ 983 003e FFF7FEFF 		bl	delay_ms
+ 411:../bsp/lcd.c  **** 
+ 412:../bsp/lcd.c  **** 	lcd_write(LCD_CMD_RESET | LCD_CMD_LINES_TWO |LCD_CMD_FONT_5X8);
+ 984              		.loc 1 412 0
+ 985 0042 3820     		movs	r0, #56
+ 986 0044 FFF7FEFF 		bl	lcd_write
+ 413:../bsp/lcd.c  **** 
+ 414:../bsp/lcd.c  **** 	delay_ms(1);
+ 987              		.loc 1 414 0
+ 988 0048 0120     		movs	r0, #1
+ 989 004a FFF7FEFF 		bl	delay_ms
+ 415:../bsp/lcd.c  **** 	//lcd_write(LCD_CMD_DISPLAY_CLEAR);
+ 416:../bsp/lcd.c  **** 
+ 417:../bsp/lcd.c  **** 	delay_ms(1);
+ 990              		.loc 1 417 0
+ 991 004e 0120     		movs	r0, #1
+ 992 0050 FFF7FEFF 		bl	delay_ms
+ 418:../bsp/lcd.c  **** 
+ 419:../bsp/lcd.c  **** 
+ 420:../bsp/lcd.c  **** 	lcd_write(LCD_CMD_DISPLAY_ON | LCD_CMD_CURSOR_ON);
+ 993              		.loc 1 420 0
+ 994 0054 0E20     		movs	r0, #14
+ 995 0056 FFF7FEFF 		bl	lcd_write
+ 421:../bsp/lcd.c  ****     delay_ms(1);
+ 996              		.loc 1 421 0
+ 997 005a 0120     		movs	r0, #1
+ 998 005c FFF7FEFF 		bl	delay_ms
+ 422:../bsp/lcd.c  **** 
+ 423:../bsp/lcd.c  **** 	lcd_write(LCD_CMD_DISPLAY_CLEAR);
+ 999              		.loc 1 423 0
+ 1000 0060 0120     		movs	r0, #1
+ 1001 0062 FFF7FEFF 		bl	lcd_write
+ 424:../bsp/lcd.c  **** 
+ 425:../bsp/lcd.c  **** 
+ 426:../bsp/lcd.c  **** 	delay_ms(1);
+ 1002              		.loc 1 426 0
+ 1003 0066 0120     		movs	r0, #1
+ 1004 0068 FFF7FEFF 		bl	delay_ms
+ 427:../bsp/lcd.c  **** 	lcd_command_write(LCD_CMD_CGRAM_ADDR);
+ 1005              		.loc 1 427 0
+ 1006 006c 4020     		movs	r0, #64
+ 1007 006e FFF7FEFF 		bl	lcd_command_write
+ 428:../bsp/lcd.c  **** 	delay_ms(1);
+ 1008              		.loc 1 428 0
+ 1009 0072 0120     		movs	r0, #1
+ 1010 0074 FFF7FEFF 		bl	delay_ms
+ 429:../bsp/lcd.c  **** 
+ 430:../bsp/lcd.c  **** 	lcd_add_some_symbol(symbol_ua_1);
+ 1011              		.loc 1 430 0
+ 1012 0078 40F20000 		movw	r0, #:lower16:symbol_ua_1
+ 1013 007c C0F20000 		movt	r0, #:upper16:symbol_ua_1
+ 1014 0080 FFF7FEFF 		bl	lcd_add_some_symbol
+ 431:../bsp/lcd.c  **** 	lcd_add_some_symbol(symbol_ua_2);
+ 1015              		.loc 1 431 0
+ 1016 0084 40F20000 		movw	r0, #:lower16:symbol_ua_2
+ 1017 0088 C0F20000 		movt	r0, #:upper16:symbol_ua_2
+ 1018 008c FFF7FEFF 		bl	lcd_add_some_symbol
+ 432:../bsp/lcd.c  **** 	lcd_add_some_symbol(symbol_ua_3);
+ 1019              		.loc 1 432 0
+ 1020 0090 40F20000 		movw	r0, #:lower16:symbol_ua_3
+ 1021 0094 C0F20000 		movt	r0, #:upper16:symbol_ua_3
+ 1022 0098 FFF7FEFF 		bl	lcd_add_some_symbol
+ 433:../bsp/lcd.c  **** 	lcd_add_some_symbol(symbol_ua_4);
+ 1023              		.loc 1 433 0
+ 1024 009c 40F20000 		movw	r0, #:lower16:symbol_ua_4
+ 1025 00a0 C0F20000 		movt	r0, #:upper16:symbol_ua_4
+ 1026 00a4 FFF7FEFF 		bl	lcd_add_some_symbol
+ 434:../bsp/lcd.c  **** 	lcd_add_some_symbol(symbol_ua_5);
+ 1027              		.loc 1 434 0
+ 1028 00a8 40F20000 		movw	r0, #:lower16:symbol_ua_5
+ 1029 00ac C0F20000 		movt	r0, #:upper16:symbol_ua_5
+ 1030 00b0 FFF7FEFF 		bl	lcd_add_some_symbol
+ 435:../bsp/lcd.c  **** 	lcd_add_some_symbol(symbol_ua_6);
+ 1031              		.loc 1 435 0
+ 1032 00b4 40F20000 		movw	r0, #:lower16:symbol_ua_6
+ 1033 00b8 C0F20000 		movt	r0, #:upper16:symbol_ua_6
+ 1034 00bc FFF7FEFF 		bl	lcd_add_some_symbol
+ 436:../bsp/lcd.c  **** 
+ 437:../bsp/lcd.c  **** 	delay_ms(1);
+ 1035              		.loc 1 437 0
+ 1036 00c0 0120     		movs	r0, #1
+ 1037 00c2 FFF7FEFF 		bl	delay_ms
+ 438:../bsp/lcd.c  ****     lcd_command_write(LCD_CMD_DDRAM_ADDR);
+ 1038              		.loc 1 438 0
+ 1039 00c6 8020     		movs	r0, #128
+ 1040 00c8 FFF7FEFF 		bl	lcd_command_write
+ 439:../bsp/lcd.c  **** }
+ 1041              		.loc 1 439 0
+ 1042 00cc 80BD     		pop	{r7, pc}
+ 1043              		.cfi_endproc
+ 1044              	.LFE35:
+ 1046 00ce 00BF     		.section	.text.LcdSetPosition,"ax",%progbits
+ 1047              		.align	2
+ 1048              		.global	LcdSetPosition
+ 1049              		.thumb
+ 1050              		.thumb_func
+ 1052              	LcdSetPosition:
+ 1053              	.LFB36:
+ 440:../bsp/lcd.c  **** 
+ 441:../bsp/lcd.c  **** 
+ 442:../bsp/lcd.c  **** /*
+ 443:../bsp/lcd.c  **** ***************************************************************************************************
+ 444:../bsp/lcd.c  **** *                                                LcdSetPosition()
+ 445:../bsp/lcd.c  **** *
+ 446:../bsp/lcd.c  **** * Description : Set position of cursor.
+ 447:../bsp/lcd.c  **** *
+ 448:../bsp/lcd.c  **** * Argument(s) : position row and column.
+ 449:../bsp/lcd.c  **** *
+ 450:../bsp/lcd.c  **** * Return(s)   : none.
+ 451:../bsp/lcd.c  **** *
+ 452:../bsp/lcd.c  **** * Caller(s)   : Application.
+ 453:../bsp/lcd.c  **** *
+ 454:../bsp/lcd.c  **** * Note(s)     :
+ 455:../bsp/lcd.c  **** ***************************************************************************************************
+ 456:../bsp/lcd.c  **** */
+ 457:../bsp/lcd.c  **** void LcdSetPosition(uint8_t row, uint8_t column)
+ 458:../bsp/lcd.c  **** {
+ 1054              		.loc 1 458 0
+ 1055              		.cfi_startproc
+ 1056              		@ args = 0, pretend = 0, frame = 16
+ 1057              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1058 0000 80B5     		push	{r7, lr}
+ 1059              		.cfi_def_cfa_offset 8
+ 1060              		.cfi_offset 7, -8
+ 1061              		.cfi_offset 14, -4
+ 1062 0002 84B0     		sub	sp, sp, #16
+ 1063              		.cfi_def_cfa_offset 24
+ 1064 0004 00AF     		add	r7, sp, #0
+ 1065              		.cfi_def_cfa_register 7
+ 1066 0006 0246     		mov	r2, r0
+ 1067 0008 0B46     		mov	r3, r1
+ 1068 000a FA71     		strb	r2, [r7, #7]
+ 1069 000c BB71     		strb	r3, [r7, #6]
+ 459:../bsp/lcd.c  **** 	uint8_t position = LCD_CMD_DDRAM_ADDR;
+ 1070              		.loc 1 459 0
+ 1071 000e 8023     		movs	r3, #128
+ 1072 0010 FB73     		strb	r3, [r7, #15]
+ 460:../bsp/lcd.c  **** 
+ 461:../bsp/lcd.c  **** 	if (row > 0)
+ 1073              		.loc 1 461 0
+ 1074 0012 FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 1075 0014 002B     		cmp	r3, #0
+ 1076 0016 03D0     		beq	.L29
+ 462:../bsp/lcd.c  **** 	{
+ 463:../bsp/lcd.c  **** 		position |= LCD_CMD_NEXT_LINE;
+ 1077              		.loc 1 463 0
+ 1078 0018 FB7B     		ldrb	r3, [r7, #15]
+ 1079 001a 43F04003 		orr	r3, r3, #64
+ 1080 001e FB73     		strb	r3, [r7, #15]
+ 1081              	.L29:
+ 464:../bsp/lcd.c  **** 	}
+ 465:../bsp/lcd.c  **** 
+ 466:../bsp/lcd.c  **** 	lcd_command_write(position | column);
+ 1082              		.loc 1 466 0
+ 1083 0020 FA7B     		ldrb	r2, [r7, #15]
+ 1084 0022 BB79     		ldrb	r3, [r7, #6]
+ 1085 0024 1343     		orrs	r3, r3, r2
+ 1086 0026 DBB2     		uxtb	r3, r3
+ 1087 0028 1846     		mov	r0, r3
+ 1088 002a FFF7FEFF 		bl	lcd_command_write
+ 467:../bsp/lcd.c  **** }
+ 1089              		.loc 1 467 0
+ 1090 002e 1037     		adds	r7, r7, #16
+ 1091 0030 BD46     		mov	sp, r7
+ 1092              		@ sp needed
+ 1093 0032 80BD     		pop	{r7, pc}
+ 1094              		.cfi_endproc
+ 1095              	.LFE36:
+ 1097              		.section	.text.LcdPrintChar,"ax",%progbits
+ 1098              		.align	2
+ 1099              		.global	LcdPrintChar
+ 1100              		.thumb
+ 1101              		.thumb_func
+ 1103              	LcdPrintChar:
+ 1104              	.LFB37:
+ 468:../bsp/lcd.c  **** 
+ 469:../bsp/lcd.c  **** /*
+ 470:../bsp/lcd.c  **** ***************************************************************************************************
+ 471:../bsp/lcd.c  **** *                                                LcdPrintChar()
+ 472:../bsp/lcd.c  **** *
+ 473:../bsp/lcd.c  **** * Description : Send char to LCD.
+ 474:../bsp/lcd.c  **** *
+ 475:../bsp/lcd.c  **** * Argument(s) : data.
+ 476:../bsp/lcd.c  **** *
+ 477:../bsp/lcd.c  **** * Return(s)   : none.
+ 478:../bsp/lcd.c  **** *
+ 479:../bsp/lcd.c  **** * Caller(s)   : Application.
+ 480:../bsp/lcd.c  **** *
+ 481:../bsp/lcd.c  **** * Note(s)     :
+ 482:../bsp/lcd.c  **** ***************************************************************************************************
+ 483:../bsp/lcd.c  **** */
+ 484:../bsp/lcd.c  **** void LcdPrintChar(uint8_t data)
+ 485:../bsp/lcd.c  **** {
+ 1105              		.loc 1 485 0
+ 1106              		.cfi_startproc
+ 1107              		@ args = 0, pretend = 0, frame = 8
+ 1108              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1109 0000 80B5     		push	{r7, lr}
+ 1110              		.cfi_def_cfa_offset 8
+ 1111              		.cfi_offset 7, -8
+ 1112              		.cfi_offset 14, -4
+ 1113 0002 82B0     		sub	sp, sp, #8
+ 1114              		.cfi_def_cfa_offset 16
+ 1115 0004 00AF     		add	r7, sp, #0
+ 1116              		.cfi_def_cfa_register 7
+ 1117 0006 0346     		mov	r3, r0
+ 1118 0008 FB71     		strb	r3, [r7, #7]
+ 486:../bsp/lcd.c  **** 
+ 487:../bsp/lcd.c  **** 
+ 488:../bsp/lcd.c  **** //	if  (data > 191)
+ 489:../bsp/lcd.c  **** //		lcd_data_write(convert_HD44780[data - 192]);
+ 490:../bsp/lcd.c  **** 	if (data == '@')
+ 1119              		.loc 1 490 0
+ 1120 000a FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 1121 000c 402B     		cmp	r3, #64
+ 1122 000e 04D1     		bne	.L31
+ 491:../bsp/lcd.c  **** 		LcdSetPosition(1, 0);
+ 1123              		.loc 1 491 0
+ 1124 0010 0120     		movs	r0, #1
+ 1125 0012 0021     		movs	r1, #0
+ 1126 0014 FFF7FEFF 		bl	LcdSetPosition
+ 1127 0018 08E0     		b	.L30
+ 1128              	.L31:
+ 492:../bsp/lcd.c  **** 	else
+ 493:../bsp/lcd.c  **** 	    lcd_data_write( convert_font_to_ua[data]);
+ 1129              		.loc 1 493 0
+ 1130 001a FA79     		ldrb	r2, [r7, #7]	@ zero_extendqisi2
+ 1131 001c 40F20003 		movw	r3, #:lower16:convert_font_to_ua
+ 1132 0020 C0F20003 		movt	r3, #:upper16:convert_font_to_ua
+ 1133 0024 9B5C     		ldrb	r3, [r3, r2]	@ zero_extendqisi2
+ 1134 0026 1846     		mov	r0, r3
+ 1135 0028 FFF7FEFF 		bl	lcd_data_write
+ 1136              	.L30:
+ 494:../bsp/lcd.c  **** //	else
+ 495:../bsp/lcd.c  **** //		lcd_data_write(data);
+ 496:../bsp/lcd.c  **** 
+ 497:../bsp/lcd.c  **** }
+ 1137              		.loc 1 497 0
+ 1138 002c 0837     		adds	r7, r7, #8
+ 1139 002e BD46     		mov	sp, r7
+ 1140              		@ sp needed
+ 1141 0030 80BD     		pop	{r7, pc}
+ 1142              		.cfi_endproc
+ 1143              	.LFE37:
+ 1145 0032 00BF     		.section	.text.LcdPrintString,"ax",%progbits
+ 1146              		.align	2
+ 1147              		.global	LcdPrintString
+ 1148              		.thumb
+ 1149              		.thumb_func
+ 1151              	LcdPrintString:
+ 1152              	.LFB38:
+ 498:../bsp/lcd.c  **** 
+ 499:../bsp/lcd.c  **** /*
+ 500:../bsp/lcd.c  **** ***************************************************************************************************
+ 501:../bsp/lcd.c  **** *                                                LcdPrintString()
+ 502:../bsp/lcd.c  **** *
+ 503:../bsp/lcd.c  **** * Description : Send string to LCD.
+ 504:../bsp/lcd.c  **** *
+ 505:../bsp/lcd.c  **** * Argument(s) : pointer to string.
+ 506:../bsp/lcd.c  **** *
+ 507:../bsp/lcd.c  **** * Return(s)   : none.
+ 508:../bsp/lcd.c  **** *
+ 509:../bsp/lcd.c  **** * Caller(s)   : Application.
+ 510:../bsp/lcd.c  **** *
+ 511:../bsp/lcd.c  **** * Note(s)     :
+ 512:../bsp/lcd.c  **** ***************************************************************************************************
+ 513:../bsp/lcd.c  **** */
+ 514:../bsp/lcd.c  **** void LcdPrintString(uint8_t * string)
+ 515:../bsp/lcd.c  **** {
+ 1153              		.loc 1 515 0
+ 1154              		.cfi_startproc
+ 1155              		@ args = 0, pretend = 0, frame = 8
+ 1156              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1157 0000 80B5     		push	{r7, lr}
+ 1158              		.cfi_def_cfa_offset 8
+ 1159              		.cfi_offset 7, -8
+ 1160              		.cfi_offset 14, -4
+ 1161 0002 82B0     		sub	sp, sp, #8
+ 1162              		.cfi_def_cfa_offset 16
+ 1163 0004 00AF     		add	r7, sp, #0
+ 1164              		.cfi_def_cfa_register 7
+ 1165 0006 7860     		str	r0, [r7, #4]
+ 516:../bsp/lcd.c  **** 	while (*string != 0x00)
+ 1166              		.loc 1 516 0
+ 1167 0008 06E0     		b	.L34
+ 1168              	.L35:
+ 517:../bsp/lcd.c  **** 	{
+ 518:../bsp/lcd.c  **** 		LcdPrintChar(*string++);
+ 1169              		.loc 1 518 0
+ 1170 000a 7B68     		ldr	r3, [r7, #4]
+ 1171 000c 5A1C     		adds	r2, r3, #1
+ 1172 000e 7A60     		str	r2, [r7, #4]
+ 1173 0010 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1174 0012 1846     		mov	r0, r3
+ 1175 0014 FFF7FEFF 		bl	LcdPrintChar
+ 1176              	.L34:
+ 516:../bsp/lcd.c  **** 	while (*string != 0x00)
+ 1177              		.loc 1 516 0 discriminator 1
+ 1178 0018 7B68     		ldr	r3, [r7, #4]
+ 1179 001a 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1180 001c 002B     		cmp	r3, #0
+ 1181 001e F4D1     		bne	.L35
+ 519:../bsp/lcd.c  **** 	}
+ 520:../bsp/lcd.c  **** }
+ 1182              		.loc 1 520 0
+ 1183 0020 0837     		adds	r7, r7, #8
+ 1184 0022 BD46     		mov	sp, r7
+ 1185              		@ sp needed
+ 1186 0024 80BD     		pop	{r7, pc}
+ 1187              		.cfi_endproc
+ 1188              	.LFE38:
+ 1190 0026 00BF     		.text
+ 1191              	.Letext0:
+ 1192              		.file 2 "c:\\tools\\arm-none-eabi\\include\\stdint.h"
+ 1193              		.file 3 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/stm32f10x.h"
+ 1194              		.file 4 "../bsp/lcd.h"
+ 1195              		.file 5 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/core_cm3.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 lcd.c
+C:\Users\Alex\AppData\Local\Temp\ccSk5bSJ.s:23     .rodata.convert_font_to_ua:00000000 convert_font_to_ua
+C:\Users\Alex\AppData\Local\Temp\ccSk5bSJ.s:20     .rodata.convert_font_to_ua:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccSk5bSJ.s:285    .rodata.symbol_ua_1:00000000 symbol_ua_1
+C:\Users\Alex\AppData\Local\Temp\ccSk5bSJ.s:282    .rodata.symbol_ua_1:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccSk5bSJ.s:299    .rodata.symbol_ua_2:00000000 symbol_ua_2
+C:\Users\Alex\AppData\Local\Temp\ccSk5bSJ.s:296    .rodata.symbol_ua_2:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccSk5bSJ.s:313    .rodata.symbol_ua_3:00000000 symbol_ua_3
+C:\Users\Alex\AppData\Local\Temp\ccSk5bSJ.s:310    .rodata.symbol_ua_3:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccSk5bSJ.s:327    .rodata.symbol_ua_4:00000000 symbol_ua_4
+C:\Users\Alex\AppData\Local\Temp\ccSk5bSJ.s:324    .rodata.symbol_ua_4:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccSk5bSJ.s:341    .rodata.symbol_ua_5:00000000 symbol_ua_5
+C:\Users\Alex\AppData\Local\Temp\ccSk5bSJ.s:338    .rodata.symbol_ua_5:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccSk5bSJ.s:355    .rodata.symbol_ua_6:00000000 symbol_ua_6
+C:\Users\Alex\AppData\Local\Temp\ccSk5bSJ.s:352    .rodata.symbol_ua_6:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccSk5bSJ.s:365    .text.lcd_add_some_symbol:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccSk5bSJ.s:370    .text.lcd_add_some_symbol:00000000 lcd_add_some_symbol
+C:\Users\Alex\AppData\Local\Temp\ccSk5bSJ.s:595    .text.delay_ms:00000000 delay_ms
+C:\Users\Alex\AppData\Local\Temp\ccSk5bSJ.s:905    .text.lcd_data_write:00000000 lcd_data_write
+C:\Users\Alex\AppData\Local\Temp\ccSk5bSJ.s:419    .text.lcd_hw_init:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccSk5bSJ.s:423    .text.lcd_hw_init:00000000 lcd_hw_init
+C:\Users\Alex\AppData\Local\Temp\ccSk5bSJ.s:591    .text.delay_ms:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccSk5bSJ.s:637    .text.lcd_write:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccSk5bSJ.s:641    .text.lcd_write:00000000 lcd_write
+C:\Users\Alex\AppData\Local\Temp\ccSk5bSJ.s:863    .text.lcd_command_write:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccSk5bSJ.s:867    .text.lcd_command_write:00000000 lcd_command_write
+C:\Users\Alex\AppData\Local\Temp\ccSk5bSJ.s:901    .text.lcd_data_write:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccSk5bSJ.s:939    .text.LcdInit:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccSk5bSJ.s:944    .text.LcdInit:00000000 LcdInit
+C:\Users\Alex\AppData\Local\Temp\ccSk5bSJ.s:1047   .text.LcdSetPosition:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccSk5bSJ.s:1052   .text.LcdSetPosition:00000000 LcdSetPosition
+C:\Users\Alex\AppData\Local\Temp\ccSk5bSJ.s:1098   .text.LcdPrintChar:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccSk5bSJ.s:1103   .text.LcdPrintChar:00000000 LcdPrintChar
+C:\Users\Alex\AppData\Local\Temp\ccSk5bSJ.s:1146   .text.LcdPrintString:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccSk5bSJ.s:1151   .text.LcdPrintString:00000000 LcdPrintString
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.1.98ffea2db242cfdb58f411f7407f2b59
+                           .group:00000000 wm4.stm32f10x.h.51.b859cb68ed44ee02c916b41cb8c68f1c
+                           .group:00000000 wm4.core_cm3.h.25.d35e9a9b04ec4aaebae9bf79fff061f9
+                           .group:00000000 wm4.newlib.h.8.384a112feabb3bef7b573ae48cde2e3b
+                           .group:00000000 wm4.features.h.22.6a4ca7cd053637cc1d0db6c16f39b2d7
+                           .group:00000000 wm4.config.h.183.aa62afef667fb61d15fa64c48beb2f14
+                           .group:00000000 wm4._ansi.h.23.5644b60c990a4800b02a6e654e88f93a
+                           .group:00000000 wm4.stdint.h.20.54ad762faa59e3c05491630641c8d8bf
+                           .group:00000000 wm4.core_cm3.h.113.b286929a54d33b4c8909a7132437b244
+                           .group:00000000 wm4.stm32f10x.h.522.a925aafc848b1f088438cf0e9b167b78
+                           .group:00000000 wm4.stm32f10x_conf.h.2.f1a8c33f0a763aeef696fee38b2b2dbc
+                           .group:00000000 wm4.stm32f10x.h.8304.f7d8ad90959e99679b3257267c3aadfe
+                           .group:00000000 wm4.lcd.h.40.54e49fa4e109081ce0eb761be28bb8fa
+                           .group:00000000 wm4.stm32f10x_gpio.h.25.80c981af0e637567395034c576cfb3ce
+                           .group:00000000 wm4.stm32f10x_rcc.h.25.fe8897e7491f2eb0cff54551d08eb765
+                           .group:00000000 wm4.gpio_init.h.2.a6dd96fdaf98737019b1d0402db0d0ee
+
+UNDEFINED SYMBOLS
+RCC_APB2PeriphClockCmd
+GPIO_SetBits
+GPIO_ResetBits

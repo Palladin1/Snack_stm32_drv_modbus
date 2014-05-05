@@ -1,0 +1,2104 @@
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.file	"uart.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.section	.text.NVIC_EnableIRQ,"ax",%progbits
+  19              		.align	2
+  20              		.thumb
+  21              		.thumb_func
+  23              	NVIC_EnableIRQ:
+  24              	.LFB14:
+  25              		.file 1 "D:\\PALL\\workspace\\freertos_stm32_d\\CMSIS/core_cm3.h"
+   1:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**************************************************************************//**
+   2:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @file     core_cm3.h
+   3:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief    CMSIS Cortex-M3 Core Peripheral Access Layer Header File
+   4:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @version  V1.30
+   5:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @date     30. October 2009
+   6:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+   7:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @note
+   8:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Copyright (C) 2009 ARM Limited. All rights reserved.
+   9:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+  10:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @par
+  11:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * ARM Limited (ARM) is supplying this software for use with Cortex-M 
+  12:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * processor based microcontrollers.  This file can be freely distributed 
+  13:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * within development tools that are supporting such ARM based processors. 
+  14:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+  15:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @par
+  16:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * THIS SOFTWARE IS PROVIDED "AS IS".  NO WARRANTIES, WHETHER EXPRESS, IMPLIED
+  17:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF
+  18:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE APPLY TO THIS SOFTWARE.
+  19:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * ARM SHALL NOT, IN ANY CIRCUMSTANCES, BE LIABLE FOR SPECIAL, INCIDENTAL, OR
+  20:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * CONSEQUENTIAL DAMAGES, FOR ANY REASON WHATSOEVER.
+  21:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+  22:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  ******************************************************************************/
+  23:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+  24:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #ifndef __CM3_CORE_H__
+  25:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define __CM3_CORE_H__
+  26:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+  27:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /** @addtogroup CMSIS_CM3_core_LintCinfiguration CMSIS CM3 Core Lint Configuration
+  28:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+  29:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * List of Lint messages which will be suppressed and not shown:
+  30:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *   - Error 10: \n
+  31:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *     register uint32_t __regBasePri         __asm("basepri"); \n
+  32:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *     Error 10: Expecting ';'
+  33:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * .
+  34:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *   - Error 530: \n
+  35:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *     return(__regBasePri); \n
+  36:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *     Warning 530: Symbol '__regBasePri' (line 264) not initialized
+  37:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * . 
+  38:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *   - Error 550: \n
+  39:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *     __regBasePri = (basePri & 0x1ff); \n
+  40:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *     Warning 550: Symbol '__regBasePri' (line 271) not accessed
+  41:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * .
+  42:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *   - Error 754: \n
+  43:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *     uint32_t RESERVED0[24]; \n
+  44:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *     Info 754: local structure member '<some, not used in the HAL>' (line 109, file ./cm3_core.h)
+  45:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * .
+  46:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *   - Error 750: \n
+  47:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *     #define __CM3_CORE_H__ \n
+  48:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *     Info 750: local macro '__CM3_CORE_H__' (line 43, file./cm3_core.h) not referenced
+  49:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * .
+  50:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *   - Error 528: \n
+  51:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *     static __INLINE void NVIC_DisableIRQ(uint32_t IRQn) \n
+  52:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *     Warning 528: Symbol 'NVIC_DisableIRQ(unsigned int)' (line 419, file ./cm3_core.h) not refere
+  53:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * .
+  54:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *   - Error 751: \n
+  55:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *     } InterruptType_Type; \n
+  56:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *     Info 751: local typedef 'InterruptType_Type' (line 170, file ./cm3_core.h) not referenced
+  57:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * .
+  58:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Note:  To re-enable a Message, insert a space before 'lint' *
+  59:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+  60:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+  61:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+  62:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /*lint -save */
+  63:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /*lint -e10  */
+  64:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /*lint -e530 */
+  65:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /*lint -e550 */
+  66:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /*lint -e754 */
+  67:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /*lint -e750 */
+  68:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /*lint -e528 */
+  69:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /*lint -e751 */
+  70:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+  71:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+  72:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /** @addtogroup CMSIS_CM3_core_definitions CM3 Core Definitions
+  73:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   This file defines all structures and symbols for CMSIS core:
+  74:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****     - CMSIS version number
+  75:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****     - Cortex-M core registers and bitfields
+  76:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****     - Cortex-M core peripheral base address
+  77:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   @{
+  78:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+  79:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+  80:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #ifdef __cplusplus
+  81:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  extern "C" {
+  82:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #endif 
+  83:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+  84:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define __CM3_CMSIS_VERSION_MAIN  (0x01)                                                       /*!<
+  85:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define __CM3_CMSIS_VERSION_SUB   (0x30)                                                       /*!<
+  86:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define __CM3_CMSIS_VERSION       ((__CM3_CMSIS_VERSION_MAIN << 16) | __CM3_CMSIS_VERSION_SUB) /*!<
+  87:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+  88:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define __CORTEX_M                (0x03)                                                       /*!<
+  89:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+  90:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #include <stdint.h>                           /* Include standard types */
+  91:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+  92:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #if defined (__ICCARM__)
+  93:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   #include <intrinsics.h>                     /* IAR Intrinsics   */
+  94:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #endif
+  95:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+  96:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+  97:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #ifndef __NVIC_PRIO_BITS
+  98:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   #define __NVIC_PRIO_BITS    4               /*!< standard definition for NVIC Priority Bits */
+  99:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #endif
+ 100:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 101:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 102:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 103:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 104:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+ 105:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * IO definitions
+ 106:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+ 107:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * define access restrictions to peripheral registers
+ 108:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+ 109:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 110:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #ifdef __cplusplus
+ 111:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   #define     __I     volatile                /*!< defines 'read only' permissions      */
+ 112:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #else
+ 113:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   #define     __I     volatile const          /*!< defines 'read only' permissions      */
+ 114:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #endif
+ 115:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define     __O     volatile                  /*!< defines 'write only' permissions     */
+ 116:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define     __IO    volatile                  /*!< defines 'read / write' permissions   */
+ 117:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 118:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 119:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 120:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /*******************************************************************************
+ 121:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *                 Register Abstraction
+ 122:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  ******************************************************************************/
+ 123:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /** @addtogroup CMSIS_CM3_core_register CMSIS CM3 Core Register
+ 124:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  @{
+ 125:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** */
+ 126:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 127:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 128:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /** @addtogroup CMSIS_CM3_NVIC CMSIS CM3 NVIC
+ 129:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   memory mapped structure for Nested Vectored Interrupt Controller (NVIC)
+ 130:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   @{
+ 131:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+ 132:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** typedef struct
+ 133:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** {
+ 134:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint32_t ISER[8];                      /*!< Offset: 0x000  Interrupt Set Enable Register    
+ 135:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****        uint32_t RESERVED0[24];                                   
+ 136:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint32_t ICER[8];                      /*!< Offset: 0x080  Interrupt Clear Enable Register  
+ 137:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****        uint32_t RSERVED1[24];                                    
+ 138:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint32_t ISPR[8];                      /*!< Offset: 0x100  Interrupt Set Pending Register   
+ 139:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****        uint32_t RESERVED2[24];                                   
+ 140:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint32_t ICPR[8];                      /*!< Offset: 0x180  Interrupt Clear Pending Register 
+ 141:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****        uint32_t RESERVED3[24];                                   
+ 142:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint32_t IABR[8];                      /*!< Offset: 0x200  Interrupt Active bit Register    
+ 143:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****        uint32_t RESERVED4[56];                                   
+ 144:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint8_t  IP[240];                      /*!< Offset: 0x300  Interrupt Priority Register (8Bit
+ 145:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****        uint32_t RESERVED5[644];                                  
+ 146:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __O  uint32_t STIR;                         /*!< Offset: 0xE00  Software Trigger Interrupt Regist
+ 147:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** }  NVIC_Type;                                               
+ 148:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /*@}*/ /* end of group CMSIS_CM3_NVIC */
+ 149:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 150:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 151:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /** @addtogroup CMSIS_CM3_SCB CMSIS CM3 SCB
+ 152:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   memory mapped structure for System Control Block (SCB)
+ 153:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   @{
+ 154:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+ 155:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** typedef struct
+ 156:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** {
+ 157:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __I  uint32_t CPUID;                        /*!< Offset: 0x00  CPU ID Base Register              
+ 158:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint32_t ICSR;                         /*!< Offset: 0x04  Interrupt Control State Register  
+ 159:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint32_t VTOR;                         /*!< Offset: 0x08  Vector Table Offset Register      
+ 160:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint32_t AIRCR;                        /*!< Offset: 0x0C  Application Interrupt / Reset Cont
+ 161:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint32_t SCR;                          /*!< Offset: 0x10  System Control Register           
+ 162:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint32_t CCR;                          /*!< Offset: 0x14  Configuration Control Register    
+ 163:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint8_t  SHP[12];                      /*!< Offset: 0x18  System Handlers Priority Registers
+ 164:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint32_t SHCSR;                        /*!< Offset: 0x24  System Handler Control and State R
+ 165:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint32_t CFSR;                         /*!< Offset: 0x28  Configurable Fault Status Register
+ 166:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint32_t HFSR;                         /*!< Offset: 0x2C  Hard Fault Status Register        
+ 167:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint32_t DFSR;                         /*!< Offset: 0x30  Debug Fault Status Register       
+ 168:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint32_t MMFAR;                        /*!< Offset: 0x34  Mem Manage Address Register       
+ 169:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint32_t BFAR;                         /*!< Offset: 0x38  Bus Fault Address Register        
+ 170:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint32_t AFSR;                         /*!< Offset: 0x3C  Auxiliary Fault Status Register   
+ 171:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __I  uint32_t PFR[2];                       /*!< Offset: 0x40  Processor Feature Register        
+ 172:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __I  uint32_t DFR;                          /*!< Offset: 0x48  Debug Feature Register            
+ 173:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __I  uint32_t ADR;                          /*!< Offset: 0x4C  Auxiliary Feature Register        
+ 174:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __I  uint32_t MMFR[4];                      /*!< Offset: 0x50  Memory Model Feature Register     
+ 175:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __I  uint32_t ISAR[5];                      /*!< Offset: 0x60  ISA Feature Register              
+ 176:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** } SCB_Type;                                                
+ 177:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 178:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* SCB CPUID Register Definitions */
+ 179:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_CPUID_IMPLEMENTER_Pos          24                                             /*!< SCB 
+ 180:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_CPUID_IMPLEMENTER_Msk          (0xFFul << SCB_CPUID_IMPLEMENTER_Pos)          /*!< SCB 
+ 181:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 182:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_CPUID_VARIANT_Pos              20                                             /*!< SCB 
+ 183:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_CPUID_VARIANT_Msk              (0xFul << SCB_CPUID_VARIANT_Pos)               /*!< SCB 
+ 184:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 185:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_CPUID_PARTNO_Pos                4                                             /*!< SCB 
+ 186:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_CPUID_PARTNO_Msk               (0xFFFul << SCB_CPUID_PARTNO_Pos)              /*!< SCB 
+ 187:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 188:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_CPUID_REVISION_Pos              0                                             /*!< SCB 
+ 189:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_CPUID_REVISION_Msk             (0xFul << SCB_CPUID_REVISION_Pos)              /*!< SCB 
+ 190:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 191:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* SCB Interrupt Control State Register Definitions */
+ 192:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_ICSR_NMIPENDSET_Pos            31                                             /*!< SCB 
+ 193:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_ICSR_NMIPENDSET_Msk            (1ul << SCB_ICSR_NMIPENDSET_Pos)               /*!< SCB 
+ 194:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 195:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_ICSR_PENDSVSET_Pos             28                                             /*!< SCB 
+ 196:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_ICSR_PENDSVSET_Msk             (1ul << SCB_ICSR_PENDSVSET_Pos)                /*!< SCB 
+ 197:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 198:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_ICSR_PENDSVCLR_Pos             27                                             /*!< SCB 
+ 199:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_ICSR_PENDSVCLR_Msk             (1ul << SCB_ICSR_PENDSVCLR_Pos)                /*!< SCB 
+ 200:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 201:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_ICSR_PENDSTSET_Pos             26                                             /*!< SCB 
+ 202:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_ICSR_PENDSTSET_Msk             (1ul << SCB_ICSR_PENDSTSET_Pos)                /*!< SCB 
+ 203:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 204:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_ICSR_PENDSTCLR_Pos             25                                             /*!< SCB 
+ 205:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_ICSR_PENDSTCLR_Msk             (1ul << SCB_ICSR_PENDSTCLR_Pos)                /*!< SCB 
+ 206:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 207:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_ICSR_ISRPREEMPT_Pos            23                                             /*!< SCB 
+ 208:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_ICSR_ISRPREEMPT_Msk            (1ul << SCB_ICSR_ISRPREEMPT_Pos)               /*!< SCB 
+ 209:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 210:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_ICSR_ISRPENDING_Pos            22                                             /*!< SCB 
+ 211:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_ICSR_ISRPENDING_Msk            (1ul << SCB_ICSR_ISRPENDING_Pos)               /*!< SCB 
+ 212:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 213:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_ICSR_VECTPENDING_Pos           12                                             /*!< SCB 
+ 214:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_ICSR_VECTPENDING_Msk           (0x1FFul << SCB_ICSR_VECTPENDING_Pos)          /*!< SCB 
+ 215:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 216:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_ICSR_RETTOBASE_Pos             11                                             /*!< SCB 
+ 217:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_ICSR_RETTOBASE_Msk             (1ul << SCB_ICSR_RETTOBASE_Pos)                /*!< SCB 
+ 218:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 219:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_ICSR_VECTACTIVE_Pos             0                                             /*!< SCB 
+ 220:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_ICSR_VECTACTIVE_Msk            (0x1FFul << SCB_ICSR_VECTACTIVE_Pos)           /*!< SCB 
+ 221:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 222:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* SCB Interrupt Control State Register Definitions */
+ 223:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_VTOR_TBLBASE_Pos               29                                             /*!< SCB 
+ 224:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_VTOR_TBLBASE_Msk               (0x1FFul << SCB_VTOR_TBLBASE_Pos)              /*!< SCB 
+ 225:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 226:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_VTOR_TBLOFF_Pos                 7                                             /*!< SCB 
+ 227:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_VTOR_TBLOFF_Msk                (0x3FFFFFul << SCB_VTOR_TBLOFF_Pos)            /*!< SCB 
+ 228:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 229:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* SCB Application Interrupt and Reset Control Register Definitions */
+ 230:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_AIRCR_VECTKEY_Pos              16                                             /*!< SCB 
+ 231:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_AIRCR_VECTKEY_Msk              (0xFFFFul << SCB_AIRCR_VECTKEY_Pos)            /*!< SCB 
+ 232:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 233:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_AIRCR_VECTKEYSTAT_Pos          16                                             /*!< SCB 
+ 234:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_AIRCR_VECTKEYSTAT_Msk          (0xFFFFul << SCB_AIRCR_VECTKEYSTAT_Pos)        /*!< SCB 
+ 235:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 236:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_AIRCR_ENDIANESS_Pos            15                                             /*!< SCB 
+ 237:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_AIRCR_ENDIANESS_Msk            (1ul << SCB_AIRCR_ENDIANESS_Pos)               /*!< SCB 
+ 238:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 239:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_AIRCR_PRIGROUP_Pos              8                                             /*!< SCB 
+ 240:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_AIRCR_PRIGROUP_Msk             (7ul << SCB_AIRCR_PRIGROUP_Pos)                /*!< SCB 
+ 241:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 242:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_AIRCR_SYSRESETREQ_Pos           2                                             /*!< SCB 
+ 243:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_AIRCR_SYSRESETREQ_Msk          (1ul << SCB_AIRCR_SYSRESETREQ_Pos)             /*!< SCB 
+ 244:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 245:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_AIRCR_VECTCLRACTIVE_Pos         1                                             /*!< SCB 
+ 246:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_AIRCR_VECTCLRACTIVE_Msk        (1ul << SCB_AIRCR_VECTCLRACTIVE_Pos)           /*!< SCB 
+ 247:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 248:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_AIRCR_VECTRESET_Pos             0                                             /*!< SCB 
+ 249:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_AIRCR_VECTRESET_Msk            (1ul << SCB_AIRCR_VECTRESET_Pos)               /*!< SCB 
+ 250:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 251:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* SCB System Control Register Definitions */
+ 252:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_SCR_SEVONPEND_Pos               4                                             /*!< SCB 
+ 253:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_SCR_SEVONPEND_Msk              (1ul << SCB_SCR_SEVONPEND_Pos)                 /*!< SCB 
+ 254:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 255:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_SCR_SLEEPDEEP_Pos               2                                             /*!< SCB 
+ 256:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_SCR_SLEEPDEEP_Msk              (1ul << SCB_SCR_SLEEPDEEP_Pos)                 /*!< SCB 
+ 257:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 258:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_SCR_SLEEPONEXIT_Pos             1                                             /*!< SCB 
+ 259:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_SCR_SLEEPONEXIT_Msk            (1ul << SCB_SCR_SLEEPONEXIT_Pos)               /*!< SCB 
+ 260:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 261:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* SCB Configuration Control Register Definitions */
+ 262:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_CCR_STKALIGN_Pos                9                                             /*!< SCB 
+ 263:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_CCR_STKALIGN_Msk               (1ul << SCB_CCR_STKALIGN_Pos)                  /*!< SCB 
+ 264:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 265:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_CCR_BFHFNMIGN_Pos               8                                             /*!< SCB 
+ 266:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_CCR_BFHFNMIGN_Msk              (1ul << SCB_CCR_BFHFNMIGN_Pos)                 /*!< SCB 
+ 267:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 268:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_CCR_DIV_0_TRP_Pos               4                                             /*!< SCB 
+ 269:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_CCR_DIV_0_TRP_Msk              (1ul << SCB_CCR_DIV_0_TRP_Pos)                 /*!< SCB 
+ 270:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 271:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_CCR_UNALIGN_TRP_Pos             3                                             /*!< SCB 
+ 272:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_CCR_UNALIGN_TRP_Msk            (1ul << SCB_CCR_UNALIGN_TRP_Pos)               /*!< SCB 
+ 273:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 274:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_CCR_USERSETMPEND_Pos            1                                             /*!< SCB 
+ 275:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_CCR_USERSETMPEND_Msk           (1ul << SCB_CCR_USERSETMPEND_Pos)              /*!< SCB 
+ 276:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 277:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_CCR_NONBASETHRDENA_Pos          0                                             /*!< SCB 
+ 278:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_CCR_NONBASETHRDENA_Msk         (1ul << SCB_CCR_NONBASETHRDENA_Pos)            /*!< SCB 
+ 279:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 280:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* SCB System Handler Control and State Register Definitions */
+ 281:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_SHCSR_USGFAULTENA_Pos          18                                             /*!< SCB 
+ 282:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_SHCSR_USGFAULTENA_Msk          (1ul << SCB_SHCSR_USGFAULTENA_Pos)             /*!< SCB 
+ 283:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 284:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_SHCSR_BUSFAULTENA_Pos          17                                             /*!< SCB 
+ 285:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_SHCSR_BUSFAULTENA_Msk          (1ul << SCB_SHCSR_BUSFAULTENA_Pos)             /*!< SCB 
+ 286:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 287:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_SHCSR_MEMFAULTENA_Pos          16                                             /*!< SCB 
+ 288:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_SHCSR_MEMFAULTENA_Msk          (1ul << SCB_SHCSR_MEMFAULTENA_Pos)             /*!< SCB 
+ 289:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 290:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_SHCSR_SVCALLPENDED_Pos         15                                             /*!< SCB 
+ 291:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_SHCSR_SVCALLPENDED_Msk         (1ul << SCB_SHCSR_SVCALLPENDED_Pos)            /*!< SCB 
+ 292:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 293:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_SHCSR_BUSFAULTPENDED_Pos       14                                             /*!< SCB 
+ 294:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_SHCSR_BUSFAULTPENDED_Msk       (1ul << SCB_SHCSR_BUSFAULTPENDED_Pos)          /*!< SCB 
+ 295:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 296:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_SHCSR_MEMFAULTPENDED_Pos       13                                             /*!< SCB 
+ 297:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_SHCSR_MEMFAULTPENDED_Msk       (1ul << SCB_SHCSR_MEMFAULTPENDED_Pos)          /*!< SCB 
+ 298:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 299:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_SHCSR_USGFAULTPENDED_Pos       12                                             /*!< SCB 
+ 300:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_SHCSR_USGFAULTPENDED_Msk       (1ul << SCB_SHCSR_USGFAULTPENDED_Pos)          /*!< SCB 
+ 301:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 302:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_SHCSR_SYSTICKACT_Pos           11                                             /*!< SCB 
+ 303:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_SHCSR_SYSTICKACT_Msk           (1ul << SCB_SHCSR_SYSTICKACT_Pos)              /*!< SCB 
+ 304:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 305:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_SHCSR_PENDSVACT_Pos            10                                             /*!< SCB 
+ 306:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_SHCSR_PENDSVACT_Msk            (1ul << SCB_SHCSR_PENDSVACT_Pos)               /*!< SCB 
+ 307:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 308:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_SHCSR_MONITORACT_Pos            8                                             /*!< SCB 
+ 309:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_SHCSR_MONITORACT_Msk           (1ul << SCB_SHCSR_MONITORACT_Pos)              /*!< SCB 
+ 310:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 311:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_SHCSR_SVCALLACT_Pos             7                                             /*!< SCB 
+ 312:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_SHCSR_SVCALLACT_Msk            (1ul << SCB_SHCSR_SVCALLACT_Pos)               /*!< SCB 
+ 313:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****                                      
+ 314:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_SHCSR_USGFAULTACT_Pos           3                                             /*!< SCB 
+ 315:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_SHCSR_USGFAULTACT_Msk          (1ul << SCB_SHCSR_USGFAULTACT_Pos)             /*!< SCB 
+ 316:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 317:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_SHCSR_BUSFAULTACT_Pos           1                                             /*!< SCB 
+ 318:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_SHCSR_BUSFAULTACT_Msk          (1ul << SCB_SHCSR_BUSFAULTACT_Pos)             /*!< SCB 
+ 319:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 320:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_SHCSR_MEMFAULTACT_Pos           0                                             /*!< SCB 
+ 321:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_SHCSR_MEMFAULTACT_Msk          (1ul << SCB_SHCSR_MEMFAULTACT_Pos)             /*!< SCB 
+ 322:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 323:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* SCB Configurable Fault Status Registers Definitions */
+ 324:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_CFSR_USGFAULTSR_Pos            16                                             /*!< SCB 
+ 325:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_CFSR_USGFAULTSR_Msk            (0xFFFFul << SCB_CFSR_USGFAULTSR_Pos)          /*!< SCB 
+ 326:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 327:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_CFSR_BUSFAULTSR_Pos             8                                             /*!< SCB 
+ 328:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_CFSR_BUSFAULTSR_Msk            (0xFFul << SCB_CFSR_BUSFAULTSR_Pos)            /*!< SCB 
+ 329:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 330:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_CFSR_MEMFAULTSR_Pos             0                                             /*!< SCB 
+ 331:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_CFSR_MEMFAULTSR_Msk            (0xFFul << SCB_CFSR_MEMFAULTSR_Pos)            /*!< SCB 
+ 332:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 333:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* SCB Hard Fault Status Registers Definitions */
+ 334:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_HFSR_DEBUGEVT_Pos              31                                             /*!< SCB 
+ 335:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_HFSR_DEBUGEVT_Msk              (1ul << SCB_HFSR_DEBUGEVT_Pos)                 /*!< SCB 
+ 336:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 337:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_HFSR_FORCED_Pos                30                                             /*!< SCB 
+ 338:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_HFSR_FORCED_Msk                (1ul << SCB_HFSR_FORCED_Pos)                   /*!< SCB 
+ 339:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 340:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_HFSR_VECTTBL_Pos                1                                             /*!< SCB 
+ 341:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_HFSR_VECTTBL_Msk               (1ul << SCB_HFSR_VECTTBL_Pos)                  /*!< SCB 
+ 342:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 343:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* SCB Debug Fault Status Register Definitions */
+ 344:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_DFSR_EXTERNAL_Pos               4                                             /*!< SCB 
+ 345:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_DFSR_EXTERNAL_Msk              (1ul << SCB_DFSR_EXTERNAL_Pos)                 /*!< SCB 
+ 346:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 347:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_DFSR_VCATCH_Pos                 3                                             /*!< SCB 
+ 348:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_DFSR_VCATCH_Msk                (1ul << SCB_DFSR_VCATCH_Pos)                   /*!< SCB 
+ 349:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 350:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_DFSR_DWTTRAP_Pos                2                                             /*!< SCB 
+ 351:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_DFSR_DWTTRAP_Msk               (1ul << SCB_DFSR_DWTTRAP_Pos)                  /*!< SCB 
+ 352:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 353:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_DFSR_BKPT_Pos                   1                                             /*!< SCB 
+ 354:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_DFSR_BKPT_Msk                  (1ul << SCB_DFSR_BKPT_Pos)                     /*!< SCB 
+ 355:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 356:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_DFSR_HALTED_Pos                 0                                             /*!< SCB 
+ 357:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_DFSR_HALTED_Msk                (1ul << SCB_DFSR_HALTED_Pos)                   /*!< SCB 
+ 358:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /*@}*/ /* end of group CMSIS_CM3_SCB */
+ 359:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 360:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 361:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /** @addtogroup CMSIS_CM3_SysTick CMSIS CM3 SysTick
+ 362:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   memory mapped structure for SysTick
+ 363:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   @{
+ 364:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+ 365:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** typedef struct
+ 366:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** {
+ 367:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint32_t CTRL;                         /*!< Offset: 0x00  SysTick Control and Status Registe
+ 368:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint32_t LOAD;                         /*!< Offset: 0x04  SysTick Reload Value Register     
+ 369:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint32_t VAL;                          /*!< Offset: 0x08  SysTick Current Value Register    
+ 370:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __I  uint32_t CALIB;                        /*!< Offset: 0x0C  SysTick Calibration Register      
+ 371:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** } SysTick_Type;
+ 372:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 373:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* SysTick Control / Status Register Definitions */
+ 374:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SysTick_CTRL_COUNTFLAG_Pos         16                                             /*!< SysT
+ 375:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SysTick_CTRL_COUNTFLAG_Msk         (1ul << SysTick_CTRL_COUNTFLAG_Pos)            /*!< SysT
+ 376:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 377:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SysTick_CTRL_CLKSOURCE_Pos          2                                             /*!< SysT
+ 378:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SysTick_CTRL_CLKSOURCE_Msk         (1ul << SysTick_CTRL_CLKSOURCE_Pos)            /*!< SysT
+ 379:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 380:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SysTick_CTRL_TICKINT_Pos            1                                             /*!< SysT
+ 381:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SysTick_CTRL_TICKINT_Msk           (1ul << SysTick_CTRL_TICKINT_Pos)              /*!< SysT
+ 382:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 383:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SysTick_CTRL_ENABLE_Pos             0                                             /*!< SysT
+ 384:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SysTick_CTRL_ENABLE_Msk            (1ul << SysTick_CTRL_ENABLE_Pos)               /*!< SysT
+ 385:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 386:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* SysTick Reload Register Definitions */
+ 387:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SysTick_LOAD_RELOAD_Pos             0                                             /*!< SysT
+ 388:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SysTick_LOAD_RELOAD_Msk            (0xFFFFFFul << SysTick_LOAD_RELOAD_Pos)        /*!< SysT
+ 389:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 390:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* SysTick Current Register Definitions */
+ 391:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SysTick_VAL_CURRENT_Pos             0                                             /*!< SysT
+ 392:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SysTick_VAL_CURRENT_Msk            (0xFFFFFFul << SysTick_VAL_CURRENT_Pos)        /*!< SysT
+ 393:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 394:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* SysTick Calibration Register Definitions */
+ 395:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SysTick_CALIB_NOREF_Pos            31                                             /*!< SysT
+ 396:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SysTick_CALIB_NOREF_Msk            (1ul << SysTick_CALIB_NOREF_Pos)               /*!< SysT
+ 397:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 398:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SysTick_CALIB_SKEW_Pos             30                                             /*!< SysT
+ 399:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SysTick_CALIB_SKEW_Msk             (1ul << SysTick_CALIB_SKEW_Pos)                /*!< SysT
+ 400:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 401:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SysTick_CALIB_TENMS_Pos             0                                             /*!< SysT
+ 402:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SysTick_CALIB_TENMS_Msk            (0xFFFFFFul << SysTick_VAL_CURRENT_Pos)        /*!< SysT
+ 403:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /*@}*/ /* end of group CMSIS_CM3_SysTick */
+ 404:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 405:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 406:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /** @addtogroup CMSIS_CM3_ITM CMSIS CM3 ITM
+ 407:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   memory mapped structure for Instrumentation Trace Macrocell (ITM)
+ 408:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   @{
+ 409:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+ 410:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** typedef struct
+ 411:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** {
+ 412:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __O  union  
+ 413:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   {
+ 414:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****     __O  uint8_t    u8;                       /*!< Offset:       ITM Stimulus Port 8-bit           
+ 415:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****     __O  uint16_t   u16;                      /*!< Offset:       ITM Stimulus Port 16-bit          
+ 416:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****     __O  uint32_t   u32;                      /*!< Offset:       ITM Stimulus Port 32-bit          
+ 417:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   }  PORT [32];                               /*!< Offset: 0x00  ITM Stimulus Port Registers       
+ 418:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****        uint32_t RESERVED0[864];                                 
+ 419:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint32_t TER;                          /*!< Offset:       ITM Trace Enable Register         
+ 420:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****        uint32_t RESERVED1[15];                                  
+ 421:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint32_t TPR;                          /*!< Offset:       ITM Trace Privilege Register      
+ 422:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****        uint32_t RESERVED2[15];                                  
+ 423:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint32_t TCR;                          /*!< Offset:       ITM Trace Control Register        
+ 424:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****        uint32_t RESERVED3[29];                                  
+ 425:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint32_t IWR;                          /*!< Offset:       ITM Integration Write Register    
+ 426:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint32_t IRR;                          /*!< Offset:       ITM Integration Read Register     
+ 427:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint32_t IMCR;                         /*!< Offset:       ITM Integration Mode Control Regis
+ 428:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****        uint32_t RESERVED4[43];                                  
+ 429:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint32_t LAR;                          /*!< Offset:       ITM Lock Access Register          
+ 430:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint32_t LSR;                          /*!< Offset:       ITM Lock Status Register          
+ 431:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****        uint32_t RESERVED5[6];                                   
+ 432:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __I  uint32_t PID4;                         /*!< Offset:       ITM Peripheral Identification Regi
+ 433:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __I  uint32_t PID5;                         /*!< Offset:       ITM Peripheral Identification Regi
+ 434:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __I  uint32_t PID6;                         /*!< Offset:       ITM Peripheral Identification Regi
+ 435:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __I  uint32_t PID7;                         /*!< Offset:       ITM Peripheral Identification Regi
+ 436:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __I  uint32_t PID0;                         /*!< Offset:       ITM Peripheral Identification Regi
+ 437:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __I  uint32_t PID1;                         /*!< Offset:       ITM Peripheral Identification Regi
+ 438:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __I  uint32_t PID2;                         /*!< Offset:       ITM Peripheral Identification Regi
+ 439:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __I  uint32_t PID3;                         /*!< Offset:       ITM Peripheral Identification Regi
+ 440:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __I  uint32_t CID0;                         /*!< Offset:       ITM Component  Identification Regi
+ 441:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __I  uint32_t CID1;                         /*!< Offset:       ITM Component  Identification Regi
+ 442:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __I  uint32_t CID2;                         /*!< Offset:       ITM Component  Identification Regi
+ 443:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __I  uint32_t CID3;                         /*!< Offset:       ITM Component  Identification Regi
+ 444:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** } ITM_Type;                                                
+ 445:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 446:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* ITM Trace Privilege Register Definitions */
+ 447:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define ITM_TPR_PRIVMASK_Pos                0                                             /*!< ITM 
+ 448:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define ITM_TPR_PRIVMASK_Msk               (0xFul << ITM_TPR_PRIVMASK_Pos)                /*!< ITM 
+ 449:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 450:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* ITM Trace Control Register Definitions */
+ 451:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define ITM_TCR_BUSY_Pos                   23                                             /*!< ITM 
+ 452:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define ITM_TCR_BUSY_Msk                   (1ul << ITM_TCR_BUSY_Pos)                      /*!< ITM 
+ 453:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 454:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define ITM_TCR_ATBID_Pos                  16                                             /*!< ITM 
+ 455:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define ITM_TCR_ATBID_Msk                  (0x7Ful << ITM_TCR_ATBID_Pos)                  /*!< ITM 
+ 456:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 457:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define ITM_TCR_TSPrescale_Pos              8                                             /*!< ITM 
+ 458:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define ITM_TCR_TSPrescale_Msk             (3ul << ITM_TCR_TSPrescale_Pos)                /*!< ITM 
+ 459:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 460:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define ITM_TCR_SWOENA_Pos                  4                                             /*!< ITM 
+ 461:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define ITM_TCR_SWOENA_Msk                 (1ul << ITM_TCR_SWOENA_Pos)                    /*!< ITM 
+ 462:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 463:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define ITM_TCR_DWTENA_Pos                  3                                             /*!< ITM 
+ 464:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define ITM_TCR_DWTENA_Msk                 (1ul << ITM_TCR_DWTENA_Pos)                    /*!< ITM 
+ 465:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 466:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define ITM_TCR_SYNCENA_Pos                 2                                             /*!< ITM 
+ 467:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define ITM_TCR_SYNCENA_Msk                (1ul << ITM_TCR_SYNCENA_Pos)                   /*!< ITM 
+ 468:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 469:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define ITM_TCR_TSENA_Pos                   1                                             /*!< ITM 
+ 470:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define ITM_TCR_TSENA_Msk                  (1ul << ITM_TCR_TSENA_Pos)                     /*!< ITM 
+ 471:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 472:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define ITM_TCR_ITMENA_Pos                  0                                             /*!< ITM 
+ 473:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define ITM_TCR_ITMENA_Msk                 (1ul << ITM_TCR_ITMENA_Pos)                    /*!< ITM 
+ 474:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 475:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* ITM Integration Write Register Definitions */
+ 476:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define ITM_IWR_ATVALIDM_Pos                0                                             /*!< ITM 
+ 477:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define ITM_IWR_ATVALIDM_Msk               (1ul << ITM_IWR_ATVALIDM_Pos)                  /*!< ITM 
+ 478:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 479:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* ITM Integration Read Register Definitions */
+ 480:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define ITM_IRR_ATREADYM_Pos                0                                             /*!< ITM 
+ 481:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define ITM_IRR_ATREADYM_Msk               (1ul << ITM_IRR_ATREADYM_Pos)                  /*!< ITM 
+ 482:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 483:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* ITM Integration Mode Control Register Definitions */
+ 484:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define ITM_IMCR_INTEGRATION_Pos            0                                             /*!< ITM 
+ 485:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define ITM_IMCR_INTEGRATION_Msk           (1ul << ITM_IMCR_INTEGRATION_Pos)              /*!< ITM 
+ 486:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 487:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* ITM Lock Status Register Definitions */
+ 488:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define ITM_LSR_ByteAcc_Pos                 2                                             /*!< ITM 
+ 489:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define ITM_LSR_ByteAcc_Msk                (1ul << ITM_LSR_ByteAcc_Pos)                   /*!< ITM 
+ 490:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 491:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define ITM_LSR_Access_Pos                  1                                             /*!< ITM 
+ 492:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define ITM_LSR_Access_Msk                 (1ul << ITM_LSR_Access_Pos)                    /*!< ITM 
+ 493:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 494:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define ITM_LSR_Present_Pos                 0                                             /*!< ITM 
+ 495:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define ITM_LSR_Present_Msk                (1ul << ITM_LSR_Present_Pos)                   /*!< ITM 
+ 496:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /*@}*/ /* end of group CMSIS_CM3_ITM */
+ 497:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 498:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 499:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /** @addtogroup CMSIS_CM3_InterruptType CMSIS CM3 Interrupt Type
+ 500:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   memory mapped structure for Interrupt Type
+ 501:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   @{
+ 502:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+ 503:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** typedef struct
+ 504:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** {
+ 505:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****        uint32_t RESERVED0;
+ 506:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __I  uint32_t ICTR;                         /*!< Offset: 0x04  Interrupt Control Type Register */
+ 507:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #if ((defined __CM3_REV) && (__CM3_REV >= 0x200))
+ 508:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint32_t ACTLR;                        /*!< Offset: 0x08  Auxiliary Control Register      */
+ 509:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #else
+ 510:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****        uint32_t RESERVED1;
+ 511:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #endif
+ 512:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** } InterruptType_Type;
+ 513:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 514:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* Interrupt Controller Type Register Definitions */
+ 515:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define InterruptType_ICTR_INTLINESNUM_Pos  0                                             /*!< Inte
+ 516:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define InterruptType_ICTR_INTLINESNUM_Msk (0x1Ful << InterruptType_ICTR_INTLINESNUM_Pos) /*!< Inte
+ 517:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 518:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* Auxiliary Control Register Definitions */
+ 519:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define InterruptType_ACTLR_DISFOLD_Pos     2                                             /*!< Inte
+ 520:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define InterruptType_ACTLR_DISFOLD_Msk    (1ul << InterruptType_ACTLR_DISFOLD_Pos)       /*!< Inte
+ 521:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 522:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define InterruptType_ACTLR_DISDEFWBUF_Pos  1                                             /*!< Inte
+ 523:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define InterruptType_ACTLR_DISDEFWBUF_Msk (1ul << InterruptType_ACTLR_DISDEFWBUF_Pos)    /*!< Inte
+ 524:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 525:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define InterruptType_ACTLR_DISMCYCINT_Pos  0                                             /*!< Inte
+ 526:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define InterruptType_ACTLR_DISMCYCINT_Msk (1ul << InterruptType_ACTLR_DISMCYCINT_Pos)    /*!< Inte
+ 527:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /*@}*/ /* end of group CMSIS_CM3_InterruptType */
+ 528:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 529:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 530:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #if defined (__MPU_PRESENT) && (__MPU_PRESENT == 1)
+ 531:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /** @addtogroup CMSIS_CM3_MPU CMSIS CM3 MPU
+ 532:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   memory mapped structure for Memory Protection Unit (MPU)
+ 533:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   @{
+ 534:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+ 535:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** typedef struct
+ 536:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** {
+ 537:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __I  uint32_t TYPE;                         /*!< Offset: 0x00  MPU Type Register                 
+ 538:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint32_t CTRL;                         /*!< Offset: 0x04  MPU Control Register              
+ 539:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint32_t RNR;                          /*!< Offset: 0x08  MPU Region RNRber Register        
+ 540:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint32_t RBAR;                         /*!< Offset: 0x0C  MPU Region Base Address Register  
+ 541:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint32_t RASR;                         /*!< Offset: 0x10  MPU Region Attribute and Size Regi
+ 542:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint32_t RBAR_A1;                      /*!< Offset: 0x14  MPU Alias 1 Region Base Address Re
+ 543:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint32_t RASR_A1;                      /*!< Offset: 0x18  MPU Alias 1 Region Attribute and S
+ 544:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint32_t RBAR_A2;                      /*!< Offset: 0x1C  MPU Alias 2 Region Base Address Re
+ 545:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint32_t RASR_A2;                      /*!< Offset: 0x20  MPU Alias 2 Region Attribute and S
+ 546:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint32_t RBAR_A3;                      /*!< Offset: 0x24  MPU Alias 3 Region Base Address Re
+ 547:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint32_t RASR_A3;                      /*!< Offset: 0x28  MPU Alias 3 Region Attribute and S
+ 548:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** } MPU_Type;                                                
+ 549:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 550:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* MPU Type Register */
+ 551:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define MPU_TYPE_IREGION_Pos               16                                             /*!< MPU 
+ 552:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define MPU_TYPE_IREGION_Msk               (0xFFul << MPU_TYPE_IREGION_Pos)               /*!< MPU 
+ 553:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 554:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define MPU_TYPE_DREGION_Pos                8                                             /*!< MPU 
+ 555:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define MPU_TYPE_DREGION_Msk               (0xFFul << MPU_TYPE_DREGION_Pos)               /*!< MPU 
+ 556:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 557:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define MPU_TYPE_SEPARATE_Pos               0                                             /*!< MPU 
+ 558:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define MPU_TYPE_SEPARATE_Msk              (1ul << MPU_TYPE_SEPARATE_Pos)                 /*!< MPU 
+ 559:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 560:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* MPU Control Register */
+ 561:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define MPU_CTRL_PRIVDEFENA_Pos             2                                             /*!< MPU 
+ 562:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define MPU_CTRL_PRIVDEFENA_Msk            (1ul << MPU_CTRL_PRIVDEFENA_Pos)               /*!< MPU 
+ 563:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 564:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define MPU_CTRL_HFNMIENA_Pos               1                                             /*!< MPU 
+ 565:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define MPU_CTRL_HFNMIENA_Msk              (1ul << MPU_CTRL_HFNMIENA_Pos)                 /*!< MPU 
+ 566:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 567:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define MPU_CTRL_ENABLE_Pos                 0                                             /*!< MPU 
+ 568:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define MPU_CTRL_ENABLE_Msk                (1ul << MPU_CTRL_ENABLE_Pos)                   /*!< MPU 
+ 569:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 570:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* MPU Region Number Register */
+ 571:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define MPU_RNR_REGION_Pos                  0                                             /*!< MPU 
+ 572:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define MPU_RNR_REGION_Msk                 (0xFFul << MPU_RNR_REGION_Pos)                 /*!< MPU 
+ 573:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 574:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* MPU Region Base Address Register */
+ 575:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define MPU_RBAR_ADDR_Pos                   5                                             /*!< MPU 
+ 576:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define MPU_RBAR_ADDR_Msk                  (0x7FFFFFFul << MPU_RBAR_ADDR_Pos)             /*!< MPU 
+ 577:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 578:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define MPU_RBAR_VALID_Pos                  4                                             /*!< MPU 
+ 579:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define MPU_RBAR_VALID_Msk                 (1ul << MPU_RBAR_VALID_Pos)                    /*!< MPU 
+ 580:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 581:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define MPU_RBAR_REGION_Pos                 0                                             /*!< MPU 
+ 582:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define MPU_RBAR_REGION_Msk                (0xFul << MPU_RBAR_REGION_Pos)                 /*!< MPU 
+ 583:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 584:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* MPU Region Attribute and Size Register */
+ 585:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define MPU_RASR_XN_Pos                    28                                             /*!< MPU 
+ 586:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define MPU_RASR_XN_Msk                    (1ul << MPU_RASR_XN_Pos)                       /*!< MPU 
+ 587:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 588:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define MPU_RASR_AP_Pos                    24                                             /*!< MPU 
+ 589:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define MPU_RASR_AP_Msk                    (7ul << MPU_RASR_AP_Pos)                       /*!< MPU 
+ 590:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 591:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define MPU_RASR_TEX_Pos                   19                                             /*!< MPU 
+ 592:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define MPU_RASR_TEX_Msk                   (7ul << MPU_RASR_TEX_Pos)                      /*!< MPU 
+ 593:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 594:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define MPU_RASR_S_Pos                     18                                             /*!< MPU 
+ 595:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define MPU_RASR_S_Msk                     (1ul << MPU_RASR_S_Pos)                        /*!< MPU 
+ 596:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 597:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define MPU_RASR_C_Pos                     17                                             /*!< MPU 
+ 598:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define MPU_RASR_C_Msk                     (1ul << MPU_RASR_C_Pos)                        /*!< MPU 
+ 599:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 600:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define MPU_RASR_B_Pos                     16                                             /*!< MPU 
+ 601:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define MPU_RASR_B_Msk                     (1ul << MPU_RASR_B_Pos)                        /*!< MPU 
+ 602:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 603:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define MPU_RASR_SRD_Pos                    8                                             /*!< MPU 
+ 604:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define MPU_RASR_SRD_Msk                   (0xFFul << MPU_RASR_SRD_Pos)                   /*!< MPU 
+ 605:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 606:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define MPU_RASR_SIZE_Pos                   1                                             /*!< MPU 
+ 607:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define MPU_RASR_SIZE_Msk                  (0x1Ful << MPU_RASR_SIZE_Pos)                  /*!< MPU 
+ 608:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 609:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define MPU_RASR_ENA_Pos                     0                                            /*!< MPU 
+ 610:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define MPU_RASR_ENA_Msk                    (0x1Ful << MPU_RASR_ENA_Pos)                  /*!< MPU 
+ 611:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 612:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /*@}*/ /* end of group CMSIS_CM3_MPU */
+ 613:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #endif
+ 614:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 615:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 616:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /** @addtogroup CMSIS_CM3_CoreDebug CMSIS CM3 Core Debug
+ 617:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   memory mapped structure for Core Debug Register
+ 618:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   @{
+ 619:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+ 620:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** typedef struct
+ 621:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** {
+ 622:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint32_t DHCSR;                        /*!< Offset: 0x00  Debug Halting Control and Status R
+ 623:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __O  uint32_t DCRSR;                        /*!< Offset: 0x04  Debug Core Register Selector Regis
+ 624:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint32_t DCRDR;                        /*!< Offset: 0x08  Debug Core Register Data Register 
+ 625:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __IO uint32_t DEMCR;                        /*!< Offset: 0x0C  Debug Exception and Monitor Contro
+ 626:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** } CoreDebug_Type;
+ 627:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 628:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* Debug Halting Control and Status Register */
+ 629:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DHCSR_DBGKEY_Pos         16                                             /*!< Core
+ 630:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DHCSR_DBGKEY_Msk         (0xFFFFul << CoreDebug_DHCSR_DBGKEY_Pos)       /*!< Core
+ 631:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 632:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DHCSR_S_RESET_ST_Pos     25                                             /*!< Core
+ 633:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DHCSR_S_RESET_ST_Msk     (1ul << CoreDebug_DHCSR_S_RESET_ST_Pos)        /*!< Core
+ 634:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 635:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DHCSR_S_RETIRE_ST_Pos    24                                             /*!< Core
+ 636:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DHCSR_S_RETIRE_ST_Msk    (1ul << CoreDebug_DHCSR_S_RETIRE_ST_Pos)       /*!< Core
+ 637:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 638:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DHCSR_S_LOCKUP_Pos       19                                             /*!< Core
+ 639:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DHCSR_S_LOCKUP_Msk       (1ul << CoreDebug_DHCSR_S_LOCKUP_Pos)          /*!< Core
+ 640:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 641:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DHCSR_S_SLEEP_Pos        18                                             /*!< Core
+ 642:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DHCSR_S_SLEEP_Msk        (1ul << CoreDebug_DHCSR_S_SLEEP_Pos)           /*!< Core
+ 643:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 644:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DHCSR_S_HALT_Pos         17                                             /*!< Core
+ 645:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DHCSR_S_HALT_Msk         (1ul << CoreDebug_DHCSR_S_HALT_Pos)            /*!< Core
+ 646:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 647:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DHCSR_S_REGRDY_Pos       16                                             /*!< Core
+ 648:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DHCSR_S_REGRDY_Msk       (1ul << CoreDebug_DHCSR_S_REGRDY_Pos)          /*!< Core
+ 649:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 650:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DHCSR_C_SNAPSTALL_Pos     5                                             /*!< Core
+ 651:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DHCSR_C_SNAPSTALL_Msk    (1ul << CoreDebug_DHCSR_C_SNAPSTALL_Pos)       /*!< Core
+ 652:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 653:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DHCSR_C_MASKINTS_Pos      3                                             /*!< Core
+ 654:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DHCSR_C_MASKINTS_Msk     (1ul << CoreDebug_DHCSR_C_MASKINTS_Pos)        /*!< Core
+ 655:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 656:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DHCSR_C_STEP_Pos          2                                             /*!< Core
+ 657:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DHCSR_C_STEP_Msk         (1ul << CoreDebug_DHCSR_C_STEP_Pos)            /*!< Core
+ 658:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 659:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DHCSR_C_HALT_Pos          1                                             /*!< Core
+ 660:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DHCSR_C_HALT_Msk         (1ul << CoreDebug_DHCSR_C_HALT_Pos)            /*!< Core
+ 661:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 662:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DHCSR_C_DEBUGEN_Pos       0                                             /*!< Core
+ 663:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DHCSR_C_DEBUGEN_Msk      (1ul << CoreDebug_DHCSR_C_DEBUGEN_Pos)         /*!< Core
+ 664:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 665:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* Debug Core Register Selector Register */
+ 666:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DCRSR_REGWnR_Pos         16                                             /*!< Core
+ 667:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DCRSR_REGWnR_Msk         (1ul << CoreDebug_DCRSR_REGWnR_Pos)            /*!< Core
+ 668:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 669:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DCRSR_REGSEL_Pos          0                                             /*!< Core
+ 670:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DCRSR_REGSEL_Msk         (0x1Ful << CoreDebug_DCRSR_REGSEL_Pos)         /*!< Core
+ 671:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 672:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* Debug Exception and Monitor Control Register */
+ 673:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DEMCR_TRCENA_Pos         24                                             /*!< Core
+ 674:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DEMCR_TRCENA_Msk         (1ul << CoreDebug_DEMCR_TRCENA_Pos)            /*!< Core
+ 675:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 676:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DEMCR_MON_REQ_Pos        19                                             /*!< Core
+ 677:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DEMCR_MON_REQ_Msk        (1ul << CoreDebug_DEMCR_MON_REQ_Pos)           /*!< Core
+ 678:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 679:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DEMCR_MON_STEP_Pos       18                                             /*!< Core
+ 680:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DEMCR_MON_STEP_Msk       (1ul << CoreDebug_DEMCR_MON_STEP_Pos)          /*!< Core
+ 681:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 682:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DEMCR_MON_PEND_Pos       17                                             /*!< Core
+ 683:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DEMCR_MON_PEND_Msk       (1ul << CoreDebug_DEMCR_MON_PEND_Pos)          /*!< Core
+ 684:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 685:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DEMCR_MON_EN_Pos         16                                             /*!< Core
+ 686:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DEMCR_MON_EN_Msk         (1ul << CoreDebug_DEMCR_MON_EN_Pos)            /*!< Core
+ 687:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 688:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DEMCR_VC_HARDERR_Pos     10                                             /*!< Core
+ 689:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DEMCR_VC_HARDERR_Msk     (1ul << CoreDebug_DEMCR_VC_HARDERR_Pos)        /*!< Core
+ 690:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 691:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DEMCR_VC_INTERR_Pos       9                                             /*!< Core
+ 692:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DEMCR_VC_INTERR_Msk      (1ul << CoreDebug_DEMCR_VC_INTERR_Pos)         /*!< Core
+ 693:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 694:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DEMCR_VC_BUSERR_Pos       8                                             /*!< Core
+ 695:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DEMCR_VC_BUSERR_Msk      (1ul << CoreDebug_DEMCR_VC_BUSERR_Pos)         /*!< Core
+ 696:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 697:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DEMCR_VC_STATERR_Pos      7                                             /*!< Core
+ 698:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DEMCR_VC_STATERR_Msk     (1ul << CoreDebug_DEMCR_VC_STATERR_Pos)        /*!< Core
+ 699:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 700:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DEMCR_VC_CHKERR_Pos       6                                             /*!< Core
+ 701:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DEMCR_VC_CHKERR_Msk      (1ul << CoreDebug_DEMCR_VC_CHKERR_Pos)         /*!< Core
+ 702:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 703:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DEMCR_VC_NOCPERR_Pos      5                                             /*!< Core
+ 704:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DEMCR_VC_NOCPERR_Msk     (1ul << CoreDebug_DEMCR_VC_NOCPERR_Pos)        /*!< Core
+ 705:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 706:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DEMCR_VC_MMERR_Pos        4                                             /*!< Core
+ 707:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DEMCR_VC_MMERR_Msk       (1ul << CoreDebug_DEMCR_VC_MMERR_Pos)          /*!< Core
+ 708:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 709:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DEMCR_VC_CORERESET_Pos    0                                             /*!< Core
+ 710:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_DEMCR_VC_CORERESET_Msk   (1ul << CoreDebug_DEMCR_VC_CORERESET_Pos)      /*!< Core
+ 711:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /*@}*/ /* end of group CMSIS_CM3_CoreDebug */
+ 712:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 713:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 714:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* Memory mapping of Cortex-M3 Hardware */
+ 715:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCS_BASE            (0xE000E000)                              /*!< System Control Space Bas
+ 716:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define ITM_BASE            (0xE0000000)                              /*!< ITM Base Address        
+ 717:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug_BASE      (0xE000EDF0)                              /*!< Core Debug Base Address 
+ 718:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SysTick_BASE        (SCS_BASE +  0x0010)                      /*!< SysTick Base Address    
+ 719:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define NVIC_BASE           (SCS_BASE +  0x0100)                      /*!< NVIC Base Address       
+ 720:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB_BASE            (SCS_BASE +  0x0D00)                      /*!< System Control Block Bas
+ 721:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 722:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define InterruptType       ((InterruptType_Type *) SCS_BASE)         /*!< Interrupt Type Register 
+ 723:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SCB                 ((SCB_Type *)           SCB_BASE)         /*!< SCB configuration struct
+ 724:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define SysTick             ((SysTick_Type *)       SysTick_BASE)     /*!< SysTick configuration st
+ 725:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define NVIC                ((NVIC_Type *)          NVIC_BASE)        /*!< NVIC configuration struc
+ 726:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define ITM                 ((ITM_Type *)           ITM_BASE)         /*!< ITM configuration struct
+ 727:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define CoreDebug           ((CoreDebug_Type *)     CoreDebug_BASE)   /*!< Core Debug configuration
+ 728:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 729:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #if defined (__MPU_PRESENT) && (__MPU_PRESENT == 1)
+ 730:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   #define MPU_BASE          (SCS_BASE +  0x0D90)                      /*!< Memory Protection Unit  
+ 731:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   #define MPU               ((MPU_Type*)            MPU_BASE)         /*!< Memory Protection Unit  
+ 732:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #endif
+ 733:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 734:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /*@}*/ /* end of group CMSIS_CM3_core_register */
+ 735:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 736:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 737:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /*******************************************************************************
+ 738:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *                Hardware Abstraction Layer
+ 739:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  ******************************************************************************/
+ 740:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 741:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #if defined ( __CC_ARM   )
+ 742:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   #define __ASM            __asm                                      /*!< asm keyword for ARM Comp
+ 743:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   #define __INLINE         __inline                                   /*!< inline keyword for ARM C
+ 744:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 745:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #elif defined ( __ICCARM__ )
+ 746:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   #define __ASM           __asm                                       /*!< asm keyword for IAR Comp
+ 747:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   #define __INLINE        inline                                      /*!< inline keyword for IAR C
+ 748:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 749:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #elif defined   (  __GNUC__  )
+ 750:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   #define __ASM            __asm                                      /*!< asm keyword for GNU Comp
+ 751:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   #define __INLINE         inline                                     /*!< inline keyword for GNU C
+ 752:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 753:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #elif defined   (  __TASKING__  )
+ 754:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   #define __ASM            __asm                                      /*!< asm keyword for TASKING 
+ 755:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   #define __INLINE         inline                                     /*!< inline keyword for TASKI
+ 756:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 757:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #endif
+ 758:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 759:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 760:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* ###################  Compiler specific Intrinsics  ########################### */
+ 761:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 762:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #if defined ( __CC_ARM   ) /*------------------RealView Compiler -----------------*/
+ 763:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* ARM armcc specific functions */
+ 764:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 765:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define __enable_fault_irq                __enable_fiq
+ 766:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define __disable_fault_irq               __disable_fiq
+ 767:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 768:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define __NOP                             __nop
+ 769:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define __WFI                             __wfi
+ 770:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define __WFE                             __wfe
+ 771:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define __SEV                             __sev
+ 772:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define __ISB()                           __isb(0)
+ 773:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define __DSB()                           __dsb(0)
+ 774:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define __DMB()                           __dmb(0)
+ 775:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define __REV                             __rev
+ 776:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define __RBIT                            __rbit
+ 777:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define __LDREXB(ptr)                     ((unsigned char ) __ldrex(ptr))
+ 778:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define __LDREXH(ptr)                     ((unsigned short) __ldrex(ptr))
+ 779:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define __LDREXW(ptr)                     ((unsigned int  ) __ldrex(ptr))
+ 780:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define __STREXB(value, ptr)              __strex(value, ptr)
+ 781:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define __STREXH(value, ptr)              __strex(value, ptr)
+ 782:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define __STREXW(value, ptr)              __strex(value, ptr)
+ 783:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 784:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 785:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* intrinsic unsigned long long __ldrexd(volatile void *ptr) */
+ 786:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* intrinsic int __strexd(unsigned long long val, volatile void *ptr) */
+ 787:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* intrinsic void __enable_irq();     */
+ 788:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* intrinsic void __disable_irq();    */
+ 789:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 790:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 791:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+ 792:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Return the Process Stack Pointer
+ 793:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+ 794:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @return ProcessStackPointer
+ 795:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+ 796:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Return the actual process stack pointer
+ 797:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+ 798:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern uint32_t __get_PSP(void);
+ 799:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 800:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+ 801:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Set the Process Stack Pointer
+ 802:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+ 803:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param  topOfProcStack  Process Stack Pointer
+ 804:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+ 805:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Assign the value ProcessStackPointer to the MSP 
+ 806:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * (process stack pointer) Cortex processor register
+ 807:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+ 808:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern void __set_PSP(uint32_t topOfProcStack);
+ 809:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 810:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+ 811:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Return the Main Stack Pointer
+ 812:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+ 813:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @return Main Stack Pointer
+ 814:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+ 815:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Return the current value of the MSP (main stack pointer)
+ 816:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Cortex processor register
+ 817:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+ 818:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern uint32_t __get_MSP(void);
+ 819:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 820:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+ 821:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Set the Main Stack Pointer
+ 822:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+ 823:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param  topOfMainStack  Main Stack Pointer
+ 824:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+ 825:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Assign the value mainStackPointer to the MSP 
+ 826:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * (main stack pointer) Cortex processor register
+ 827:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+ 828:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern void __set_MSP(uint32_t topOfMainStack);
+ 829:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 830:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+ 831:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Reverse byte order in unsigned short value
+ 832:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+ 833:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param   value  value to reverse
+ 834:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @return         reversed value
+ 835:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+ 836:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Reverse byte order in unsigned short value
+ 837:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+ 838:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern uint32_t __REV16(uint16_t value);
+ 839:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 840:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+ 841:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Reverse byte order in signed short value with sign extension to integer
+ 842:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+ 843:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param   value  value to reverse
+ 844:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @return         reversed value
+ 845:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+ 846:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Reverse byte order in signed short value with sign extension to integer
+ 847:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+ 848:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern int32_t __REVSH(int16_t value);
+ 849:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 850:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 851:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #if (__ARMCC_VERSION < 400000)
+ 852:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 853:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+ 854:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Remove the exclusive lock created by ldrex
+ 855:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+ 856:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Removes the exclusive lock which is created by ldrex.
+ 857:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+ 858:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern void __CLREX(void);
+ 859:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 860:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+ 861:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Return the Base Priority value
+ 862:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+ 863:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @return BasePriority
+ 864:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+ 865:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Return the content of the base priority register
+ 866:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+ 867:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern uint32_t __get_BASEPRI(void);
+ 868:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 869:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+ 870:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Set the Base Priority value
+ 871:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+ 872:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param  basePri  BasePriority
+ 873:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+ 874:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Set the base priority register
+ 875:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+ 876:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern void __set_BASEPRI(uint32_t basePri);
+ 877:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 878:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+ 879:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Return the Priority Mask value
+ 880:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+ 881:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @return PriMask
+ 882:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+ 883:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Return state of the priority mask bit from the priority mask register
+ 884:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+ 885:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern uint32_t __get_PRIMASK(void);
+ 886:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 887:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+ 888:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Set the Priority Mask value
+ 889:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+ 890:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param   priMask  PriMask
+ 891:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+ 892:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Set the priority mask bit in the priority mask register
+ 893:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+ 894:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern void __set_PRIMASK(uint32_t priMask);
+ 895:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 896:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+ 897:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Return the Fault Mask value
+ 898:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+ 899:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @return FaultMask
+ 900:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+ 901:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Return the content of the fault mask register
+ 902:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+ 903:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern uint32_t __get_FAULTMASK(void);
+ 904:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 905:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+ 906:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Set the Fault Mask value
+ 907:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+ 908:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param  faultMask faultMask value
+ 909:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+ 910:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Set the fault mask register
+ 911:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+ 912:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern void __set_FAULTMASK(uint32_t faultMask);
+ 913:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 914:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+ 915:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Return the Control Register value
+ 916:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * 
+ 917:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @return Control value
+ 918:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+ 919:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Return the content of the control register
+ 920:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+ 921:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern uint32_t __get_CONTROL(void);
+ 922:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 923:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+ 924:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Set the Control Register value
+ 925:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+ 926:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param  control  Control value
+ 927:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+ 928:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Set the control register
+ 929:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+ 930:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern void __set_CONTROL(uint32_t control);
+ 931:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 932:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #else  /* (__ARMCC_VERSION >= 400000)  */
+ 933:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 934:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+ 935:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Remove the exclusive lock created by ldrex
+ 936:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+ 937:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Removes the exclusive lock which is created by ldrex.
+ 938:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+ 939:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define __CLREX                           __clrex
+ 940:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 941:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+ 942:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Return the Base Priority value
+ 943:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+ 944:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @return BasePriority
+ 945:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+ 946:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Return the content of the base priority register
+ 947:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+ 948:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** static __INLINE uint32_t  __get_BASEPRI(void)
+ 949:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** {
+ 950:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   register uint32_t __regBasePri         __ASM("basepri");
+ 951:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   return(__regBasePri);
+ 952:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** }
+ 953:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 954:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+ 955:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Set the Base Priority value
+ 956:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+ 957:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param  basePri  BasePriority
+ 958:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+ 959:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Set the base priority register
+ 960:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+ 961:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** static __INLINE void __set_BASEPRI(uint32_t basePri)
+ 962:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** {
+ 963:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   register uint32_t __regBasePri         __ASM("basepri");
+ 964:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __regBasePri = (basePri & 0xff);
+ 965:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** }
+ 966:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 967:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+ 968:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Return the Priority Mask value
+ 969:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+ 970:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @return PriMask
+ 971:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+ 972:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Return state of the priority mask bit from the priority mask register
+ 973:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+ 974:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** static __INLINE uint32_t __get_PRIMASK(void)
+ 975:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** {
+ 976:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   register uint32_t __regPriMask         __ASM("primask");
+ 977:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   return(__regPriMask);
+ 978:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** }
+ 979:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 980:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+ 981:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Set the Priority Mask value
+ 982:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+ 983:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param  priMask  PriMask
+ 984:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+ 985:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Set the priority mask bit in the priority mask register
+ 986:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+ 987:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** static __INLINE void __set_PRIMASK(uint32_t priMask)
+ 988:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** {
+ 989:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   register uint32_t __regPriMask         __ASM("primask");
+ 990:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __regPriMask = (priMask);
+ 991:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** }
+ 992:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+ 993:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+ 994:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Return the Fault Mask value
+ 995:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+ 996:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @return FaultMask
+ 997:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+ 998:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Return the content of the fault mask register
+ 999:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+1000:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** static __INLINE uint32_t __get_FAULTMASK(void)
+1001:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** {
+1002:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   register uint32_t __regFaultMask       __ASM("faultmask");
+1003:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   return(__regFaultMask);
+1004:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** }
+1005:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1006:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+1007:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Set the Fault Mask value
+1008:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1009:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param  faultMask  faultMask value
+1010:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1011:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Set the fault mask register
+1012:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+1013:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** static __INLINE void __set_FAULTMASK(uint32_t faultMask)
+1014:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** {
+1015:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   register uint32_t __regFaultMask       __ASM("faultmask");
+1016:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __regFaultMask = (faultMask & 1);
+1017:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** }
+1018:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1019:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+1020:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Return the Control Register value
+1021:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * 
+1022:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @return Control value
+1023:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1024:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Return the content of the control register
+1025:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+1026:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** static __INLINE uint32_t __get_CONTROL(void)
+1027:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** {
+1028:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   register uint32_t __regControl         __ASM("control");
+1029:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   return(__regControl);
+1030:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** }
+1031:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1032:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+1033:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Set the Control Register value
+1034:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1035:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param  control  Control value
+1036:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1037:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Set the control register
+1038:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+1039:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** static __INLINE void __set_CONTROL(uint32_t control)
+1040:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** {
+1041:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   register uint32_t __regControl         __ASM("control");
+1042:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   __regControl = control;
+1043:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** }
+1044:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1045:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #endif /* __ARMCC_VERSION  */ 
+1046:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1047:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1048:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1049:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #elif (defined (__ICCARM__)) /*------------------ ICC Compiler -------------------*/
+1050:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* IAR iccarm specific functions */
+1051:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1052:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define __enable_irq                              __enable_interrupt        /*!< global Interrupt e
+1053:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define __disable_irq                             __disable_interrupt       /*!< global Interrupt d
+1054:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1055:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** static __INLINE void __enable_fault_irq()         { __ASM ("cpsie f"); }
+1056:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** static __INLINE void __disable_fault_irq()        { __ASM ("cpsid f"); }
+1057:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1058:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #define __NOP                                     __no_operation            /*!< no operation intri
+1059:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** static __INLINE  void __WFI()                     { __ASM ("wfi"); }
+1060:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** static __INLINE  void __WFE()                     { __ASM ("wfe"); }
+1061:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** static __INLINE  void __SEV()                     { __ASM ("sev"); }
+1062:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** static __INLINE  void __CLREX()                   { __ASM ("clrex"); }
+1063:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1064:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* intrinsic void __ISB(void)                                     */
+1065:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* intrinsic void __DSB(void)                                     */
+1066:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* intrinsic void __DMB(void)                                     */
+1067:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* intrinsic void __set_PRIMASK();                                */
+1068:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* intrinsic void __get_PRIMASK();                                */
+1069:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* intrinsic void __set_FAULTMASK();                              */
+1070:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* intrinsic void __get_FAULTMASK();                              */
+1071:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* intrinsic uint32_t __REV(uint32_t value);                      */
+1072:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* intrinsic uint32_t __REVSH(uint32_t value);                    */
+1073:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* intrinsic unsigned long __STREX(unsigned long, unsigned long); */
+1074:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* intrinsic unsigned long __LDREX(unsigned long *);              */
+1075:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1076:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1077:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+1078:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Return the Process Stack Pointer
+1079:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1080:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @return ProcessStackPointer
+1081:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1082:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Return the actual process stack pointer
+1083:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+1084:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern uint32_t __get_PSP(void);
+1085:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1086:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+1087:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Set the Process Stack Pointer
+1088:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1089:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param  topOfProcStack  Process Stack Pointer
+1090:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1091:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Assign the value ProcessStackPointer to the MSP 
+1092:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * (process stack pointer) Cortex processor register
+1093:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+1094:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern void __set_PSP(uint32_t topOfProcStack);
+1095:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1096:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+1097:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Return the Main Stack Pointer
+1098:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1099:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @return Main Stack Pointer
+1100:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1101:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Return the current value of the MSP (main stack pointer)
+1102:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Cortex processor register
+1103:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+1104:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern uint32_t __get_MSP(void);
+1105:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1106:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+1107:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Set the Main Stack Pointer
+1108:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1109:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param  topOfMainStack  Main Stack Pointer
+1110:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1111:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Assign the value mainStackPointer to the MSP 
+1112:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * (main stack pointer) Cortex processor register
+1113:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+1114:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern void __set_MSP(uint32_t topOfMainStack);
+1115:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1116:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+1117:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Reverse byte order in unsigned short value
+1118:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1119:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param  value  value to reverse
+1120:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @return        reversed value
+1121:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1122:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Reverse byte order in unsigned short value
+1123:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+1124:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern uint32_t __REV16(uint16_t value);
+1125:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1126:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+1127:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Reverse bit order of value
+1128:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1129:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param  value  value to reverse
+1130:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @return        reversed value
+1131:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1132:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Reverse bit order of value
+1133:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+1134:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern uint32_t __RBIT(uint32_t value);
+1135:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1136:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+1137:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  LDR Exclusive (8 bit)
+1138:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1139:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param  *addr  address pointer
+1140:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @return        value of (*address)
+1141:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1142:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Exclusive LDR command for 8 bit values)
+1143:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+1144:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern uint8_t __LDREXB(uint8_t *addr);
+1145:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1146:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+1147:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  LDR Exclusive (16 bit)
+1148:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1149:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param  *addr  address pointer
+1150:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @return        value of (*address)
+1151:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1152:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Exclusive LDR command for 16 bit values
+1153:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+1154:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern uint16_t __LDREXH(uint16_t *addr);
+1155:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1156:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+1157:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  LDR Exclusive (32 bit)
+1158:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1159:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param  *addr  address pointer
+1160:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @return        value of (*address)
+1161:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1162:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Exclusive LDR command for 32 bit values
+1163:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+1164:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern uint32_t __LDREXW(uint32_t *addr);
+1165:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1166:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+1167:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  STR Exclusive (8 bit)
+1168:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1169:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param  value  value to store
+1170:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param  *addr  address pointer
+1171:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @return        successful / failed
+1172:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1173:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Exclusive STR command for 8 bit values
+1174:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+1175:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern uint32_t __STREXB(uint8_t value, uint8_t *addr);
+1176:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1177:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+1178:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  STR Exclusive (16 bit)
+1179:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1180:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param  value  value to store
+1181:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param  *addr  address pointer
+1182:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @return        successful / failed
+1183:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1184:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Exclusive STR command for 16 bit values
+1185:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+1186:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern uint32_t __STREXH(uint16_t value, uint16_t *addr);
+1187:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1188:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+1189:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  STR Exclusive (32 bit)
+1190:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1191:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param  value  value to store
+1192:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param  *addr  address pointer
+1193:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @return        successful / failed
+1194:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1195:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Exclusive STR command for 32 bit values
+1196:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+1197:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern uint32_t __STREXW(uint32_t value, uint32_t *addr);
+1198:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1199:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1200:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1201:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #elif (defined (__GNUC__)) /*------------------ GNU Compiler ---------------------*/
+1202:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* GNU gcc specific functions */
+1203:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1204:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** static __INLINE void __enable_irq()               { __ASM volatile ("cpsie i"); }
+1205:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** static __INLINE void __disable_irq()              { __ASM volatile ("cpsid i"); }
+1206:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1207:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** static __INLINE void __enable_fault_irq()         { __ASM volatile ("cpsie f"); }
+1208:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** static __INLINE void __disable_fault_irq()        { __ASM volatile ("cpsid f"); }
+1209:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1210:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** static __INLINE void __NOP()                      { __ASM volatile ("nop"); }
+1211:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** static __INLINE void __WFI()                      { __ASM volatile ("wfi"); }
+1212:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** static __INLINE void __WFE()                      { __ASM volatile ("wfe"); }
+1213:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** static __INLINE void __SEV()                      { __ASM volatile ("sev"); }
+1214:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** static __INLINE void __ISB()                      { __ASM volatile ("isb"); }
+1215:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** static __INLINE void __DSB()                      { __ASM volatile ("dsb"); }
+1216:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** static __INLINE void __DMB()                      { __ASM volatile ("dmb"); }
+1217:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** static __INLINE void __CLREX()                    { __ASM volatile ("clrex"); }
+1218:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1219:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1220:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+1221:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Return the Process Stack Pointer
+1222:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1223:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @return ProcessStackPointer
+1224:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1225:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Return the actual process stack pointer
+1226:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+1227:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern uint32_t __get_PSP(void);
+1228:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1229:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+1230:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Set the Process Stack Pointer
+1231:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1232:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param  topOfProcStack  Process Stack Pointer
+1233:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1234:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Assign the value ProcessStackPointer to the MSP 
+1235:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * (process stack pointer) Cortex processor register
+1236:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+1237:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern void __set_PSP(uint32_t topOfProcStack);
+1238:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1239:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+1240:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Return the Main Stack Pointer
+1241:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1242:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @return Main Stack Pointer
+1243:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1244:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Return the current value of the MSP (main stack pointer)
+1245:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Cortex processor register
+1246:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+1247:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern uint32_t __get_MSP(void);
+1248:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1249:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+1250:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Set the Main Stack Pointer
+1251:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1252:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param  topOfMainStack  Main Stack Pointer
+1253:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1254:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Assign the value mainStackPointer to the MSP 
+1255:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * (main stack pointer) Cortex processor register
+1256:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+1257:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern void __set_MSP(uint32_t topOfMainStack);
+1258:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1259:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+1260:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Return the Base Priority value
+1261:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1262:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @return BasePriority
+1263:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1264:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Return the content of the base priority register
+1265:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+1266:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern uint32_t __get_BASEPRI(void);
+1267:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1268:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+1269:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Set the Base Priority value
+1270:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1271:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param  basePri  BasePriority
+1272:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1273:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Set the base priority register
+1274:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+1275:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern void __set_BASEPRI(uint32_t basePri);
+1276:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1277:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+1278:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Return the Priority Mask value
+1279:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1280:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @return PriMask
+1281:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1282:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Return state of the priority mask bit from the priority mask register
+1283:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+1284:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern uint32_t  __get_PRIMASK(void);
+1285:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1286:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+1287:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Set the Priority Mask value
+1288:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1289:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param  priMask  PriMask
+1290:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1291:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Set the priority mask bit in the priority mask register
+1292:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+1293:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern void __set_PRIMASK(uint32_t priMask);
+1294:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1295:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+1296:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Return the Fault Mask value
+1297:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1298:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @return FaultMask
+1299:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1300:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Return the content of the fault mask register
+1301:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+1302:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern uint32_t __get_FAULTMASK(void);
+1303:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1304:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+1305:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Set the Fault Mask value
+1306:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1307:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param  faultMask  faultMask value
+1308:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1309:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Set the fault mask register
+1310:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+1311:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern void __set_FAULTMASK(uint32_t faultMask);
+1312:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1313:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+1314:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Return the Control Register value
+1315:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** * 
+1316:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** *  @return Control value
+1317:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1318:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Return the content of the control register
+1319:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+1320:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern uint32_t __get_CONTROL(void);
+1321:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1322:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+1323:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Set the Control Register value
+1324:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1325:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param  control  Control value
+1326:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1327:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Set the control register
+1328:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+1329:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern void __set_CONTROL(uint32_t control);
+1330:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1331:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+1332:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Reverse byte order in integer value
+1333:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1334:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param  value  value to reverse
+1335:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @return        reversed value
+1336:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1337:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Reverse byte order in integer value
+1338:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+1339:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern uint32_t __REV(uint32_t value);
+1340:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1341:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+1342:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Reverse byte order in unsigned short value
+1343:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1344:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param  value  value to reverse
+1345:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @return        reversed value
+1346:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1347:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Reverse byte order in unsigned short value
+1348:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+1349:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern uint32_t __REV16(uint16_t value);
+1350:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1351:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+1352:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Reverse byte order in signed short value with sign extension to integer
+1353:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1354:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param  value  value to reverse
+1355:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @return        reversed value
+1356:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1357:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Reverse byte order in signed short value with sign extension to integer
+1358:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+1359:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern int32_t __REVSH(int16_t value);
+1360:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1361:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+1362:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Reverse bit order of value
+1363:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1364:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param  value  value to reverse
+1365:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @return        reversed value
+1366:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1367:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Reverse bit order of value
+1368:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+1369:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern uint32_t __RBIT(uint32_t value);
+1370:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1371:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+1372:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  LDR Exclusive (8 bit)
+1373:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1374:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param  *addr  address pointer
+1375:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @return        value of (*address)
+1376:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1377:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Exclusive LDR command for 8 bit value
+1378:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+1379:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern uint8_t __LDREXB(uint8_t *addr);
+1380:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1381:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+1382:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  LDR Exclusive (16 bit)
+1383:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1384:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param  *addr  address pointer
+1385:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @return        value of (*address)
+1386:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1387:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Exclusive LDR command for 16 bit values
+1388:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+1389:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern uint16_t __LDREXH(uint16_t *addr);
+1390:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1391:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+1392:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  LDR Exclusive (32 bit)
+1393:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1394:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param  *addr  address pointer
+1395:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @return        value of (*address)
+1396:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1397:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Exclusive LDR command for 32 bit values
+1398:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+1399:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern uint32_t __LDREXW(uint32_t *addr);
+1400:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1401:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+1402:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  STR Exclusive (8 bit)
+1403:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1404:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param  value  value to store
+1405:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param  *addr  address pointer
+1406:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @return        successful / failed
+1407:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1408:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Exclusive STR command for 8 bit values
+1409:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+1410:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern uint32_t __STREXB(uint8_t value, uint8_t *addr);
+1411:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1412:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+1413:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  STR Exclusive (16 bit)
+1414:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1415:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param  value  value to store
+1416:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param  *addr  address pointer
+1417:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @return        successful / failed
+1418:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1419:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Exclusive STR command for 16 bit values
+1420:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+1421:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern uint32_t __STREXH(uint16_t value, uint16_t *addr);
+1422:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1423:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+1424:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  STR Exclusive (32 bit)
+1425:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1426:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param  value  value to store
+1427:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param  *addr  address pointer
+1428:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @return        successful / failed
+1429:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1430:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Exclusive STR command for 32 bit values
+1431:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+1432:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** extern uint32_t __STREXW(uint32_t value, uint32_t *addr);
+1433:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1434:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1435:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #elif (defined (__TASKING__)) /*------------------ TASKING Compiler ---------------------*/
+1436:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* TASKING carm specific functions */
+1437:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1438:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /*
+1439:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * The CMSIS functions have been implemented as intrinsics in the compiler.
+1440:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Please use "carm -?i" to get an up to date list of all instrinsics,
+1441:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Including the CMSIS ones.
+1442:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+1443:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1444:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** #endif
+1445:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1446:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1447:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /** @addtogroup CMSIS_CM3_Core_FunctionInterface CMSIS CM3 Core Function Interface
+1448:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   Core  Function Interface containing:
+1449:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   - Core NVIC Functions
+1450:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   - Core SysTick Functions
+1451:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   - Core Reset Functions
+1452:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** */
+1453:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /*@{*/
+1454:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1455:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /* ##########################   NVIC functions  #################################### */
+1456:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1457:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+1458:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Set the Priority Grouping in NVIC Interrupt Controller
+1459:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1460:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param  PriorityGroup is priority grouping field
+1461:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1462:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Set the priority grouping field using the required unlock sequence.
+1463:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * The parameter priority_grouping is assigned to the field 
+1464:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * SCB->AIRCR [10:8] PRIGROUP field. Only values from 0..7 are used.
+1465:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * In case of a conflict between priority grouping and available
+1466:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * priority bits (__NVIC_PRIO_BITS) the smallest possible priority group is set.
+1467:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+1468:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** static __INLINE void NVIC_SetPriorityGrouping(uint32_t PriorityGroup)
+1469:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** {
+1470:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   uint32_t reg_value;
+1471:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   uint32_t PriorityGroupTmp = (PriorityGroup & 0x07);                         /* only values 0..7 a
+1472:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   
+1473:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   reg_value  =  SCB->AIRCR;                                                   /* read old register 
+1474:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   reg_value &= ~(SCB_AIRCR_VECTKEY_Msk | SCB_AIRCR_PRIGROUP_Msk);             /* clear bits to chan
+1475:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   reg_value  =  (reg_value                       |
+1476:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****                 (0x5FA << SCB_AIRCR_VECTKEY_Pos) | 
+1477:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****                 (PriorityGroupTmp << 8));                                     /* Insert write key a
+1478:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   SCB->AIRCR =  reg_value;
+1479:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** }
+1480:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1481:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+1482:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Get the Priority Grouping from NVIC Interrupt Controller
+1483:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1484:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @return priority grouping field 
+1485:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1486:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Get the priority grouping from NVIC Interrupt Controller.
+1487:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * priority grouping is SCB->AIRCR [10:8] PRIGROUP field.
+1488:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+1489:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** static __INLINE uint32_t NVIC_GetPriorityGrouping(void)
+1490:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** {
+1491:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   return ((SCB->AIRCR & SCB_AIRCR_PRIGROUP_Msk) >> SCB_AIRCR_PRIGROUP_Pos);   /* read priority grou
+1492:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** }
+1493:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** 
+1494:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** /**
+1495:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @brief  Enable Interrupt in NVIC Interrupt Controller
+1496:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1497:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * @param  IRQn   The positive number of the external interrupt to enable
+1498:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  *
+1499:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * Enable a device specific interupt in the NVIC interrupt controller.
+1500:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  * The interrupt number cannot be a negative value.
+1501:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****  */
+1502:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** static __INLINE void NVIC_EnableIRQ(IRQn_Type IRQn)
+1503:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** {
+  26              		.loc 1 1503 0
+  27              		.cfi_startproc
+  28              		@ args = 0, pretend = 0, frame = 8
+  29              		@ frame_needed = 1, uses_anonymous_args = 0
+  30              		@ link register save eliminated.
+  31 0000 80B4     		push	{r7}
+  32              	.LCFI0:
+  33              		.cfi_def_cfa_offset 4
+  34              		.cfi_offset 7, -4
+  35 0002 83B0     		sub	sp, sp, #12
+  36              	.LCFI1:
+  37              		.cfi_def_cfa_offset 16
+  38 0004 00AF     		add	r7, sp, #0
+  39              	.LCFI2:
+  40              		.cfi_def_cfa_register 7
+  41 0006 0346     		mov	r3, r0
+  42 0008 FB71     		strb	r3, [r7, #7]
+1504:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h ****   NVIC->ISER[((uint32_t)(IRQn) >> 5)] = (1 << ((uint32_t)(IRQn) & 0x1F)); /* enable interrupt */
+  43              		.loc 1 1504 0
+  44 000a 4FF46143 		mov	r3, #57600
+  45 000e CEF20003 		movt	r3, 57344
+  46 0012 97F90720 		ldrsb	r2, [r7, #7]
+  47 0016 4FEA5212 		lsr	r2, r2, #5
+  48 001a F979     		ldrb	r1, [r7, #7]	@ zero_extendqisi2
+  49 001c 01F01F01 		and	r1, r1, #31
+  50 0020 4FF00100 		mov	r0, #1
+  51 0024 00FA01F1 		lsl	r1, r0, r1
+  52 0028 43F82210 		str	r1, [r3, r2, lsl #2]
+1505:D:\PALL\workspace\freertos_stm32_d\CMSIS\core_cm3.h **** }
+  53              		.loc 1 1505 0
+  54 002c 07F10C07 		add	r7, r7, #12
+  55 0030 BD46     		mov	sp, r7
+  56 0032 80BC     		pop	{r7}
+  57 0034 7047     		bx	lr
+  58              		.cfi_endproc
+  59              	.LFE14:
+  61 0036 00BF     		.section	.text.Uart1Init,"ax",%progbits
+  62              		.align	2
+  63              		.global	Uart1Init
+  64              		.thumb
+  65              		.thumb_func
+  67              	Uart1Init:
+  68              	.LFB29:
+  69              		.file 2 "../Peripherals/uart.c"
+   1:../Peripherals/uart.c **** /*
+   2:../Peripherals/uart.c **** ***************************************************************************************************
+   3:../Peripherals/uart.c **** *
+   4:../Peripherals/uart.c **** *                                            UART INTERFACE
+   5:../Peripherals/uart.c **** *
+   6:../Peripherals/uart.c **** * Filename      : uart.c
+   7:../Peripherals/uart.c **** * Version       : V1.00
+   8:../Peripherals/uart.c **** * Programmer(s) : Palladin
+   9:../Peripherals/uart.c **** ***************************************************************************************************
+  10:../Peripherals/uart.c **** */
+  11:../Peripherals/uart.c **** 
+  12:../Peripherals/uart.c **** 
+  13:../Peripherals/uart.c **** /*
+  14:../Peripherals/uart.c **** ***************************************************************************************************
+  15:../Peripherals/uart.c **** *                                             INCLUDE FILES
+  16:../Peripherals/uart.c **** ***************************************************************************************************
+  17:../Peripherals/uart.c **** */
+  18:../Peripherals/uart.c **** #include <stm32f10x.h>
+  19:../Peripherals/uart.c **** #include "stm32f10x_rcc.h"
+  20:../Peripherals/uart.c **** #include "stm32f10x_gpio.h"
+  21:../Peripherals/uart.c **** #include "stm32f10x_usart.h"
+  22:../Peripherals/uart.c **** #include "uart.h"
+  23:../Peripherals/uart.c **** 
+  24:../Peripherals/uart.c **** /*
+  25:../Peripherals/uart.c **** ***************************************************************************************************
+  26:../Peripherals/uart.c **** *                                            LOCAL DEFINES
+  27:../Peripherals/uart.c **** ***************************************************************************************************
+  28:../Peripherals/uart.c **** */
+  29:../Peripherals/uart.c **** 
+  30:../Peripherals/uart.c **** 
+  31:../Peripherals/uart.c **** /*
+  32:../Peripherals/uart.c **** ***************************************************************************************************
+  33:../Peripherals/uart.c **** *                                           LOCAL CONSTANTS
+  34:../Peripherals/uart.c **** ***************************************************************************************************
+  35:../Peripherals/uart.c **** */
+  36:../Peripherals/uart.c **** 
+  37:../Peripherals/uart.c **** 
+  38:../Peripherals/uart.c **** /*
+  39:../Peripherals/uart.c **** ***************************************************************************************************
+  40:../Peripherals/uart.c **** *                                          LOCAL DATA TYPES
+  41:../Peripherals/uart.c **** ***************************************************************************************************
+  42:../Peripherals/uart.c **** */
+  43:../Peripherals/uart.c **** 
+  44:../Peripherals/uart.c **** 
+  45:../Peripherals/uart.c **** /*
+  46:../Peripherals/uart.c **** ***************************************************************************************************
+  47:../Peripherals/uart.c **** *                                            LOCAL TABLES
+  48:../Peripherals/uart.c **** ***************************************************************************************************
+  49:../Peripherals/uart.c **** */
+  50:../Peripherals/uart.c **** 
+  51:../Peripherals/uart.c **** 
+  52:../Peripherals/uart.c **** /*
+  53:../Peripherals/uart.c **** ***************************************************************************************************
+  54:../Peripherals/uart.c **** *                                       LOCAL GLOBAL VARIABLES
+  55:../Peripherals/uart.c **** ***************************************************************************************************
+  56:../Peripherals/uart.c **** */
+  57:../Peripherals/uart.c **** 
+  58:../Peripherals/uart.c **** 
+  59:../Peripherals/uart.c **** /*
+  60:../Peripherals/uart.c **** ***************************************************************************************************
+  61:../Peripherals/uart.c **** *                                      LOCAL FUNCTION PROTOTYPES
+  62:../Peripherals/uart.c **** ***************************************************************************************************
+  63:../Peripherals/uart.c **** */
+  64:../Peripherals/uart.c **** 
+  65:../Peripherals/uart.c **** 
+  66:../Peripherals/uart.c **** /*
+  67:../Peripherals/uart.c **** ***************************************************************************************************
+  68:../Peripherals/uart.c **** *                                     LOCAL CONFIGURATION ERRORS
+  69:../Peripherals/uart.c **** ***************************************************************************************************
+  70:../Peripherals/uart.c **** */
+  71:../Peripherals/uart.c **** 
+  72:../Peripherals/uart.c **** 
+  73:../Peripherals/uart.c **** /*
+  74:../Peripherals/uart.c **** ***************************************************************************************************
+  75:../Peripherals/uart.c **** ***************************************************************************************************
+  76:../Peripherals/uart.c **** **                                         GLOBAL FUNCTIONS
+  77:../Peripherals/uart.c **** ***************************************************************************************************
+  78:../Peripherals/uart.c **** ***************************************************************************************************
+  79:../Peripherals/uart.c **** */
+  80:../Peripherals/uart.c **** 
+  81:../Peripherals/uart.c **** 
+  82:../Peripherals/uart.c **** /*
+  83:../Peripherals/uart.c **** ***************************************************************************************************
+  84:../Peripherals/uart.c **** *                                          UartInit()
+  85:../Peripherals/uart.c **** *
+  86:../Peripherals/uart.c **** * Description : Initialize a serial port for communication.
+  87:../Peripherals/uart.c **** *
+  88:../Peripherals/uart.c **** * Argument(s) : baud_rate           The desire RS232 baud rate.
+  89:../Peripherals/uart.c **** *
+  90:../Peripherals/uart.c **** * Return(s)   : none.
+  91:../Peripherals/uart.c **** *
+  92:../Peripherals/uart.c **** * Caller(s)   : Application.
+  93:../Peripherals/uart.c **** *
+  94:../Peripherals/uart.c **** * Note(s)     : none.
+  95:../Peripherals/uart.c **** ***************************************************************************************************
+  96:../Peripherals/uart.c **** */
+  97:../Peripherals/uart.c **** 
+  98:../Peripherals/uart.c **** void  Uart1Init (u32  baud_rate) {
+  70              		.loc 2 98 0
+  71              		.cfi_startproc
+  72              		@ args = 0, pretend = 0, frame = 32
+  73              		@ frame_needed = 1, uses_anonymous_args = 0
+  74 0000 80B5     		push	{r7, lr}
+  75              	.LCFI3:
+  76              		.cfi_def_cfa_offset 8
+  77              		.cfi_offset 14, -4
+  78              		.cfi_offset 7, -8
+  79 0002 88B0     		sub	sp, sp, #32
+  80              	.LCFI4:
+  81              		.cfi_def_cfa_offset 40
+  82 0004 00AF     		add	r7, sp, #0
+  83              	.LCFI5:
+  84              		.cfi_def_cfa_register 7
+  85 0006 7860     		str	r0, [r7, #4]
+  99:../Peripherals/uart.c **** 
+ 100:../Peripherals/uart.c **** 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_AFIO | RCC_APB2Periph_USART1, ENABLE)
+  86              		.loc 2 100 0
+  87 0008 44F20500 		movw	r0, #16389
+  88 000c 4FF00101 		mov	r1, #1
+  89 0010 FFF7FEFF 		bl	RCC_APB2PeriphClockCmd
+ 101:../Peripherals/uart.c **** 
+ 102:../Peripherals/uart.c **** 	GPIO_InitTypeDef uart1_gpio;
+ 103:../Peripherals/uart.c **** 	uart1_gpio.GPIO_Pin = GPIO_Pin_10;                               /* UART1 RX pin */
+  90              		.loc 2 103 0
+  91 0014 4FF48063 		mov	r3, #1024
+  92 0018 BB83     		strh	r3, [r7, #28]	@ movhi
+ 104:../Peripherals/uart.c **** 	uart1_gpio.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+  93              		.loc 2 104 0
+  94 001a 4FF00403 		mov	r3, #4
+  95 001e FB77     		strb	r3, [r7, #31]
+ 105:../Peripherals/uart.c **** 	GPIO_Init(GPIOA, &uart1_gpio);
+  96              		.loc 2 105 0
+  97 0020 07F11C03 		add	r3, r7, #28
+  98 0024 4FF40060 		mov	r0, #2048
+  99 0028 C4F20100 		movt	r0, 16385
+ 100 002c 1946     		mov	r1, r3
+ 101 002e FFF7FEFF 		bl	GPIO_Init
+ 106:../Peripherals/uart.c **** 
+ 107:../Peripherals/uart.c **** 	uart1_gpio.GPIO_Pin = GPIO_Pin_9;                                /* UART1 TX pin */
+ 102              		.loc 2 107 0
+ 103 0032 4FF40073 		mov	r3, #512
+ 104 0036 BB83     		strh	r3, [r7, #28]	@ movhi
+ 108:../Peripherals/uart.c **** 	uart1_gpio.GPIO_Mode = GPIO_Mode_AF_PP;
+ 105              		.loc 2 108 0
+ 106 0038 4FF01803 		mov	r3, #24
+ 107 003c FB77     		strb	r3, [r7, #31]
+ 109:../Peripherals/uart.c **** 	uart1_gpio.GPIO_Speed = GPIO_Speed_10MHz;
+ 108              		.loc 2 109 0
+ 109 003e 4FF00103 		mov	r3, #1
+ 110 0042 BB77     		strb	r3, [r7, #30]
+ 110:../Peripherals/uart.c **** 	GPIO_Init(GPIOA, &uart1_gpio);
+ 111              		.loc 2 110 0
+ 112 0044 07F11C03 		add	r3, r7, #28
+ 113 0048 4FF40060 		mov	r0, #2048
+ 114 004c C4F20100 		movt	r0, 16385
+ 115 0050 1946     		mov	r1, r3
+ 116 0052 FFF7FEFF 		bl	GPIO_Init
+ 111:../Peripherals/uart.c **** 
+ 112:../Peripherals/uart.c ****     USART_InitTypeDef uart1;
+ 113:../Peripherals/uart.c ****     uart1.USART_BaudRate = baud_rate;
+ 117              		.loc 2 113 0
+ 118 0056 7B68     		ldr	r3, [r7, #4]
+ 119 0058 FB60     		str	r3, [r7, #12]
+ 114:../Peripherals/uart.c ****     uart1.USART_WordLength = USART_WordLength_8b;
+ 120              		.loc 2 114 0
+ 121 005a 4FF00003 		mov	r3, #0
+ 122 005e 3B82     		strh	r3, [r7, #16]	@ movhi
+ 115:../Peripherals/uart.c ****     uart1.USART_StopBits = USART_StopBits_1;
+ 123              		.loc 2 115 0
+ 124 0060 4FF00003 		mov	r3, #0
+ 125 0064 7B82     		strh	r3, [r7, #18]	@ movhi
+ 116:../Peripherals/uart.c ****     uart1.USART_Parity = USART_Parity_No;
+ 126              		.loc 2 116 0
+ 127 0066 4FF00003 		mov	r3, #0
+ 128 006a BB82     		strh	r3, [r7, #20]	@ movhi
+ 117:../Peripherals/uart.c ****     uart1.USART_Mode = USART_Mode_Tx | USART_Mode_Rx;
+ 129              		.loc 2 117 0
+ 130 006c 4FF00C03 		mov	r3, #12
+ 131 0070 FB82     		strh	r3, [r7, #22]	@ movhi
+ 118:../Peripherals/uart.c ****     uart1.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+ 132              		.loc 2 118 0
+ 133 0072 4FF00003 		mov	r3, #0
+ 134 0076 3B83     		strh	r3, [r7, #24]	@ movhi
+ 119:../Peripherals/uart.c **** 
+ 120:../Peripherals/uart.c ****     USART_Init(USART1, &uart1);
+ 135              		.loc 2 120 0
+ 136 0078 07F10C03 		add	r3, r7, #12
+ 137 007c 4FF46050 		mov	r0, #14336
+ 138 0080 C4F20100 		movt	r0, 16385
+ 139 0084 1946     		mov	r1, r3
+ 140 0086 FFF7FEFF 		bl	USART_Init
+ 121:../Peripherals/uart.c **** 
+ 122:../Peripherals/uart.c ****     #if UART1_RX_INTERRAPT_ENABLE
+ 123:../Peripherals/uart.c ****         USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
+ 141              		.loc 2 123 0
+ 142 008a 4FF46050 		mov	r0, #14336
+ 143 008e C4F20100 		movt	r0, 16385
+ 144 0092 40F22551 		movw	r1, #1317
+ 145 0096 4FF00102 		mov	r2, #1
+ 146 009a FFF7FEFF 		bl	USART_ITConfig
+ 124:../Peripherals/uart.c ****         NVIC_EnableIRQ(USART1_IRQn);
+ 147              		.loc 2 124 0
+ 148 009e 4FF02500 		mov	r0, #37
+ 149 00a2 FFF7FEFF 		bl	NVIC_EnableIRQ
+ 125:../Peripherals/uart.c ****     #endif
+ 126:../Peripherals/uart.c ****     #if UART1_TX_INTERRAPT_ENABLE
+ 127:../Peripherals/uart.c ****         USART_ITConfig(USART1, USART_IT_TXE, ENABLE);
+ 150              		.loc 2 127 0
+ 151 00a6 4FF46050 		mov	r0, #14336
+ 152 00aa C4F20100 		movt	r0, 16385
+ 153 00ae 40F22771 		movw	r1, #1831
+ 154 00b2 4FF00102 		mov	r2, #1
+ 155 00b6 FFF7FEFF 		bl	USART_ITConfig
+ 128:../Peripherals/uart.c ****         NVIC_EnableIRQ(USART1_IRQn);
+ 156              		.loc 2 128 0
+ 157 00ba 4FF02500 		mov	r0, #37
+ 158 00be FFF7FEFF 		bl	NVIC_EnableIRQ
+ 129:../Peripherals/uart.c ****     #endif
+ 130:../Peripherals/uart.c **** 
+ 131:../Peripherals/uart.c ****     USART_Cmd(USART1, ENABLE);
+ 159              		.loc 2 131 0
+ 160 00c2 4FF46050 		mov	r0, #14336
+ 161 00c6 C4F20100 		movt	r0, 16385
+ 162 00ca 4FF00101 		mov	r1, #1
+ 163 00ce FFF7FEFF 		bl	USART_Cmd
+ 132:../Peripherals/uart.c **** }
+ 164              		.loc 2 132 0
+ 165 00d2 07F12007 		add	r7, r7, #32
+ 166 00d6 BD46     		mov	sp, r7
+ 167 00d8 80BD     		pop	{r7, pc}
+ 168              		.cfi_endproc
+ 169              	.LFE29:
+ 171 00da 00BF     		.section	.text.Uart1RdByte,"ax",%progbits
+ 172              		.align	2
+ 173              		.global	Uart1RdByte
+ 174              		.thumb
+ 175              		.thumb_func
+ 177              	Uart1RdByte:
+ 178              	.LFB30:
+ 133:../Peripherals/uart.c **** 
+ 134:../Peripherals/uart.c **** /*
+ 135:../Peripherals/uart.c **** ***************************************************************************************************
+ 136:../Peripherals/uart.c **** *                                                Uart1RdByte()
+ 137:../Peripherals/uart.c **** *
+ 138:../Peripherals/uart.c **** * Description : Receive a single byte.
+ 139:../Peripherals/uart.c **** *
+ 140:../Peripherals/uart.c **** * Argument(s) : none.
+ 141:../Peripherals/uart.c **** *
+ 142:../Peripherals/uart.c **** * Return(s)   : The received byte.
+ 143:../Peripherals/uart.c **** *
+ 144:../Peripherals/uart.c **** * Caller(s)   : Application.
+ 145:../Peripherals/uart.c **** *
+ 146:../Peripherals/uart.c **** * Note(s)     : 
+ 147:../Peripherals/uart.c **** ***************************************************************************************************
+ 148:../Peripherals/uart.c **** */
+ 149:../Peripherals/uart.c **** u8  Uart1RdByte (void) {
+ 179              		.loc 2 149 0
+ 180              		.cfi_startproc
+ 181              		@ args = 0, pretend = 0, frame = 0
+ 182              		@ frame_needed = 1, uses_anonymous_args = 0
+ 183 0000 80B5     		push	{r7, lr}
+ 184              	.LCFI6:
+ 185              		.cfi_def_cfa_offset 8
+ 186              		.cfi_offset 14, -4
+ 187              		.cfi_offset 7, -8
+ 188 0002 00AF     		add	r7, sp, #0
+ 189              	.LCFI7:
+ 190              		.cfi_def_cfa_register 7
+ 150:../Peripherals/uart.c **** /*
+ 151:../Peripherals/uart.c ****     u8 rx_byte;
+ 152:../Peripherals/uart.c ****     rx_byte = USART_ReceiveData(USART1);
+ 153:../Peripherals/uart.c **** 
+ 154:../Peripherals/uart.c ****     
+ 155:../Peripherals/uart.c **** return (rx_byte);
+ 156:../Peripherals/uart.c **** */
+ 157:../Peripherals/uart.c **** return (USART_ReceiveData(USART1));
+ 191              		.loc 2 157 0
+ 192 0004 4FF46050 		mov	r0, #14336
+ 193 0008 C4F20100 		movt	r0, 16385
+ 194 000c FFF7FEFF 		bl	USART_ReceiveData
+ 195 0010 0346     		mov	r3, r0
+ 196 0012 DBB2     		uxtb	r3, r3
+ 158:../Peripherals/uart.c **** }
+ 197              		.loc 2 158 0
+ 198 0014 1846     		mov	r0, r3
+ 199 0016 80BD     		pop	{r7, pc}
+ 200              		.cfi_endproc
+ 201              	.LFE30:
+ 203              		.section	.text.Uart1WrByte,"ax",%progbits
+ 204              		.align	2
+ 205              		.global	Uart1WrByte
+ 206              		.thumb
+ 207              		.thumb_func
+ 209              	Uart1WrByte:
+ 210              	.LFB31:
+ 159:../Peripherals/uart.c **** 
+ 160:../Peripherals/uart.c **** /*
+ 161:../Peripherals/uart.c **** ***************************************************************************************************
+ 162:../Peripherals/uart.c **** *                                                Uart1WrByte()
+ 163:../Peripherals/uart.c **** *
+ 164:../Peripherals/uart.c **** * Description : Writes a single byte to a serial port.
+ 165:../Peripherals/uart.c **** *
+ 166:../Peripherals/uart.c **** * Argument(s) : tx_byte     The character to output.
+ 167:../Peripherals/uart.c **** *
+ 168:../Peripherals/uart.c **** * Return(s)   : none.
+ 169:../Peripherals/uart.c **** *
+ 170:../Peripherals/uart.c **** * Caller(s)   : Application.
+ 171:../Peripherals/uart.c **** *
+ 172:../Peripherals/uart.c **** * Note(s)     : none.
+ 173:../Peripherals/uart.c **** ***************************************************************************************************
+ 174:../Peripherals/uart.c **** */
+ 175:../Peripherals/uart.c **** void  Uart1WrByte (u8 c) {
+ 211              		.loc 2 175 0
+ 212              		.cfi_startproc
+ 213              		@ args = 0, pretend = 0, frame = 8
+ 214              		@ frame_needed = 1, uses_anonymous_args = 0
+ 215 0000 80B5     		push	{r7, lr}
+ 216              	.LCFI8:
+ 217              		.cfi_def_cfa_offset 8
+ 218              		.cfi_offset 14, -4
+ 219              		.cfi_offset 7, -8
+ 220 0002 82B0     		sub	sp, sp, #8
+ 221              	.LCFI9:
+ 222              		.cfi_def_cfa_offset 16
+ 223 0004 00AF     		add	r7, sp, #0
+ 224              	.LCFI10:
+ 225              		.cfi_def_cfa_register 7
+ 226 0006 0346     		mov	r3, r0
+ 227 0008 FB71     		strb	r3, [r7, #7]
+ 176:../Peripherals/uart.c **** 
+ 177:../Peripherals/uart.c **** 	while (USART_GetFlagStatus(USART1, USART_FLAG_TXE) == RESET);
+ 228              		.loc 2 177 0
+ 229 000a 00BF     		nop
+ 230              	.L5:
+ 231              		.loc 2 177 0 is_stmt 0 discriminator 1
+ 232 000c 4FF46050 		mov	r0, #14336
+ 233 0010 C4F20100 		movt	r0, 16385
+ 234 0014 4FF08001 		mov	r1, #128
+ 235 0018 FFF7FEFF 		bl	USART_GetFlagStatus
+ 236 001c 0346     		mov	r3, r0
+ 237 001e 002B     		cmp	r3, #0
+ 238 0020 F4D0     		beq	.L5
+ 178:../Peripherals/uart.c **** 	USART_SendData(USART1, c);
+ 239              		.loc 2 178 0 is_stmt 1
+ 240 0022 FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 241 0024 9BB2     		uxth	r3, r3
+ 242 0026 4FF46050 		mov	r0, #14336
+ 243 002a C4F20100 		movt	r0, 16385
+ 244 002e 1946     		mov	r1, r3
+ 245 0030 FFF7FEFF 		bl	USART_SendData
+ 179:../Peripherals/uart.c **** }
+ 246              		.loc 2 179 0
+ 247 0034 07F10807 		add	r7, r7, #8
+ 248 0038 BD46     		mov	sp, r7
+ 249 003a 80BD     		pop	{r7, pc}
+ 250              		.cfi_endproc
+ 251              	.LFE31:
+ 253              		.section	.text.Uart1WrStr,"ax",%progbits
+ 254              		.align	2
+ 255              		.global	Uart1WrStr
+ 256              		.thumb
+ 257              		.thumb_func
+ 259              	Uart1WrStr:
+ 260              	.LFB32:
+ 180:../Peripherals/uart.c **** 
+ 181:../Peripherals/uart.c **** 
+ 182:../Peripherals/uart.c **** /*
+ 183:../Peripherals/uart.c **** ***************************************************************************************************
+ 184:../Peripherals/uart.c **** *                                                Uart1WrStr()
+ 185:../Peripherals/uart.c **** *
+ 186:../Peripherals/uart.c **** * Description : Transmits a string.
+ 187:../Peripherals/uart.c **** *
+ 188:../Peripherals/uart.c **** * Argument(s) : p_str       Pointer to the string that will be transmitted.
+ 189:../Peripherals/uart.c **** *
+ 190:../Peripherals/uart.c **** * Caller(s)   : Application.
+ 191:../Peripherals/uart.c **** *
+ 192:../Peripherals/uart.c **** * Return(s)   : none.
+ 193:../Peripherals/uart.c **** *
+ 194:../Peripherals/uart.c **** * Note(s)     : none.
+ 195:../Peripherals/uart.c **** ***************************************************************************************************
+ 196:../Peripherals/uart.c **** */
+ 197:../Peripherals/uart.c **** void  Uart1WrStr (u8  *p_str) {
+ 261              		.loc 2 197 0
+ 262              		.cfi_startproc
+ 263              		@ args = 0, pretend = 0, frame = 8
+ 264              		@ frame_needed = 1, uses_anonymous_args = 0
+ 265 0000 80B5     		push	{r7, lr}
+ 266              	.LCFI11:
+ 267              		.cfi_def_cfa_offset 8
+ 268              		.cfi_offset 14, -4
+ 269              		.cfi_offset 7, -8
+ 270 0002 82B0     		sub	sp, sp, #8
+ 271              	.LCFI12:
+ 272              		.cfi_def_cfa_offset 16
+ 273 0004 00AF     		add	r7, sp, #0
+ 274              	.LCFI13:
+ 275              		.cfi_def_cfa_register 7
+ 276 0006 7860     		str	r0, [r7, #4]
+ 277              	.L9:
+ 198:../Peripherals/uart.c ****     
+ 199:../Peripherals/uart.c ****     while (1) {
+ 200:../Peripherals/uart.c ****         if (!(*p_str)) {
+ 278              		.loc 2 200 0
+ 279 0008 7B68     		ldr	r3, [r7, #4]
+ 280 000a 1B78     		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 281 000c 002B     		cmp	r3, #0
+ 282 000e 09D0     		beq	.L11
+ 283              	.L7:
+ 201:../Peripherals/uart.c ****             break;
+ 202:../Peripherals/uart.c ****         }
+ 203:../Peripherals/uart.c ****         Uart1WrByte(*(p_str++));
+ 284              		.loc 2 203 0
+ 285 0010 7B68     		ldr	r3, [r7, #4]
+ 286 0012 1B78     		ldrb	r3, [r3, #0]	@ zero_extendqisi2
+ 287 0014 7A68     		ldr	r2, [r7, #4]
+ 288 0016 02F10102 		add	r2, r2, #1
+ 289 001a 7A60     		str	r2, [r7, #4]
+ 290 001c 1846     		mov	r0, r3
+ 291 001e FFF7FEFF 		bl	Uart1WrByte
+ 204:../Peripherals/uart.c ****     }
+ 292              		.loc 2 204 0
+ 293 0022 F1E7     		b	.L9
+ 294              	.L11:
+ 201:../Peripherals/uart.c ****             break;
+ 295              		.loc 2 201 0
+ 296 0024 00BF     		nop
+ 297              	.L10:
+ 205:../Peripherals/uart.c ****     
+ 206:../Peripherals/uart.c **** }
+ 298              		.loc 2 206 0
+ 299 0026 07F10807 		add	r7, r7, #8
+ 300 002a BD46     		mov	sp, r7
+ 301 002c 80BD     		pop	{r7, pc}
+ 302              		.cfi_endproc
+ 303              	.LFE32:
+ 305 002e 00BF     		.section	.text.USART1_IRQHandler,"ax",%progbits
+ 306              		.align	2
+ 307              		.global	USART1_IRQHandler
+ 308              		.thumb
+ 309              		.thumb_func
+ 311              	USART1_IRQHandler:
+ 312              	.LFB33:
+ 207:../Peripherals/uart.c **** 
+ 208:../Peripherals/uart.c **** 
+ 209:../Peripherals/uart.c **** #if UART1_RX_INTERRAPT_ENABLE || UART1_TX_INTERRAPT_ENABLE
+ 210:../Peripherals/uart.c **** void USART1_IRQHandler (void) {
+ 313              		.loc 2 210 0
+ 314              		.cfi_startproc
+ 315              		@ args = 0, pretend = 0, frame = 8
+ 316              		@ frame_needed = 1, uses_anonymous_args = 0
+ 317 0000 80B5     		push	{r7, lr}
+ 318              	.LCFI14:
+ 319              		.cfi_def_cfa_offset 8
+ 320              		.cfi_offset 14, -4
+ 321              		.cfi_offset 7, -8
+ 322 0002 82B0     		sub	sp, sp, #8
+ 323              	.LCFI15:
+ 324              		.cfi_def_cfa_offset 16
+ 325 0004 00AF     		add	r7, sp, #0
+ 326              	.LCFI16:
+ 327              		.cfi_def_cfa_register 7
+ 211:../Peripherals/uart.c ****     volatile char z;
+ 212:../Peripherals/uart.c ****     #if UART1_RX_INTERRAPT_ENABLE
+ 213:../Peripherals/uart.c ****       if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET) {
+ 328              		.loc 2 213 0
+ 329 0006 4FF46050 		mov	r0, #14336
+ 330 000a C4F20100 		movt	r0, 16385
+ 331 000e 40F22551 		movw	r1, #1317
+ 332 0012 FFF7FEFF 		bl	USART_GetITStatus
+ 333 0016 0346     		mov	r3, r0
+ 334 0018 002B     		cmp	r3, #0
+ 335 001a 08D0     		beq	.L13
+ 214:../Peripherals/uart.c ****     	  /* Read one byte from the receive data register */
+ 215:../Peripherals/uart.c ****     	  z = USART_ReceiveData(USART1);
+ 336              		.loc 2 215 0
+ 337 001c 4FF46050 		mov	r0, #14336
+ 338 0020 C4F20100 		movt	r0, 16385
+ 339 0024 FFF7FEFF 		bl	USART_ReceiveData
+ 340 0028 0346     		mov	r3, r0
+ 341 002a DBB2     		uxtb	r3, r3
+ 342 002c FB71     		strb	r3, [r7, #7]
+ 343              	.L13:
+ 216:../Peripherals/uart.c ****       }
+ 217:../Peripherals/uart.c ****     #endif
+ 218:../Peripherals/uart.c ****     #if UART1_TX_INTERRAPT_ENABLE
+ 219:../Peripherals/uart.c ****       if(USART_GetITStatus(USART1, USART_IT_TXE) != RESET) {
+ 344              		.loc 2 219 0
+ 345 002e 4FF46050 		mov	r0, #14336
+ 346 0032 C4F20100 		movt	r0, 16385
+ 347 0036 40F22771 		movw	r1, #1831
+ 348 003a FFF7FEFF 		bl	USART_GetITStatus
+ 220:../Peripherals/uart.c **** 
+ 221:../Peripherals/uart.c ****       }
+ 222:../Peripherals/uart.c ****     #endif
+ 223:../Peripherals/uart.c **** }
+ 349              		.loc 2 223 0
+ 350 003e 07F10807 		add	r7, r7, #8
+ 351 0042 BD46     		mov	sp, r7
+ 352 0044 80BD     		pop	{r7, pc}
+ 353              		.cfi_endproc
+ 354              	.LFE33:
+ 356 0046 00BF     		.text
+ 357              	.Letext0:
+ 358              		.file 3 "D:\\PALL\\workspace\\freertos_stm32_d\\CMSIS/stm32f10x.h"
+ 359              		.file 4 "c:\\tools\\codesourcery\\arm\\29-01-2012\\bin\\../lib/gcc/arm-none-eabi/4.6.1/../../../..
+ 360              		.file 5 "D:\\PALL\\workspace\\freertos_stm32_d\\StdPeripheralDriver\\inc/stm32f10x_gpio.h"
+ 361              		.file 6 "D:\\PALL\\workspace\\freertos_stm32_d\\StdPeripheralDriver\\inc/stm32f10x_usart.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 uart.c
+C:\Users\Palladin\AppData\Local\Temp\cc13C0kO.s:19     .text.NVIC_EnableIRQ:00000000 $t
+C:\Users\Palladin\AppData\Local\Temp\cc13C0kO.s:23     .text.NVIC_EnableIRQ:00000000 NVIC_EnableIRQ
+C:\Users\Palladin\AppData\Local\Temp\cc13C0kO.s:62     .text.Uart1Init:00000000 $t
+C:\Users\Palladin\AppData\Local\Temp\cc13C0kO.s:67     .text.Uart1Init:00000000 Uart1Init
+C:\Users\Palladin\AppData\Local\Temp\cc13C0kO.s:172    .text.Uart1RdByte:00000000 $t
+C:\Users\Palladin\AppData\Local\Temp\cc13C0kO.s:177    .text.Uart1RdByte:00000000 Uart1RdByte
+C:\Users\Palladin\AppData\Local\Temp\cc13C0kO.s:204    .text.Uart1WrByte:00000000 $t
+C:\Users\Palladin\AppData\Local\Temp\cc13C0kO.s:209    .text.Uart1WrByte:00000000 Uart1WrByte
+C:\Users\Palladin\AppData\Local\Temp\cc13C0kO.s:254    .text.Uart1WrStr:00000000 $t
+C:\Users\Palladin\AppData\Local\Temp\cc13C0kO.s:259    .text.Uart1WrStr:00000000 Uart1WrStr
+C:\Users\Palladin\AppData\Local\Temp\cc13C0kO.s:306    .text.USART1_IRQHandler:00000000 $t
+C:\Users\Palladin\AppData\Local\Temp\cc13C0kO.s:311    .text.USART1_IRQHandler:00000000 USART1_IRQHandler
+                     .debug_frame:00000010 $d
+
+UNDEFINED SYMBOLS
+RCC_APB2PeriphClockCmd
+GPIO_Init
+USART_Init
+USART_ITConfig
+USART_Cmd
+USART_ReceiveData
+USART_GetFlagStatus
+USART_SendData
+USART_GetITStatus

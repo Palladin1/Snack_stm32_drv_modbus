@@ -1,0 +1,1644 @@
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.file	"mbfuncholding_m.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.section	.text.eMBMasterReqWriteHoldingRegister,"ax",%progbits
+  19              		.align	2
+  20              		.global	eMBMasterReqWriteHoldingRegister
+  21              		.thumb
+  22              		.thumb_func
+  24              	eMBMasterReqWriteHoldingRegister:
+  25              	.LFB29:
+  26              		.file 1 "../FreeModbus/functions/mbfuncholding_m.c"
+   1:../FreeModbus/functions/mbfuncholding_m.c **** /* 
+   2:../FreeModbus/functions/mbfuncholding_m.c ****  * FreeModbus Libary: A portable Modbus implementation for Modbus ASCII/RTU.
+   3:../FreeModbus/functions/mbfuncholding_m.c ****  * Copyright (C) 2013 Armink <armink.ztl@gmail.com>
+   4:../FreeModbus/functions/mbfuncholding_m.c ****  * All rights reserved.
+   5:../FreeModbus/functions/mbfuncholding_m.c ****  *
+   6:../FreeModbus/functions/mbfuncholding_m.c ****  * Redistribution and use in source and binary forms, with or without
+   7:../FreeModbus/functions/mbfuncholding_m.c ****  * modification, are permitted provided that the following conditions
+   8:../FreeModbus/functions/mbfuncholding_m.c ****  * are met:
+   9:../FreeModbus/functions/mbfuncholding_m.c ****  * 1. Redistributions of source code must retain the above copyright
+  10:../FreeModbus/functions/mbfuncholding_m.c ****  *    notice, this list of conditions and the following disclaimer.
+  11:../FreeModbus/functions/mbfuncholding_m.c ****  * 2. Redistributions in binary form must reproduce the above copyright
+  12:../FreeModbus/functions/mbfuncholding_m.c ****  *    notice, this list of conditions and the following disclaimer in the
+  13:../FreeModbus/functions/mbfuncholding_m.c ****  *    documentation and/or other materials provided with the distribution.
+  14:../FreeModbus/functions/mbfuncholding_m.c ****  * 3. The name of the author may not be used to endorse or promote products
+  15:../FreeModbus/functions/mbfuncholding_m.c ****  *    derived from this software without specific prior written permission.
+  16:../FreeModbus/functions/mbfuncholding_m.c ****  *
+  17:../FreeModbus/functions/mbfuncholding_m.c ****  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+  18:../FreeModbus/functions/mbfuncholding_m.c ****  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+  19:../FreeModbus/functions/mbfuncholding_m.c ****  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+  20:../FreeModbus/functions/mbfuncholding_m.c ****  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+  21:../FreeModbus/functions/mbfuncholding_m.c ****  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+  22:../FreeModbus/functions/mbfuncholding_m.c ****  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  23:../FreeModbus/functions/mbfuncholding_m.c ****  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  24:../FreeModbus/functions/mbfuncholding_m.c ****  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  25:../FreeModbus/functions/mbfuncholding_m.c ****  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+  26:../FreeModbus/functions/mbfuncholding_m.c ****  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  27:../FreeModbus/functions/mbfuncholding_m.c ****  *
+  28:../FreeModbus/functions/mbfuncholding_m.c ****  * File: $Id: mbfuncholding_m.c,v 1.60 2013/09/02 14:13:40 Armink Add Master Functions  Exp $
+  29:../FreeModbus/functions/mbfuncholding_m.c ****  */
+  30:../FreeModbus/functions/mbfuncholding_m.c **** 
+  31:../FreeModbus/functions/mbfuncholding_m.c **** /* ----------------------- System includes ----------------------------------*/
+  32:../FreeModbus/functions/mbfuncholding_m.c **** #include "stdlib.h"
+  33:../FreeModbus/functions/mbfuncholding_m.c **** #include "string.h"
+  34:../FreeModbus/functions/mbfuncholding_m.c **** 
+  35:../FreeModbus/functions/mbfuncholding_m.c **** /* ----------------------- Platform includes --------------------------------*/
+  36:../FreeModbus/functions/mbfuncholding_m.c **** #include "port.h"
+  37:../FreeModbus/functions/mbfuncholding_m.c **** 
+  38:../FreeModbus/functions/mbfuncholding_m.c **** /* ----------------------- Modbus includes ----------------------------------*/
+  39:../FreeModbus/functions/mbfuncholding_m.c **** #include "mb.h"
+  40:../FreeModbus/functions/mbfuncholding_m.c **** #include "mb_m.h"
+  41:../FreeModbus/functions/mbfuncholding_m.c **** #include "mbframe.h"
+  42:../FreeModbus/functions/mbfuncholding_m.c **** #include "mbproto.h"
+  43:../FreeModbus/functions/mbfuncholding_m.c **** #include "mbconfig.h"
+  44:../FreeModbus/functions/mbfuncholding_m.c **** 
+  45:../FreeModbus/functions/mbfuncholding_m.c **** /* ----------------------- Defines ------------------------------------------*/
+  46:../FreeModbus/functions/mbfuncholding_m.c **** #define MB_PDU_REQ_READ_ADDR_OFF                ( MB_PDU_DATA_OFF + 0 )
+  47:../FreeModbus/functions/mbfuncholding_m.c **** #define MB_PDU_REQ_READ_REGCNT_OFF              ( MB_PDU_DATA_OFF + 2 )
+  48:../FreeModbus/functions/mbfuncholding_m.c **** #define MB_PDU_REQ_READ_SIZE                    ( 4 )
+  49:../FreeModbus/functions/mbfuncholding_m.c **** #define MB_PDU_FUNC_READ_REGCNT_MAX             ( 0x007D )
+  50:../FreeModbus/functions/mbfuncholding_m.c **** #define MB_PDU_FUNC_READ_BYTECNT_OFF            ( MB_PDU_DATA_OFF + 0 )
+  51:../FreeModbus/functions/mbfuncholding_m.c **** #define MB_PDU_FUNC_READ_VALUES_OFF             ( MB_PDU_DATA_OFF + 1 )
+  52:../FreeModbus/functions/mbfuncholding_m.c **** #define MB_PDU_FUNC_READ_SIZE_MIN               ( 1 )
+  53:../FreeModbus/functions/mbfuncholding_m.c **** 
+  54:../FreeModbus/functions/mbfuncholding_m.c **** #define MB_PDU_REQ_WRITE_ADDR_OFF               ( MB_PDU_DATA_OFF + 0)
+  55:../FreeModbus/functions/mbfuncholding_m.c **** #define MB_PDU_REQ_WRITE_VALUE_OFF              ( MB_PDU_DATA_OFF + 2 )
+  56:../FreeModbus/functions/mbfuncholding_m.c **** #define MB_PDU_REQ_WRITE_SIZE                   ( 4 )
+  57:../FreeModbus/functions/mbfuncholding_m.c **** #define MB_PDU_FUNC_WRITE_ADDR_OFF              ( MB_PDU_DATA_OFF + 0)
+  58:../FreeModbus/functions/mbfuncholding_m.c **** #define MB_PDU_FUNC_WRITE_VALUE_OFF             ( MB_PDU_DATA_OFF + 2 )
+  59:../FreeModbus/functions/mbfuncholding_m.c **** #define MB_PDU_FUNC_WRITE_SIZE                  ( 4 )
+  60:../FreeModbus/functions/mbfuncholding_m.c **** 
+  61:../FreeModbus/functions/mbfuncholding_m.c **** #define MB_PDU_REQ_WRITE_MUL_ADDR_OFF           ( MB_PDU_DATA_OFF + 0 )
+  62:../FreeModbus/functions/mbfuncholding_m.c **** #define MB_PDU_REQ_WRITE_MUL_REGCNT_OFF         ( MB_PDU_DATA_OFF + 2 )
+  63:../FreeModbus/functions/mbfuncholding_m.c **** #define MB_PDU_REQ_WRITE_MUL_BYTECNT_OFF        ( MB_PDU_DATA_OFF + 4 )
+  64:../FreeModbus/functions/mbfuncholding_m.c **** #define MB_PDU_REQ_WRITE_MUL_VALUES_OFF         ( MB_PDU_DATA_OFF + 5 )
+  65:../FreeModbus/functions/mbfuncholding_m.c **** #define MB_PDU_REQ_WRITE_MUL_SIZE_MIN           ( 5 )
+  66:../FreeModbus/functions/mbfuncholding_m.c **** #define MB_PDU_REQ_WRITE_MUL_REGCNT_MAX         ( 0x0078 )
+  67:../FreeModbus/functions/mbfuncholding_m.c **** #define MB_PDU_FUNC_WRITE_MUL_ADDR_OFF          ( MB_PDU_DATA_OFF + 0 )
+  68:../FreeModbus/functions/mbfuncholding_m.c **** #define MB_PDU_FUNC_WRITE_MUL_REGCNT_OFF        ( MB_PDU_DATA_OFF + 2 )
+  69:../FreeModbus/functions/mbfuncholding_m.c **** #define MB_PDU_FUNC_WRITE_MUL_SIZE              ( 4 )
+  70:../FreeModbus/functions/mbfuncholding_m.c **** 
+  71:../FreeModbus/functions/mbfuncholding_m.c **** #define MB_PDU_REQ_READWRITE_READ_ADDR_OFF      ( MB_PDU_DATA_OFF + 0 )
+  72:../FreeModbus/functions/mbfuncholding_m.c **** #define MB_PDU_REQ_READWRITE_READ_REGCNT_OFF    ( MB_PDU_DATA_OFF + 2 )
+  73:../FreeModbus/functions/mbfuncholding_m.c **** #define MB_PDU_REQ_READWRITE_WRITE_ADDR_OFF     ( MB_PDU_DATA_OFF + 4 )
+  74:../FreeModbus/functions/mbfuncholding_m.c **** #define MB_PDU_REQ_READWRITE_WRITE_REGCNT_OFF   ( MB_PDU_DATA_OFF + 6 )
+  75:../FreeModbus/functions/mbfuncholding_m.c **** #define MB_PDU_REQ_READWRITE_WRITE_BYTECNT_OFF  ( MB_PDU_DATA_OFF + 8 )
+  76:../FreeModbus/functions/mbfuncholding_m.c **** #define MB_PDU_REQ_READWRITE_WRITE_VALUES_OFF   ( MB_PDU_DATA_OFF + 9 )
+  77:../FreeModbus/functions/mbfuncholding_m.c **** #define MB_PDU_REQ_READWRITE_SIZE_MIN           ( 9 )
+  78:../FreeModbus/functions/mbfuncholding_m.c **** #define MB_PDU_FUNC_READWRITE_READ_BYTECNT_OFF  ( MB_PDU_DATA_OFF + 0 )
+  79:../FreeModbus/functions/mbfuncholding_m.c **** #define MB_PDU_FUNC_READWRITE_READ_VALUES_OFF   ( MB_PDU_DATA_OFF + 1 )
+  80:../FreeModbus/functions/mbfuncholding_m.c **** #define MB_PDU_FUNC_READWRITE_SIZE_MIN          ( 1 )
+  81:../FreeModbus/functions/mbfuncholding_m.c **** 
+  82:../FreeModbus/functions/mbfuncholding_m.c **** /* ----------------------- Static functions ---------------------------------*/
+  83:../FreeModbus/functions/mbfuncholding_m.c **** eMBException    prveMBError2Exception( eMBErrorCode eErrorCode );
+  84:../FreeModbus/functions/mbfuncholding_m.c **** 
+  85:../FreeModbus/functions/mbfuncholding_m.c **** /* ----------------------- Start implementation -----------------------------*/
+  86:../FreeModbus/functions/mbfuncholding_m.c **** #if MB_MASTER_RTU_ENABLED > 0 || MB_MASTER_ASCII_ENABLED > 0
+  87:../FreeModbus/functions/mbfuncholding_m.c **** #if MB_FUNC_WRITE_HOLDING_ENABLED > 0
+  88:../FreeModbus/functions/mbfuncholding_m.c **** 
+  89:../FreeModbus/functions/mbfuncholding_m.c **** /**
+  90:../FreeModbus/functions/mbfuncholding_m.c ****  * This function will request write holding register.
+  91:../FreeModbus/functions/mbfuncholding_m.c ****  *
+  92:../FreeModbus/functions/mbfuncholding_m.c ****  * @param ucSndAddr salve address
+  93:../FreeModbus/functions/mbfuncholding_m.c ****  * @param usRegAddr register start address
+  94:../FreeModbus/functions/mbfuncholding_m.c ****  * @param usRegData register data to be written
+  95:../FreeModbus/functions/mbfuncholding_m.c ****  * @param lTimeOut timeout (-1 will waiting forever)
+  96:../FreeModbus/functions/mbfuncholding_m.c ****  *
+  97:../FreeModbus/functions/mbfuncholding_m.c ****  * @return error code
+  98:../FreeModbus/functions/mbfuncholding_m.c ****  */
+  99:../FreeModbus/functions/mbfuncholding_m.c **** eMBMasterReqErrCode
+ 100:../FreeModbus/functions/mbfuncholding_m.c **** eMBMasterReqWriteHoldingRegister( UCHAR ucSndAddr, USHORT usRegAddr, USHORT usRegData, LONG lTimeOu
+ 101:../FreeModbus/functions/mbfuncholding_m.c **** {
+  27              		.loc 1 101 0
+  28              		.cfi_startproc
+  29              		@ args = 0, pretend = 0, frame = 24
+  30              		@ frame_needed = 1, uses_anonymous_args = 0
+  31 0000 80B5     		push	{r7, lr}
+  32              		.cfi_def_cfa_offset 8
+  33              		.cfi_offset 7, -8
+  34              		.cfi_offset 14, -4
+  35 0002 86B0     		sub	sp, sp, #24
+  36              		.cfi_def_cfa_offset 32
+  37 0004 00AF     		add	r7, sp, #0
+  38              		.cfi_def_cfa_register 7
+  39 0006 7B60     		str	r3, [r7, #4]
+  40 0008 0346     		mov	r3, r0
+  41 000a FB73     		strb	r3, [r7, #15]
+  42 000c 0B46     		mov	r3, r1	@ movhi
+  43 000e BB81     		strh	r3, [r7, #12]	@ movhi
+  44 0010 1346     		mov	r3, r2	@ movhi
+  45 0012 7B81     		strh	r3, [r7, #10]	@ movhi
+ 102:../FreeModbus/functions/mbfuncholding_m.c ****     UCHAR                 *ucMBFrame;
+ 103:../FreeModbus/functions/mbfuncholding_m.c ****     eMBMasterReqErrCode    eErrStatus = MB_MRE_NO_ERR;
+  46              		.loc 1 103 0
+  47 0014 0023     		movs	r3, #0
+  48 0016 FB75     		strb	r3, [r7, #23]
+ 104:../FreeModbus/functions/mbfuncholding_m.c **** 
+ 105:../FreeModbus/functions/mbfuncholding_m.c ****     if ( ucSndAddr > MB_MASTER_TOTAL_SLAVE_NUM ) eErrStatus = MB_MRE_ILL_ARG;
+  49              		.loc 1 105 0
+  50 0018 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+  51 001a 102B     		cmp	r3, #16
+  52 001c 02D9     		bls	.L2
+  53              		.loc 1 105 0 is_stmt 0 discriminator 1
+  54 001e 0223     		movs	r3, #2
+  55 0020 FB75     		strb	r3, [r7, #23]
+  56 0022 36E0     		b	.L3
+  57              	.L2:
+ 106:../FreeModbus/functions/mbfuncholding_m.c ****     else if ( xMBMasterRunResTake( lTimeOut ) == FALSE ) eErrStatus = MB_MRE_MASTER_BUSY;
+  58              		.loc 1 106 0 is_stmt 1
+  59 0024 7868     		ldr	r0, [r7, #4]
+  60 0026 FFF7FEFF 		bl	xMBMasterRunResTake
+  61 002a 0346     		mov	r3, r0
+  62 002c 002B     		cmp	r3, #0
+  63 002e 02D1     		bne	.L4
+  64              		.loc 1 106 0 is_stmt 0 discriminator 1
+  65 0030 0523     		movs	r3, #5
+  66 0032 FB75     		strb	r3, [r7, #23]
+  67 0034 2DE0     		b	.L3
+  68              	.L4:
+ 107:../FreeModbus/functions/mbfuncholding_m.c ****     else
+ 108:../FreeModbus/functions/mbfuncholding_m.c ****     {
+ 109:../FreeModbus/functions/mbfuncholding_m.c **** 		vMBMasterGetPDUSndBuf(&ucMBFrame);
+  69              		.loc 1 109 0 is_stmt 1
+  70 0036 07F11003 		add	r3, r7, #16
+  71 003a 1846     		mov	r0, r3
+  72 003c FFF7FEFF 		bl	vMBMasterGetPDUSndBuf
+ 110:../FreeModbus/functions/mbfuncholding_m.c **** 		vMBMasterSetDestAddress(ucSndAddr);
+  73              		.loc 1 110 0
+  74 0040 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+  75 0042 1846     		mov	r0, r3
+  76 0044 FFF7FEFF 		bl	vMBMasterSetDestAddress
+ 111:../FreeModbus/functions/mbfuncholding_m.c **** 		ucMBFrame[MB_PDU_FUNC_OFF]                = MB_FUNC_WRITE_REGISTER;
+  77              		.loc 1 111 0
+  78 0048 3B69     		ldr	r3, [r7, #16]
+  79 004a 0622     		movs	r2, #6
+  80 004c 1A70     		strb	r2, [r3]
+ 112:../FreeModbus/functions/mbfuncholding_m.c **** 		ucMBFrame[MB_PDU_REQ_WRITE_ADDR_OFF]      = usRegAddr >> 8;
+  81              		.loc 1 112 0
+  82 004e 3B69     		ldr	r3, [r7, #16]
+  83 0050 0133     		adds	r3, r3, #1
+  84 0052 BA89     		ldrh	r2, [r7, #12]
+  85 0054 120A     		lsrs	r2, r2, #8
+  86 0056 92B2     		uxth	r2, r2
+  87 0058 D2B2     		uxtb	r2, r2
+  88 005a 1A70     		strb	r2, [r3]
+ 113:../FreeModbus/functions/mbfuncholding_m.c **** 		ucMBFrame[MB_PDU_REQ_WRITE_ADDR_OFF + 1]  = usRegAddr;
+  89              		.loc 1 113 0
+  90 005c 3B69     		ldr	r3, [r7, #16]
+  91 005e 0233     		adds	r3, r3, #2
+  92 0060 BA89     		ldrh	r2, [r7, #12]	@ movhi
+  93 0062 D2B2     		uxtb	r2, r2
+  94 0064 1A70     		strb	r2, [r3]
+ 114:../FreeModbus/functions/mbfuncholding_m.c **** 		ucMBFrame[MB_PDU_REQ_WRITE_VALUE_OFF]     = usRegData >> 8;
+  95              		.loc 1 114 0
+  96 0066 3B69     		ldr	r3, [r7, #16]
+  97 0068 0333     		adds	r3, r3, #3
+  98 006a 7A89     		ldrh	r2, [r7, #10]
+  99 006c 120A     		lsrs	r2, r2, #8
+ 100 006e 92B2     		uxth	r2, r2
+ 101 0070 D2B2     		uxtb	r2, r2
+ 102 0072 1A70     		strb	r2, [r3]
+ 115:../FreeModbus/functions/mbfuncholding_m.c **** 		ucMBFrame[MB_PDU_REQ_WRITE_VALUE_OFF + 1] = usRegData ;
+ 103              		.loc 1 115 0
+ 104 0074 3B69     		ldr	r3, [r7, #16]
+ 105 0076 0433     		adds	r3, r3, #4
+ 106 0078 7A89     		ldrh	r2, [r7, #10]	@ movhi
+ 107 007a D2B2     		uxtb	r2, r2
+ 108 007c 1A70     		strb	r2, [r3]
+ 116:../FreeModbus/functions/mbfuncholding_m.c **** 		vMBMasterSetPDUSndLength( MB_PDU_SIZE_MIN + MB_PDU_REQ_WRITE_SIZE );
+ 109              		.loc 1 116 0
+ 110 007e 0520     		movs	r0, #5
+ 111 0080 FFF7FEFF 		bl	vMBMasterSetPDUSndLength
+ 117:../FreeModbus/functions/mbfuncholding_m.c **** 		( void ) xMBMasterPortEventPost( EV_MASTER_FRAME_SENT );
+ 112              		.loc 1 117 0
+ 113 0084 0320     		movs	r0, #3
+ 114 0086 FFF7FEFF 		bl	xMBMasterPortEventPost
+ 118:../FreeModbus/functions/mbfuncholding_m.c **** 		eErrStatus = eMBMasterWaitRequestFinish( );
+ 115              		.loc 1 118 0
+ 116 008a FFF7FEFF 		bl	eMBMasterWaitRequestFinish
+ 117 008e 0346     		mov	r3, r0
+ 118 0090 FB75     		strb	r3, [r7, #23]
+ 119              	.L3:
+ 119:../FreeModbus/functions/mbfuncholding_m.c ****     }
+ 120:../FreeModbus/functions/mbfuncholding_m.c ****     return eErrStatus;
+ 120              		.loc 1 120 0
+ 121 0092 FB7D     		ldrb	r3, [r7, #23]	@ zero_extendqisi2
+ 121:../FreeModbus/functions/mbfuncholding_m.c **** }
+ 122              		.loc 1 121 0
+ 123 0094 1846     		mov	r0, r3
+ 124 0096 1837     		adds	r7, r7, #24
+ 125 0098 BD46     		mov	sp, r7
+ 126              		@ sp needed
+ 127 009a 80BD     		pop	{r7, pc}
+ 128              		.cfi_endproc
+ 129              	.LFE29:
+ 131              		.section	.text.eMBMasterFuncWriteHoldingRegister,"ax",%progbits
+ 132              		.align	2
+ 133              		.global	eMBMasterFuncWriteHoldingRegister
+ 134              		.thumb
+ 135              		.thumb_func
+ 137              	eMBMasterFuncWriteHoldingRegister:
+ 138              	.LFB30:
+ 122:../FreeModbus/functions/mbfuncholding_m.c **** 
+ 123:../FreeModbus/functions/mbfuncholding_m.c **** eMBException
+ 124:../FreeModbus/functions/mbfuncholding_m.c **** eMBMasterFuncWriteHoldingRegister( UCHAR * pucFrame, USHORT * usLen )
+ 125:../FreeModbus/functions/mbfuncholding_m.c **** {
+ 139              		.loc 1 125 0
+ 140              		.cfi_startproc
+ 141              		@ args = 0, pretend = 0, frame = 16
+ 142              		@ frame_needed = 1, uses_anonymous_args = 0
+ 143 0000 80B5     		push	{r7, lr}
+ 144              		.cfi_def_cfa_offset 8
+ 145              		.cfi_offset 7, -8
+ 146              		.cfi_offset 14, -4
+ 147 0002 84B0     		sub	sp, sp, #16
+ 148              		.cfi_def_cfa_offset 24
+ 149 0004 00AF     		add	r7, sp, #0
+ 150              		.cfi_def_cfa_register 7
+ 151 0006 7860     		str	r0, [r7, #4]
+ 152 0008 3960     		str	r1, [r7]
+ 126:../FreeModbus/functions/mbfuncholding_m.c ****     USHORT          usRegAddress;
+ 127:../FreeModbus/functions/mbfuncholding_m.c ****     eMBException    eStatus = MB_EX_NONE;
+ 153              		.loc 1 127 0
+ 154 000a 0023     		movs	r3, #0
+ 155 000c FB73     		strb	r3, [r7, #15]
+ 128:../FreeModbus/functions/mbfuncholding_m.c ****     eMBErrorCode    eRegStatus;
+ 129:../FreeModbus/functions/mbfuncholding_m.c **** 
+ 130:../FreeModbus/functions/mbfuncholding_m.c ****     if( *usLen == ( MB_PDU_SIZE_MIN + MB_PDU_FUNC_WRITE_SIZE ) )
+ 156              		.loc 1 130 0
+ 157 000e 3B68     		ldr	r3, [r7]
+ 158 0010 1B88     		ldrh	r3, [r3]
+ 159 0012 052B     		cmp	r3, #5
+ 160 0014 23D1     		bne	.L7
+ 131:../FreeModbus/functions/mbfuncholding_m.c ****     {
+ 132:../FreeModbus/functions/mbfuncholding_m.c ****         usRegAddress = ( USHORT )( pucFrame[MB_PDU_FUNC_WRITE_ADDR_OFF] << 8 );
+ 161              		.loc 1 132 0
+ 162 0016 7B68     		ldr	r3, [r7, #4]
+ 163 0018 0133     		adds	r3, r3, #1
+ 164 001a 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 165 001c 1B02     		lsls	r3, r3, #8
+ 166 001e BB81     		strh	r3, [r7, #12]	@ movhi
+ 133:../FreeModbus/functions/mbfuncholding_m.c ****         usRegAddress |= ( USHORT )( pucFrame[MB_PDU_FUNC_WRITE_ADDR_OFF + 1] );
+ 167              		.loc 1 133 0
+ 168 0020 7B68     		ldr	r3, [r7, #4]
+ 169 0022 0233     		adds	r3, r3, #2
+ 170 0024 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 171 0026 1A46     		mov	r2, r3
+ 172 0028 BB89     		ldrh	r3, [r7, #12]	@ movhi
+ 173 002a 1343     		orrs	r3, r3, r2
+ 174 002c BB81     		strh	r3, [r7, #12]	@ movhi
+ 134:../FreeModbus/functions/mbfuncholding_m.c ****         usRegAddress++;
+ 175              		.loc 1 134 0
+ 176 002e BB89     		ldrh	r3, [r7, #12]
+ 177 0030 0133     		adds	r3, r3, #1
+ 178 0032 BB81     		strh	r3, [r7, #12]	@ movhi
+ 135:../FreeModbus/functions/mbfuncholding_m.c **** 
+ 136:../FreeModbus/functions/mbfuncholding_m.c ****         /* Make callback to update the value. */
+ 137:../FreeModbus/functions/mbfuncholding_m.c ****         eRegStatus = eMBMasterRegHoldingCB( &pucFrame[MB_PDU_FUNC_WRITE_VALUE_OFF],
+ 179              		.loc 1 137 0
+ 180 0034 7B68     		ldr	r3, [r7, #4]
+ 181 0036 DA1C     		adds	r2, r3, #3
+ 182 0038 BB89     		ldrh	r3, [r7, #12]
+ 183 003a 1046     		mov	r0, r2
+ 184 003c 1946     		mov	r1, r3
+ 185 003e 0122     		movs	r2, #1
+ 186 0040 0123     		movs	r3, #1
+ 187 0042 FFF7FEFF 		bl	eMBMasterRegHoldingCB
+ 188 0046 0346     		mov	r3, r0
+ 189 0048 FB72     		strb	r3, [r7, #11]
+ 138:../FreeModbus/functions/mbfuncholding_m.c ****                                       usRegAddress, 1, MB_REG_WRITE );
+ 139:../FreeModbus/functions/mbfuncholding_m.c **** 
+ 140:../FreeModbus/functions/mbfuncholding_m.c ****         /* If an error occured convert it into a Modbus exception. */
+ 141:../FreeModbus/functions/mbfuncholding_m.c ****         if( eRegStatus != MB_ENOERR )
+ 190              		.loc 1 141 0
+ 191 004a FB7A     		ldrb	r3, [r7, #11]	@ zero_extendqisi2
+ 192 004c 002B     		cmp	r3, #0
+ 193 004e 08D0     		beq	.L9
+ 142:../FreeModbus/functions/mbfuncholding_m.c ****         {
+ 143:../FreeModbus/functions/mbfuncholding_m.c ****             eStatus = prveMBError2Exception( eRegStatus );
+ 194              		.loc 1 143 0
+ 195 0050 FB7A     		ldrb	r3, [r7, #11]	@ zero_extendqisi2
+ 196 0052 1846     		mov	r0, r3
+ 197 0054 FFF7FEFF 		bl	prveMBError2Exception
+ 198 0058 0346     		mov	r3, r0
+ 199 005a FB73     		strb	r3, [r7, #15]
+ 200 005c 01E0     		b	.L9
+ 201              	.L7:
+ 144:../FreeModbus/functions/mbfuncholding_m.c ****         }
+ 145:../FreeModbus/functions/mbfuncholding_m.c ****     }
+ 146:../FreeModbus/functions/mbfuncholding_m.c ****     else
+ 147:../FreeModbus/functions/mbfuncholding_m.c ****     {
+ 148:../FreeModbus/functions/mbfuncholding_m.c ****         /* Can't be a valid request because the length is incorrect. */
+ 149:../FreeModbus/functions/mbfuncholding_m.c ****         eStatus = MB_EX_ILLEGAL_DATA_VALUE;
+ 202              		.loc 1 149 0
+ 203 005e 0323     		movs	r3, #3
+ 204 0060 FB73     		strb	r3, [r7, #15]
+ 205              	.L9:
+ 150:../FreeModbus/functions/mbfuncholding_m.c ****     }
+ 151:../FreeModbus/functions/mbfuncholding_m.c ****     return eStatus;
+ 206              		.loc 1 151 0
+ 207 0062 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 152:../FreeModbus/functions/mbfuncholding_m.c **** }
+ 208              		.loc 1 152 0
+ 209 0064 1846     		mov	r0, r3
+ 210 0066 1037     		adds	r7, r7, #16
+ 211 0068 BD46     		mov	sp, r7
+ 212              		@ sp needed
+ 213 006a 80BD     		pop	{r7, pc}
+ 214              		.cfi_endproc
+ 215              	.LFE30:
+ 217              		.section	.text.eMBMasterReqWriteMultipleHoldingRegister,"ax",%progbits
+ 218              		.align	2
+ 219              		.global	eMBMasterReqWriteMultipleHoldingRegister
+ 220              		.thumb
+ 221              		.thumb_func
+ 223              	eMBMasterReqWriteMultipleHoldingRegister:
+ 224              	.LFB31:
+ 153:../FreeModbus/functions/mbfuncholding_m.c **** #endif
+ 154:../FreeModbus/functions/mbfuncholding_m.c **** 
+ 155:../FreeModbus/functions/mbfuncholding_m.c **** #if MB_FUNC_WRITE_MULTIPLE_HOLDING_ENABLED > 0
+ 156:../FreeModbus/functions/mbfuncholding_m.c **** 
+ 157:../FreeModbus/functions/mbfuncholding_m.c **** /**
+ 158:../FreeModbus/functions/mbfuncholding_m.c ****  * This function will request write multiple holding register.
+ 159:../FreeModbus/functions/mbfuncholding_m.c ****  *
+ 160:../FreeModbus/functions/mbfuncholding_m.c ****  * @param ucSndAddr salve address
+ 161:../FreeModbus/functions/mbfuncholding_m.c ****  * @param usRegAddr register start address
+ 162:../FreeModbus/functions/mbfuncholding_m.c ****  * @param usNRegs register total number
+ 163:../FreeModbus/functions/mbfuncholding_m.c ****  * @param pusDataBuffer data to be written
+ 164:../FreeModbus/functions/mbfuncholding_m.c ****  * @param lTimeOut timeout (-1 will waiting forever)
+ 165:../FreeModbus/functions/mbfuncholding_m.c ****  *
+ 166:../FreeModbus/functions/mbfuncholding_m.c ****  * @return error code
+ 167:../FreeModbus/functions/mbfuncholding_m.c ****  */
+ 168:../FreeModbus/functions/mbfuncholding_m.c **** eMBMasterReqErrCode
+ 169:../FreeModbus/functions/mbfuncholding_m.c **** eMBMasterReqWriteMultipleHoldingRegister( UCHAR ucSndAddr,
+ 170:../FreeModbus/functions/mbfuncholding_m.c **** 		USHORT usRegAddr, USHORT usNRegs, USHORT * pusDataBuffer, LONG lTimeOut )
+ 171:../FreeModbus/functions/mbfuncholding_m.c **** {
+ 225              		.loc 1 171 0
+ 226              		.cfi_startproc
+ 227              		@ args = 4, pretend = 0, frame = 24
+ 228              		@ frame_needed = 1, uses_anonymous_args = 0
+ 229 0000 80B5     		push	{r7, lr}
+ 230              		.cfi_def_cfa_offset 8
+ 231              		.cfi_offset 7, -8
+ 232              		.cfi_offset 14, -4
+ 233 0002 86B0     		sub	sp, sp, #24
+ 234              		.cfi_def_cfa_offset 32
+ 235 0004 00AF     		add	r7, sp, #0
+ 236              		.cfi_def_cfa_register 7
+ 237 0006 7B60     		str	r3, [r7, #4]
+ 238 0008 0346     		mov	r3, r0
+ 239 000a FB73     		strb	r3, [r7, #15]
+ 240 000c 0B46     		mov	r3, r1	@ movhi
+ 241 000e BB81     		strh	r3, [r7, #12]	@ movhi
+ 242 0010 1346     		mov	r3, r2	@ movhi
+ 243 0012 7B81     		strh	r3, [r7, #10]	@ movhi
+ 172:../FreeModbus/functions/mbfuncholding_m.c ****     UCHAR                 *ucMBFrame;
+ 173:../FreeModbus/functions/mbfuncholding_m.c ****     USHORT                 usRegIndex = 0;
+ 244              		.loc 1 173 0
+ 245 0014 0023     		movs	r3, #0
+ 246 0016 FB82     		strh	r3, [r7, #22]	@ movhi
+ 174:../FreeModbus/functions/mbfuncholding_m.c ****     eMBMasterReqErrCode    eErrStatus = MB_MRE_NO_ERR;
+ 247              		.loc 1 174 0
+ 248 0018 0023     		movs	r3, #0
+ 249 001a 7B75     		strb	r3, [r7, #21]
+ 175:../FreeModbus/functions/mbfuncholding_m.c **** 
+ 176:../FreeModbus/functions/mbfuncholding_m.c ****     if ( ucSndAddr > MB_MASTER_TOTAL_SLAVE_NUM ) eErrStatus = MB_MRE_ILL_ARG;
+ 250              		.loc 1 176 0
+ 251 001c FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 252 001e 102B     		cmp	r3, #16
+ 253 0020 02D9     		bls	.L12
+ 254              		.loc 1 176 0 is_stmt 0 discriminator 1
+ 255 0022 0223     		movs	r3, #2
+ 256 0024 7B75     		strb	r3, [r7, #21]
+ 257 0026 62E0     		b	.L13
+ 258              	.L12:
+ 177:../FreeModbus/functions/mbfuncholding_m.c ****     else if ( xMBMasterRunResTake( lTimeOut ) == FALSE ) eErrStatus = MB_MRE_MASTER_BUSY;
+ 259              		.loc 1 177 0 is_stmt 1
+ 260 0028 386A     		ldr	r0, [r7, #32]
+ 261 002a FFF7FEFF 		bl	xMBMasterRunResTake
+ 262 002e 0346     		mov	r3, r0
+ 263 0030 002B     		cmp	r3, #0
+ 264 0032 02D1     		bne	.L14
+ 265              		.loc 1 177 0 is_stmt 0 discriminator 1
+ 266 0034 0523     		movs	r3, #5
+ 267 0036 7B75     		strb	r3, [r7, #21]
+ 268 0038 59E0     		b	.L13
+ 269              	.L14:
+ 178:../FreeModbus/functions/mbfuncholding_m.c ****     else
+ 179:../FreeModbus/functions/mbfuncholding_m.c ****     {
+ 180:../FreeModbus/functions/mbfuncholding_m.c **** 		vMBMasterGetPDUSndBuf(&ucMBFrame);
+ 270              		.loc 1 180 0 is_stmt 1
+ 271 003a 07F11003 		add	r3, r7, #16
+ 272 003e 1846     		mov	r0, r3
+ 273 0040 FFF7FEFF 		bl	vMBMasterGetPDUSndBuf
+ 181:../FreeModbus/functions/mbfuncholding_m.c **** 		vMBMasterSetDestAddress(ucSndAddr);
+ 274              		.loc 1 181 0
+ 275 0044 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 276 0046 1846     		mov	r0, r3
+ 277 0048 FFF7FEFF 		bl	vMBMasterSetDestAddress
+ 182:../FreeModbus/functions/mbfuncholding_m.c **** 		ucMBFrame[MB_PDU_FUNC_OFF]                     = MB_FUNC_WRITE_MULTIPLE_REGISTERS;
+ 278              		.loc 1 182 0
+ 279 004c 3B69     		ldr	r3, [r7, #16]
+ 280 004e 1022     		movs	r2, #16
+ 281 0050 1A70     		strb	r2, [r3]
+ 183:../FreeModbus/functions/mbfuncholding_m.c **** 		ucMBFrame[MB_PDU_REQ_WRITE_MUL_ADDR_OFF]       = usRegAddr >> 8;
+ 282              		.loc 1 183 0
+ 283 0052 3B69     		ldr	r3, [r7, #16]
+ 284 0054 0133     		adds	r3, r3, #1
+ 285 0056 BA89     		ldrh	r2, [r7, #12]
+ 286 0058 120A     		lsrs	r2, r2, #8
+ 287 005a 92B2     		uxth	r2, r2
+ 288 005c D2B2     		uxtb	r2, r2
+ 289 005e 1A70     		strb	r2, [r3]
+ 184:../FreeModbus/functions/mbfuncholding_m.c **** 		ucMBFrame[MB_PDU_REQ_WRITE_MUL_ADDR_OFF + 1]   = usRegAddr;
+ 290              		.loc 1 184 0
+ 291 0060 3B69     		ldr	r3, [r7, #16]
+ 292 0062 0233     		adds	r3, r3, #2
+ 293 0064 BA89     		ldrh	r2, [r7, #12]	@ movhi
+ 294 0066 D2B2     		uxtb	r2, r2
+ 295 0068 1A70     		strb	r2, [r3]
+ 185:../FreeModbus/functions/mbfuncholding_m.c **** 		ucMBFrame[MB_PDU_REQ_WRITE_MUL_REGCNT_OFF]     = usNRegs >> 8;
+ 296              		.loc 1 185 0
+ 297 006a 3B69     		ldr	r3, [r7, #16]
+ 298 006c 0333     		adds	r3, r3, #3
+ 299 006e 7A89     		ldrh	r2, [r7, #10]
+ 300 0070 120A     		lsrs	r2, r2, #8
+ 301 0072 92B2     		uxth	r2, r2
+ 302 0074 D2B2     		uxtb	r2, r2
+ 303 0076 1A70     		strb	r2, [r3]
+ 186:../FreeModbus/functions/mbfuncholding_m.c **** 		ucMBFrame[MB_PDU_REQ_WRITE_MUL_REGCNT_OFF + 1] = usNRegs ;
+ 304              		.loc 1 186 0
+ 305 0078 3B69     		ldr	r3, [r7, #16]
+ 306 007a 0433     		adds	r3, r3, #4
+ 307 007c 7A89     		ldrh	r2, [r7, #10]	@ movhi
+ 308 007e D2B2     		uxtb	r2, r2
+ 309 0080 1A70     		strb	r2, [r3]
+ 187:../FreeModbus/functions/mbfuncholding_m.c **** 		ucMBFrame[MB_PDU_REQ_WRITE_MUL_BYTECNT_OFF]    = usNRegs * 2;
+ 310              		.loc 1 187 0
+ 311 0082 3B69     		ldr	r3, [r7, #16]
+ 312 0084 0533     		adds	r3, r3, #5
+ 313 0086 7A89     		ldrh	r2, [r7, #10]	@ movhi
+ 314 0088 D2B2     		uxtb	r2, r2
+ 315 008a 5200     		lsls	r2, r2, #1
+ 316 008c D2B2     		uxtb	r2, r2
+ 317 008e 1A70     		strb	r2, [r3]
+ 188:../FreeModbus/functions/mbfuncholding_m.c **** 		ucMBFrame += MB_PDU_REQ_WRITE_MUL_VALUES_OFF;
+ 318              		.loc 1 188 0
+ 319 0090 3B69     		ldr	r3, [r7, #16]
+ 320 0092 0633     		adds	r3, r3, #6
+ 321 0094 3B61     		str	r3, [r7, #16]
+ 189:../FreeModbus/functions/mbfuncholding_m.c **** 		while( usNRegs > usRegIndex)
+ 322              		.loc 1 189 0
+ 323 0096 17E0     		b	.L15
+ 324              	.L16:
+ 190:../FreeModbus/functions/mbfuncholding_m.c **** 		{
+ 191:../FreeModbus/functions/mbfuncholding_m.c **** 			*ucMBFrame++ = pusDataBuffer[usRegIndex] >> 8;
+ 325              		.loc 1 191 0
+ 326 0098 3B69     		ldr	r3, [r7, #16]
+ 327 009a 5A1C     		adds	r2, r3, #1
+ 328 009c 3A61     		str	r2, [r7, #16]
+ 329 009e FA8A     		ldrh	r2, [r7, #22]
+ 330 00a0 5200     		lsls	r2, r2, #1
+ 331 00a2 7968     		ldr	r1, [r7, #4]
+ 332 00a4 0A44     		add	r2, r2, r1
+ 333 00a6 1288     		ldrh	r2, [r2]
+ 334 00a8 120A     		lsrs	r2, r2, #8
+ 335 00aa 92B2     		uxth	r2, r2
+ 336 00ac D2B2     		uxtb	r2, r2
+ 337 00ae 1A70     		strb	r2, [r3]
+ 192:../FreeModbus/functions/mbfuncholding_m.c **** 			*ucMBFrame++ = pusDataBuffer[usRegIndex++] ;
+ 338              		.loc 1 192 0
+ 339 00b0 3B69     		ldr	r3, [r7, #16]
+ 340 00b2 5A1C     		adds	r2, r3, #1
+ 341 00b4 3A61     		str	r2, [r7, #16]
+ 342 00b6 FA8A     		ldrh	r2, [r7, #22]
+ 343 00b8 511C     		adds	r1, r2, #1
+ 344 00ba F982     		strh	r1, [r7, #22]	@ movhi
+ 345 00bc 5200     		lsls	r2, r2, #1
+ 346 00be 7968     		ldr	r1, [r7, #4]
+ 347 00c0 0A44     		add	r2, r2, r1
+ 348 00c2 1288     		ldrh	r2, [r2]
+ 349 00c4 D2B2     		uxtb	r2, r2
+ 350 00c6 1A70     		strb	r2, [r3]
+ 351              	.L15:
+ 189:../FreeModbus/functions/mbfuncholding_m.c **** 		while( usNRegs > usRegIndex)
+ 352              		.loc 1 189 0 discriminator 1
+ 353 00c8 7A89     		ldrh	r2, [r7, #10]
+ 354 00ca FB8A     		ldrh	r3, [r7, #22]
+ 355 00cc 9A42     		cmp	r2, r3
+ 356 00ce E3D8     		bhi	.L16
+ 193:../FreeModbus/functions/mbfuncholding_m.c **** 		}
+ 194:../FreeModbus/functions/mbfuncholding_m.c **** 		vMBMasterSetPDUSndLength( MB_PDU_SIZE_MIN + MB_PDU_REQ_WRITE_MUL_SIZE_MIN + 2*usNRegs );
+ 357              		.loc 1 194 0
+ 358 00d0 7B89     		ldrh	r3, [r7, #10]
+ 359 00d2 0333     		adds	r3, r3, #3
+ 360 00d4 9BB2     		uxth	r3, r3
+ 361 00d6 5B00     		lsls	r3, r3, #1
+ 362 00d8 9BB2     		uxth	r3, r3
+ 363 00da 1846     		mov	r0, r3
+ 364 00dc FFF7FEFF 		bl	vMBMasterSetPDUSndLength
+ 195:../FreeModbus/functions/mbfuncholding_m.c **** 		( void ) xMBMasterPortEventPost( EV_MASTER_FRAME_SENT );
+ 365              		.loc 1 195 0
+ 366 00e0 0320     		movs	r0, #3
+ 367 00e2 FFF7FEFF 		bl	xMBMasterPortEventPost
+ 196:../FreeModbus/functions/mbfuncholding_m.c **** 		eErrStatus = eMBMasterWaitRequestFinish( );
+ 368              		.loc 1 196 0
+ 369 00e6 FFF7FEFF 		bl	eMBMasterWaitRequestFinish
+ 370 00ea 0346     		mov	r3, r0
+ 371 00ec 7B75     		strb	r3, [r7, #21]
+ 372              	.L13:
+ 197:../FreeModbus/functions/mbfuncholding_m.c ****     }
+ 198:../FreeModbus/functions/mbfuncholding_m.c ****     return eErrStatus;
+ 373              		.loc 1 198 0
+ 374 00ee 7B7D     		ldrb	r3, [r7, #21]	@ zero_extendqisi2
+ 199:../FreeModbus/functions/mbfuncholding_m.c **** }
+ 375              		.loc 1 199 0
+ 376 00f0 1846     		mov	r0, r3
+ 377 00f2 1837     		adds	r7, r7, #24
+ 378 00f4 BD46     		mov	sp, r7
+ 379              		@ sp needed
+ 380 00f6 80BD     		pop	{r7, pc}
+ 381              		.cfi_endproc
+ 382              	.LFE31:
+ 384              		.section	.text.eMBMasterFuncWriteMultipleHoldingRegister,"ax",%progbits
+ 385              		.align	2
+ 386              		.global	eMBMasterFuncWriteMultipleHoldingRegister
+ 387              		.thumb
+ 388              		.thumb_func
+ 390              	eMBMasterFuncWriteMultipleHoldingRegister:
+ 391              	.LFB32:
+ 200:../FreeModbus/functions/mbfuncholding_m.c **** 
+ 201:../FreeModbus/functions/mbfuncholding_m.c **** eMBException
+ 202:../FreeModbus/functions/mbfuncholding_m.c **** eMBMasterFuncWriteMultipleHoldingRegister( UCHAR * pucFrame, USHORT * usLen )
+ 203:../FreeModbus/functions/mbfuncholding_m.c **** {
+ 392              		.loc 1 203 0
+ 393              		.cfi_startproc
+ 394              		@ args = 0, pretend = 0, frame = 24
+ 395              		@ frame_needed = 1, uses_anonymous_args = 0
+ 396 0000 80B5     		push	{r7, lr}
+ 397              		.cfi_def_cfa_offset 8
+ 398              		.cfi_offset 7, -8
+ 399              		.cfi_offset 14, -4
+ 400 0002 86B0     		sub	sp, sp, #24
+ 401              		.cfi_def_cfa_offset 32
+ 402 0004 00AF     		add	r7, sp, #0
+ 403              		.cfi_def_cfa_register 7
+ 404 0006 7860     		str	r0, [r7, #4]
+ 405 0008 3960     		str	r1, [r7]
+ 204:../FreeModbus/functions/mbfuncholding_m.c ****     UCHAR          *ucMBFrame;
+ 205:../FreeModbus/functions/mbfuncholding_m.c ****     USHORT          usRegAddress;
+ 206:../FreeModbus/functions/mbfuncholding_m.c ****     USHORT          usRegCount;
+ 207:../FreeModbus/functions/mbfuncholding_m.c ****     UCHAR           ucRegByteCount;
+ 208:../FreeModbus/functions/mbfuncholding_m.c **** 
+ 209:../FreeModbus/functions/mbfuncholding_m.c ****     eMBException    eStatus = MB_EX_NONE;
+ 406              		.loc 1 209 0
+ 407 000a 0023     		movs	r3, #0
+ 408 000c FB75     		strb	r3, [r7, #23]
+ 210:../FreeModbus/functions/mbfuncholding_m.c ****     eMBErrorCode    eRegStatus;
+ 211:../FreeModbus/functions/mbfuncholding_m.c **** 
+ 212:../FreeModbus/functions/mbfuncholding_m.c ****     /* If this request is broadcast, the *usLen is not need check. */
+ 213:../FreeModbus/functions/mbfuncholding_m.c ****     if( ( *usLen == MB_PDU_SIZE_MIN + MB_PDU_FUNC_WRITE_MUL_SIZE ) || xMBMasterRequestIsBroadcast()
+ 409              		.loc 1 213 0
+ 410 000e 3B68     		ldr	r3, [r7]
+ 411 0010 1B88     		ldrh	r3, [r3]
+ 412 0012 052B     		cmp	r3, #5
+ 413 0014 04D0     		beq	.L19
+ 414              		.loc 1 213 0 is_stmt 0 discriminator 1
+ 415 0016 FFF7FEFF 		bl	xMBMasterRequestIsBroadcast
+ 416 001a 0346     		mov	r3, r0
+ 417 001c 002B     		cmp	r3, #0
+ 418 001e 41D0     		beq	.L20
+ 419              	.L19:
+ 214:../FreeModbus/functions/mbfuncholding_m.c ****     {
+ 215:../FreeModbus/functions/mbfuncholding_m.c **** 		vMBMasterGetPDUSndBuf(&ucMBFrame);
+ 420              		.loc 1 215 0 is_stmt 1
+ 421 0020 07F10C03 		add	r3, r7, #12
+ 422 0024 1846     		mov	r0, r3
+ 423 0026 FFF7FEFF 		bl	vMBMasterGetPDUSndBuf
+ 216:../FreeModbus/functions/mbfuncholding_m.c ****         usRegAddress = ( USHORT )( ucMBFrame[MB_PDU_REQ_WRITE_MUL_ADDR_OFF] << 8 );
+ 424              		.loc 1 216 0
+ 425 002a FB68     		ldr	r3, [r7, #12]
+ 426 002c 0133     		adds	r3, r3, #1
+ 427 002e 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 428 0030 1B02     		lsls	r3, r3, #8
+ 429 0032 BB82     		strh	r3, [r7, #20]	@ movhi
+ 217:../FreeModbus/functions/mbfuncholding_m.c ****         usRegAddress |= ( USHORT )( ucMBFrame[MB_PDU_REQ_WRITE_MUL_ADDR_OFF + 1] );
+ 430              		.loc 1 217 0
+ 431 0034 FB68     		ldr	r3, [r7, #12]
+ 432 0036 0233     		adds	r3, r3, #2
+ 433 0038 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 434 003a 1A46     		mov	r2, r3
+ 435 003c BB8A     		ldrh	r3, [r7, #20]	@ movhi
+ 436 003e 1343     		orrs	r3, r3, r2
+ 437 0040 BB82     		strh	r3, [r7, #20]	@ movhi
+ 218:../FreeModbus/functions/mbfuncholding_m.c ****         usRegAddress++;
+ 438              		.loc 1 218 0
+ 439 0042 BB8A     		ldrh	r3, [r7, #20]
+ 440 0044 0133     		adds	r3, r3, #1
+ 441 0046 BB82     		strh	r3, [r7, #20]	@ movhi
+ 219:../FreeModbus/functions/mbfuncholding_m.c **** 
+ 220:../FreeModbus/functions/mbfuncholding_m.c ****         usRegCount = ( USHORT )( ucMBFrame[MB_PDU_REQ_WRITE_MUL_REGCNT_OFF] << 8 );
+ 442              		.loc 1 220 0
+ 443 0048 FB68     		ldr	r3, [r7, #12]
+ 444 004a 0333     		adds	r3, r3, #3
+ 445 004c 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 446 004e 1B02     		lsls	r3, r3, #8
+ 447 0050 7B82     		strh	r3, [r7, #18]	@ movhi
+ 221:../FreeModbus/functions/mbfuncholding_m.c ****         usRegCount |= ( USHORT )( ucMBFrame[MB_PDU_REQ_WRITE_MUL_REGCNT_OFF + 1] );
+ 448              		.loc 1 221 0
+ 449 0052 FB68     		ldr	r3, [r7, #12]
+ 450 0054 0433     		adds	r3, r3, #4
+ 451 0056 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 452 0058 1A46     		mov	r2, r3
+ 453 005a 7B8A     		ldrh	r3, [r7, #18]	@ movhi
+ 454 005c 1343     		orrs	r3, r3, r2
+ 455 005e 7B82     		strh	r3, [r7, #18]	@ movhi
+ 222:../FreeModbus/functions/mbfuncholding_m.c **** 
+ 223:../FreeModbus/functions/mbfuncholding_m.c ****         ucRegByteCount = ucMBFrame[MB_PDU_REQ_WRITE_MUL_BYTECNT_OFF];
+ 456              		.loc 1 223 0
+ 457 0060 FB68     		ldr	r3, [r7, #12]
+ 458 0062 5B79     		ldrb	r3, [r3, #5]
+ 459 0064 7B74     		strb	r3, [r7, #17]
+ 224:../FreeModbus/functions/mbfuncholding_m.c **** 
+ 225:../FreeModbus/functions/mbfuncholding_m.c ****         if( ucRegByteCount == 2 * usRegCount )
+ 460              		.loc 1 225 0
+ 461 0066 7A7C     		ldrb	r2, [r7, #17]	@ zero_extendqisi2
+ 462 0068 7B8A     		ldrh	r3, [r7, #18]
+ 463 006a 5B00     		lsls	r3, r3, #1
+ 464 006c 9A42     		cmp	r2, r3
+ 465 006e 15D1     		bne	.L21
+ 226:../FreeModbus/functions/mbfuncholding_m.c ****         {
+ 227:../FreeModbus/functions/mbfuncholding_m.c ****             /* Make callback to update the register values. */
+ 228:../FreeModbus/functions/mbfuncholding_m.c ****             eRegStatus =
+ 229:../FreeModbus/functions/mbfuncholding_m.c ****                 eMBMasterRegHoldingCB( &ucMBFrame[MB_PDU_REQ_WRITE_MUL_VALUES_OFF],
+ 466              		.loc 1 229 0
+ 467 0070 FB68     		ldr	r3, [r7, #12]
+ 468 0072 991D     		adds	r1, r3, #6
+ 228:../FreeModbus/functions/mbfuncholding_m.c ****                 eMBMasterRegHoldingCB( &ucMBFrame[MB_PDU_REQ_WRITE_MUL_VALUES_OFF],
+ 469              		.loc 1 228 0
+ 470 0074 BA8A     		ldrh	r2, [r7, #20]
+ 471 0076 7B8A     		ldrh	r3, [r7, #18]
+ 472 0078 0846     		mov	r0, r1
+ 473 007a 1146     		mov	r1, r2
+ 474 007c 1A46     		mov	r2, r3
+ 475 007e 0123     		movs	r3, #1
+ 476 0080 FFF7FEFF 		bl	eMBMasterRegHoldingCB
+ 477 0084 0346     		mov	r3, r0
+ 478 0086 3B74     		strb	r3, [r7, #16]
+ 230:../FreeModbus/functions/mbfuncholding_m.c ****                                  usRegAddress, usRegCount, MB_REG_WRITE );
+ 231:../FreeModbus/functions/mbfuncholding_m.c **** 
+ 232:../FreeModbus/functions/mbfuncholding_m.c ****             /* If an error occured convert it into a Modbus exception. */
+ 233:../FreeModbus/functions/mbfuncholding_m.c ****             if( eRegStatus != MB_ENOERR )
+ 479              		.loc 1 233 0
+ 480 0088 3B7C     		ldrb	r3, [r7, #16]	@ zero_extendqisi2
+ 481 008a 002B     		cmp	r3, #0
+ 482 008c 09D0     		beq	.L23
+ 234:../FreeModbus/functions/mbfuncholding_m.c ****             {
+ 235:../FreeModbus/functions/mbfuncholding_m.c ****                 eStatus = prveMBError2Exception( eRegStatus );
+ 483              		.loc 1 235 0
+ 484 008e 3B7C     		ldrb	r3, [r7, #16]	@ zero_extendqisi2
+ 485 0090 1846     		mov	r0, r3
+ 486 0092 FFF7FEFF 		bl	prveMBError2Exception
+ 487 0096 0346     		mov	r3, r0
+ 488 0098 FB75     		strb	r3, [r7, #23]
+ 225:../FreeModbus/functions/mbfuncholding_m.c ****         {
+ 489              		.loc 1 225 0
+ 490 009a 05E0     		b	.L24
+ 491              	.L21:
+ 236:../FreeModbus/functions/mbfuncholding_m.c ****             }
+ 237:../FreeModbus/functions/mbfuncholding_m.c ****         }
+ 238:../FreeModbus/functions/mbfuncholding_m.c ****         else
+ 239:../FreeModbus/functions/mbfuncholding_m.c ****         {
+ 240:../FreeModbus/functions/mbfuncholding_m.c ****             eStatus = MB_EX_ILLEGAL_DATA_VALUE;
+ 492              		.loc 1 240 0
+ 493 009c 0323     		movs	r3, #3
+ 494 009e FB75     		strb	r3, [r7, #23]
+ 225:../FreeModbus/functions/mbfuncholding_m.c ****         {
+ 495              		.loc 1 225 0
+ 496 00a0 02E0     		b	.L24
+ 497              	.L23:
+ 498 00a2 01E0     		b	.L24
+ 499              	.L20:
+ 241:../FreeModbus/functions/mbfuncholding_m.c ****         }
+ 242:../FreeModbus/functions/mbfuncholding_m.c ****     }
+ 243:../FreeModbus/functions/mbfuncholding_m.c ****     else
+ 244:../FreeModbus/functions/mbfuncholding_m.c ****     {
+ 245:../FreeModbus/functions/mbfuncholding_m.c ****         /* Can't be a valid request because the length is incorrect. */
+ 246:../FreeModbus/functions/mbfuncholding_m.c ****         eStatus = MB_EX_ILLEGAL_DATA_VALUE;
+ 500              		.loc 1 246 0
+ 501 00a4 0323     		movs	r3, #3
+ 502 00a6 FB75     		strb	r3, [r7, #23]
+ 503              	.L24:
+ 247:../FreeModbus/functions/mbfuncholding_m.c ****     }
+ 248:../FreeModbus/functions/mbfuncholding_m.c ****     return eStatus;
+ 504              		.loc 1 248 0
+ 505 00a8 FB7D     		ldrb	r3, [r7, #23]	@ zero_extendqisi2
+ 249:../FreeModbus/functions/mbfuncholding_m.c **** }
+ 506              		.loc 1 249 0
+ 507 00aa 1846     		mov	r0, r3
+ 508 00ac 1837     		adds	r7, r7, #24
+ 509 00ae BD46     		mov	sp, r7
+ 510              		@ sp needed
+ 511 00b0 80BD     		pop	{r7, pc}
+ 512              		.cfi_endproc
+ 513              	.LFE32:
+ 515 00b2 00BF     		.section	.text.eMBMasterReqReadHoldingRegister,"ax",%progbits
+ 516              		.align	2
+ 517              		.global	eMBMasterReqReadHoldingRegister
+ 518              		.thumb
+ 519              		.thumb_func
+ 521              	eMBMasterReqReadHoldingRegister:
+ 522              	.LFB33:
+ 250:../FreeModbus/functions/mbfuncholding_m.c **** #endif
+ 251:../FreeModbus/functions/mbfuncholding_m.c **** 
+ 252:../FreeModbus/functions/mbfuncholding_m.c **** #if MB_FUNC_READ_HOLDING_ENABLED > 0
+ 253:../FreeModbus/functions/mbfuncholding_m.c **** 
+ 254:../FreeModbus/functions/mbfuncholding_m.c **** /**
+ 255:../FreeModbus/functions/mbfuncholding_m.c ****  * This function will request read holding register.
+ 256:../FreeModbus/functions/mbfuncholding_m.c ****  *
+ 257:../FreeModbus/functions/mbfuncholding_m.c ****  * @param ucSndAddr salve address
+ 258:../FreeModbus/functions/mbfuncholding_m.c ****  * @param usRegAddr register start address
+ 259:../FreeModbus/functions/mbfuncholding_m.c ****  * @param usNRegs register total number
+ 260:../FreeModbus/functions/mbfuncholding_m.c ****  * @param lTimeOut timeout (-1 will waiting forever)
+ 261:../FreeModbus/functions/mbfuncholding_m.c ****  *
+ 262:../FreeModbus/functions/mbfuncholding_m.c ****  * @return error code
+ 263:../FreeModbus/functions/mbfuncholding_m.c ****  */
+ 264:../FreeModbus/functions/mbfuncholding_m.c **** eMBMasterReqErrCode
+ 265:../FreeModbus/functions/mbfuncholding_m.c **** eMBMasterReqReadHoldingRegister( UCHAR ucSndAddr, USHORT usRegAddr, USHORT usNRegs, LONG lTimeOut )
+ 266:../FreeModbus/functions/mbfuncholding_m.c **** {
+ 523              		.loc 1 266 0
+ 524              		.cfi_startproc
+ 525              		@ args = 0, pretend = 0, frame = 24
+ 526              		@ frame_needed = 1, uses_anonymous_args = 0
+ 527 0000 80B5     		push	{r7, lr}
+ 528              		.cfi_def_cfa_offset 8
+ 529              		.cfi_offset 7, -8
+ 530              		.cfi_offset 14, -4
+ 531 0002 86B0     		sub	sp, sp, #24
+ 532              		.cfi_def_cfa_offset 32
+ 533 0004 00AF     		add	r7, sp, #0
+ 534              		.cfi_def_cfa_register 7
+ 535 0006 7B60     		str	r3, [r7, #4]
+ 536 0008 0346     		mov	r3, r0
+ 537 000a FB73     		strb	r3, [r7, #15]
+ 538 000c 0B46     		mov	r3, r1	@ movhi
+ 539 000e BB81     		strh	r3, [r7, #12]	@ movhi
+ 540 0010 1346     		mov	r3, r2	@ movhi
+ 541 0012 7B81     		strh	r3, [r7, #10]	@ movhi
+ 267:../FreeModbus/functions/mbfuncholding_m.c ****     UCHAR                 *ucMBFrame;
+ 268:../FreeModbus/functions/mbfuncholding_m.c ****     eMBMasterReqErrCode    eErrStatus = MB_MRE_NO_ERR;
+ 542              		.loc 1 268 0
+ 543 0014 0023     		movs	r3, #0
+ 544 0016 FB75     		strb	r3, [r7, #23]
+ 269:../FreeModbus/functions/mbfuncholding_m.c **** 
+ 270:../FreeModbus/functions/mbfuncholding_m.c ****     if ( ucSndAddr > MB_MASTER_TOTAL_SLAVE_NUM ) eErrStatus = MB_MRE_ILL_ARG;
+ 545              		.loc 1 270 0
+ 546 0018 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 547 001a 102B     		cmp	r3, #16
+ 548 001c 02D9     		bls	.L27
+ 549              		.loc 1 270 0 is_stmt 0 discriminator 1
+ 550 001e 0223     		movs	r3, #2
+ 551 0020 FB75     		strb	r3, [r7, #23]
+ 552 0022 36E0     		b	.L28
+ 553              	.L27:
+ 271:../FreeModbus/functions/mbfuncholding_m.c ****     else if ( xMBMasterRunResTake( lTimeOut ) == FALSE ) eErrStatus = MB_MRE_MASTER_BUSY;
+ 554              		.loc 1 271 0 is_stmt 1
+ 555 0024 7868     		ldr	r0, [r7, #4]
+ 556 0026 FFF7FEFF 		bl	xMBMasterRunResTake
+ 557 002a 0346     		mov	r3, r0
+ 558 002c 002B     		cmp	r3, #0
+ 559 002e 02D1     		bne	.L29
+ 560              		.loc 1 271 0 is_stmt 0 discriminator 1
+ 561 0030 0523     		movs	r3, #5
+ 562 0032 FB75     		strb	r3, [r7, #23]
+ 563 0034 2DE0     		b	.L28
+ 564              	.L29:
+ 272:../FreeModbus/functions/mbfuncholding_m.c ****     else
+ 273:../FreeModbus/functions/mbfuncholding_m.c ****     {
+ 274:../FreeModbus/functions/mbfuncholding_m.c **** 		vMBMasterGetPDUSndBuf(&ucMBFrame);
+ 565              		.loc 1 274 0 is_stmt 1
+ 566 0036 07F11003 		add	r3, r7, #16
+ 567 003a 1846     		mov	r0, r3
+ 568 003c FFF7FEFF 		bl	vMBMasterGetPDUSndBuf
+ 275:../FreeModbus/functions/mbfuncholding_m.c **** 		vMBMasterSetDestAddress(ucSndAddr);
+ 569              		.loc 1 275 0
+ 570 0040 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 571 0042 1846     		mov	r0, r3
+ 572 0044 FFF7FEFF 		bl	vMBMasterSetDestAddress
+ 276:../FreeModbus/functions/mbfuncholding_m.c **** 		ucMBFrame[MB_PDU_FUNC_OFF]                = MB_FUNC_READ_HOLDING_REGISTER;
+ 573              		.loc 1 276 0
+ 574 0048 3B69     		ldr	r3, [r7, #16]
+ 575 004a 0322     		movs	r2, #3
+ 576 004c 1A70     		strb	r2, [r3]
+ 277:../FreeModbus/functions/mbfuncholding_m.c **** 		ucMBFrame[MB_PDU_REQ_READ_ADDR_OFF]       = usRegAddr >> 8;
+ 577              		.loc 1 277 0
+ 578 004e 3B69     		ldr	r3, [r7, #16]
+ 579 0050 0133     		adds	r3, r3, #1
+ 580 0052 BA89     		ldrh	r2, [r7, #12]
+ 581 0054 120A     		lsrs	r2, r2, #8
+ 582 0056 92B2     		uxth	r2, r2
+ 583 0058 D2B2     		uxtb	r2, r2
+ 584 005a 1A70     		strb	r2, [r3]
+ 278:../FreeModbus/functions/mbfuncholding_m.c **** 		ucMBFrame[MB_PDU_REQ_READ_ADDR_OFF + 1]   = usRegAddr;
+ 585              		.loc 1 278 0
+ 586 005c 3B69     		ldr	r3, [r7, #16]
+ 587 005e 0233     		adds	r3, r3, #2
+ 588 0060 BA89     		ldrh	r2, [r7, #12]	@ movhi
+ 589 0062 D2B2     		uxtb	r2, r2
+ 590 0064 1A70     		strb	r2, [r3]
+ 279:../FreeModbus/functions/mbfuncholding_m.c **** 		ucMBFrame[MB_PDU_REQ_READ_REGCNT_OFF]     = usNRegs >> 8;
+ 591              		.loc 1 279 0
+ 592 0066 3B69     		ldr	r3, [r7, #16]
+ 593 0068 0333     		adds	r3, r3, #3
+ 594 006a 7A89     		ldrh	r2, [r7, #10]
+ 595 006c 120A     		lsrs	r2, r2, #8
+ 596 006e 92B2     		uxth	r2, r2
+ 597 0070 D2B2     		uxtb	r2, r2
+ 598 0072 1A70     		strb	r2, [r3]
+ 280:../FreeModbus/functions/mbfuncholding_m.c **** 		ucMBFrame[MB_PDU_REQ_READ_REGCNT_OFF + 1] = usNRegs;
+ 599              		.loc 1 280 0
+ 600 0074 3B69     		ldr	r3, [r7, #16]
+ 601 0076 0433     		adds	r3, r3, #4
+ 602 0078 7A89     		ldrh	r2, [r7, #10]	@ movhi
+ 603 007a D2B2     		uxtb	r2, r2
+ 604 007c 1A70     		strb	r2, [r3]
+ 281:../FreeModbus/functions/mbfuncholding_m.c **** 		vMBMasterSetPDUSndLength( MB_PDU_SIZE_MIN + MB_PDU_REQ_READ_SIZE );
+ 605              		.loc 1 281 0
+ 606 007e 0520     		movs	r0, #5
+ 607 0080 FFF7FEFF 		bl	vMBMasterSetPDUSndLength
+ 282:../FreeModbus/functions/mbfuncholding_m.c **** 		( void ) xMBMasterPortEventPost( EV_MASTER_FRAME_SENT );
+ 608              		.loc 1 282 0
+ 609 0084 0320     		movs	r0, #3
+ 610 0086 FFF7FEFF 		bl	xMBMasterPortEventPost
+ 283:../FreeModbus/functions/mbfuncholding_m.c **** 		eErrStatus = eMBMasterWaitRequestFinish( );
+ 611              		.loc 1 283 0
+ 612 008a FFF7FEFF 		bl	eMBMasterWaitRequestFinish
+ 613 008e 0346     		mov	r3, r0
+ 614 0090 FB75     		strb	r3, [r7, #23]
+ 615              	.L28:
+ 284:../FreeModbus/functions/mbfuncholding_m.c ****     }
+ 285:../FreeModbus/functions/mbfuncholding_m.c ****     return eErrStatus;
+ 616              		.loc 1 285 0
+ 617 0092 FB7D     		ldrb	r3, [r7, #23]	@ zero_extendqisi2
+ 286:../FreeModbus/functions/mbfuncholding_m.c **** }
+ 618              		.loc 1 286 0
+ 619 0094 1846     		mov	r0, r3
+ 620 0096 1837     		adds	r7, r7, #24
+ 621 0098 BD46     		mov	sp, r7
+ 622              		@ sp needed
+ 623 009a 80BD     		pop	{r7, pc}
+ 624              		.cfi_endproc
+ 625              	.LFE33:
+ 627              		.section	.text.eMBMasterFuncReadHoldingRegister,"ax",%progbits
+ 628              		.align	2
+ 629              		.global	eMBMasterFuncReadHoldingRegister
+ 630              		.thumb
+ 631              		.thumb_func
+ 633              	eMBMasterFuncReadHoldingRegister:
+ 634              	.LFB34:
+ 287:../FreeModbus/functions/mbfuncholding_m.c **** 
+ 288:../FreeModbus/functions/mbfuncholding_m.c **** eMBException
+ 289:../FreeModbus/functions/mbfuncholding_m.c **** eMBMasterFuncReadHoldingRegister( UCHAR * pucFrame, USHORT * usLen )
+ 290:../FreeModbus/functions/mbfuncholding_m.c **** {
+ 635              		.loc 1 290 0
+ 636              		.cfi_startproc
+ 637              		@ args = 0, pretend = 0, frame = 24
+ 638              		@ frame_needed = 1, uses_anonymous_args = 0
+ 639 0000 80B5     		push	{r7, lr}
+ 640              		.cfi_def_cfa_offset 8
+ 641              		.cfi_offset 7, -8
+ 642              		.cfi_offset 14, -4
+ 643 0002 86B0     		sub	sp, sp, #24
+ 644              		.cfi_def_cfa_offset 32
+ 645 0004 00AF     		add	r7, sp, #0
+ 646              		.cfi_def_cfa_register 7
+ 647 0006 7860     		str	r0, [r7, #4]
+ 648 0008 3960     		str	r1, [r7]
+ 291:../FreeModbus/functions/mbfuncholding_m.c ****     UCHAR          *ucMBFrame;
+ 292:../FreeModbus/functions/mbfuncholding_m.c ****     USHORT          usRegAddress;
+ 293:../FreeModbus/functions/mbfuncholding_m.c ****     USHORT          usRegCount;
+ 294:../FreeModbus/functions/mbfuncholding_m.c **** 
+ 295:../FreeModbus/functions/mbfuncholding_m.c ****     eMBException    eStatus = MB_EX_NONE;
+ 649              		.loc 1 295 0
+ 650 000a 0023     		movs	r3, #0
+ 651 000c FB75     		strb	r3, [r7, #23]
+ 296:../FreeModbus/functions/mbfuncholding_m.c ****     eMBErrorCode    eRegStatus;
+ 297:../FreeModbus/functions/mbfuncholding_m.c **** 
+ 298:../FreeModbus/functions/mbfuncholding_m.c ****     /* If this request is broadcast, and it's read mode. This request don't need execute. */
+ 299:../FreeModbus/functions/mbfuncholding_m.c ****     if ( xMBMasterRequestIsBroadcast() )
+ 652              		.loc 1 299 0
+ 653 000e FFF7FEFF 		bl	xMBMasterRequestIsBroadcast
+ 654 0012 0346     		mov	r3, r0
+ 655 0014 002B     		cmp	r3, #0
+ 656 0016 02D0     		beq	.L32
+ 300:../FreeModbus/functions/mbfuncholding_m.c ****     {
+ 301:../FreeModbus/functions/mbfuncholding_m.c ****     	eStatus = MB_EX_NONE;
+ 657              		.loc 1 301 0
+ 658 0018 0023     		movs	r3, #0
+ 659 001a FB75     		strb	r3, [r7, #23]
+ 660 001c 47E0     		b	.L33
+ 661              	.L32:
+ 302:../FreeModbus/functions/mbfuncholding_m.c ****     }
+ 303:../FreeModbus/functions/mbfuncholding_m.c ****     else if( *usLen >= MB_PDU_SIZE_MIN + MB_PDU_FUNC_READ_SIZE_MIN )
+ 662              		.loc 1 303 0
+ 663 001e 3B68     		ldr	r3, [r7]
+ 664 0020 1B88     		ldrh	r3, [r3]
+ 665 0022 012B     		cmp	r3, #1
+ 666 0024 41D9     		bls	.L34
+ 304:../FreeModbus/functions/mbfuncholding_m.c ****     {
+ 305:../FreeModbus/functions/mbfuncholding_m.c **** 		vMBMasterGetPDUSndBuf(&ucMBFrame);
+ 667              		.loc 1 305 0
+ 668 0026 07F10C03 		add	r3, r7, #12
+ 669 002a 1846     		mov	r0, r3
+ 670 002c FFF7FEFF 		bl	vMBMasterGetPDUSndBuf
+ 306:../FreeModbus/functions/mbfuncholding_m.c ****         usRegAddress = ( USHORT )( ucMBFrame[MB_PDU_REQ_READ_ADDR_OFF] << 8 );
+ 671              		.loc 1 306 0
+ 672 0030 FB68     		ldr	r3, [r7, #12]
+ 673 0032 0133     		adds	r3, r3, #1
+ 674 0034 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 675 0036 1B02     		lsls	r3, r3, #8
+ 676 0038 BB82     		strh	r3, [r7, #20]	@ movhi
+ 307:../FreeModbus/functions/mbfuncholding_m.c ****         usRegAddress |= ( USHORT )( ucMBFrame[MB_PDU_REQ_READ_ADDR_OFF + 1] );
+ 677              		.loc 1 307 0
+ 678 003a FB68     		ldr	r3, [r7, #12]
+ 679 003c 0233     		adds	r3, r3, #2
+ 680 003e 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 681 0040 1A46     		mov	r2, r3
+ 682 0042 BB8A     		ldrh	r3, [r7, #20]	@ movhi
+ 683 0044 1343     		orrs	r3, r3, r2
+ 684 0046 BB82     		strh	r3, [r7, #20]	@ movhi
+ 308:../FreeModbus/functions/mbfuncholding_m.c ****         usRegAddress++;
+ 685              		.loc 1 308 0
+ 686 0048 BB8A     		ldrh	r3, [r7, #20]
+ 687 004a 0133     		adds	r3, r3, #1
+ 688 004c BB82     		strh	r3, [r7, #20]	@ movhi
+ 309:../FreeModbus/functions/mbfuncholding_m.c **** 
+ 310:../FreeModbus/functions/mbfuncholding_m.c ****         usRegCount = ( USHORT )( ucMBFrame[MB_PDU_REQ_READ_REGCNT_OFF] << 8 );
+ 689              		.loc 1 310 0
+ 690 004e FB68     		ldr	r3, [r7, #12]
+ 691 0050 0333     		adds	r3, r3, #3
+ 692 0052 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 693 0054 1B02     		lsls	r3, r3, #8
+ 694 0056 7B82     		strh	r3, [r7, #18]	@ movhi
+ 311:../FreeModbus/functions/mbfuncholding_m.c ****         usRegCount = ( USHORT )( ucMBFrame[MB_PDU_REQ_READ_REGCNT_OFF + 1] );
+ 695              		.loc 1 311 0
+ 696 0058 FB68     		ldr	r3, [r7, #12]
+ 697 005a 0433     		adds	r3, r3, #4
+ 698 005c 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 699 005e 7B82     		strh	r3, [r7, #18]	@ movhi
+ 312:../FreeModbus/functions/mbfuncholding_m.c **** 
+ 313:../FreeModbus/functions/mbfuncholding_m.c ****         /* Check if the number of registers to read is valid. If not
+ 314:../FreeModbus/functions/mbfuncholding_m.c ****          * return Modbus illegal data value exception.
+ 315:../FreeModbus/functions/mbfuncholding_m.c ****          */
+ 316:../FreeModbus/functions/mbfuncholding_m.c ****         if( ( usRegCount >= 1 ) && ( 2 * usRegCount == pucFrame[MB_PDU_FUNC_READ_BYTECNT_OFF] ) )
+ 700              		.loc 1 316 0
+ 701 0060 7B8A     		ldrh	r3, [r7, #18]
+ 702 0062 002B     		cmp	r3, #0
+ 703 0064 1DD0     		beq	.L35
+ 704              		.loc 1 316 0 is_stmt 0 discriminator 1
+ 705 0066 7B8A     		ldrh	r3, [r7, #18]
+ 706 0068 5A00     		lsls	r2, r3, #1
+ 707 006a 7B68     		ldr	r3, [r7, #4]
+ 708 006c 0133     		adds	r3, r3, #1
+ 709 006e 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 710 0070 9A42     		cmp	r2, r3
+ 711 0072 16D1     		bne	.L35
+ 317:../FreeModbus/functions/mbfuncholding_m.c ****         {
+ 318:../FreeModbus/functions/mbfuncholding_m.c ****             /* Make callback to fill the buffer. */
+ 319:../FreeModbus/functions/mbfuncholding_m.c ****             eRegStatus = eMBMasterRegHoldingCB( &pucFrame[MB_PDU_FUNC_READ_VALUES_OFF], usRegAddres
+ 712              		.loc 1 319 0 is_stmt 1
+ 713 0074 7B68     		ldr	r3, [r7, #4]
+ 714 0076 991C     		adds	r1, r3, #2
+ 715 0078 BA8A     		ldrh	r2, [r7, #20]
+ 716 007a 7B8A     		ldrh	r3, [r7, #18]
+ 717 007c 0846     		mov	r0, r1
+ 718 007e 1146     		mov	r1, r2
+ 719 0080 1A46     		mov	r2, r3
+ 720 0082 0023     		movs	r3, #0
+ 721 0084 FFF7FEFF 		bl	eMBMasterRegHoldingCB
+ 722 0088 0346     		mov	r3, r0
+ 723 008a 7B74     		strb	r3, [r7, #17]
+ 320:../FreeModbus/functions/mbfuncholding_m.c ****             /* If an error occured convert it into a Modbus exception. */
+ 321:../FreeModbus/functions/mbfuncholding_m.c ****             if( eRegStatus != MB_ENOERR )
+ 724              		.loc 1 321 0
+ 725 008c 7B7C     		ldrb	r3, [r7, #17]	@ zero_extendqisi2
+ 726 008e 002B     		cmp	r3, #0
+ 727 0090 06D0     		beq	.L36
+ 322:../FreeModbus/functions/mbfuncholding_m.c ****             {
+ 323:../FreeModbus/functions/mbfuncholding_m.c ****                 eStatus = prveMBError2Exception( eRegStatus );
+ 728              		.loc 1 323 0
+ 729 0092 7B7C     		ldrb	r3, [r7, #17]	@ zero_extendqisi2
+ 730 0094 1846     		mov	r0, r3
+ 731 0096 FFF7FEFF 		bl	prveMBError2Exception
+ 732 009a 0346     		mov	r3, r0
+ 733 009c FB75     		strb	r3, [r7, #23]
+ 321:../FreeModbus/functions/mbfuncholding_m.c ****             {
+ 734              		.loc 1 321 0
+ 735 009e 03E0     		b	.L37
+ 736              	.L36:
+ 321:../FreeModbus/functions/mbfuncholding_m.c ****             {
+ 737              		.loc 1 321 0 is_stmt 0 discriminator 1
+ 738 00a0 02E0     		b	.L37
+ 739              	.L35:
+ 324:../FreeModbus/functions/mbfuncholding_m.c ****             }
+ 325:../FreeModbus/functions/mbfuncholding_m.c ****         }
+ 326:../FreeModbus/functions/mbfuncholding_m.c ****         else
+ 327:../FreeModbus/functions/mbfuncholding_m.c ****         {
+ 328:../FreeModbus/functions/mbfuncholding_m.c ****             eStatus = MB_EX_ILLEGAL_DATA_VALUE;
+ 740              		.loc 1 328 0 is_stmt 1
+ 741 00a2 0323     		movs	r3, #3
+ 742 00a4 FB75     		strb	r3, [r7, #23]
+ 743 00a6 02E0     		b	.L33
+ 744              	.L37:
+ 745 00a8 01E0     		b	.L33
+ 746              	.L34:
+ 329:../FreeModbus/functions/mbfuncholding_m.c ****         }
+ 330:../FreeModbus/functions/mbfuncholding_m.c ****     }
+ 331:../FreeModbus/functions/mbfuncholding_m.c ****     else
+ 332:../FreeModbus/functions/mbfuncholding_m.c ****     {
+ 333:../FreeModbus/functions/mbfuncholding_m.c ****         /* Can't be a valid request because the length is incorrect. */
+ 334:../FreeModbus/functions/mbfuncholding_m.c ****         eStatus = MB_EX_ILLEGAL_DATA_VALUE;
+ 747              		.loc 1 334 0
+ 748 00aa 0323     		movs	r3, #3
+ 749 00ac FB75     		strb	r3, [r7, #23]
+ 750              	.L33:
+ 335:../FreeModbus/functions/mbfuncholding_m.c ****     }
+ 336:../FreeModbus/functions/mbfuncholding_m.c ****     return eStatus;
+ 751              		.loc 1 336 0
+ 752 00ae FB7D     		ldrb	r3, [r7, #23]	@ zero_extendqisi2
+ 337:../FreeModbus/functions/mbfuncholding_m.c **** }
+ 753              		.loc 1 337 0
+ 754 00b0 1846     		mov	r0, r3
+ 755 00b2 1837     		adds	r7, r7, #24
+ 756 00b4 BD46     		mov	sp, r7
+ 757              		@ sp needed
+ 758 00b6 80BD     		pop	{r7, pc}
+ 759              		.cfi_endproc
+ 760              	.LFE34:
+ 762              		.section	.text.eMBMasterReqReadWriteMultipleHoldingRegister,"ax",%progbits
+ 763              		.align	2
+ 764              		.global	eMBMasterReqReadWriteMultipleHoldingRegister
+ 765              		.thumb
+ 766              		.thumb_func
+ 768              	eMBMasterReqReadWriteMultipleHoldingRegister:
+ 769              	.LFB35:
+ 338:../FreeModbus/functions/mbfuncholding_m.c **** 
+ 339:../FreeModbus/functions/mbfuncholding_m.c **** #endif
+ 340:../FreeModbus/functions/mbfuncholding_m.c **** 
+ 341:../FreeModbus/functions/mbfuncholding_m.c **** #if MB_FUNC_READWRITE_HOLDING_ENABLED > 0
+ 342:../FreeModbus/functions/mbfuncholding_m.c **** 
+ 343:../FreeModbus/functions/mbfuncholding_m.c **** /**
+ 344:../FreeModbus/functions/mbfuncholding_m.c ****  * This function will request read and write holding register.
+ 345:../FreeModbus/functions/mbfuncholding_m.c ****  *
+ 346:../FreeModbus/functions/mbfuncholding_m.c ****  * @param ucSndAddr salve address
+ 347:../FreeModbus/functions/mbfuncholding_m.c ****  * @param usReadRegAddr read register start address
+ 348:../FreeModbus/functions/mbfuncholding_m.c ****  * @param usNReadRegs read register total number
+ 349:../FreeModbus/functions/mbfuncholding_m.c ****  * @param pusDataBuffer data to be written
+ 350:../FreeModbus/functions/mbfuncholding_m.c ****  * @param usWriteRegAddr write register start address
+ 351:../FreeModbus/functions/mbfuncholding_m.c ****  * @param usNWriteRegs write register total number
+ 352:../FreeModbus/functions/mbfuncholding_m.c ****  * @param lTimeOut timeout (-1 will waiting forever)
+ 353:../FreeModbus/functions/mbfuncholding_m.c ****  *
+ 354:../FreeModbus/functions/mbfuncholding_m.c ****  * @return error code
+ 355:../FreeModbus/functions/mbfuncholding_m.c ****  */
+ 356:../FreeModbus/functions/mbfuncholding_m.c **** eMBMasterReqErrCode
+ 357:../FreeModbus/functions/mbfuncholding_m.c **** eMBMasterReqReadWriteMultipleHoldingRegister( UCHAR ucSndAddr,
+ 358:../FreeModbus/functions/mbfuncholding_m.c **** 		USHORT usReadRegAddr, USHORT usNReadRegs, USHORT * pusDataBuffer,
+ 359:../FreeModbus/functions/mbfuncholding_m.c **** 		USHORT usWriteRegAddr, USHORT usNWriteRegs, LONG lTimeOut )
+ 360:../FreeModbus/functions/mbfuncholding_m.c **** {
+ 770              		.loc 1 360 0
+ 771              		.cfi_startproc
+ 772              		@ args = 12, pretend = 0, frame = 24
+ 773              		@ frame_needed = 1, uses_anonymous_args = 0
+ 774 0000 80B5     		push	{r7, lr}
+ 775              		.cfi_def_cfa_offset 8
+ 776              		.cfi_offset 7, -8
+ 777              		.cfi_offset 14, -4
+ 778 0002 86B0     		sub	sp, sp, #24
+ 779              		.cfi_def_cfa_offset 32
+ 780 0004 00AF     		add	r7, sp, #0
+ 781              		.cfi_def_cfa_register 7
+ 782 0006 7B60     		str	r3, [r7, #4]
+ 783 0008 0346     		mov	r3, r0
+ 784 000a FB73     		strb	r3, [r7, #15]
+ 785 000c 0B46     		mov	r3, r1	@ movhi
+ 786 000e BB81     		strh	r3, [r7, #12]	@ movhi
+ 787 0010 1346     		mov	r3, r2	@ movhi
+ 788 0012 7B81     		strh	r3, [r7, #10]	@ movhi
+ 361:../FreeModbus/functions/mbfuncholding_m.c ****     UCHAR                 *ucMBFrame;
+ 362:../FreeModbus/functions/mbfuncholding_m.c ****     USHORT                 usRegIndex = 0;
+ 789              		.loc 1 362 0
+ 790 0014 0023     		movs	r3, #0
+ 791 0016 FB82     		strh	r3, [r7, #22]	@ movhi
+ 363:../FreeModbus/functions/mbfuncholding_m.c ****     eMBMasterReqErrCode    eErrStatus = MB_MRE_NO_ERR;
+ 792              		.loc 1 363 0
+ 793 0018 0023     		movs	r3, #0
+ 794 001a 7B75     		strb	r3, [r7, #21]
+ 364:../FreeModbus/functions/mbfuncholding_m.c **** 
+ 365:../FreeModbus/functions/mbfuncholding_m.c ****     if ( ucSndAddr > MB_MASTER_TOTAL_SLAVE_NUM ) eErrStatus = MB_MRE_ILL_ARG;
+ 795              		.loc 1 365 0
+ 796 001c FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 797 001e 102B     		cmp	r3, #16
+ 798 0020 02D9     		bls	.L40
+ 799              		.loc 1 365 0 is_stmt 0 discriminator 1
+ 800 0022 0223     		movs	r3, #2
+ 801 0024 7B75     		strb	r3, [r7, #21]
+ 802 0026 7AE0     		b	.L41
+ 803              	.L40:
+ 366:../FreeModbus/functions/mbfuncholding_m.c ****     else if ( xMBMasterRunResTake( lTimeOut ) == FALSE ) eErrStatus = MB_MRE_MASTER_BUSY;
+ 804              		.loc 1 366 0 is_stmt 1
+ 805 0028 B86A     		ldr	r0, [r7, #40]
+ 806 002a FFF7FEFF 		bl	xMBMasterRunResTake
+ 807 002e 0346     		mov	r3, r0
+ 808 0030 002B     		cmp	r3, #0
+ 809 0032 02D1     		bne	.L42
+ 810              		.loc 1 366 0 is_stmt 0 discriminator 1
+ 811 0034 0523     		movs	r3, #5
+ 812 0036 7B75     		strb	r3, [r7, #21]
+ 813 0038 71E0     		b	.L41
+ 814              	.L42:
+ 367:../FreeModbus/functions/mbfuncholding_m.c ****     else
+ 368:../FreeModbus/functions/mbfuncholding_m.c ****     {
+ 369:../FreeModbus/functions/mbfuncholding_m.c **** 		vMBMasterGetPDUSndBuf(&ucMBFrame);
+ 815              		.loc 1 369 0 is_stmt 1
+ 816 003a 07F11003 		add	r3, r7, #16
+ 817 003e 1846     		mov	r0, r3
+ 818 0040 FFF7FEFF 		bl	vMBMasterGetPDUSndBuf
+ 370:../FreeModbus/functions/mbfuncholding_m.c **** 		vMBMasterSetDestAddress(ucSndAddr);
+ 819              		.loc 1 370 0
+ 820 0044 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 821 0046 1846     		mov	r0, r3
+ 822 0048 FFF7FEFF 		bl	vMBMasterSetDestAddress
+ 371:../FreeModbus/functions/mbfuncholding_m.c **** 		ucMBFrame[MB_PDU_FUNC_OFF]                           = MB_FUNC_READWRITE_MULTIPLE_REGISTERS;
+ 823              		.loc 1 371 0
+ 824 004c 3B69     		ldr	r3, [r7, #16]
+ 825 004e 1722     		movs	r2, #23
+ 826 0050 1A70     		strb	r2, [r3]
+ 372:../FreeModbus/functions/mbfuncholding_m.c **** 		ucMBFrame[MB_PDU_REQ_READWRITE_READ_ADDR_OFF]        = usReadRegAddr >> 8;
+ 827              		.loc 1 372 0
+ 828 0052 3B69     		ldr	r3, [r7, #16]
+ 829 0054 0133     		adds	r3, r3, #1
+ 830 0056 BA89     		ldrh	r2, [r7, #12]
+ 831 0058 120A     		lsrs	r2, r2, #8
+ 832 005a 92B2     		uxth	r2, r2
+ 833 005c D2B2     		uxtb	r2, r2
+ 834 005e 1A70     		strb	r2, [r3]
+ 373:../FreeModbus/functions/mbfuncholding_m.c **** 		ucMBFrame[MB_PDU_REQ_READWRITE_READ_ADDR_OFF + 1]    = usReadRegAddr;
+ 835              		.loc 1 373 0
+ 836 0060 3B69     		ldr	r3, [r7, #16]
+ 837 0062 0233     		adds	r3, r3, #2
+ 838 0064 BA89     		ldrh	r2, [r7, #12]	@ movhi
+ 839 0066 D2B2     		uxtb	r2, r2
+ 840 0068 1A70     		strb	r2, [r3]
+ 374:../FreeModbus/functions/mbfuncholding_m.c **** 		ucMBFrame[MB_PDU_REQ_READWRITE_READ_REGCNT_OFF]      = usNReadRegs >> 8;
+ 841              		.loc 1 374 0
+ 842 006a 3B69     		ldr	r3, [r7, #16]
+ 843 006c 0333     		adds	r3, r3, #3
+ 844 006e 7A89     		ldrh	r2, [r7, #10]
+ 845 0070 120A     		lsrs	r2, r2, #8
+ 846 0072 92B2     		uxth	r2, r2
+ 847 0074 D2B2     		uxtb	r2, r2
+ 848 0076 1A70     		strb	r2, [r3]
+ 375:../FreeModbus/functions/mbfuncholding_m.c **** 		ucMBFrame[MB_PDU_REQ_READWRITE_READ_REGCNT_OFF + 1]  = usNReadRegs ;
+ 849              		.loc 1 375 0
+ 850 0078 3B69     		ldr	r3, [r7, #16]
+ 851 007a 0433     		adds	r3, r3, #4
+ 852 007c 7A89     		ldrh	r2, [r7, #10]	@ movhi
+ 853 007e D2B2     		uxtb	r2, r2
+ 854 0080 1A70     		strb	r2, [r3]
+ 376:../FreeModbus/functions/mbfuncholding_m.c **** 		ucMBFrame[MB_PDU_REQ_READWRITE_WRITE_ADDR_OFF]       = usWriteRegAddr >> 8;
+ 855              		.loc 1 376 0
+ 856 0082 3B69     		ldr	r3, [r7, #16]
+ 857 0084 0533     		adds	r3, r3, #5
+ 858 0086 3A8C     		ldrh	r2, [r7, #32]
+ 859 0088 120A     		lsrs	r2, r2, #8
+ 860 008a 92B2     		uxth	r2, r2
+ 861 008c D2B2     		uxtb	r2, r2
+ 862 008e 1A70     		strb	r2, [r3]
+ 377:../FreeModbus/functions/mbfuncholding_m.c **** 		ucMBFrame[MB_PDU_REQ_READWRITE_WRITE_ADDR_OFF + 1]   = usWriteRegAddr;
+ 863              		.loc 1 377 0
+ 864 0090 3B69     		ldr	r3, [r7, #16]
+ 865 0092 0633     		adds	r3, r3, #6
+ 866 0094 3A8C     		ldrh	r2, [r7, #32]	@ movhi
+ 867 0096 D2B2     		uxtb	r2, r2
+ 868 0098 1A70     		strb	r2, [r3]
+ 378:../FreeModbus/functions/mbfuncholding_m.c **** 		ucMBFrame[MB_PDU_REQ_READWRITE_WRITE_REGCNT_OFF]     = usNWriteRegs >> 8;
+ 869              		.loc 1 378 0
+ 870 009a 3B69     		ldr	r3, [r7, #16]
+ 871 009c 0733     		adds	r3, r3, #7
+ 872 009e BA8C     		ldrh	r2, [r7, #36]
+ 873 00a0 120A     		lsrs	r2, r2, #8
+ 874 00a2 92B2     		uxth	r2, r2
+ 875 00a4 D2B2     		uxtb	r2, r2
+ 876 00a6 1A70     		strb	r2, [r3]
+ 379:../FreeModbus/functions/mbfuncholding_m.c **** 		ucMBFrame[MB_PDU_REQ_READWRITE_WRITE_REGCNT_OFF + 1] = usNWriteRegs ;
+ 877              		.loc 1 379 0
+ 878 00a8 3B69     		ldr	r3, [r7, #16]
+ 879 00aa 0833     		adds	r3, r3, #8
+ 880 00ac BA8C     		ldrh	r2, [r7, #36]	@ movhi
+ 881 00ae D2B2     		uxtb	r2, r2
+ 882 00b0 1A70     		strb	r2, [r3]
+ 380:../FreeModbus/functions/mbfuncholding_m.c **** 		ucMBFrame[MB_PDU_REQ_READWRITE_WRITE_BYTECNT_OFF]    = usNWriteRegs * 2;
+ 883              		.loc 1 380 0
+ 884 00b2 3B69     		ldr	r3, [r7, #16]
+ 885 00b4 0933     		adds	r3, r3, #9
+ 886 00b6 BA8C     		ldrh	r2, [r7, #36]	@ movhi
+ 887 00b8 D2B2     		uxtb	r2, r2
+ 888 00ba 5200     		lsls	r2, r2, #1
+ 889 00bc D2B2     		uxtb	r2, r2
+ 890 00be 1A70     		strb	r2, [r3]
+ 381:../FreeModbus/functions/mbfuncholding_m.c **** 		ucMBFrame += MB_PDU_REQ_READWRITE_WRITE_VALUES_OFF;
+ 891              		.loc 1 381 0
+ 892 00c0 3B69     		ldr	r3, [r7, #16]
+ 893 00c2 0A33     		adds	r3, r3, #10
+ 894 00c4 3B61     		str	r3, [r7, #16]
+ 382:../FreeModbus/functions/mbfuncholding_m.c **** 		while( usNWriteRegs > usRegIndex)
+ 895              		.loc 1 382 0
+ 896 00c6 17E0     		b	.L43
+ 897              	.L44:
+ 383:../FreeModbus/functions/mbfuncholding_m.c **** 		{
+ 384:../FreeModbus/functions/mbfuncholding_m.c **** 			*ucMBFrame++ = pusDataBuffer[usRegIndex] >> 8;
+ 898              		.loc 1 384 0
+ 899 00c8 3B69     		ldr	r3, [r7, #16]
+ 900 00ca 5A1C     		adds	r2, r3, #1
+ 901 00cc 3A61     		str	r2, [r7, #16]
+ 902 00ce FA8A     		ldrh	r2, [r7, #22]
+ 903 00d0 5200     		lsls	r2, r2, #1
+ 904 00d2 7968     		ldr	r1, [r7, #4]
+ 905 00d4 0A44     		add	r2, r2, r1
+ 906 00d6 1288     		ldrh	r2, [r2]
+ 907 00d8 120A     		lsrs	r2, r2, #8
+ 908 00da 92B2     		uxth	r2, r2
+ 909 00dc D2B2     		uxtb	r2, r2
+ 910 00de 1A70     		strb	r2, [r3]
+ 385:../FreeModbus/functions/mbfuncholding_m.c **** 			*ucMBFrame++ = pusDataBuffer[usRegIndex++] ;
+ 911              		.loc 1 385 0
+ 912 00e0 3B69     		ldr	r3, [r7, #16]
+ 913 00e2 5A1C     		adds	r2, r3, #1
+ 914 00e4 3A61     		str	r2, [r7, #16]
+ 915 00e6 FA8A     		ldrh	r2, [r7, #22]
+ 916 00e8 511C     		adds	r1, r2, #1
+ 917 00ea F982     		strh	r1, [r7, #22]	@ movhi
+ 918 00ec 5200     		lsls	r2, r2, #1
+ 919 00ee 7968     		ldr	r1, [r7, #4]
+ 920 00f0 0A44     		add	r2, r2, r1
+ 921 00f2 1288     		ldrh	r2, [r2]
+ 922 00f4 D2B2     		uxtb	r2, r2
+ 923 00f6 1A70     		strb	r2, [r3]
+ 924              	.L43:
+ 382:../FreeModbus/functions/mbfuncholding_m.c **** 		while( usNWriteRegs > usRegIndex)
+ 925              		.loc 1 382 0 discriminator 1
+ 926 00f8 BA8C     		ldrh	r2, [r7, #36]
+ 927 00fa FB8A     		ldrh	r3, [r7, #22]
+ 928 00fc 9A42     		cmp	r2, r3
+ 929 00fe E3D8     		bhi	.L44
+ 386:../FreeModbus/functions/mbfuncholding_m.c **** 		}
+ 387:../FreeModbus/functions/mbfuncholding_m.c **** 		vMBMasterSetPDUSndLength( MB_PDU_SIZE_MIN + MB_PDU_REQ_READWRITE_SIZE_MIN + 2*usNWriteRegs );
+ 930              		.loc 1 387 0
+ 931 0100 BB8C     		ldrh	r3, [r7, #36]
+ 932 0102 0533     		adds	r3, r3, #5
+ 933 0104 9BB2     		uxth	r3, r3
+ 934 0106 5B00     		lsls	r3, r3, #1
+ 935 0108 9BB2     		uxth	r3, r3
+ 936 010a 1846     		mov	r0, r3
+ 937 010c FFF7FEFF 		bl	vMBMasterSetPDUSndLength
+ 388:../FreeModbus/functions/mbfuncholding_m.c **** 		( void ) xMBMasterPortEventPost( EV_MASTER_FRAME_SENT );
+ 938              		.loc 1 388 0
+ 939 0110 0320     		movs	r0, #3
+ 940 0112 FFF7FEFF 		bl	xMBMasterPortEventPost
+ 389:../FreeModbus/functions/mbfuncholding_m.c **** 		eErrStatus = eMBMasterWaitRequestFinish( );
+ 941              		.loc 1 389 0
+ 942 0116 FFF7FEFF 		bl	eMBMasterWaitRequestFinish
+ 943 011a 0346     		mov	r3, r0
+ 944 011c 7B75     		strb	r3, [r7, #21]
+ 945              	.L41:
+ 390:../FreeModbus/functions/mbfuncholding_m.c ****     }
+ 391:../FreeModbus/functions/mbfuncholding_m.c ****     return eErrStatus;
+ 946              		.loc 1 391 0
+ 947 011e 7B7D     		ldrb	r3, [r7, #21]	@ zero_extendqisi2
+ 392:../FreeModbus/functions/mbfuncholding_m.c **** }
+ 948              		.loc 1 392 0
+ 949 0120 1846     		mov	r0, r3
+ 950 0122 1837     		adds	r7, r7, #24
+ 951 0124 BD46     		mov	sp, r7
+ 952              		@ sp needed
+ 953 0126 80BD     		pop	{r7, pc}
+ 954              		.cfi_endproc
+ 955              	.LFE35:
+ 957              		.section	.text.eMBMasterFuncReadWriteMultipleHoldingRegister,"ax",%progbits
+ 958              		.align	2
+ 959              		.global	eMBMasterFuncReadWriteMultipleHoldingRegister
+ 960              		.thumb
+ 961              		.thumb_func
+ 963              	eMBMasterFuncReadWriteMultipleHoldingRegister:
+ 964              	.LFB36:
+ 393:../FreeModbus/functions/mbfuncholding_m.c **** 
+ 394:../FreeModbus/functions/mbfuncholding_m.c **** eMBException
+ 395:../FreeModbus/functions/mbfuncholding_m.c **** eMBMasterFuncReadWriteMultipleHoldingRegister( UCHAR * pucFrame, USHORT * usLen )
+ 396:../FreeModbus/functions/mbfuncholding_m.c **** {
+ 965              		.loc 1 396 0
+ 966              		.cfi_startproc
+ 967              		@ args = 0, pretend = 0, frame = 24
+ 968              		@ frame_needed = 1, uses_anonymous_args = 0
+ 969 0000 80B5     		push	{r7, lr}
+ 970              		.cfi_def_cfa_offset 8
+ 971              		.cfi_offset 7, -8
+ 972              		.cfi_offset 14, -4
+ 973 0002 86B0     		sub	sp, sp, #24
+ 974              		.cfi_def_cfa_offset 32
+ 975 0004 00AF     		add	r7, sp, #0
+ 976              		.cfi_def_cfa_register 7
+ 977 0006 7860     		str	r0, [r7, #4]
+ 978 0008 3960     		str	r1, [r7]
+ 397:../FreeModbus/functions/mbfuncholding_m.c ****     USHORT          usRegReadAddress;
+ 398:../FreeModbus/functions/mbfuncholding_m.c ****     USHORT          usRegReadCount;
+ 399:../FreeModbus/functions/mbfuncholding_m.c ****     USHORT          usRegWriteAddress;
+ 400:../FreeModbus/functions/mbfuncholding_m.c ****     USHORT          usRegWriteCount;
+ 401:../FreeModbus/functions/mbfuncholding_m.c ****     UCHAR          *ucMBFrame;
+ 402:../FreeModbus/functions/mbfuncholding_m.c **** 
+ 403:../FreeModbus/functions/mbfuncholding_m.c ****     eMBException    eStatus = MB_EX_NONE;
+ 979              		.loc 1 403 0
+ 980 000a 0023     		movs	r3, #0
+ 981 000c FB75     		strb	r3, [r7, #23]
+ 404:../FreeModbus/functions/mbfuncholding_m.c ****     eMBErrorCode    eRegStatus;
+ 405:../FreeModbus/functions/mbfuncholding_m.c **** 
+ 406:../FreeModbus/functions/mbfuncholding_m.c ****     /* If this request is broadcast, and it's read mode. This request don't need execute. */
+ 407:../FreeModbus/functions/mbfuncholding_m.c ****     if ( xMBMasterRequestIsBroadcast() )
+ 982              		.loc 1 407 0
+ 983 000e FFF7FEFF 		bl	xMBMasterRequestIsBroadcast
+ 984 0012 0346     		mov	r3, r0
+ 985 0014 002B     		cmp	r3, #0
+ 986 0016 02D0     		beq	.L47
+ 408:../FreeModbus/functions/mbfuncholding_m.c ****     {
+ 409:../FreeModbus/functions/mbfuncholding_m.c ****     	eStatus = MB_EX_NONE;
+ 987              		.loc 1 409 0
+ 988 0018 0023     		movs	r3, #0
+ 989 001a FB75     		strb	r3, [r7, #23]
+ 990 001c 6DE0     		b	.L48
+ 991              	.L47:
+ 410:../FreeModbus/functions/mbfuncholding_m.c ****     }
+ 411:../FreeModbus/functions/mbfuncholding_m.c ****     else if( *usLen >= MB_PDU_SIZE_MIN + MB_PDU_FUNC_READWRITE_SIZE_MIN )
+ 992              		.loc 1 411 0
+ 993 001e 3B68     		ldr	r3, [r7]
+ 994 0020 1B88     		ldrh	r3, [r3]
+ 995 0022 012B     		cmp	r3, #1
+ 996 0024 69D9     		bls	.L48
+ 412:../FreeModbus/functions/mbfuncholding_m.c ****     {
+ 413:../FreeModbus/functions/mbfuncholding_m.c ****     	vMBMasterGetPDUSndBuf(&ucMBFrame);
+ 997              		.loc 1 413 0
+ 998 0026 07F10803 		add	r3, r7, #8
+ 999 002a 1846     		mov	r0, r3
+ 1000 002c FFF7FEFF 		bl	vMBMasterGetPDUSndBuf
+ 414:../FreeModbus/functions/mbfuncholding_m.c ****         usRegReadAddress = ( USHORT )( ucMBFrame[MB_PDU_REQ_READWRITE_READ_ADDR_OFF] << 8U );
+ 1001              		.loc 1 414 0
+ 1002 0030 BB68     		ldr	r3, [r7, #8]
+ 1003 0032 0133     		adds	r3, r3, #1
+ 1004 0034 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1005 0036 1B02     		lsls	r3, r3, #8
+ 1006 0038 BB82     		strh	r3, [r7, #20]	@ movhi
+ 415:../FreeModbus/functions/mbfuncholding_m.c ****         usRegReadAddress |= ( USHORT )( ucMBFrame[MB_PDU_REQ_READWRITE_READ_ADDR_OFF + 1] );
+ 1007              		.loc 1 415 0
+ 1008 003a BB68     		ldr	r3, [r7, #8]
+ 1009 003c 0233     		adds	r3, r3, #2
+ 1010 003e 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1011 0040 1A46     		mov	r2, r3
+ 1012 0042 BB8A     		ldrh	r3, [r7, #20]	@ movhi
+ 1013 0044 1343     		orrs	r3, r3, r2
+ 1014 0046 BB82     		strh	r3, [r7, #20]	@ movhi
+ 416:../FreeModbus/functions/mbfuncholding_m.c ****         usRegReadAddress++;
+ 1015              		.loc 1 416 0
+ 1016 0048 BB8A     		ldrh	r3, [r7, #20]
+ 1017 004a 0133     		adds	r3, r3, #1
+ 1018 004c BB82     		strh	r3, [r7, #20]	@ movhi
+ 417:../FreeModbus/functions/mbfuncholding_m.c **** 
+ 418:../FreeModbus/functions/mbfuncholding_m.c ****         usRegReadCount = ( USHORT )( ucMBFrame[MB_PDU_REQ_READWRITE_READ_REGCNT_OFF] << 8U );
+ 1019              		.loc 1 418 0
+ 1020 004e BB68     		ldr	r3, [r7, #8]
+ 1021 0050 0333     		adds	r3, r3, #3
+ 1022 0052 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1023 0054 1B02     		lsls	r3, r3, #8
+ 1024 0056 7B82     		strh	r3, [r7, #18]	@ movhi
+ 419:../FreeModbus/functions/mbfuncholding_m.c ****         usRegReadCount |= ( USHORT )( ucMBFrame[MB_PDU_REQ_READWRITE_READ_REGCNT_OFF + 1] );
+ 1025              		.loc 1 419 0
+ 1026 0058 BB68     		ldr	r3, [r7, #8]
+ 1027 005a 0433     		adds	r3, r3, #4
+ 1028 005c 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1029 005e 1A46     		mov	r2, r3
+ 1030 0060 7B8A     		ldrh	r3, [r7, #18]	@ movhi
+ 1031 0062 1343     		orrs	r3, r3, r2
+ 1032 0064 7B82     		strh	r3, [r7, #18]	@ movhi
+ 420:../FreeModbus/functions/mbfuncholding_m.c **** 
+ 421:../FreeModbus/functions/mbfuncholding_m.c ****         usRegWriteAddress = ( USHORT )( ucMBFrame[MB_PDU_REQ_READWRITE_WRITE_ADDR_OFF] << 8U );
+ 1033              		.loc 1 421 0
+ 1034 0066 BB68     		ldr	r3, [r7, #8]
+ 1035 0068 0533     		adds	r3, r3, #5
+ 1036 006a 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1037 006c 1B02     		lsls	r3, r3, #8
+ 1038 006e 3B82     		strh	r3, [r7, #16]	@ movhi
+ 422:../FreeModbus/functions/mbfuncholding_m.c ****         usRegWriteAddress |= ( USHORT )( ucMBFrame[MB_PDU_REQ_READWRITE_WRITE_ADDR_OFF + 1] );
+ 1039              		.loc 1 422 0
+ 1040 0070 BB68     		ldr	r3, [r7, #8]
+ 1041 0072 0633     		adds	r3, r3, #6
+ 1042 0074 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1043 0076 1A46     		mov	r2, r3
+ 1044 0078 3B8A     		ldrh	r3, [r7, #16]	@ movhi
+ 1045 007a 1343     		orrs	r3, r3, r2
+ 1046 007c 3B82     		strh	r3, [r7, #16]	@ movhi
+ 423:../FreeModbus/functions/mbfuncholding_m.c ****         usRegWriteAddress++;
+ 1047              		.loc 1 423 0
+ 1048 007e 3B8A     		ldrh	r3, [r7, #16]
+ 1049 0080 0133     		adds	r3, r3, #1
+ 1050 0082 3B82     		strh	r3, [r7, #16]	@ movhi
+ 424:../FreeModbus/functions/mbfuncholding_m.c **** 
+ 425:../FreeModbus/functions/mbfuncholding_m.c ****         usRegWriteCount = ( USHORT )( ucMBFrame[MB_PDU_REQ_READWRITE_WRITE_REGCNT_OFF] << 8U );
+ 1051              		.loc 1 425 0
+ 1052 0084 BB68     		ldr	r3, [r7, #8]
+ 1053 0086 0733     		adds	r3, r3, #7
+ 1054 0088 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1055 008a 1B02     		lsls	r3, r3, #8
+ 1056 008c FB81     		strh	r3, [r7, #14]	@ movhi
+ 426:../FreeModbus/functions/mbfuncholding_m.c ****         usRegWriteCount |= ( USHORT )( ucMBFrame[MB_PDU_REQ_READWRITE_WRITE_REGCNT_OFF + 1] );
+ 1057              		.loc 1 426 0
+ 1058 008e BB68     		ldr	r3, [r7, #8]
+ 1059 0090 0833     		adds	r3, r3, #8
+ 1060 0092 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1061 0094 1A46     		mov	r2, r3
+ 1062 0096 FB89     		ldrh	r3, [r7, #14]	@ movhi
+ 1063 0098 1343     		orrs	r3, r3, r2
+ 1064 009a FB81     		strh	r3, [r7, #14]	@ movhi
+ 427:../FreeModbus/functions/mbfuncholding_m.c **** 
+ 428:../FreeModbus/functions/mbfuncholding_m.c ****         if( ( 2 * usRegReadCount ) == pucFrame[MB_PDU_FUNC_READWRITE_READ_BYTECNT_OFF] )
+ 1065              		.loc 1 428 0
+ 1066 009c 7B8A     		ldrh	r3, [r7, #18]
+ 1067 009e 5A00     		lsls	r2, r3, #1
+ 1068 00a0 7B68     		ldr	r3, [r7, #4]
+ 1069 00a2 0133     		adds	r3, r3, #1
+ 1070 00a4 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 1071 00a6 9A42     		cmp	r2, r3
+ 1072 00a8 25D1     		bne	.L49
+ 429:../FreeModbus/functions/mbfuncholding_m.c ****         {
+ 430:../FreeModbus/functions/mbfuncholding_m.c ****             /* Make callback to update the register values. */
+ 431:../FreeModbus/functions/mbfuncholding_m.c ****             eRegStatus = eMBMasterRegHoldingCB( &ucMBFrame[MB_PDU_REQ_READWRITE_WRITE_VALUES_OFF],
+ 1073              		.loc 1 431 0
+ 1074 00aa BB68     		ldr	r3, [r7, #8]
+ 1075 00ac 03F10A01 		add	r1, r3, #10
+ 1076 00b0 3A8A     		ldrh	r2, [r7, #16]
+ 1077 00b2 FB89     		ldrh	r3, [r7, #14]
+ 1078 00b4 0846     		mov	r0, r1
+ 1079 00b6 1146     		mov	r1, r2
+ 1080 00b8 1A46     		mov	r2, r3
+ 1081 00ba 0123     		movs	r3, #1
+ 1082 00bc FFF7FEFF 		bl	eMBMasterRegHoldingCB
+ 1083 00c0 0346     		mov	r3, r0
+ 1084 00c2 BB75     		strb	r3, [r7, #22]
+ 432:../FreeModbus/functions/mbfuncholding_m.c ****                                            usRegWriteAddress, usRegWriteCount, MB_REG_WRITE );
+ 433:../FreeModbus/functions/mbfuncholding_m.c **** 
+ 434:../FreeModbus/functions/mbfuncholding_m.c ****             if( eRegStatus == MB_ENOERR )
+ 1085              		.loc 1 434 0
+ 1086 00c4 BB7D     		ldrb	r3, [r7, #22]	@ zero_extendqisi2
+ 1087 00c6 002B     		cmp	r3, #0
+ 1088 00c8 0BD1     		bne	.L50
+ 435:../FreeModbus/functions/mbfuncholding_m.c ****             {
+ 436:../FreeModbus/functions/mbfuncholding_m.c ****                 /* Make the read callback. */
+ 437:../FreeModbus/functions/mbfuncholding_m.c **** 				eRegStatus = eMBMasterRegHoldingCB(&pucFrame[MB_PDU_FUNC_READWRITE_READ_VALUES_OFF],
+ 1089              		.loc 1 437 0
+ 1090 00ca 7B68     		ldr	r3, [r7, #4]
+ 1091 00cc 991C     		adds	r1, r3, #2
+ 1092 00ce BA8A     		ldrh	r2, [r7, #20]
+ 1093 00d0 7B8A     		ldrh	r3, [r7, #18]
+ 1094 00d2 0846     		mov	r0, r1
+ 1095 00d4 1146     		mov	r1, r2
+ 1096 00d6 1A46     		mov	r2, r3
+ 1097 00d8 0023     		movs	r3, #0
+ 1098 00da FFF7FEFF 		bl	eMBMasterRegHoldingCB
+ 1099 00de 0346     		mov	r3, r0
+ 1100 00e0 BB75     		strb	r3, [r7, #22]
+ 1101              	.L50:
+ 438:../FreeModbus/functions/mbfuncholding_m.c **** 						                      usRegReadAddress, usRegReadCount, MB_REG_READ);
+ 439:../FreeModbus/functions/mbfuncholding_m.c ****             }
+ 440:../FreeModbus/functions/mbfuncholding_m.c ****             if( eRegStatus != MB_ENOERR )
+ 1102              		.loc 1 440 0
+ 1103 00e2 BB7D     		ldrb	r3, [r7, #22]	@ zero_extendqisi2
+ 1104 00e4 002B     		cmp	r3, #0
+ 1105 00e6 08D0     		beq	.L48
+ 441:../FreeModbus/functions/mbfuncholding_m.c ****             {
+ 442:../FreeModbus/functions/mbfuncholding_m.c ****                 eStatus = prveMBError2Exception( eRegStatus );
+ 1106              		.loc 1 442 0
+ 1107 00e8 BB7D     		ldrb	r3, [r7, #22]	@ zero_extendqisi2
+ 1108 00ea 1846     		mov	r0, r3
+ 1109 00ec FFF7FEFF 		bl	prveMBError2Exception
+ 1110 00f0 0346     		mov	r3, r0
+ 1111 00f2 FB75     		strb	r3, [r7, #23]
+ 1112 00f4 01E0     		b	.L48
+ 1113              	.L49:
+ 443:../FreeModbus/functions/mbfuncholding_m.c ****             }
+ 444:../FreeModbus/functions/mbfuncholding_m.c ****         }
+ 445:../FreeModbus/functions/mbfuncholding_m.c ****         else
+ 446:../FreeModbus/functions/mbfuncholding_m.c ****         {
+ 447:../FreeModbus/functions/mbfuncholding_m.c ****             eStatus = MB_EX_ILLEGAL_DATA_VALUE;
+ 1114              		.loc 1 447 0
+ 1115 00f6 0323     		movs	r3, #3
+ 1116 00f8 FB75     		strb	r3, [r7, #23]
+ 1117              	.L48:
+ 448:../FreeModbus/functions/mbfuncholding_m.c ****         }
+ 449:../FreeModbus/functions/mbfuncholding_m.c ****     }
+ 450:../FreeModbus/functions/mbfuncholding_m.c ****     return eStatus;
+ 1118              		.loc 1 450 0
+ 1119 00fa FB7D     		ldrb	r3, [r7, #23]	@ zero_extendqisi2
+ 451:../FreeModbus/functions/mbfuncholding_m.c **** }
+ 1120              		.loc 1 451 0
+ 1121 00fc 1846     		mov	r0, r3
+ 1122 00fe 1837     		adds	r7, r7, #24
+ 1123 0100 BD46     		mov	sp, r7
+ 1124              		@ sp needed
+ 1125 0102 80BD     		pop	{r7, pc}
+ 1126              		.cfi_endproc
+ 1127              	.LFE36:
+ 1129              		.text
+ 1130              	.Letext0:
+ 1131              		.file 2 "c:\\tools\\arm-none-eabi\\include\\stdint.h"
+ 1132              		.file 3 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\stm32/port.h"
+ 1133              		.file 4 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\include/mbport.h"
+ 1134              		.file 5 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\include/mbproto.h"
+ 1135              		.file 6 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\include/mb.h"
+ 1136              		.file 7 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\include/mb_m.h"
+ 1137              		.file 8 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/core_cm3.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 mbfuncholding_m.c
+C:\Users\Alex\AppData\Local\Temp\cc32Nree.s:19     .text.eMBMasterReqWriteHoldingRegister:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cc32Nree.s:24     .text.eMBMasterReqWriteHoldingRegister:00000000 eMBMasterReqWriteHoldingRegister
+C:\Users\Alex\AppData\Local\Temp\cc32Nree.s:132    .text.eMBMasterFuncWriteHoldingRegister:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cc32Nree.s:137    .text.eMBMasterFuncWriteHoldingRegister:00000000 eMBMasterFuncWriteHoldingRegister
+C:\Users\Alex\AppData\Local\Temp\cc32Nree.s:218    .text.eMBMasterReqWriteMultipleHoldingRegister:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cc32Nree.s:223    .text.eMBMasterReqWriteMultipleHoldingRegister:00000000 eMBMasterReqWriteMultipleHoldingRegister
+C:\Users\Alex\AppData\Local\Temp\cc32Nree.s:385    .text.eMBMasterFuncWriteMultipleHoldingRegister:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cc32Nree.s:390    .text.eMBMasterFuncWriteMultipleHoldingRegister:00000000 eMBMasterFuncWriteMultipleHoldingRegister
+C:\Users\Alex\AppData\Local\Temp\cc32Nree.s:516    .text.eMBMasterReqReadHoldingRegister:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cc32Nree.s:521    .text.eMBMasterReqReadHoldingRegister:00000000 eMBMasterReqReadHoldingRegister
+C:\Users\Alex\AppData\Local\Temp\cc32Nree.s:628    .text.eMBMasterFuncReadHoldingRegister:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cc32Nree.s:633    .text.eMBMasterFuncReadHoldingRegister:00000000 eMBMasterFuncReadHoldingRegister
+C:\Users\Alex\AppData\Local\Temp\cc32Nree.s:763    .text.eMBMasterReqReadWriteMultipleHoldingRegister:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cc32Nree.s:768    .text.eMBMasterReqReadWriteMultipleHoldingRegister:00000000 eMBMasterReqReadWriteMultipleHoldingRegister
+C:\Users\Alex\AppData\Local\Temp\cc32Nree.s:958    .text.eMBMasterFuncReadWriteMultipleHoldingRegister:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cc32Nree.s:963    .text.eMBMasterFuncReadWriteMultipleHoldingRegister:00000000 eMBMasterFuncReadWriteMultipleHoldingRegister
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.1.98ffea2db242cfdb58f411f7407f2b59
+                           .group:00000000 wm4.newlib.h.8.384a112feabb3bef7b573ae48cde2e3b
+                           .group:00000000 wm4.features.h.22.6a4ca7cd053637cc1d0db6c16f39b2d7
+                           .group:00000000 wm4.config.h.183.aa62afef667fb61d15fa64c48beb2f14
+                           .group:00000000 wm4._ansi.h.23.5644b60c990a4800b02a6e654e88f93a
+                           .group:00000000 wm4.stdlib.h.18.8bab2fb43ac4e90235390733c30a4530
+                           .group:00000000 wm4.stddef.h.184.aa65fb7281d578229bbad41b91862635
+                           .group:00000000 wm4._default_types.h.6.5e12cd604db8ce00b62bb2f02708eaf3
+                           .group:00000000 wm4.lock.h.2.9bc98482741e5e2a9450b12934a684ea
+                           .group:00000000 wm4._types.h.59.db8450f33c1f6150c0372fa1091a887a
+                           .group:00000000 wm4.stddef.h.348.9a99de77b6ba3b4278b57e9cc6d6e349
+                           .group:00000000 wm4.reent.h.16.567d760e6ae9ad7f917851a308bd7a57
+                           .group:00000000 wm4.alloca.h.8.dfc0c703c47ec3e69746825b17d9e66d
+                           .group:00000000 wm4.stdlib.h.55.7091a050e07f1c4abd225630fe3d62f1
+                           .group:00000000 wm4.stddef.h.39.d0197034aa5fd947cae140b9289e6734
+                           .group:00000000 wm4.stdint.h.10.90b695f550ca6cc3fb08fa83baf01e05
+                           .group:00000000 wm4.cdefs.h.56.efab90f4d89fbc41d6b3a5c5fb0d3d0f
+                           .group:00000000 wm4.string.h.15.dab3980bf35408a4c507182805e2de3a
+                           .group:00000000 wm4.stddef.h.158.a7efb00f6cbc6f43213b50e183c9830c
+                           .group:00000000 wm4.string.h.126.6ff3aa59129e7f66b2c273baf353e066
+                           .group:00000000 wm4.stm32f10x_conf.h.2.f1a8c33f0a763aeef696fee38b2b2dbc
+                           .group:00000000 wm4.mbconfig.h.33.2e295d4ff98bc723e2405a40490b5ddb
+                           .group:00000000 wm4.assert.h.11.060c3dc511517628fd4f958fa9448dce
+                           .group:00000000 wm4.inttypes.h.14.48280a9a5aa6f2f2d5302e2988897736
+                           .group:00000000 wm4.inttypes.h.24.8137491c6995c2cb5d25f9bab92d7f64
+                           .group:00000000 wm4.stm32f10x.h.51.b859cb68ed44ee02c916b41cb8c68f1c
+                           .group:00000000 wm4.core_cm3.h.25.119fe996be41b62fbd915b59177e39d1
+                           .group:00000000 wm4.stm32f10x.h.522.a925aafc848b1f088438cf0e9b167b78
+                           .group:00000000 wm4.stm32f10x.h.8304.f7d8ad90959e99679b3257267c3aadfe
+                           .group:00000000 wm4.stm32f10x_rcc.h.25.fe8897e7491f2eb0cff54551d08eb765
+                           .group:00000000 wm4.portmacro.h.56.a47bdd86bc36d334ca6056492e2d709f
+                           .group:00000000 wm4.port.h.38.e5d12e3086604499e6922efe9c85cac5
+                           .group:00000000 wm4.mbproto.h.32.da85c2bdd9bdb84e975a92c999a4b490
+                           .group:00000000 wm4.mb_m.h.32.f0c90bdd8de56a09521e2eefafb4f11f
+                           .group:00000000 wm4.mbframe.h.32.cb3fc2a5a44fcaf8fe721dce49a4ba3c
+
+UNDEFINED SYMBOLS
+xMBMasterRunResTake
+vMBMasterGetPDUSndBuf
+vMBMasterSetDestAddress
+vMBMasterSetPDUSndLength
+xMBMasterPortEventPost
+eMBMasterWaitRequestFinish
+eMBMasterRegHoldingCB
+prveMBError2Exception
+xMBMasterRequestIsBroadcast

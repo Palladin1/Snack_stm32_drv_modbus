@@ -1,0 +1,177 @@
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.file	"port.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.section	.text.EnterCriticalSection,"ax",%progbits
+  19              		.align	2
+  20              		.global	EnterCriticalSection
+  21              		.thumb
+  22              		.thumb_func
+  24              	EnterCriticalSection:
+  25              	.LFB0:
+  26              		.file 1 "../FreeModbus/stm32/port.c"
+   1:../FreeModbus/stm32/port.c ****  /*
+   2:../FreeModbus/stm32/port.c ****   * FreeModbus Libary: STM32 Port
+   3:../FreeModbus/stm32/port.c ****   * Copyright (C) 2013 Armink <armink.ztl@gmail.com>
+   4:../FreeModbus/stm32/port.c ****   *
+   5:../FreeModbus/stm32/port.c ****   * This library is free software; you can redistribute it and/or
+   6:../FreeModbus/stm32/port.c ****   * modify it under the terms of the GNU Lesser General Public
+   7:../FreeModbus/stm32/port.c ****   * License as published by the Free Software Foundation; either
+   8:../FreeModbus/stm32/port.c ****   * version 2.1 of the License, or (at your option) any later version.
+   9:../FreeModbus/stm32/port.c ****   *
+  10:../FreeModbus/stm32/port.c ****   * This library is distributed in the hope that it will be useful,
+  11:../FreeModbus/stm32/port.c ****   * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  12:../FreeModbus/stm32/port.c ****   * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  13:../FreeModbus/stm32/port.c ****   * Lesser General Public License for more details.
+  14:../FreeModbus/stm32/port.c ****   *
+  15:../FreeModbus/stm32/port.c ****   * You should have received a copy of the GNU Lesser General Public
+  16:../FreeModbus/stm32/port.c ****   * License along with this library; if not, write to the Free Software
+  17:../FreeModbus/stm32/port.c ****   * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+  18:../FreeModbus/stm32/port.c ****   *
+  19:../FreeModbus/stm32/port.c ****   * File: $Id: portevent.c,v 1.60 2013/12/28 9:18:05 Armink $
+  20:../FreeModbus/stm32/port.c ****   */
+  21:../FreeModbus/stm32/port.c **** 
+  22:../FreeModbus/stm32/port.c **** /* ----------------------- System includes --------------------------------*/
+  23:../FreeModbus/stm32/port.c **** 
+  24:../FreeModbus/stm32/port.c **** /* ----------------------- Modbus includes ----------------------------------*/
+  25:../FreeModbus/stm32/port.c **** #include "port.h"
+  26:../FreeModbus/stm32/port.c **** /* ----------------------- Variables ----------------------------------------*/
+  27:../FreeModbus/stm32/port.c **** 
+  28:../FreeModbus/stm32/port.c **** /* ----------------------- Start implementation -----------------------------*/
+  29:../FreeModbus/stm32/port.c **** void EnterCriticalSection(void)
+  30:../FreeModbus/stm32/port.c **** {
+  27              		.loc 1 30 0
+  28              		.cfi_startproc
+  29              		@ args = 0, pretend = 0, frame = 0
+  30              		@ frame_needed = 1, uses_anonymous_args = 0
+  31 0000 80B5     		push	{r7, lr}
+  32              		.cfi_def_cfa_offset 8
+  33              		.cfi_offset 7, -8
+  34              		.cfi_offset 14, -4
+  35 0002 00AF     		add	r7, sp, #0
+  36              		.cfi_def_cfa_register 7
+  31:../FreeModbus/stm32/port.c **** 	//关闭全局中断
+  32:../FreeModbus/stm32/port.c **** 	__disable_irq();
+  37              		.loc 1 32 0
+  38 0004 FFF7FEFF 		bl	__disable_irq
+  33:../FreeModbus/stm32/port.c **** }
+  39              		.loc 1 33 0
+  40 0008 80BD     		pop	{r7, pc}
+  41              		.cfi_endproc
+  42              	.LFE0:
+  44 000a 00BF     		.section	.text.ExitCriticalSection,"ax",%progbits
+  45              		.align	2
+  46              		.global	ExitCriticalSection
+  47              		.thumb
+  48              		.thumb_func
+  50              	ExitCriticalSection:
+  51              	.LFB1:
+  34:../FreeModbus/stm32/port.c **** 
+  35:../FreeModbus/stm32/port.c **** void ExitCriticalSection(void)
+  36:../FreeModbus/stm32/port.c **** {
+  52              		.loc 1 36 0
+  53              		.cfi_startproc
+  54              		@ args = 0, pretend = 0, frame = 0
+  55              		@ frame_needed = 1, uses_anonymous_args = 0
+  56 0000 80B5     		push	{r7, lr}
+  57              		.cfi_def_cfa_offset 8
+  58              		.cfi_offset 7, -8
+  59              		.cfi_offset 14, -4
+  60 0002 00AF     		add	r7, sp, #0
+  61              		.cfi_def_cfa_register 7
+  37:../FreeModbus/stm32/port.c **** 	//开启全局中断
+  38:../FreeModbus/stm32/port.c **** 	__enable_irq();
+  62              		.loc 1 38 0
+  63 0004 FFF7FEFF 		bl	__enable_irq
+  39:../FreeModbus/stm32/port.c **** }
+  64              		.loc 1 39 0
+  65 0008 80BD     		pop	{r7, pc}
+  66              		.cfi_endproc
+  67              	.LFE1:
+  69 000a 00BF     		.section	.text.vMBDelay,"ax",%progbits
+  70              		.align	2
+  71              		.global	vMBDelay
+  72              		.thumb
+  73              		.thumb_func
+  75              	vMBDelay:
+  76              	.LFB2:
+  40:../FreeModbus/stm32/port.c **** 
+  41:../FreeModbus/stm32/port.c **** void vMBDelay(ULONG nCount)
+  42:../FreeModbus/stm32/port.c **** {
+  77              		.loc 1 42 0
+  78              		.cfi_startproc
+  79              		@ args = 0, pretend = 0, frame = 8
+  80              		@ frame_needed = 1, uses_anonymous_args = 0
+  81              		@ link register save eliminated.
+  82 0000 80B4     		push	{r7}
+  83              		.cfi_def_cfa_offset 4
+  84              		.cfi_offset 7, -4
+  85 0002 83B0     		sub	sp, sp, #12
+  86              		.cfi_def_cfa_offset 16
+  87 0004 00AF     		add	r7, sp, #0
+  88              		.cfi_def_cfa_register 7
+  89 0006 7860     		str	r0, [r7, #4]
+  43:../FreeModbus/stm32/port.c ****   for(; nCount > 0;nCount--);
+  90              		.loc 1 43 0
+  91 0008 02E0     		b	.L4
+  92              	.L5:
+  93              		.loc 1 43 0 is_stmt 0 discriminator 2
+  94 000a 7B68     		ldr	r3, [r7, #4]
+  95 000c 013B     		subs	r3, r3, #1
+  96 000e 7B60     		str	r3, [r7, #4]
+  97              	.L4:
+  98              		.loc 1 43 0 discriminator 1
+  99 0010 7B68     		ldr	r3, [r7, #4]
+ 100 0012 002B     		cmp	r3, #0
+ 101 0014 F9D1     		bne	.L5
+  44:../FreeModbus/stm32/port.c **** }
+ 102              		.loc 1 44 0 is_stmt 1
+ 103 0016 0C37     		adds	r7, r7, #12
+ 104 0018 BD46     		mov	sp, r7
+ 105              		@ sp needed
+ 106 001a 5DF8047B 		ldr	r7, [sp], #4
+ 107 001e 7047     		bx	lr
+ 108              		.cfi_endproc
+ 109              	.LFE2:
+ 111              		.text
+ 112              	.Letext0:
+ 113              		.file 2 "c:\\tools\\arm-none-eabi\\include\\stdint.h"
+ 114              		.file 3 "../FreeModbus/stm32/port.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 port.c
+C:\Users\Alex\AppData\Local\Temp\ccY7LUHM.s:19     .text.EnterCriticalSection:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccY7LUHM.s:24     .text.EnterCriticalSection:00000000 EnterCriticalSection
+C:\Users\Alex\AppData\Local\Temp\ccY7LUHM.s:45     .text.ExitCriticalSection:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccY7LUHM.s:50     .text.ExitCriticalSection:00000000 ExitCriticalSection
+C:\Users\Alex\AppData\Local\Temp\ccY7LUHM.s:70     .text.vMBDelay:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccY7LUHM.s:75     .text.vMBDelay:00000000 vMBDelay
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.1.98ffea2db242cfdb58f411f7407f2b59
+                           .group:00000000 wm4.stm32f10x_conf.h.2.f1a8c33f0a763aeef696fee38b2b2dbc
+                           .group:00000000 wm4.mbconfig.h.33.95a8754a0cf7dcbfee5562143bfddb39
+                           .group:00000000 wm4.newlib.h.8.384a112feabb3bef7b573ae48cde2e3b
+                           .group:00000000 wm4.features.h.22.6a4ca7cd053637cc1d0db6c16f39b2d7
+                           .group:00000000 wm4.config.h.183.aa62afef667fb61d15fa64c48beb2f14
+                           .group:00000000 wm4._ansi.h.23.5644b60c990a4800b02a6e654e88f93a
+                           .group:00000000 wm4.assert.h.11.060c3dc511517628fd4f958fa9448dce
+                           .group:00000000 wm4.stdint.h.20.54ad762faa59e3c05491630641c8d8bf
+                           .group:00000000 wm4.stddef.h.263.49e44f5ee9cdd8820580fc4aa239e32a
+                           .group:00000000 wm4.inttypes.h.24.8137491c6995c2cb5d25f9bab92d7f64
+                           .group:00000000 wm4.port.h.33.53cb624c52793ce9c119e75de3b08e02
+
+UNDEFINED SYMBOLS
+__disable_irq
+__enable_irq

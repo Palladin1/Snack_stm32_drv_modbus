@@ -1,0 +1,3630 @@
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.file	"queue.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.comm	xQueueRegistry,8,4
+  19              		.section	.text.xQueueGenericCreate,"ax",%progbits
+  20              		.align	2
+  21              		.global	xQueueGenericCreate
+  22              		.thumb
+  23              		.thumb_func
+  25              	xQueueGenericCreate:
+  26              	.LFB0:
+  27              		.file 1 "../FreeRTOS/Source/queue.c"
+   1:../FreeRTOS/Source/queue.c **** /*
+   2:../FreeRTOS/Source/queue.c ****     FreeRTOS V7.1.0 - Copyright (C) 2011 Real Time Engineers Ltd.
+   3:../FreeRTOS/Source/queue.c **** 
+   4:../FreeRTOS/Source/queue.c **** 
+   5:../FreeRTOS/Source/queue.c ****     ***************************************************************************
+   6:../FreeRTOS/Source/queue.c ****      *                                                                       *
+   7:../FreeRTOS/Source/queue.c ****      *    FreeRTOS tutorial books are available in pdf and paperback.        *
+   8:../FreeRTOS/Source/queue.c ****      *    Complete, revised, and edited pdf reference manuals are also       *
+   9:../FreeRTOS/Source/queue.c ****      *    available.                                                         *
+  10:../FreeRTOS/Source/queue.c ****      *                                                                       *
+  11:../FreeRTOS/Source/queue.c ****      *    Purchasing FreeRTOS documentation will not only help you, by       *
+  12:../FreeRTOS/Source/queue.c ****      *    ensuring you get running as quickly as possible and with an        *
+  13:../FreeRTOS/Source/queue.c ****      *    in-depth knowledge of how to use FreeRTOS, it will also help       *
+  14:../FreeRTOS/Source/queue.c ****      *    the FreeRTOS project to continue with its mission of providing     *
+  15:../FreeRTOS/Source/queue.c ****      *    professional grade, cross platform, de facto standard solutions    *
+  16:../FreeRTOS/Source/queue.c ****      *    for microcontrollers - completely free of charge!                  *
+  17:../FreeRTOS/Source/queue.c ****      *                                                                       *
+  18:../FreeRTOS/Source/queue.c ****      *    >>> See http://www.FreeRTOS.org/Documentation for details. <<<     *
+  19:../FreeRTOS/Source/queue.c ****      *                                                                       *
+  20:../FreeRTOS/Source/queue.c ****      *    Thank you for using FreeRTOS, and thank you for your support!      *
+  21:../FreeRTOS/Source/queue.c ****      *                                                                       *
+  22:../FreeRTOS/Source/queue.c ****     ***************************************************************************
+  23:../FreeRTOS/Source/queue.c **** 
+  24:../FreeRTOS/Source/queue.c **** 
+  25:../FreeRTOS/Source/queue.c ****     This file is part of the FreeRTOS distribution.
+  26:../FreeRTOS/Source/queue.c **** 
+  27:../FreeRTOS/Source/queue.c ****     FreeRTOS is free software; you can redistribute it and/or modify it under
+  28:../FreeRTOS/Source/queue.c ****     the terms of the GNU General Public License (version 2) as published by the
+  29:../FreeRTOS/Source/queue.c ****     Free Software Foundation AND MODIFIED BY the FreeRTOS exception.
+  30:../FreeRTOS/Source/queue.c ****     >>>NOTE<<< The modification to the GPL is included to allow you to
+  31:../FreeRTOS/Source/queue.c ****     distribute a combined work that includes FreeRTOS without being obliged to
+  32:../FreeRTOS/Source/queue.c ****     provide the source code for proprietary components outside of the FreeRTOS
+  33:../FreeRTOS/Source/queue.c ****     kernel.  FreeRTOS is distributed in the hope that it will be useful, but
+  34:../FreeRTOS/Source/queue.c ****     WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+  35:../FreeRTOS/Source/queue.c ****     or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+  36:../FreeRTOS/Source/queue.c ****     more details. You should have received a copy of the GNU General Public
+  37:../FreeRTOS/Source/queue.c ****     License and the FreeRTOS license exception along with FreeRTOS; if not it
+  38:../FreeRTOS/Source/queue.c ****     can be viewed here: http://www.freertos.org/a00114.html and also obtained
+  39:../FreeRTOS/Source/queue.c ****     by writing to Richard Barry, contact details for whom are available on the
+  40:../FreeRTOS/Source/queue.c ****     FreeRTOS WEB site.
+  41:../FreeRTOS/Source/queue.c **** 
+  42:../FreeRTOS/Source/queue.c ****     1 tab == 4 spaces!
+  43:../FreeRTOS/Source/queue.c **** 
+  44:../FreeRTOS/Source/queue.c ****     http://www.FreeRTOS.org - Documentation, latest information, license and
+  45:../FreeRTOS/Source/queue.c ****     contact details.
+  46:../FreeRTOS/Source/queue.c **** 
+  47:../FreeRTOS/Source/queue.c ****     http://www.SafeRTOS.com - A version that is certified for use in safety
+  48:../FreeRTOS/Source/queue.c ****     critical systems.
+  49:../FreeRTOS/Source/queue.c **** 
+  50:../FreeRTOS/Source/queue.c ****     http://www.OpenRTOS.com - Commercial support, development, porting,
+  51:../FreeRTOS/Source/queue.c ****     licensing and training services.
+  52:../FreeRTOS/Source/queue.c **** */
+  53:../FreeRTOS/Source/queue.c **** 
+  54:../FreeRTOS/Source/queue.c **** #include <stdlib.h>
+  55:../FreeRTOS/Source/queue.c **** #include <string.h>
+  56:../FreeRTOS/Source/queue.c **** 
+  57:../FreeRTOS/Source/queue.c **** /* Defining MPU_WRAPPERS_INCLUDED_FROM_API_FILE prevents task.h from redefining
+  58:../FreeRTOS/Source/queue.c **** all the API functions to use the MPU wrappers.  That should only be done when
+  59:../FreeRTOS/Source/queue.c **** task.h is included from an application file. */
+  60:../FreeRTOS/Source/queue.c **** #define MPU_WRAPPERS_INCLUDED_FROM_API_FILE
+  61:../FreeRTOS/Source/queue.c **** 
+  62:../FreeRTOS/Source/queue.c **** #include "FreeRTOS.h"
+  63:../FreeRTOS/Source/queue.c **** #include "task.h"
+  64:../FreeRTOS/Source/queue.c **** 
+  65:../FreeRTOS/Source/queue.c **** #if ( configUSE_CO_ROUTINES == 1 )
+  66:../FreeRTOS/Source/queue.c **** 	#include "croutine.h"
+  67:../FreeRTOS/Source/queue.c **** #endif
+  68:../FreeRTOS/Source/queue.c **** 
+  69:../FreeRTOS/Source/queue.c **** #undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
+  70:../FreeRTOS/Source/queue.c **** 
+  71:../FreeRTOS/Source/queue.c **** /*-----------------------------------------------------------
+  72:../FreeRTOS/Source/queue.c ****  * PUBLIC LIST API documented in list.h
+  73:../FreeRTOS/Source/queue.c ****  *----------------------------------------------------------*/
+  74:../FreeRTOS/Source/queue.c **** 
+  75:../FreeRTOS/Source/queue.c **** /* Constants used with the cRxLock and cTxLock structure members. */
+  76:../FreeRTOS/Source/queue.c **** #define queueUNLOCKED					( ( signed portBASE_TYPE ) -1 )
+  77:../FreeRTOS/Source/queue.c **** #define queueLOCKED_UNMODIFIED			( ( signed portBASE_TYPE ) 0 )
+  78:../FreeRTOS/Source/queue.c **** 
+  79:../FreeRTOS/Source/queue.c **** #define queueERRONEOUS_UNBLOCK			( -1 )
+  80:../FreeRTOS/Source/queue.c **** 
+  81:../FreeRTOS/Source/queue.c **** /* For internal use only. */
+  82:../FreeRTOS/Source/queue.c **** #define	queueSEND_TO_BACK				( 0 )
+  83:../FreeRTOS/Source/queue.c **** #define	queueSEND_TO_FRONT				( 1 )
+  84:../FreeRTOS/Source/queue.c **** 
+  85:../FreeRTOS/Source/queue.c **** /* Effectively make a union out of the xQUEUE structure. */
+  86:../FreeRTOS/Source/queue.c **** #define pxMutexHolder					pcTail
+  87:../FreeRTOS/Source/queue.c **** #define uxQueueType						pcHead
+  88:../FreeRTOS/Source/queue.c **** #define uxRecursiveCallCount			pcReadFrom
+  89:../FreeRTOS/Source/queue.c **** #define queueQUEUE_IS_MUTEX				NULL
+  90:../FreeRTOS/Source/queue.c **** 
+  91:../FreeRTOS/Source/queue.c **** /* Semaphores do not actually store or copy data, so have an items size of
+  92:../FreeRTOS/Source/queue.c **** zero. */
+  93:../FreeRTOS/Source/queue.c **** #define queueSEMAPHORE_QUEUE_ITEM_LENGTH ( ( unsigned portBASE_TYPE ) 0 )
+  94:../FreeRTOS/Source/queue.c **** #define queueDONT_BLOCK					 ( ( portTickType ) 0U )
+  95:../FreeRTOS/Source/queue.c **** #define queueMUTEX_GIVE_BLOCK_TIME		 ( ( portTickType ) 0U )
+  96:../FreeRTOS/Source/queue.c **** 
+  97:../FreeRTOS/Source/queue.c **** /* These definitions *must* match those in queue.h. */
+  98:../FreeRTOS/Source/queue.c **** #define queueQUEUE_TYPE_BASE				( 0U )
+  99:../FreeRTOS/Source/queue.c **** #define queueQUEUE_TYPE_MUTEX 				( 1U )
+ 100:../FreeRTOS/Source/queue.c **** #define queueQUEUE_TYPE_COUNTING_SEMAPHORE	( 2U )
+ 101:../FreeRTOS/Source/queue.c **** #define queueQUEUE_TYPE_BINARY_SEMAPHORE	( 3U )
+ 102:../FreeRTOS/Source/queue.c **** #define queueQUEUE_TYPE_RECURSIVE_MUTEX		( 4U )
+ 103:../FreeRTOS/Source/queue.c **** 
+ 104:../FreeRTOS/Source/queue.c **** /*
+ 105:../FreeRTOS/Source/queue.c ****  * Definition of the queue used by the scheduler.
+ 106:../FreeRTOS/Source/queue.c ****  * Items are queued by copy, not reference.
+ 107:../FreeRTOS/Source/queue.c ****  */
+ 108:../FreeRTOS/Source/queue.c **** typedef struct QueueDefinition
+ 109:../FreeRTOS/Source/queue.c **** {
+ 110:../FreeRTOS/Source/queue.c **** 	signed char *pcHead;				/*< Points to the beginning of the queue storage area. */
+ 111:../FreeRTOS/Source/queue.c **** 	signed char *pcTail;				/*< Points to the byte at the end of the queue storage area.  Once more by
+ 112:../FreeRTOS/Source/queue.c **** 
+ 113:../FreeRTOS/Source/queue.c **** 	signed char *pcWriteTo;				/*< Points to the free next place in the storage area. */
+ 114:../FreeRTOS/Source/queue.c **** 	signed char *pcReadFrom;			/*< Points to the last place that a queued item was read from. */
+ 115:../FreeRTOS/Source/queue.c **** 
+ 116:../FreeRTOS/Source/queue.c **** 	xList xTasksWaitingToSend;				/*< List of tasks that are blocked waiting to post onto this queue. 
+ 117:../FreeRTOS/Source/queue.c **** 	xList xTasksWaitingToReceive;			/*< List of tasks that are blocked waiting to read from this queue
+ 118:../FreeRTOS/Source/queue.c **** 
+ 119:../FreeRTOS/Source/queue.c **** 	volatile unsigned portBASE_TYPE uxMessagesWaiting;/*< The number of items currently in the queue. 
+ 120:../FreeRTOS/Source/queue.c **** 	unsigned portBASE_TYPE uxLength;		/*< The length of the queue defined as the number of items it wi
+ 121:../FreeRTOS/Source/queue.c **** 	unsigned portBASE_TYPE uxItemSize;		/*< The size of each items that the queue will hold. */
+ 122:../FreeRTOS/Source/queue.c **** 
+ 123:../FreeRTOS/Source/queue.c **** 	signed portBASE_TYPE xRxLock;			/*< Stores the number of items received from the queue (removed fr
+ 124:../FreeRTOS/Source/queue.c **** 	signed portBASE_TYPE xTxLock;			/*< Stores the number of items transmitted to the queue (added to 
+ 125:../FreeRTOS/Source/queue.c **** 	
+ 126:../FreeRTOS/Source/queue.c **** 	#if ( configUSE_TRACE_FACILITY == 1 )
+ 127:../FreeRTOS/Source/queue.c **** 		unsigned char ucQueueNumber;
+ 128:../FreeRTOS/Source/queue.c **** 		unsigned char ucQueueType;
+ 129:../FreeRTOS/Source/queue.c **** 	#endif
+ 130:../FreeRTOS/Source/queue.c **** 
+ 131:../FreeRTOS/Source/queue.c **** } xQUEUE;
+ 132:../FreeRTOS/Source/queue.c **** /*-----------------------------------------------------------*/
+ 133:../FreeRTOS/Source/queue.c **** 
+ 134:../FreeRTOS/Source/queue.c **** /*
+ 135:../FreeRTOS/Source/queue.c ****  * Inside this file xQueueHandle is a pointer to a xQUEUE structure.
+ 136:../FreeRTOS/Source/queue.c ****  * To keep the definition private the API header file defines it as a
+ 137:../FreeRTOS/Source/queue.c ****  * pointer to void.
+ 138:../FreeRTOS/Source/queue.c ****  */
+ 139:../FreeRTOS/Source/queue.c **** typedef xQUEUE * xQueueHandle;
+ 140:../FreeRTOS/Source/queue.c **** 
+ 141:../FreeRTOS/Source/queue.c **** /*
+ 142:../FreeRTOS/Source/queue.c ****  * Prototypes for public functions are included here so we don't have to
+ 143:../FreeRTOS/Source/queue.c ****  * include the API header file (as it defines xQueueHandle differently).  These
+ 144:../FreeRTOS/Source/queue.c ****  * functions are documented in the API header file.
+ 145:../FreeRTOS/Source/queue.c ****  */
+ 146:../FreeRTOS/Source/queue.c **** xQueueHandle xQueueGenericCreate( unsigned portBASE_TYPE uxQueueLength, unsigned portBASE_TYPE uxIt
+ 147:../FreeRTOS/Source/queue.c **** signed portBASE_TYPE xQueueGenericSend( xQueueHandle xQueue, const void * const pvItemToQueue, port
+ 148:../FreeRTOS/Source/queue.c **** unsigned portBASE_TYPE uxQueueMessagesWaiting( const xQueueHandle pxQueue ) PRIVILEGED_FUNCTION;
+ 149:../FreeRTOS/Source/queue.c **** void vQueueDelete( xQueueHandle xQueue ) PRIVILEGED_FUNCTION;
+ 150:../FreeRTOS/Source/queue.c **** signed portBASE_TYPE xQueueGenericSendFromISR( xQueueHandle pxQueue, const void * const pvItemToQue
+ 151:../FreeRTOS/Source/queue.c **** signed portBASE_TYPE xQueueGenericReceive( xQueueHandle pxQueue, void * const pvBuffer, portTickTyp
+ 152:../FreeRTOS/Source/queue.c **** signed portBASE_TYPE xQueueReceiveFromISR( xQueueHandle pxQueue, void * const pvBuffer, signed port
+ 153:../FreeRTOS/Source/queue.c **** xQueueHandle xQueueCreateMutex( unsigned char ucQueueType ) PRIVILEGED_FUNCTION;
+ 154:../FreeRTOS/Source/queue.c **** xQueueHandle xQueueCreateCountingSemaphore( unsigned portBASE_TYPE uxCountValue, unsigned portBASE_
+ 155:../FreeRTOS/Source/queue.c **** portBASE_TYPE xQueueTakeMutexRecursive( xQueueHandle xMutex, portTickType xBlockTime ) PRIVILEGED_F
+ 156:../FreeRTOS/Source/queue.c **** portBASE_TYPE xQueueGiveMutexRecursive( xQueueHandle xMutex ) PRIVILEGED_FUNCTION;
+ 157:../FreeRTOS/Source/queue.c **** signed portBASE_TYPE xQueueAltGenericSend( xQueueHandle pxQueue, const void * const pvItemToQueue, 
+ 158:../FreeRTOS/Source/queue.c **** signed portBASE_TYPE xQueueAltGenericReceive( xQueueHandle pxQueue, void * const pvBuffer, portTick
+ 159:../FreeRTOS/Source/queue.c **** signed portBASE_TYPE xQueueIsQueueEmptyFromISR( const xQueueHandle pxQueue ) PRIVILEGED_FUNCTION;
+ 160:../FreeRTOS/Source/queue.c **** signed portBASE_TYPE xQueueIsQueueFullFromISR( const xQueueHandle pxQueue ) PRIVILEGED_FUNCTION;
+ 161:../FreeRTOS/Source/queue.c **** unsigned portBASE_TYPE uxQueueMessagesWaitingFromISR( const xQueueHandle pxQueue ) PRIVILEGED_FUNCT
+ 162:../FreeRTOS/Source/queue.c **** void vQueueWaitForMessageRestricted( xQueueHandle pxQueue, portTickType xTicksToWait ) PRIVILEGED_F
+ 163:../FreeRTOS/Source/queue.c **** unsigned char ucQueueGetQueueNumber( xQueueHandle pxQueue ) PRIVILEGED_FUNCTION;
+ 164:../FreeRTOS/Source/queue.c **** void vQueueSetQueueNumber( xQueueHandle pxQueue, unsigned char ucQueueNumber ) PRIVILEGED_FUNCTION;
+ 165:../FreeRTOS/Source/queue.c **** unsigned char ucQueueGetQueueType( xQueueHandle pxQueue ) PRIVILEGED_FUNCTION;
+ 166:../FreeRTOS/Source/queue.c **** 
+ 167:../FreeRTOS/Source/queue.c **** /*
+ 168:../FreeRTOS/Source/queue.c ****  * Co-routine queue functions differ from task queue functions.  Co-routines are
+ 169:../FreeRTOS/Source/queue.c ****  * an optional component.
+ 170:../FreeRTOS/Source/queue.c ****  */
+ 171:../FreeRTOS/Source/queue.c **** #if configUSE_CO_ROUTINES == 1
+ 172:../FreeRTOS/Source/queue.c **** 	signed portBASE_TYPE xQueueCRSendFromISR( xQueueHandle pxQueue, const void *pvItemToQueue, signed 
+ 173:../FreeRTOS/Source/queue.c **** 	signed portBASE_TYPE xQueueCRReceiveFromISR( xQueueHandle pxQueue, void *pvBuffer, signed portBASE
+ 174:../FreeRTOS/Source/queue.c **** 	signed portBASE_TYPE xQueueCRSend( xQueueHandle pxQueue, const void *pvItemToQueue, portTickType x
+ 175:../FreeRTOS/Source/queue.c **** 	signed portBASE_TYPE xQueueCRReceive( xQueueHandle pxQueue, void *pvBuffer, portTickType xTicksToW
+ 176:../FreeRTOS/Source/queue.c **** #endif
+ 177:../FreeRTOS/Source/queue.c **** 
+ 178:../FreeRTOS/Source/queue.c **** /*
+ 179:../FreeRTOS/Source/queue.c ****  * The queue registry is just a means for kernel aware debuggers to locate
+ 180:../FreeRTOS/Source/queue.c ****  * queue structures.  It has no other purpose so is an optional component.
+ 181:../FreeRTOS/Source/queue.c ****  */
+ 182:../FreeRTOS/Source/queue.c **** #if configQUEUE_REGISTRY_SIZE > 0
+ 183:../FreeRTOS/Source/queue.c **** 
+ 184:../FreeRTOS/Source/queue.c **** 	/* The type stored within the queue registry array.  This allows a name
+ 185:../FreeRTOS/Source/queue.c **** 	to be assigned to each queue making kernel aware debugging a little
+ 186:../FreeRTOS/Source/queue.c **** 	more user friendly. */
+ 187:../FreeRTOS/Source/queue.c **** 	typedef struct QUEUE_REGISTRY_ITEM
+ 188:../FreeRTOS/Source/queue.c **** 	{
+ 189:../FreeRTOS/Source/queue.c **** 		signed char *pcQueueName;
+ 190:../FreeRTOS/Source/queue.c **** 		xQueueHandle xHandle;
+ 191:../FreeRTOS/Source/queue.c **** 	} xQueueRegistryItem;
+ 192:../FreeRTOS/Source/queue.c **** 
+ 193:../FreeRTOS/Source/queue.c **** 	/* The queue registry is simply an array of xQueueRegistryItem structures.
+ 194:../FreeRTOS/Source/queue.c **** 	The pcQueueName member of a structure being NULL is indicative of the
+ 195:../FreeRTOS/Source/queue.c **** 	array position being vacant. */
+ 196:../FreeRTOS/Source/queue.c **** 	xQueueRegistryItem xQueueRegistry[ configQUEUE_REGISTRY_SIZE ];
+ 197:../FreeRTOS/Source/queue.c **** 
+ 198:../FreeRTOS/Source/queue.c **** 	/* Removes a queue from the registry by simply setting the pcQueueName
+ 199:../FreeRTOS/Source/queue.c **** 	member to NULL. */
+ 200:../FreeRTOS/Source/queue.c **** 	static void vQueueUnregisterQueue( xQueueHandle xQueue ) PRIVILEGED_FUNCTION;
+ 201:../FreeRTOS/Source/queue.c **** 	void vQueueAddToRegistry( xQueueHandle xQueue, signed char *pcQueueName ) PRIVILEGED_FUNCTION;
+ 202:../FreeRTOS/Source/queue.c **** #endif
+ 203:../FreeRTOS/Source/queue.c **** 
+ 204:../FreeRTOS/Source/queue.c **** /*
+ 205:../FreeRTOS/Source/queue.c ****  * Unlocks a queue locked by a call to prvLockQueue.  Locking a queue does not
+ 206:../FreeRTOS/Source/queue.c ****  * prevent an ISR from adding or removing items to the queue, but does prevent
+ 207:../FreeRTOS/Source/queue.c ****  * an ISR from removing tasks from the queue event lists.  If an ISR finds a
+ 208:../FreeRTOS/Source/queue.c ****  * queue is locked it will instead increment the appropriate queue lock count
+ 209:../FreeRTOS/Source/queue.c ****  * to indicate that a task may require unblocking.  When the queue in unlocked
+ 210:../FreeRTOS/Source/queue.c ****  * these lock counts are inspected, and the appropriate action taken.
+ 211:../FreeRTOS/Source/queue.c ****  */
+ 212:../FreeRTOS/Source/queue.c **** static void prvUnlockQueue( xQueueHandle pxQueue ) PRIVILEGED_FUNCTION;
+ 213:../FreeRTOS/Source/queue.c **** 
+ 214:../FreeRTOS/Source/queue.c **** /*
+ 215:../FreeRTOS/Source/queue.c ****  * Uses a critical section to determine if there is any data in a queue.
+ 216:../FreeRTOS/Source/queue.c ****  *
+ 217:../FreeRTOS/Source/queue.c ****  * @return pdTRUE if the queue contains no items, otherwise pdFALSE.
+ 218:../FreeRTOS/Source/queue.c ****  */
+ 219:../FreeRTOS/Source/queue.c **** static signed portBASE_TYPE prvIsQueueEmpty( const xQueueHandle pxQueue ) PRIVILEGED_FUNCTION;
+ 220:../FreeRTOS/Source/queue.c **** 
+ 221:../FreeRTOS/Source/queue.c **** /*
+ 222:../FreeRTOS/Source/queue.c ****  * Uses a critical section to determine if there is any space in a queue.
+ 223:../FreeRTOS/Source/queue.c ****  *
+ 224:../FreeRTOS/Source/queue.c ****  * @return pdTRUE if there is no space, otherwise pdFALSE;
+ 225:../FreeRTOS/Source/queue.c ****  */
+ 226:../FreeRTOS/Source/queue.c **** static signed portBASE_TYPE prvIsQueueFull( const xQueueHandle pxQueue ) PRIVILEGED_FUNCTION;
+ 227:../FreeRTOS/Source/queue.c **** 
+ 228:../FreeRTOS/Source/queue.c **** /*
+ 229:../FreeRTOS/Source/queue.c ****  * Copies an item into the queue, either at the front of the queue or the
+ 230:../FreeRTOS/Source/queue.c ****  * back of the queue.
+ 231:../FreeRTOS/Source/queue.c ****  */
+ 232:../FreeRTOS/Source/queue.c **** static void prvCopyDataToQueue( xQUEUE *pxQueue, const void *pvItemToQueue, portBASE_TYPE xPosition
+ 233:../FreeRTOS/Source/queue.c **** 
+ 234:../FreeRTOS/Source/queue.c **** /*
+ 235:../FreeRTOS/Source/queue.c ****  * Copies an item out of a queue.
+ 236:../FreeRTOS/Source/queue.c ****  */
+ 237:../FreeRTOS/Source/queue.c **** static void prvCopyDataFromQueue( xQUEUE * const pxQueue, const void *pvBuffer ) PRIVILEGED_FUNCTIO
+ 238:../FreeRTOS/Source/queue.c **** /*-----------------------------------------------------------*/
+ 239:../FreeRTOS/Source/queue.c **** 
+ 240:../FreeRTOS/Source/queue.c **** /*
+ 241:../FreeRTOS/Source/queue.c ****  * Macro to mark a queue as locked.  Locking a queue prevents an ISR from
+ 242:../FreeRTOS/Source/queue.c ****  * accessing the queue event lists.
+ 243:../FreeRTOS/Source/queue.c ****  */
+ 244:../FreeRTOS/Source/queue.c **** #define prvLockQueue( pxQueue )								\
+ 245:../FreeRTOS/Source/queue.c **** 	taskENTER_CRITICAL();									\
+ 246:../FreeRTOS/Source/queue.c **** 	{														\
+ 247:../FreeRTOS/Source/queue.c **** 		if( ( pxQueue )->xRxLock == queueUNLOCKED )			\
+ 248:../FreeRTOS/Source/queue.c **** 		{													\
+ 249:../FreeRTOS/Source/queue.c **** 			( pxQueue )->xRxLock = queueLOCKED_UNMODIFIED;	\
+ 250:../FreeRTOS/Source/queue.c **** 		}													\
+ 251:../FreeRTOS/Source/queue.c **** 		if( ( pxQueue )->xTxLock == queueUNLOCKED )			\
+ 252:../FreeRTOS/Source/queue.c **** 		{													\
+ 253:../FreeRTOS/Source/queue.c **** 			( pxQueue )->xTxLock = queueLOCKED_UNMODIFIED;	\
+ 254:../FreeRTOS/Source/queue.c **** 		}													\
+ 255:../FreeRTOS/Source/queue.c **** 	}														\
+ 256:../FreeRTOS/Source/queue.c **** 	taskEXIT_CRITICAL()
+ 257:../FreeRTOS/Source/queue.c **** /*-----------------------------------------------------------*/
+ 258:../FreeRTOS/Source/queue.c **** 
+ 259:../FreeRTOS/Source/queue.c **** 
+ 260:../FreeRTOS/Source/queue.c **** /*-----------------------------------------------------------
+ 261:../FreeRTOS/Source/queue.c ****  * PUBLIC QUEUE MANAGEMENT API documented in queue.h
+ 262:../FreeRTOS/Source/queue.c ****  *----------------------------------------------------------*/
+ 263:../FreeRTOS/Source/queue.c **** 
+ 264:../FreeRTOS/Source/queue.c **** xQueueHandle xQueueGenericCreate( unsigned portBASE_TYPE uxQueueLength, unsigned portBASE_TYPE uxIt
+ 265:../FreeRTOS/Source/queue.c **** {
+  28              		.loc 1 265 0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 32
+  31              		@ frame_needed = 1, uses_anonymous_args = 0
+  32 0000 80B5     		push	{r7, lr}
+  33              		.cfi_def_cfa_offset 8
+  34              		.cfi_offset 7, -8
+  35              		.cfi_offset 14, -4
+  36 0002 88B0     		sub	sp, sp, #32
+  37              		.cfi_def_cfa_offset 40
+  38 0004 00AF     		add	r7, sp, #0
+  39              		.cfi_def_cfa_register 7
+  40 0006 F860     		str	r0, [r7, #12]
+  41 0008 B960     		str	r1, [r7, #8]
+  42 000a 1346     		mov	r3, r2
+  43 000c FB71     		strb	r3, [r7, #7]
+ 266:../FreeRTOS/Source/queue.c **** xQUEUE *pxNewQueue;
+ 267:../FreeRTOS/Source/queue.c **** size_t xQueueSizeInBytes;
+ 268:../FreeRTOS/Source/queue.c **** xQueueHandle xReturn = NULL;
+  44              		.loc 1 268 0
+  45 000e 0023     		movs	r3, #0
+  46 0010 FB61     		str	r3, [r7, #28]
+ 269:../FreeRTOS/Source/queue.c **** 
+ 270:../FreeRTOS/Source/queue.c **** 	/* Remove compiler warnings about unused parameters should 
+ 271:../FreeRTOS/Source/queue.c **** 	configUSE_TRACE_FACILITY not be set to 1. */
+ 272:../FreeRTOS/Source/queue.c **** 	( void ) ucQueueType;
+ 273:../FreeRTOS/Source/queue.c **** 
+ 274:../FreeRTOS/Source/queue.c **** 	/* Allocate the new queue structure. */
+ 275:../FreeRTOS/Source/queue.c **** 	if( uxQueueLength > ( unsigned portBASE_TYPE ) 0 )
+  47              		.loc 1 275 0
+  48 0012 FB68     		ldr	r3, [r7, #12]
+  49 0014 002B     		cmp	r3, #0
+  50 0016 4ED0     		beq	.L2
+ 276:../FreeRTOS/Source/queue.c **** 	{
+ 277:../FreeRTOS/Source/queue.c **** 		pxNewQueue = ( xQUEUE * ) pvPortMalloc( sizeof( xQUEUE ) );
+  51              		.loc 1 277 0
+  52 0018 4C20     		movs	r0, #76
+  53 001a FFF7FEFF 		bl	pvPortMalloc
+  54 001e B861     		str	r0, [r7, #24]
+ 278:../FreeRTOS/Source/queue.c **** 		if( pxNewQueue != NULL )
+  55              		.loc 1 278 0
+  56 0020 BB69     		ldr	r3, [r7, #24]
+  57 0022 002B     		cmp	r3, #0
+  58 0024 47D0     		beq	.L2
+ 279:../FreeRTOS/Source/queue.c **** 		{
+ 280:../FreeRTOS/Source/queue.c **** 			/* Create the list of pointers to queue items.  The queue is one byte
+ 281:../FreeRTOS/Source/queue.c **** 			longer than asked for to make wrap checking easier/faster. */
+ 282:../FreeRTOS/Source/queue.c **** 			xQueueSizeInBytes = ( size_t ) ( uxQueueLength * uxItemSize ) + ( size_t ) 1;
+  59              		.loc 1 282 0
+  60 0026 FB68     		ldr	r3, [r7, #12]
+  61 0028 BA68     		ldr	r2, [r7, #8]
+  62 002a 02FB03F3 		mul	r3, r2, r3
+  63 002e 0133     		adds	r3, r3, #1
+  64 0030 7B61     		str	r3, [r7, #20]
+ 283:../FreeRTOS/Source/queue.c **** 
+ 284:../FreeRTOS/Source/queue.c **** 			pxNewQueue->pcHead = ( signed char * ) pvPortMalloc( xQueueSizeInBytes );
+  65              		.loc 1 284 0
+  66 0032 7869     		ldr	r0, [r7, #20]
+  67 0034 FFF7FEFF 		bl	pvPortMalloc
+  68 0038 0246     		mov	r2, r0
+  69 003a BB69     		ldr	r3, [r7, #24]
+  70 003c 1A60     		str	r2, [r3]
+ 285:../FreeRTOS/Source/queue.c **** 			if( pxNewQueue->pcHead != NULL )
+  71              		.loc 1 285 0
+  72 003e BB69     		ldr	r3, [r7, #24]
+  73 0040 1B68     		ldr	r3, [r3]
+  74 0042 002B     		cmp	r3, #0
+  75 0044 34D0     		beq	.L3
+ 286:../FreeRTOS/Source/queue.c **** 			{
+ 287:../FreeRTOS/Source/queue.c **** 				/* Initialise the queue members as described above where the
+ 288:../FreeRTOS/Source/queue.c **** 				queue type is defined. */
+ 289:../FreeRTOS/Source/queue.c **** 				pxNewQueue->pcTail = pxNewQueue->pcHead + ( uxQueueLength * uxItemSize );
+  76              		.loc 1 289 0
+  77 0046 BB69     		ldr	r3, [r7, #24]
+  78 0048 1A68     		ldr	r2, [r3]
+  79 004a FB68     		ldr	r3, [r7, #12]
+  80 004c B968     		ldr	r1, [r7, #8]
+  81 004e 01FB03F3 		mul	r3, r1, r3
+  82 0052 1A44     		add	r2, r2, r3
+  83 0054 BB69     		ldr	r3, [r7, #24]
+  84 0056 5A60     		str	r2, [r3, #4]
+ 290:../FreeRTOS/Source/queue.c **** 				pxNewQueue->uxMessagesWaiting = ( unsigned portBASE_TYPE ) 0U;
+  85              		.loc 1 290 0
+  86 0058 BB69     		ldr	r3, [r7, #24]
+  87 005a 0022     		movs	r2, #0
+  88 005c 9A63     		str	r2, [r3, #56]
+ 291:../FreeRTOS/Source/queue.c **** 				pxNewQueue->pcWriteTo = pxNewQueue->pcHead;
+  89              		.loc 1 291 0
+  90 005e BB69     		ldr	r3, [r7, #24]
+  91 0060 1A68     		ldr	r2, [r3]
+  92 0062 BB69     		ldr	r3, [r7, #24]
+  93 0064 9A60     		str	r2, [r3, #8]
+ 292:../FreeRTOS/Source/queue.c **** 				pxNewQueue->pcReadFrom = pxNewQueue->pcHead + ( ( uxQueueLength - ( unsigned portBASE_TYPE ) 1U
+  94              		.loc 1 292 0
+  95 0066 BB69     		ldr	r3, [r7, #24]
+  96 0068 1A68     		ldr	r2, [r3]
+  97 006a FB68     		ldr	r3, [r7, #12]
+  98 006c 013B     		subs	r3, r3, #1
+  99 006e B968     		ldr	r1, [r7, #8]
+ 100 0070 01FB03F3 		mul	r3, r1, r3
+ 101 0074 1A44     		add	r2, r2, r3
+ 102 0076 BB69     		ldr	r3, [r7, #24]
+ 103 0078 DA60     		str	r2, [r3, #12]
+ 293:../FreeRTOS/Source/queue.c **** 				pxNewQueue->uxLength = uxQueueLength;
+ 104              		.loc 1 293 0
+ 105 007a BB69     		ldr	r3, [r7, #24]
+ 106 007c FA68     		ldr	r2, [r7, #12]
+ 107 007e DA63     		str	r2, [r3, #60]
+ 294:../FreeRTOS/Source/queue.c **** 				pxNewQueue->uxItemSize = uxItemSize;
+ 108              		.loc 1 294 0
+ 109 0080 BB69     		ldr	r3, [r7, #24]
+ 110 0082 BA68     		ldr	r2, [r7, #8]
+ 111 0084 1A64     		str	r2, [r3, #64]
+ 295:../FreeRTOS/Source/queue.c **** 				pxNewQueue->xRxLock = queueUNLOCKED;
+ 112              		.loc 1 295 0
+ 113 0086 BB69     		ldr	r3, [r7, #24]
+ 114 0088 4FF0FF32 		mov	r2, #-1
+ 115 008c 5A64     		str	r2, [r3, #68]
+ 296:../FreeRTOS/Source/queue.c **** 				pxNewQueue->xTxLock = queueUNLOCKED;
+ 116              		.loc 1 296 0
+ 117 008e BB69     		ldr	r3, [r7, #24]
+ 118 0090 4FF0FF32 		mov	r2, #-1
+ 119 0094 9A64     		str	r2, [r3, #72]
+ 297:../FreeRTOS/Source/queue.c **** 				#if ( configUSE_TRACE_FACILITY == 1 )
+ 298:../FreeRTOS/Source/queue.c **** 				{
+ 299:../FreeRTOS/Source/queue.c **** 					pxNewQueue->ucQueueType = ucQueueType;
+ 300:../FreeRTOS/Source/queue.c **** 				}
+ 301:../FreeRTOS/Source/queue.c **** 				#endif /* configUSE_TRACE_FACILITY */
+ 302:../FreeRTOS/Source/queue.c **** 
+ 303:../FreeRTOS/Source/queue.c **** 				/* Likewise ensure the event queues start with the correct state. */
+ 304:../FreeRTOS/Source/queue.c **** 				vListInitialise( &( pxNewQueue->xTasksWaitingToSend ) );
+ 120              		.loc 1 304 0
+ 121 0096 BB69     		ldr	r3, [r7, #24]
+ 122 0098 1033     		adds	r3, r3, #16
+ 123 009a 1846     		mov	r0, r3
+ 124 009c FFF7FEFF 		bl	vListInitialise
+ 305:../FreeRTOS/Source/queue.c **** 				vListInitialise( &( pxNewQueue->xTasksWaitingToReceive ) );
+ 125              		.loc 1 305 0
+ 126 00a0 BB69     		ldr	r3, [r7, #24]
+ 127 00a2 2433     		adds	r3, r3, #36
+ 128 00a4 1846     		mov	r0, r3
+ 129 00a6 FFF7FEFF 		bl	vListInitialise
+ 306:../FreeRTOS/Source/queue.c **** 
+ 307:../FreeRTOS/Source/queue.c **** 				traceQUEUE_CREATE( pxNewQueue );
+ 308:../FreeRTOS/Source/queue.c **** 				xReturn = pxNewQueue;
+ 130              		.loc 1 308 0
+ 131 00aa BB69     		ldr	r3, [r7, #24]
+ 132 00ac FB61     		str	r3, [r7, #28]
+ 133 00ae 02E0     		b	.L2
+ 134              	.L3:
+ 309:../FreeRTOS/Source/queue.c **** 			}
+ 310:../FreeRTOS/Source/queue.c **** 			else
+ 311:../FreeRTOS/Source/queue.c **** 			{
+ 312:../FreeRTOS/Source/queue.c **** 				traceQUEUE_CREATE_FAILED( ucQueueType );
+ 313:../FreeRTOS/Source/queue.c **** 				vPortFree( pxNewQueue );
+ 135              		.loc 1 313 0
+ 136 00b0 B869     		ldr	r0, [r7, #24]
+ 137 00b2 FFF7FEFF 		bl	vPortFree
+ 138              	.L2:
+ 314:../FreeRTOS/Source/queue.c **** 			}
+ 315:../FreeRTOS/Source/queue.c **** 		}
+ 316:../FreeRTOS/Source/queue.c **** 	}
+ 317:../FreeRTOS/Source/queue.c **** 
+ 318:../FreeRTOS/Source/queue.c **** 	configASSERT( xReturn );
+ 139              		.loc 1 318 0
+ 140 00b6 FB69     		ldr	r3, [r7, #28]
+ 141 00b8 002B     		cmp	r3, #0
+ 142 00ba 04D1     		bne	.L4
+ 143              		.loc 1 318 0 is_stmt 0 discriminator 1
+ 144              	@ 318 "../FreeRTOS/Source/queue.c" 1
+ 145 00bc 4FF05000 			mov r0, #80								
+ 146 00c0 80F31188 		msr basepri, r0							
+ 147              	
+ 148              	@ 0 "" 2
+ 149              		.thumb
+ 150              	.L5:
+ 151 00c4 FEE7     		b	.L5
+ 152              	.L4:
+ 319:../FreeRTOS/Source/queue.c **** 
+ 320:../FreeRTOS/Source/queue.c **** 	return xReturn;
+ 153              		.loc 1 320 0 is_stmt 1
+ 154 00c6 FB69     		ldr	r3, [r7, #28]
+ 321:../FreeRTOS/Source/queue.c **** }
+ 155              		.loc 1 321 0
+ 156 00c8 1846     		mov	r0, r3
+ 157 00ca 2037     		adds	r7, r7, #32
+ 158 00cc BD46     		mov	sp, r7
+ 159              		@ sp needed
+ 160 00ce 80BD     		pop	{r7, pc}
+ 161              		.cfi_endproc
+ 162              	.LFE0:
+ 164              		.section	.text.xQueueCreateMutex,"ax",%progbits
+ 165              		.align	2
+ 166              		.global	xQueueCreateMutex
+ 167              		.thumb
+ 168              		.thumb_func
+ 170              	xQueueCreateMutex:
+ 171              	.LFB1:
+ 322:../FreeRTOS/Source/queue.c **** /*-----------------------------------------------------------*/
+ 323:../FreeRTOS/Source/queue.c **** 
+ 324:../FreeRTOS/Source/queue.c **** #if ( configUSE_MUTEXES == 1 )
+ 325:../FreeRTOS/Source/queue.c **** 
+ 326:../FreeRTOS/Source/queue.c **** 	xQueueHandle xQueueCreateMutex( unsigned char ucQueueType )
+ 327:../FreeRTOS/Source/queue.c **** 	{
+ 172              		.loc 1 327 0
+ 173              		.cfi_startproc
+ 174              		@ args = 0, pretend = 0, frame = 16
+ 175              		@ frame_needed = 1, uses_anonymous_args = 0
+ 176 0000 80B5     		push	{r7, lr}
+ 177              		.cfi_def_cfa_offset 8
+ 178              		.cfi_offset 7, -8
+ 179              		.cfi_offset 14, -4
+ 180 0002 84B0     		sub	sp, sp, #16
+ 181              		.cfi_def_cfa_offset 24
+ 182 0004 00AF     		add	r7, sp, #0
+ 183              		.cfi_def_cfa_register 7
+ 184 0006 0346     		mov	r3, r0
+ 185 0008 FB71     		strb	r3, [r7, #7]
+ 328:../FreeRTOS/Source/queue.c **** 	xQUEUE *pxNewQueue;
+ 329:../FreeRTOS/Source/queue.c **** 
+ 330:../FreeRTOS/Source/queue.c **** 		/* Prevent compiler warnings about unused parameters if
+ 331:../FreeRTOS/Source/queue.c **** 		configUSE_TRACE_FACILITY does not equal 1. */
+ 332:../FreeRTOS/Source/queue.c **** 		( void ) ucQueueType;
+ 333:../FreeRTOS/Source/queue.c **** 	
+ 334:../FreeRTOS/Source/queue.c **** 		/* Allocate the new queue structure. */
+ 335:../FreeRTOS/Source/queue.c **** 		pxNewQueue = ( xQUEUE * ) pvPortMalloc( sizeof( xQUEUE ) );
+ 186              		.loc 1 335 0
+ 187 000a 4C20     		movs	r0, #76
+ 188 000c FFF7FEFF 		bl	pvPortMalloc
+ 189 0010 F860     		str	r0, [r7, #12]
+ 336:../FreeRTOS/Source/queue.c **** 		if( pxNewQueue != NULL )
+ 190              		.loc 1 336 0
+ 191 0012 FB68     		ldr	r3, [r7, #12]
+ 192 0014 002B     		cmp	r3, #0
+ 193 0016 2CD0     		beq	.L8
+ 337:../FreeRTOS/Source/queue.c **** 		{
+ 338:../FreeRTOS/Source/queue.c **** 			/* Information required for priority inheritance. */
+ 339:../FreeRTOS/Source/queue.c **** 			pxNewQueue->pxMutexHolder = NULL;
+ 194              		.loc 1 339 0
+ 195 0018 FB68     		ldr	r3, [r7, #12]
+ 196 001a 0022     		movs	r2, #0
+ 197 001c 5A60     		str	r2, [r3, #4]
+ 340:../FreeRTOS/Source/queue.c **** 			pxNewQueue->uxQueueType = queueQUEUE_IS_MUTEX;
+ 198              		.loc 1 340 0
+ 199 001e FB68     		ldr	r3, [r7, #12]
+ 200 0020 0022     		movs	r2, #0
+ 201 0022 1A60     		str	r2, [r3]
+ 341:../FreeRTOS/Source/queue.c **** 
+ 342:../FreeRTOS/Source/queue.c **** 			/* Queues used as a mutex no data is actually copied into or out
+ 343:../FreeRTOS/Source/queue.c **** 			of the queue. */
+ 344:../FreeRTOS/Source/queue.c **** 			pxNewQueue->pcWriteTo = NULL;
+ 202              		.loc 1 344 0
+ 203 0024 FB68     		ldr	r3, [r7, #12]
+ 204 0026 0022     		movs	r2, #0
+ 205 0028 9A60     		str	r2, [r3, #8]
+ 345:../FreeRTOS/Source/queue.c **** 			pxNewQueue->pcReadFrom = NULL;
+ 206              		.loc 1 345 0
+ 207 002a FB68     		ldr	r3, [r7, #12]
+ 208 002c 0022     		movs	r2, #0
+ 209 002e DA60     		str	r2, [r3, #12]
+ 346:../FreeRTOS/Source/queue.c **** 
+ 347:../FreeRTOS/Source/queue.c **** 			/* Each mutex has a length of 1 (like a binary semaphore) and
+ 348:../FreeRTOS/Source/queue.c **** 			an item size of 0 as nothing is actually copied into or out
+ 349:../FreeRTOS/Source/queue.c **** 			of the mutex. */
+ 350:../FreeRTOS/Source/queue.c **** 			pxNewQueue->uxMessagesWaiting = ( unsigned portBASE_TYPE ) 0U;
+ 210              		.loc 1 350 0
+ 211 0030 FB68     		ldr	r3, [r7, #12]
+ 212 0032 0022     		movs	r2, #0
+ 213 0034 9A63     		str	r2, [r3, #56]
+ 351:../FreeRTOS/Source/queue.c **** 			pxNewQueue->uxLength = ( unsigned portBASE_TYPE ) 1U;
+ 214              		.loc 1 351 0
+ 215 0036 FB68     		ldr	r3, [r7, #12]
+ 216 0038 0122     		movs	r2, #1
+ 217 003a DA63     		str	r2, [r3, #60]
+ 352:../FreeRTOS/Source/queue.c **** 			pxNewQueue->uxItemSize = ( unsigned portBASE_TYPE ) 0U;
+ 218              		.loc 1 352 0
+ 219 003c FB68     		ldr	r3, [r7, #12]
+ 220 003e 0022     		movs	r2, #0
+ 221 0040 1A64     		str	r2, [r3, #64]
+ 353:../FreeRTOS/Source/queue.c **** 			pxNewQueue->xRxLock = queueUNLOCKED;
+ 222              		.loc 1 353 0
+ 223 0042 FB68     		ldr	r3, [r7, #12]
+ 224 0044 4FF0FF32 		mov	r2, #-1
+ 225 0048 5A64     		str	r2, [r3, #68]
+ 354:../FreeRTOS/Source/queue.c **** 			pxNewQueue->xTxLock = queueUNLOCKED;
+ 226              		.loc 1 354 0
+ 227 004a FB68     		ldr	r3, [r7, #12]
+ 228 004c 4FF0FF32 		mov	r2, #-1
+ 229 0050 9A64     		str	r2, [r3, #72]
+ 355:../FreeRTOS/Source/queue.c **** 			
+ 356:../FreeRTOS/Source/queue.c **** 			#if ( configUSE_TRACE_FACILITY == 1 )
+ 357:../FreeRTOS/Source/queue.c **** 			{
+ 358:../FreeRTOS/Source/queue.c **** 				pxNewQueue->ucQueueType = ucQueueType;
+ 359:../FreeRTOS/Source/queue.c **** 			}
+ 360:../FreeRTOS/Source/queue.c **** 			#endif
+ 361:../FreeRTOS/Source/queue.c **** 
+ 362:../FreeRTOS/Source/queue.c **** 			/* Ensure the event queues start with the correct state. */
+ 363:../FreeRTOS/Source/queue.c **** 			vListInitialise( &( pxNewQueue->xTasksWaitingToSend ) );
+ 230              		.loc 1 363 0
+ 231 0052 FB68     		ldr	r3, [r7, #12]
+ 232 0054 1033     		adds	r3, r3, #16
+ 233 0056 1846     		mov	r0, r3
+ 234 0058 FFF7FEFF 		bl	vListInitialise
+ 364:../FreeRTOS/Source/queue.c **** 			vListInitialise( &( pxNewQueue->xTasksWaitingToReceive ) );
+ 235              		.loc 1 364 0
+ 236 005c FB68     		ldr	r3, [r7, #12]
+ 237 005e 2433     		adds	r3, r3, #36
+ 238 0060 1846     		mov	r0, r3
+ 239 0062 FFF7FEFF 		bl	vListInitialise
+ 365:../FreeRTOS/Source/queue.c **** 
+ 366:../FreeRTOS/Source/queue.c **** 			traceCREATE_MUTEX( pxNewQueue );
+ 367:../FreeRTOS/Source/queue.c **** 
+ 368:../FreeRTOS/Source/queue.c **** 			/* Start with the semaphore in the expected state. */
+ 369:../FreeRTOS/Source/queue.c **** 			xQueueGenericSend( pxNewQueue, NULL, ( portTickType ) 0U, queueSEND_TO_BACK );
+ 240              		.loc 1 369 0
+ 241 0066 F868     		ldr	r0, [r7, #12]
+ 242 0068 0021     		movs	r1, #0
+ 243 006a 0022     		movs	r2, #0
+ 244 006c 0023     		movs	r3, #0
+ 245 006e FFF7FEFF 		bl	xQueueGenericSend
+ 246              	.L8:
+ 370:../FreeRTOS/Source/queue.c **** 		}
+ 371:../FreeRTOS/Source/queue.c **** 		else
+ 372:../FreeRTOS/Source/queue.c **** 		{
+ 373:../FreeRTOS/Source/queue.c **** 			traceCREATE_MUTEX_FAILED();
+ 374:../FreeRTOS/Source/queue.c **** 		}
+ 375:../FreeRTOS/Source/queue.c **** 
+ 376:../FreeRTOS/Source/queue.c **** 		configASSERT( pxNewQueue );
+ 247              		.loc 1 376 0
+ 248 0072 FB68     		ldr	r3, [r7, #12]
+ 249 0074 002B     		cmp	r3, #0
+ 250 0076 04D1     		bne	.L9
+ 251              		.loc 1 376 0 is_stmt 0 discriminator 1
+ 252              	@ 376 "../FreeRTOS/Source/queue.c" 1
+ 253 0078 4FF05000 			mov r0, #80								
+ 254 007c 80F31188 		msr basepri, r0							
+ 255              	
+ 256              	@ 0 "" 2
+ 257              		.thumb
+ 258              	.L10:
+ 259 0080 FEE7     		b	.L10
+ 260              	.L9:
+ 377:../FreeRTOS/Source/queue.c **** 		return pxNewQueue;
+ 261              		.loc 1 377 0 is_stmt 1
+ 262 0082 FB68     		ldr	r3, [r7, #12]
+ 378:../FreeRTOS/Source/queue.c **** 	}
+ 263              		.loc 1 378 0
+ 264 0084 1846     		mov	r0, r3
+ 265 0086 1037     		adds	r7, r7, #16
+ 266 0088 BD46     		mov	sp, r7
+ 267              		@ sp needed
+ 268 008a 80BD     		pop	{r7, pc}
+ 269              		.cfi_endproc
+ 270              	.LFE1:
+ 272              		.section	.text.xQueueGenericSend,"ax",%progbits
+ 273              		.align	2
+ 274              		.global	xQueueGenericSend
+ 275              		.thumb
+ 276              		.thumb_func
+ 278              	xQueueGenericSend:
+ 279              	.LFB2:
+ 379:../FreeRTOS/Source/queue.c **** 
+ 380:../FreeRTOS/Source/queue.c **** #endif /* configUSE_MUTEXES */
+ 381:../FreeRTOS/Source/queue.c **** /*-----------------------------------------------------------*/
+ 382:../FreeRTOS/Source/queue.c **** 
+ 383:../FreeRTOS/Source/queue.c **** #if configUSE_RECURSIVE_MUTEXES == 1
+ 384:../FreeRTOS/Source/queue.c **** 
+ 385:../FreeRTOS/Source/queue.c **** 	portBASE_TYPE xQueueGiveMutexRecursive( xQueueHandle pxMutex )
+ 386:../FreeRTOS/Source/queue.c **** 	{
+ 387:../FreeRTOS/Source/queue.c **** 	portBASE_TYPE xReturn;
+ 388:../FreeRTOS/Source/queue.c **** 
+ 389:../FreeRTOS/Source/queue.c **** 		configASSERT( pxMutex );
+ 390:../FreeRTOS/Source/queue.c **** 
+ 391:../FreeRTOS/Source/queue.c **** 		/* If this is the task that holds the mutex then pxMutexHolder will not
+ 392:../FreeRTOS/Source/queue.c **** 		change outside of this task.  If this task does not hold the mutex then
+ 393:../FreeRTOS/Source/queue.c **** 		pxMutexHolder can never coincidentally equal the tasks handle, and as
+ 394:../FreeRTOS/Source/queue.c **** 		this is the only condition we are interested in it does not matter if
+ 395:../FreeRTOS/Source/queue.c **** 		pxMutexHolder is accessed simultaneously by another task.  Therefore no
+ 396:../FreeRTOS/Source/queue.c **** 		mutual exclusion is required to test the pxMutexHolder variable. */
+ 397:../FreeRTOS/Source/queue.c **** 		if( pxMutex->pxMutexHolder == xTaskGetCurrentTaskHandle() )
+ 398:../FreeRTOS/Source/queue.c **** 		{
+ 399:../FreeRTOS/Source/queue.c **** 			traceGIVE_MUTEX_RECURSIVE( pxMutex );
+ 400:../FreeRTOS/Source/queue.c **** 
+ 401:../FreeRTOS/Source/queue.c **** 			/* uxRecursiveCallCount cannot be zero if pxMutexHolder is equal to
+ 402:../FreeRTOS/Source/queue.c **** 			the task handle, therefore no underflow check is required.  Also,
+ 403:../FreeRTOS/Source/queue.c **** 			uxRecursiveCallCount is only modified by the mutex holder, and as
+ 404:../FreeRTOS/Source/queue.c **** 			there can only be one, no mutual exclusion is required to modify the
+ 405:../FreeRTOS/Source/queue.c **** 			uxRecursiveCallCount member. */
+ 406:../FreeRTOS/Source/queue.c **** 			( pxMutex->uxRecursiveCallCount )--;
+ 407:../FreeRTOS/Source/queue.c **** 
+ 408:../FreeRTOS/Source/queue.c **** 			/* Have we unwound the call count? */
+ 409:../FreeRTOS/Source/queue.c **** 			if( pxMutex->uxRecursiveCallCount == 0 )
+ 410:../FreeRTOS/Source/queue.c **** 			{
+ 411:../FreeRTOS/Source/queue.c **** 				/* Return the mutex.  This will automatically unblock any other
+ 412:../FreeRTOS/Source/queue.c **** 				task that might be waiting to access the mutex. */
+ 413:../FreeRTOS/Source/queue.c **** 				xQueueGenericSend( pxMutex, NULL, queueMUTEX_GIVE_BLOCK_TIME, queueSEND_TO_BACK );
+ 414:../FreeRTOS/Source/queue.c **** 			}
+ 415:../FreeRTOS/Source/queue.c **** 
+ 416:../FreeRTOS/Source/queue.c **** 			xReturn = pdPASS;
+ 417:../FreeRTOS/Source/queue.c **** 		}
+ 418:../FreeRTOS/Source/queue.c **** 		else
+ 419:../FreeRTOS/Source/queue.c **** 		{
+ 420:../FreeRTOS/Source/queue.c **** 			/* We cannot give the mutex because we are not the holder. */
+ 421:../FreeRTOS/Source/queue.c **** 			xReturn = pdFAIL;
+ 422:../FreeRTOS/Source/queue.c **** 
+ 423:../FreeRTOS/Source/queue.c **** 			traceGIVE_MUTEX_RECURSIVE_FAILED( pxMutex );
+ 424:../FreeRTOS/Source/queue.c **** 		}
+ 425:../FreeRTOS/Source/queue.c **** 
+ 426:../FreeRTOS/Source/queue.c **** 		return xReturn;
+ 427:../FreeRTOS/Source/queue.c **** 	}
+ 428:../FreeRTOS/Source/queue.c **** 
+ 429:../FreeRTOS/Source/queue.c **** #endif /* configUSE_RECURSIVE_MUTEXES */
+ 430:../FreeRTOS/Source/queue.c **** /*-----------------------------------------------------------*/
+ 431:../FreeRTOS/Source/queue.c **** 
+ 432:../FreeRTOS/Source/queue.c **** #if configUSE_RECURSIVE_MUTEXES == 1
+ 433:../FreeRTOS/Source/queue.c **** 
+ 434:../FreeRTOS/Source/queue.c **** 	portBASE_TYPE xQueueTakeMutexRecursive( xQueueHandle pxMutex, portTickType xBlockTime )
+ 435:../FreeRTOS/Source/queue.c **** 	{
+ 436:../FreeRTOS/Source/queue.c **** 	portBASE_TYPE xReturn;
+ 437:../FreeRTOS/Source/queue.c **** 
+ 438:../FreeRTOS/Source/queue.c **** 		configASSERT( pxMutex );
+ 439:../FreeRTOS/Source/queue.c **** 
+ 440:../FreeRTOS/Source/queue.c **** 		/* Comments regarding mutual exclusion as per those within
+ 441:../FreeRTOS/Source/queue.c **** 		xQueueGiveMutexRecursive(). */
+ 442:../FreeRTOS/Source/queue.c **** 
+ 443:../FreeRTOS/Source/queue.c **** 		traceTAKE_MUTEX_RECURSIVE( pxMutex );
+ 444:../FreeRTOS/Source/queue.c **** 
+ 445:../FreeRTOS/Source/queue.c **** 		if( pxMutex->pxMutexHolder == xTaskGetCurrentTaskHandle() )
+ 446:../FreeRTOS/Source/queue.c **** 		{
+ 447:../FreeRTOS/Source/queue.c **** 			( pxMutex->uxRecursiveCallCount )++;
+ 448:../FreeRTOS/Source/queue.c **** 			xReturn = pdPASS;
+ 449:../FreeRTOS/Source/queue.c **** 		}
+ 450:../FreeRTOS/Source/queue.c **** 		else
+ 451:../FreeRTOS/Source/queue.c **** 		{
+ 452:../FreeRTOS/Source/queue.c **** 			xReturn = xQueueGenericReceive( pxMutex, NULL, xBlockTime, pdFALSE );
+ 453:../FreeRTOS/Source/queue.c **** 
+ 454:../FreeRTOS/Source/queue.c **** 			/* pdPASS will only be returned if we successfully obtained the mutex,
+ 455:../FreeRTOS/Source/queue.c **** 			we may have blocked to reach here. */
+ 456:../FreeRTOS/Source/queue.c **** 			if( xReturn == pdPASS )
+ 457:../FreeRTOS/Source/queue.c **** 			{
+ 458:../FreeRTOS/Source/queue.c **** 				( pxMutex->uxRecursiveCallCount )++;
+ 459:../FreeRTOS/Source/queue.c **** 			}
+ 460:../FreeRTOS/Source/queue.c **** 			else
+ 461:../FreeRTOS/Source/queue.c **** 			{
+ 462:../FreeRTOS/Source/queue.c **** 				traceTAKE_MUTEX_RECURSIVE_FAILED( pxMutex );
+ 463:../FreeRTOS/Source/queue.c **** 			}
+ 464:../FreeRTOS/Source/queue.c **** 		}
+ 465:../FreeRTOS/Source/queue.c **** 
+ 466:../FreeRTOS/Source/queue.c **** 		return xReturn;
+ 467:../FreeRTOS/Source/queue.c **** 	}
+ 468:../FreeRTOS/Source/queue.c **** 
+ 469:../FreeRTOS/Source/queue.c **** #endif /* configUSE_RECURSIVE_MUTEXES */
+ 470:../FreeRTOS/Source/queue.c **** /*-----------------------------------------------------------*/
+ 471:../FreeRTOS/Source/queue.c **** 
+ 472:../FreeRTOS/Source/queue.c **** #if configUSE_COUNTING_SEMAPHORES == 1
+ 473:../FreeRTOS/Source/queue.c **** 
+ 474:../FreeRTOS/Source/queue.c **** 	xQueueHandle xQueueCreateCountingSemaphore( unsigned portBASE_TYPE uxCountValue, unsigned portBASE
+ 475:../FreeRTOS/Source/queue.c **** 	{
+ 476:../FreeRTOS/Source/queue.c **** 	xQueueHandle pxHandle;
+ 477:../FreeRTOS/Source/queue.c **** 
+ 478:../FreeRTOS/Source/queue.c **** 		pxHandle = xQueueGenericCreate( ( unsigned portBASE_TYPE ) uxCountValue, queueSEMAPHORE_QUEUE_ITE
+ 479:../FreeRTOS/Source/queue.c **** 
+ 480:../FreeRTOS/Source/queue.c **** 		if( pxHandle != NULL )
+ 481:../FreeRTOS/Source/queue.c **** 		{
+ 482:../FreeRTOS/Source/queue.c **** 			pxHandle->uxMessagesWaiting = uxInitialCount;
+ 483:../FreeRTOS/Source/queue.c **** 
+ 484:../FreeRTOS/Source/queue.c **** 			traceCREATE_COUNTING_SEMAPHORE();
+ 485:../FreeRTOS/Source/queue.c **** 		}
+ 486:../FreeRTOS/Source/queue.c **** 		else
+ 487:../FreeRTOS/Source/queue.c **** 		{
+ 488:../FreeRTOS/Source/queue.c **** 			traceCREATE_COUNTING_SEMAPHORE_FAILED();
+ 489:../FreeRTOS/Source/queue.c **** 		}
+ 490:../FreeRTOS/Source/queue.c **** 
+ 491:../FreeRTOS/Source/queue.c **** 		configASSERT( pxHandle );
+ 492:../FreeRTOS/Source/queue.c **** 		return pxHandle;
+ 493:../FreeRTOS/Source/queue.c **** 	}
+ 494:../FreeRTOS/Source/queue.c **** 
+ 495:../FreeRTOS/Source/queue.c **** #endif /* configUSE_COUNTING_SEMAPHORES */
+ 496:../FreeRTOS/Source/queue.c **** /*-----------------------------------------------------------*/
+ 497:../FreeRTOS/Source/queue.c **** 
+ 498:../FreeRTOS/Source/queue.c **** signed portBASE_TYPE xQueueGenericSend( xQueueHandle pxQueue, const void * const pvItemToQueue, por
+ 499:../FreeRTOS/Source/queue.c **** {
+ 280              		.loc 1 499 0
+ 281              		.cfi_startproc
+ 282              		@ args = 0, pretend = 0, frame = 32
+ 283              		@ frame_needed = 1, uses_anonymous_args = 0
+ 284 0000 80B5     		push	{r7, lr}
+ 285              		.cfi_def_cfa_offset 8
+ 286              		.cfi_offset 7, -8
+ 287              		.cfi_offset 14, -4
+ 288 0002 88B0     		sub	sp, sp, #32
+ 289              		.cfi_def_cfa_offset 40
+ 290 0004 00AF     		add	r7, sp, #0
+ 291              		.cfi_def_cfa_register 7
+ 292 0006 F860     		str	r0, [r7, #12]
+ 293 0008 B960     		str	r1, [r7, #8]
+ 294 000a 7A60     		str	r2, [r7, #4]
+ 295 000c 3B60     		str	r3, [r7]
+ 500:../FreeRTOS/Source/queue.c **** signed portBASE_TYPE xEntryTimeSet = pdFALSE;
+ 296              		.loc 1 500 0
+ 297 000e 0023     		movs	r3, #0
+ 298 0010 FB61     		str	r3, [r7, #28]
+ 501:../FreeRTOS/Source/queue.c **** xTimeOutType xTimeOut;
+ 502:../FreeRTOS/Source/queue.c **** 
+ 503:../FreeRTOS/Source/queue.c **** 	configASSERT( pxQueue );
+ 299              		.loc 1 503 0
+ 300 0012 FB68     		ldr	r3, [r7, #12]
+ 301 0014 002B     		cmp	r3, #0
+ 302 0016 04D1     		bne	.L13
+ 303              		.loc 1 503 0 is_stmt 0 discriminator 1
+ 304              	@ 503 "../FreeRTOS/Source/queue.c" 1
+ 305 0018 4FF05000 			mov r0, #80								
+ 306 001c 80F31188 		msr basepri, r0							
+ 307              	
+ 308              	@ 0 "" 2
+ 309              		.thumb
+ 310              	.L14:
+ 311 0020 FEE7     		b	.L14
+ 312              	.L13:
+ 504:../FreeRTOS/Source/queue.c **** 	configASSERT( !( ( pvItemToQueue == NULL ) && ( pxQueue->uxItemSize != ( unsigned portBASE_TYPE ) 
+ 313              		.loc 1 504 0 is_stmt 1
+ 314 0022 BB68     		ldr	r3, [r7, #8]
+ 315 0024 002B     		cmp	r3, #0
+ 316 0026 03D1     		bne	.L15
+ 317              		.loc 1 504 0 is_stmt 0 discriminator 2
+ 318 0028 FB68     		ldr	r3, [r7, #12]
+ 319 002a 1B6C     		ldr	r3, [r3, #64]
+ 320 002c 002B     		cmp	r3, #0
+ 321 002e 01D1     		bne	.L16
+ 322              	.L15:
+ 323              		.loc 1 504 0 discriminator 1
+ 324 0030 0123     		movs	r3, #1
+ 325 0032 00E0     		b	.L17
+ 326              	.L16:
+ 327              		.loc 1 504 0 discriminator 3
+ 328 0034 0023     		movs	r3, #0
+ 329              	.L17:
+ 330              		.loc 1 504 0 discriminator 4
+ 331 0036 002B     		cmp	r3, #0
+ 332 0038 04D1     		bne	.L18
+ 333              		.loc 1 504 0 discriminator 1
+ 334              	@ 504 "../FreeRTOS/Source/queue.c" 1
+ 335 003a 4FF05000 			mov r0, #80								
+ 336 003e 80F31188 		msr basepri, r0							
+ 337              	
+ 338              	@ 0 "" 2
+ 339              		.thumb
+ 340              	.L19:
+ 341 0042 FEE7     		b	.L19
+ 342              	.L18:
+ 505:../FreeRTOS/Source/queue.c **** 
+ 506:../FreeRTOS/Source/queue.c **** 	/* This function relaxes the coding standard somewhat to allow return
+ 507:../FreeRTOS/Source/queue.c **** 	statements within the function itself.  This is done in the interest
+ 508:../FreeRTOS/Source/queue.c **** 	of execution time efficiency. */
+ 509:../FreeRTOS/Source/queue.c **** 	for( ;; )
+ 510:../FreeRTOS/Source/queue.c **** 	{
+ 511:../FreeRTOS/Source/queue.c **** 		taskENTER_CRITICAL();
+ 343              		.loc 1 511 0 is_stmt 1
+ 344 0044 FFF7FEFF 		bl	vPortEnterCritical
+ 512:../FreeRTOS/Source/queue.c **** 		{
+ 513:../FreeRTOS/Source/queue.c **** 			/* Is there room on the queue now?  To be running we must be
+ 514:../FreeRTOS/Source/queue.c **** 			the highest priority task wanting to access the queue. */
+ 515:../FreeRTOS/Source/queue.c **** 			if( pxQueue->uxMessagesWaiting < pxQueue->uxLength )
+ 345              		.loc 1 515 0
+ 346 0048 FB68     		ldr	r3, [r7, #12]
+ 347 004a 9A6B     		ldr	r2, [r3, #56]
+ 348 004c FB68     		ldr	r3, [r7, #12]
+ 349 004e DB6B     		ldr	r3, [r3, #60]
+ 350 0050 9A42     		cmp	r2, r3
+ 351 0052 16D2     		bcs	.L20
+ 516:../FreeRTOS/Source/queue.c **** 			{
+ 517:../FreeRTOS/Source/queue.c **** 				traceQUEUE_SEND( pxQueue );
+ 518:../FreeRTOS/Source/queue.c **** 				prvCopyDataToQueue( pxQueue, pvItemToQueue, xCopyPosition );
+ 352              		.loc 1 518 0
+ 353 0054 F868     		ldr	r0, [r7, #12]
+ 354 0056 B968     		ldr	r1, [r7, #8]
+ 355 0058 3A68     		ldr	r2, [r7]
+ 356 005a FFF7FEFF 		bl	prvCopyDataToQueue
+ 519:../FreeRTOS/Source/queue.c **** 
+ 520:../FreeRTOS/Source/queue.c **** 				/* If there was a task waiting for data to arrive on the
+ 521:../FreeRTOS/Source/queue.c **** 				queue then unblock it now. */
+ 522:../FreeRTOS/Source/queue.c **** 				if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) == pdFALSE )
+ 357              		.loc 1 522 0
+ 358 005e FB68     		ldr	r3, [r7, #12]
+ 359 0060 5B6A     		ldr	r3, [r3, #36]
+ 360 0062 002B     		cmp	r3, #0
+ 361 0064 09D0     		beq	.L21
+ 523:../FreeRTOS/Source/queue.c **** 				{
+ 524:../FreeRTOS/Source/queue.c **** 					if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToReceive ) ) == pdTRUE )
+ 362              		.loc 1 524 0
+ 363 0066 FB68     		ldr	r3, [r7, #12]
+ 364 0068 2433     		adds	r3, r3, #36
+ 365 006a 1846     		mov	r0, r3
+ 366 006c FFF7FEFF 		bl	xTaskRemoveFromEventList
+ 367 0070 0346     		mov	r3, r0
+ 368 0072 012B     		cmp	r3, #1
+ 369 0074 01D1     		bne	.L21
+ 525:../FreeRTOS/Source/queue.c **** 					{
+ 526:../FreeRTOS/Source/queue.c **** 						/* The unblocked task has a priority higher than
+ 527:../FreeRTOS/Source/queue.c **** 						our own so yield immediately.  Yes it is ok to do
+ 528:../FreeRTOS/Source/queue.c **** 						this from within the critical section - the kernel
+ 529:../FreeRTOS/Source/queue.c **** 						takes care of that. */
+ 530:../FreeRTOS/Source/queue.c **** 						portYIELD_WITHIN_API();
+ 370              		.loc 1 530 0
+ 371 0076 FFF7FEFF 		bl	vPortYieldFromISR
+ 372              	.L21:
+ 531:../FreeRTOS/Source/queue.c **** 					}
+ 532:../FreeRTOS/Source/queue.c **** 				}
+ 533:../FreeRTOS/Source/queue.c **** 
+ 534:../FreeRTOS/Source/queue.c **** 				taskEXIT_CRITICAL();
+ 373              		.loc 1 534 0
+ 374 007a FFF7FEFF 		bl	vPortExitCritical
+ 535:../FreeRTOS/Source/queue.c **** 
+ 536:../FreeRTOS/Source/queue.c **** 				/* Return to the original privilege level before exiting the
+ 537:../FreeRTOS/Source/queue.c **** 				function. */
+ 538:../FreeRTOS/Source/queue.c **** 				return pdPASS;
+ 375              		.loc 1 538 0
+ 376 007e 0123     		movs	r3, #1
+ 377 0080 59E0     		b	.L32
+ 378              	.L20:
+ 539:../FreeRTOS/Source/queue.c **** 			}
+ 540:../FreeRTOS/Source/queue.c **** 			else
+ 541:../FreeRTOS/Source/queue.c **** 			{
+ 542:../FreeRTOS/Source/queue.c **** 				if( xTicksToWait == ( portTickType ) 0 )
+ 379              		.loc 1 542 0
+ 380 0082 7B68     		ldr	r3, [r7, #4]
+ 381 0084 002B     		cmp	r3, #0
+ 382 0086 03D1     		bne	.L23
+ 543:../FreeRTOS/Source/queue.c **** 				{
+ 544:../FreeRTOS/Source/queue.c **** 					/* The queue was full and no block time is specified (or
+ 545:../FreeRTOS/Source/queue.c **** 					the block time has expired) so leave now. */
+ 546:../FreeRTOS/Source/queue.c **** 					taskEXIT_CRITICAL();
+ 383              		.loc 1 546 0
+ 384 0088 FFF7FEFF 		bl	vPortExitCritical
+ 547:../FreeRTOS/Source/queue.c **** 
+ 548:../FreeRTOS/Source/queue.c **** 					/* Return to the original privilege level before exiting
+ 549:../FreeRTOS/Source/queue.c **** 					the function. */
+ 550:../FreeRTOS/Source/queue.c **** 					traceQUEUE_SEND_FAILED( pxQueue );
+ 551:../FreeRTOS/Source/queue.c **** 					return errQUEUE_FULL;
+ 385              		.loc 1 551 0
+ 386 008c 0023     		movs	r3, #0
+ 387 008e 52E0     		b	.L32
+ 388              	.L23:
+ 552:../FreeRTOS/Source/queue.c **** 				}
+ 553:../FreeRTOS/Source/queue.c **** 				else if( xEntryTimeSet == pdFALSE )
+ 389              		.loc 1 553 0
+ 390 0090 FB69     		ldr	r3, [r7, #28]
+ 391 0092 002B     		cmp	r3, #0
+ 392 0094 06D1     		bne	.L24
+ 554:../FreeRTOS/Source/queue.c **** 				{
+ 555:../FreeRTOS/Source/queue.c **** 					/* The queue was full and a block time was specified so
+ 556:../FreeRTOS/Source/queue.c **** 					configure the timeout structure. */
+ 557:../FreeRTOS/Source/queue.c **** 					vTaskSetTimeOutState( &xTimeOut );
+ 393              		.loc 1 557 0
+ 394 0096 07F11403 		add	r3, r7, #20
+ 395 009a 1846     		mov	r0, r3
+ 396 009c FFF7FEFF 		bl	vTaskSetTimeOutState
+ 558:../FreeRTOS/Source/queue.c **** 					xEntryTimeSet = pdTRUE;
+ 397              		.loc 1 558 0
+ 398 00a0 0123     		movs	r3, #1
+ 399 00a2 FB61     		str	r3, [r7, #28]
+ 400              	.L24:
+ 559:../FreeRTOS/Source/queue.c **** 				}
+ 560:../FreeRTOS/Source/queue.c **** 			}
+ 561:../FreeRTOS/Source/queue.c **** 		}
+ 562:../FreeRTOS/Source/queue.c **** 		taskEXIT_CRITICAL();
+ 401              		.loc 1 562 0
+ 402 00a4 FFF7FEFF 		bl	vPortExitCritical
+ 563:../FreeRTOS/Source/queue.c **** 
+ 564:../FreeRTOS/Source/queue.c **** 		/* Interrupts and other tasks can send to and receive from the queue
+ 565:../FreeRTOS/Source/queue.c **** 		now the critical section has been exited. */
+ 566:../FreeRTOS/Source/queue.c **** 
+ 567:../FreeRTOS/Source/queue.c **** 		vTaskSuspendAll();
+ 403              		.loc 1 567 0
+ 404 00a8 FFF7FEFF 		bl	vTaskSuspendAll
+ 568:../FreeRTOS/Source/queue.c **** 		prvLockQueue( pxQueue );
+ 405              		.loc 1 568 0
+ 406 00ac FFF7FEFF 		bl	vPortEnterCritical
+ 407 00b0 FB68     		ldr	r3, [r7, #12]
+ 408 00b2 5B6C     		ldr	r3, [r3, #68]
+ 409 00b4 B3F1FF3F 		cmp	r3, #-1
+ 410 00b8 02D1     		bne	.L25
+ 411              		.loc 1 568 0 is_stmt 0 discriminator 1
+ 412 00ba FB68     		ldr	r3, [r7, #12]
+ 413 00bc 0022     		movs	r2, #0
+ 414 00be 5A64     		str	r2, [r3, #68]
+ 415              	.L25:
+ 416              		.loc 1 568 0 discriminator 2
+ 417 00c0 FB68     		ldr	r3, [r7, #12]
+ 418 00c2 9B6C     		ldr	r3, [r3, #72]
+ 419 00c4 B3F1FF3F 		cmp	r3, #-1
+ 420 00c8 02D1     		bne	.L26
+ 421              		.loc 1 568 0 discriminator 1
+ 422 00ca FB68     		ldr	r3, [r7, #12]
+ 423 00cc 0022     		movs	r2, #0
+ 424 00ce 9A64     		str	r2, [r3, #72]
+ 425              	.L26:
+ 426              		.loc 1 568 0 discriminator 2
+ 427 00d0 FFF7FEFF 		bl	vPortExitCritical
+ 569:../FreeRTOS/Source/queue.c **** 
+ 570:../FreeRTOS/Source/queue.c **** 		/* Update the timeout state to see if it has expired yet. */
+ 571:../FreeRTOS/Source/queue.c **** 		if( xTaskCheckForTimeOut( &xTimeOut, &xTicksToWait ) == pdFALSE )
+ 428              		.loc 1 571 0 is_stmt 1 discriminator 2
+ 429 00d4 07F11402 		add	r2, r7, #20
+ 430 00d8 3B1D     		adds	r3, r7, #4
+ 431 00da 1046     		mov	r0, r2
+ 432 00dc 1946     		mov	r1, r3
+ 433 00de FFF7FEFF 		bl	xTaskCheckForTimeOut
+ 434 00e2 0346     		mov	r3, r0
+ 435 00e4 002B     		cmp	r3, #0
+ 436 00e6 1ED1     		bne	.L27
+ 572:../FreeRTOS/Source/queue.c **** 		{
+ 573:../FreeRTOS/Source/queue.c **** 			if( prvIsQueueFull( pxQueue ) != pdFALSE )
+ 437              		.loc 1 573 0
+ 438 00e8 F868     		ldr	r0, [r7, #12]
+ 439 00ea FFF7FEFF 		bl	prvIsQueueFull
+ 440 00ee 0346     		mov	r3, r0
+ 441 00f0 002B     		cmp	r3, #0
+ 442 00f2 12D0     		beq	.L28
+ 574:../FreeRTOS/Source/queue.c **** 			{
+ 575:../FreeRTOS/Source/queue.c **** 				traceBLOCKING_ON_QUEUE_SEND( pxQueue );
+ 576:../FreeRTOS/Source/queue.c **** 				vTaskPlaceOnEventList( &( pxQueue->xTasksWaitingToSend ), xTicksToWait );
+ 443              		.loc 1 576 0
+ 444 00f4 FB68     		ldr	r3, [r7, #12]
+ 445 00f6 03F11002 		add	r2, r3, #16
+ 446 00fa 7B68     		ldr	r3, [r7, #4]
+ 447 00fc 1046     		mov	r0, r2
+ 448 00fe 1946     		mov	r1, r3
+ 449 0100 FFF7FEFF 		bl	vTaskPlaceOnEventList
+ 577:../FreeRTOS/Source/queue.c **** 
+ 578:../FreeRTOS/Source/queue.c **** 				/* Unlocking the queue means queue events can effect the
+ 579:../FreeRTOS/Source/queue.c **** 				event list.  It is possible	that interrupts occurring now
+ 580:../FreeRTOS/Source/queue.c **** 				remove this task from the event	list again - but as the
+ 581:../FreeRTOS/Source/queue.c **** 				scheduler is suspended the task will go onto the pending
+ 582:../FreeRTOS/Source/queue.c **** 				ready last instead of the actual ready list. */
+ 583:../FreeRTOS/Source/queue.c **** 				prvUnlockQueue( pxQueue );
+ 450              		.loc 1 583 0
+ 451 0104 F868     		ldr	r0, [r7, #12]
+ 452 0106 FFF7FEFF 		bl	prvUnlockQueue
+ 584:../FreeRTOS/Source/queue.c **** 
+ 585:../FreeRTOS/Source/queue.c **** 				/* Resuming the scheduler will move tasks from the pending
+ 586:../FreeRTOS/Source/queue.c **** 				ready list into the ready list - so it is feasible that this
+ 587:../FreeRTOS/Source/queue.c **** 				task is already in a ready list before it yields - in which
+ 588:../FreeRTOS/Source/queue.c **** 				case the yield will not cause a context switch unless there
+ 589:../FreeRTOS/Source/queue.c **** 				is also a higher priority task in the pending ready list. */
+ 590:../FreeRTOS/Source/queue.c **** 				if( xTaskResumeAll() == pdFALSE )
+ 453              		.loc 1 590 0
+ 454 010a FFF7FEFF 		bl	xTaskResumeAll
+ 455 010e 0346     		mov	r3, r0
+ 456 0110 002B     		cmp	r3, #0
+ 457 0112 0FD1     		bne	.L31
+ 591:../FreeRTOS/Source/queue.c **** 				{
+ 592:../FreeRTOS/Source/queue.c **** 					portYIELD_WITHIN_API();
+ 458              		.loc 1 592 0
+ 459 0114 FFF7FEFF 		bl	vPortYieldFromISR
+ 460 0118 0CE0     		b	.L31
+ 461              	.L28:
+ 593:../FreeRTOS/Source/queue.c **** 				}
+ 594:../FreeRTOS/Source/queue.c **** 			}
+ 595:../FreeRTOS/Source/queue.c **** 			else
+ 596:../FreeRTOS/Source/queue.c **** 			{
+ 597:../FreeRTOS/Source/queue.c **** 				/* Try again. */
+ 598:../FreeRTOS/Source/queue.c **** 				prvUnlockQueue( pxQueue );
+ 462              		.loc 1 598 0
+ 463 011a F868     		ldr	r0, [r7, #12]
+ 464 011c FFF7FEFF 		bl	prvUnlockQueue
+ 599:../FreeRTOS/Source/queue.c **** 				( void ) xTaskResumeAll();
+ 465              		.loc 1 599 0
+ 466 0120 FFF7FEFF 		bl	xTaskResumeAll
+ 600:../FreeRTOS/Source/queue.c **** 			}
+ 601:../FreeRTOS/Source/queue.c **** 		}
+ 602:../FreeRTOS/Source/queue.c **** 		else
+ 603:../FreeRTOS/Source/queue.c **** 		{
+ 604:../FreeRTOS/Source/queue.c **** 			/* The timeout has expired. */
+ 605:../FreeRTOS/Source/queue.c **** 			prvUnlockQueue( pxQueue );
+ 606:../FreeRTOS/Source/queue.c **** 			( void ) xTaskResumeAll();
+ 607:../FreeRTOS/Source/queue.c **** 
+ 608:../FreeRTOS/Source/queue.c **** 			/* Return to the original privilege level before exiting the
+ 609:../FreeRTOS/Source/queue.c **** 			function. */
+ 610:../FreeRTOS/Source/queue.c **** 			traceQUEUE_SEND_FAILED( pxQueue );
+ 611:../FreeRTOS/Source/queue.c **** 			return errQUEUE_FULL;
+ 612:../FreeRTOS/Source/queue.c **** 		}
+ 613:../FreeRTOS/Source/queue.c **** 	}
+ 467              		.loc 1 613 0
+ 468 0124 8EE7     		b	.L18
+ 469              	.L27:
+ 605:../FreeRTOS/Source/queue.c **** 			( void ) xTaskResumeAll();
+ 470              		.loc 1 605 0
+ 471 0126 F868     		ldr	r0, [r7, #12]
+ 472 0128 FFF7FEFF 		bl	prvUnlockQueue
+ 606:../FreeRTOS/Source/queue.c **** 
+ 473              		.loc 1 606 0
+ 474 012c FFF7FEFF 		bl	xTaskResumeAll
+ 611:../FreeRTOS/Source/queue.c **** 		}
+ 475              		.loc 1 611 0
+ 476 0130 0023     		movs	r3, #0
+ 477 0132 00E0     		b	.L32
+ 478              	.L31:
+ 479              		.loc 1 613 0
+ 480 0134 86E7     		b	.L18
+ 481              	.L32:
+ 614:../FreeRTOS/Source/queue.c **** }
+ 482              		.loc 1 614 0
+ 483 0136 1846     		mov	r0, r3
+ 484 0138 2037     		adds	r7, r7, #32
+ 485 013a BD46     		mov	sp, r7
+ 486              		@ sp needed
+ 487 013c 80BD     		pop	{r7, pc}
+ 488              		.cfi_endproc
+ 489              	.LFE2:
+ 491 013e 00BF     		.section	.text.xQueueGenericSendFromISR,"ax",%progbits
+ 492              		.align	2
+ 493              		.global	xQueueGenericSendFromISR
+ 494              		.thumb
+ 495              		.thumb_func
+ 497              	xQueueGenericSendFromISR:
+ 498              	.LFB3:
+ 615:../FreeRTOS/Source/queue.c **** /*-----------------------------------------------------------*/
+ 616:../FreeRTOS/Source/queue.c **** 
+ 617:../FreeRTOS/Source/queue.c **** #if configUSE_ALTERNATIVE_API == 1
+ 618:../FreeRTOS/Source/queue.c **** 
+ 619:../FreeRTOS/Source/queue.c **** 	signed portBASE_TYPE xQueueAltGenericSend( xQueueHandle pxQueue, const void * const pvItemToQueue,
+ 620:../FreeRTOS/Source/queue.c **** 	{
+ 621:../FreeRTOS/Source/queue.c **** 	signed portBASE_TYPE xEntryTimeSet = pdFALSE;
+ 622:../FreeRTOS/Source/queue.c **** 	xTimeOutType xTimeOut;
+ 623:../FreeRTOS/Source/queue.c **** 
+ 624:../FreeRTOS/Source/queue.c **** 		configASSERT( pxQueue );
+ 625:../FreeRTOS/Source/queue.c **** 		configASSERT( !( ( pvItemToQueue == NULL ) && ( pxQueue->uxItemSize != ( unsigned portBASE_TYPE )
+ 626:../FreeRTOS/Source/queue.c **** 
+ 627:../FreeRTOS/Source/queue.c **** 		for( ;; )
+ 628:../FreeRTOS/Source/queue.c **** 		{
+ 629:../FreeRTOS/Source/queue.c **** 			taskENTER_CRITICAL();
+ 630:../FreeRTOS/Source/queue.c **** 			{
+ 631:../FreeRTOS/Source/queue.c **** 				/* Is there room on the queue now?  To be running we must be
+ 632:../FreeRTOS/Source/queue.c **** 				the highest priority task wanting to access the queue. */
+ 633:../FreeRTOS/Source/queue.c **** 				if( pxQueue->uxMessagesWaiting < pxQueue->uxLength )
+ 634:../FreeRTOS/Source/queue.c **** 				{
+ 635:../FreeRTOS/Source/queue.c **** 					traceQUEUE_SEND( pxQueue );
+ 636:../FreeRTOS/Source/queue.c **** 					prvCopyDataToQueue( pxQueue, pvItemToQueue, xCopyPosition );
+ 637:../FreeRTOS/Source/queue.c **** 
+ 638:../FreeRTOS/Source/queue.c **** 					/* If there was a task waiting for data to arrive on the
+ 639:../FreeRTOS/Source/queue.c **** 					queue then unblock it now. */
+ 640:../FreeRTOS/Source/queue.c **** 					if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) == pdFALSE )
+ 641:../FreeRTOS/Source/queue.c **** 					{
+ 642:../FreeRTOS/Source/queue.c **** 						if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToReceive ) ) == pdTRUE )
+ 643:../FreeRTOS/Source/queue.c **** 						{
+ 644:../FreeRTOS/Source/queue.c **** 							/* The unblocked task has a priority higher than
+ 645:../FreeRTOS/Source/queue.c **** 							our own so yield immediately. */
+ 646:../FreeRTOS/Source/queue.c **** 							portYIELD_WITHIN_API();
+ 647:../FreeRTOS/Source/queue.c **** 						}
+ 648:../FreeRTOS/Source/queue.c **** 					}
+ 649:../FreeRTOS/Source/queue.c **** 
+ 650:../FreeRTOS/Source/queue.c **** 					taskEXIT_CRITICAL();
+ 651:../FreeRTOS/Source/queue.c **** 					return pdPASS;
+ 652:../FreeRTOS/Source/queue.c **** 				}
+ 653:../FreeRTOS/Source/queue.c **** 				else
+ 654:../FreeRTOS/Source/queue.c **** 				{
+ 655:../FreeRTOS/Source/queue.c **** 					if( xTicksToWait == ( portTickType ) 0 )
+ 656:../FreeRTOS/Source/queue.c **** 					{
+ 657:../FreeRTOS/Source/queue.c **** 						taskEXIT_CRITICAL();
+ 658:../FreeRTOS/Source/queue.c **** 						return errQUEUE_FULL;
+ 659:../FreeRTOS/Source/queue.c **** 					}
+ 660:../FreeRTOS/Source/queue.c **** 					else if( xEntryTimeSet == pdFALSE )
+ 661:../FreeRTOS/Source/queue.c **** 					{
+ 662:../FreeRTOS/Source/queue.c **** 						vTaskSetTimeOutState( &xTimeOut );
+ 663:../FreeRTOS/Source/queue.c **** 						xEntryTimeSet = pdTRUE;
+ 664:../FreeRTOS/Source/queue.c **** 					}
+ 665:../FreeRTOS/Source/queue.c **** 				}
+ 666:../FreeRTOS/Source/queue.c **** 			}
+ 667:../FreeRTOS/Source/queue.c **** 			taskEXIT_CRITICAL();
+ 668:../FreeRTOS/Source/queue.c **** 
+ 669:../FreeRTOS/Source/queue.c **** 			taskENTER_CRITICAL();
+ 670:../FreeRTOS/Source/queue.c **** 			{
+ 671:../FreeRTOS/Source/queue.c **** 				if( xTaskCheckForTimeOut( &xTimeOut, &xTicksToWait ) == pdFALSE )
+ 672:../FreeRTOS/Source/queue.c **** 				{
+ 673:../FreeRTOS/Source/queue.c **** 					if( prvIsQueueFull( pxQueue ) != pdFALSE )
+ 674:../FreeRTOS/Source/queue.c **** 					{
+ 675:../FreeRTOS/Source/queue.c **** 						traceBLOCKING_ON_QUEUE_SEND( pxQueue );
+ 676:../FreeRTOS/Source/queue.c **** 						vTaskPlaceOnEventList( &( pxQueue->xTasksWaitingToSend ), xTicksToWait );
+ 677:../FreeRTOS/Source/queue.c **** 						portYIELD_WITHIN_API();
+ 678:../FreeRTOS/Source/queue.c **** 					}
+ 679:../FreeRTOS/Source/queue.c **** 				}
+ 680:../FreeRTOS/Source/queue.c **** 				else
+ 681:../FreeRTOS/Source/queue.c **** 				{
+ 682:../FreeRTOS/Source/queue.c **** 					taskEXIT_CRITICAL();
+ 683:../FreeRTOS/Source/queue.c **** 					traceQUEUE_SEND_FAILED( pxQueue );
+ 684:../FreeRTOS/Source/queue.c **** 					return errQUEUE_FULL;
+ 685:../FreeRTOS/Source/queue.c **** 				}
+ 686:../FreeRTOS/Source/queue.c **** 			}
+ 687:../FreeRTOS/Source/queue.c **** 			taskEXIT_CRITICAL();
+ 688:../FreeRTOS/Source/queue.c **** 		}
+ 689:../FreeRTOS/Source/queue.c **** 	}
+ 690:../FreeRTOS/Source/queue.c **** 
+ 691:../FreeRTOS/Source/queue.c **** #endif /* configUSE_ALTERNATIVE_API */
+ 692:../FreeRTOS/Source/queue.c **** /*-----------------------------------------------------------*/
+ 693:../FreeRTOS/Source/queue.c **** 
+ 694:../FreeRTOS/Source/queue.c **** #if configUSE_ALTERNATIVE_API == 1
+ 695:../FreeRTOS/Source/queue.c **** 
+ 696:../FreeRTOS/Source/queue.c **** 	signed portBASE_TYPE xQueueAltGenericReceive( xQueueHandle pxQueue, void * const pvBuffer, portTic
+ 697:../FreeRTOS/Source/queue.c **** 	{
+ 698:../FreeRTOS/Source/queue.c **** 	signed portBASE_TYPE xEntryTimeSet = pdFALSE;
+ 699:../FreeRTOS/Source/queue.c **** 	xTimeOutType xTimeOut;
+ 700:../FreeRTOS/Source/queue.c **** 	signed char *pcOriginalReadPosition;
+ 701:../FreeRTOS/Source/queue.c **** 
+ 702:../FreeRTOS/Source/queue.c **** 		configASSERT( pxQueue );
+ 703:../FreeRTOS/Source/queue.c **** 		configASSERT( !( ( pvBuffer == NULL ) && ( pxQueue->uxItemSize != ( unsigned portBASE_TYPE ) 0U )
+ 704:../FreeRTOS/Source/queue.c **** 
+ 705:../FreeRTOS/Source/queue.c **** 		for( ;; )
+ 706:../FreeRTOS/Source/queue.c **** 		{
+ 707:../FreeRTOS/Source/queue.c **** 			taskENTER_CRITICAL();
+ 708:../FreeRTOS/Source/queue.c **** 			{
+ 709:../FreeRTOS/Source/queue.c **** 				if( pxQueue->uxMessagesWaiting > ( unsigned portBASE_TYPE ) 0 )
+ 710:../FreeRTOS/Source/queue.c **** 				{
+ 711:../FreeRTOS/Source/queue.c **** 					/* Remember our read position in case we are just peeking. */
+ 712:../FreeRTOS/Source/queue.c **** 					pcOriginalReadPosition = pxQueue->pcReadFrom;
+ 713:../FreeRTOS/Source/queue.c **** 
+ 714:../FreeRTOS/Source/queue.c **** 					prvCopyDataFromQueue( pxQueue, pvBuffer );
+ 715:../FreeRTOS/Source/queue.c **** 
+ 716:../FreeRTOS/Source/queue.c **** 					if( xJustPeeking == pdFALSE )
+ 717:../FreeRTOS/Source/queue.c **** 					{
+ 718:../FreeRTOS/Source/queue.c **** 						traceQUEUE_RECEIVE( pxQueue );
+ 719:../FreeRTOS/Source/queue.c **** 
+ 720:../FreeRTOS/Source/queue.c **** 						/* We are actually removing data. */
+ 721:../FreeRTOS/Source/queue.c **** 						--( pxQueue->uxMessagesWaiting );
+ 722:../FreeRTOS/Source/queue.c **** 
+ 723:../FreeRTOS/Source/queue.c **** 						#if ( configUSE_MUTEXES == 1 )
+ 724:../FreeRTOS/Source/queue.c **** 						{
+ 725:../FreeRTOS/Source/queue.c **** 							if( pxQueue->uxQueueType == queueQUEUE_IS_MUTEX )
+ 726:../FreeRTOS/Source/queue.c **** 							{
+ 727:../FreeRTOS/Source/queue.c **** 								/* Record the information required to implement
+ 728:../FreeRTOS/Source/queue.c **** 								priority inheritance should it become necessary. */
+ 729:../FreeRTOS/Source/queue.c **** 								pxQueue->pxMutexHolder = xTaskGetCurrentTaskHandle();
+ 730:../FreeRTOS/Source/queue.c **** 							}
+ 731:../FreeRTOS/Source/queue.c **** 						}
+ 732:../FreeRTOS/Source/queue.c **** 						#endif
+ 733:../FreeRTOS/Source/queue.c **** 
+ 734:../FreeRTOS/Source/queue.c **** 						if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToSend ) ) == pdFALSE )
+ 735:../FreeRTOS/Source/queue.c **** 						{
+ 736:../FreeRTOS/Source/queue.c **** 							if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToSend ) ) == pdTRUE )
+ 737:../FreeRTOS/Source/queue.c **** 							{
+ 738:../FreeRTOS/Source/queue.c **** 								portYIELD_WITHIN_API();
+ 739:../FreeRTOS/Source/queue.c **** 							}
+ 740:../FreeRTOS/Source/queue.c **** 						}
+ 741:../FreeRTOS/Source/queue.c **** 					}
+ 742:../FreeRTOS/Source/queue.c **** 					else
+ 743:../FreeRTOS/Source/queue.c **** 					{
+ 744:../FreeRTOS/Source/queue.c **** 						traceQUEUE_PEEK( pxQueue );
+ 745:../FreeRTOS/Source/queue.c **** 
+ 746:../FreeRTOS/Source/queue.c **** 						/* We are not removing the data, so reset our read
+ 747:../FreeRTOS/Source/queue.c **** 						pointer. */
+ 748:../FreeRTOS/Source/queue.c **** 						pxQueue->pcReadFrom = pcOriginalReadPosition;
+ 749:../FreeRTOS/Source/queue.c **** 
+ 750:../FreeRTOS/Source/queue.c **** 						/* The data is being left in the queue, so see if there are
+ 751:../FreeRTOS/Source/queue.c **** 						any other tasks waiting for the data. */
+ 752:../FreeRTOS/Source/queue.c **** 						if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) == pdFALSE )
+ 753:../FreeRTOS/Source/queue.c **** 						{
+ 754:../FreeRTOS/Source/queue.c **** 							/* Tasks that are removed from the event list will get added to
+ 755:../FreeRTOS/Source/queue.c **** 							the pending ready list as the scheduler is still suspended. */
+ 756:../FreeRTOS/Source/queue.c **** 							if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToReceive ) ) != pdFALSE )
+ 757:../FreeRTOS/Source/queue.c **** 							{
+ 758:../FreeRTOS/Source/queue.c **** 								/* The task waiting has a higher priority than this task. */
+ 759:../FreeRTOS/Source/queue.c **** 								portYIELD_WITHIN_API();
+ 760:../FreeRTOS/Source/queue.c **** 							}
+ 761:../FreeRTOS/Source/queue.c **** 						}
+ 762:../FreeRTOS/Source/queue.c **** 
+ 763:../FreeRTOS/Source/queue.c **** 					}
+ 764:../FreeRTOS/Source/queue.c **** 
+ 765:../FreeRTOS/Source/queue.c **** 					taskEXIT_CRITICAL();
+ 766:../FreeRTOS/Source/queue.c **** 					return pdPASS;
+ 767:../FreeRTOS/Source/queue.c **** 				}
+ 768:../FreeRTOS/Source/queue.c **** 				else
+ 769:../FreeRTOS/Source/queue.c **** 				{
+ 770:../FreeRTOS/Source/queue.c **** 					if( xTicksToWait == ( portTickType ) 0 )
+ 771:../FreeRTOS/Source/queue.c **** 					{
+ 772:../FreeRTOS/Source/queue.c **** 						taskEXIT_CRITICAL();
+ 773:../FreeRTOS/Source/queue.c **** 						traceQUEUE_RECEIVE_FAILED( pxQueue );
+ 774:../FreeRTOS/Source/queue.c **** 						return errQUEUE_EMPTY;
+ 775:../FreeRTOS/Source/queue.c **** 					}
+ 776:../FreeRTOS/Source/queue.c **** 					else if( xEntryTimeSet == pdFALSE )
+ 777:../FreeRTOS/Source/queue.c **** 					{
+ 778:../FreeRTOS/Source/queue.c **** 						vTaskSetTimeOutState( &xTimeOut );
+ 779:../FreeRTOS/Source/queue.c **** 						xEntryTimeSet = pdTRUE;
+ 780:../FreeRTOS/Source/queue.c **** 					}
+ 781:../FreeRTOS/Source/queue.c **** 				}
+ 782:../FreeRTOS/Source/queue.c **** 			}
+ 783:../FreeRTOS/Source/queue.c **** 			taskEXIT_CRITICAL();
+ 784:../FreeRTOS/Source/queue.c **** 
+ 785:../FreeRTOS/Source/queue.c **** 			taskENTER_CRITICAL();
+ 786:../FreeRTOS/Source/queue.c **** 			{
+ 787:../FreeRTOS/Source/queue.c **** 				if( xTaskCheckForTimeOut( &xTimeOut, &xTicksToWait ) == pdFALSE )
+ 788:../FreeRTOS/Source/queue.c **** 				{
+ 789:../FreeRTOS/Source/queue.c **** 					if( prvIsQueueEmpty( pxQueue ) != pdFALSE )
+ 790:../FreeRTOS/Source/queue.c **** 					{
+ 791:../FreeRTOS/Source/queue.c **** 						traceBLOCKING_ON_QUEUE_RECEIVE( pxQueue );
+ 792:../FreeRTOS/Source/queue.c **** 
+ 793:../FreeRTOS/Source/queue.c **** 						#if ( configUSE_MUTEXES == 1 )
+ 794:../FreeRTOS/Source/queue.c **** 						{
+ 795:../FreeRTOS/Source/queue.c **** 							if( pxQueue->uxQueueType == queueQUEUE_IS_MUTEX )
+ 796:../FreeRTOS/Source/queue.c **** 							{
+ 797:../FreeRTOS/Source/queue.c **** 								portENTER_CRITICAL();
+ 798:../FreeRTOS/Source/queue.c **** 									vTaskPriorityInherit( ( void * ) pxQueue->pxMutexHolder );
+ 799:../FreeRTOS/Source/queue.c **** 								portEXIT_CRITICAL();
+ 800:../FreeRTOS/Source/queue.c **** 							}
+ 801:../FreeRTOS/Source/queue.c **** 						}
+ 802:../FreeRTOS/Source/queue.c **** 						#endif
+ 803:../FreeRTOS/Source/queue.c **** 
+ 804:../FreeRTOS/Source/queue.c **** 						vTaskPlaceOnEventList( &( pxQueue->xTasksWaitingToReceive ), xTicksToWait );
+ 805:../FreeRTOS/Source/queue.c **** 						portYIELD_WITHIN_API();
+ 806:../FreeRTOS/Source/queue.c **** 					}
+ 807:../FreeRTOS/Source/queue.c **** 				}
+ 808:../FreeRTOS/Source/queue.c **** 				else
+ 809:../FreeRTOS/Source/queue.c **** 				{
+ 810:../FreeRTOS/Source/queue.c **** 					taskEXIT_CRITICAL();
+ 811:../FreeRTOS/Source/queue.c **** 					traceQUEUE_RECEIVE_FAILED( pxQueue );
+ 812:../FreeRTOS/Source/queue.c **** 					return errQUEUE_EMPTY;
+ 813:../FreeRTOS/Source/queue.c **** 				}
+ 814:../FreeRTOS/Source/queue.c **** 			}
+ 815:../FreeRTOS/Source/queue.c **** 			taskEXIT_CRITICAL();
+ 816:../FreeRTOS/Source/queue.c **** 		}
+ 817:../FreeRTOS/Source/queue.c **** 	}
+ 818:../FreeRTOS/Source/queue.c **** 
+ 819:../FreeRTOS/Source/queue.c **** 
+ 820:../FreeRTOS/Source/queue.c **** #endif /* configUSE_ALTERNATIVE_API */
+ 821:../FreeRTOS/Source/queue.c **** /*-----------------------------------------------------------*/
+ 822:../FreeRTOS/Source/queue.c **** 
+ 823:../FreeRTOS/Source/queue.c **** signed portBASE_TYPE xQueueGenericSendFromISR( xQueueHandle pxQueue, const void * const pvItemToQue
+ 824:../FreeRTOS/Source/queue.c **** {
+ 499              		.loc 1 824 0
+ 500              		.cfi_startproc
+ 501              		@ args = 0, pretend = 0, frame = 24
+ 502              		@ frame_needed = 1, uses_anonymous_args = 0
+ 503 0000 80B5     		push	{r7, lr}
+ 504              		.cfi_def_cfa_offset 8
+ 505              		.cfi_offset 7, -8
+ 506              		.cfi_offset 14, -4
+ 507 0002 86B0     		sub	sp, sp, #24
+ 508              		.cfi_def_cfa_offset 32
+ 509 0004 00AF     		add	r7, sp, #0
+ 510              		.cfi_def_cfa_register 7
+ 511 0006 F860     		str	r0, [r7, #12]
+ 512 0008 B960     		str	r1, [r7, #8]
+ 513 000a 7A60     		str	r2, [r7, #4]
+ 514 000c 3B60     		str	r3, [r7]
+ 825:../FreeRTOS/Source/queue.c **** signed portBASE_TYPE xReturn;
+ 826:../FreeRTOS/Source/queue.c **** unsigned portBASE_TYPE uxSavedInterruptStatus;
+ 827:../FreeRTOS/Source/queue.c **** 
+ 828:../FreeRTOS/Source/queue.c **** 	configASSERT( pxQueue );
+ 515              		.loc 1 828 0
+ 516 000e FB68     		ldr	r3, [r7, #12]
+ 517 0010 002B     		cmp	r3, #0
+ 518 0012 04D1     		bne	.L34
+ 519              		.loc 1 828 0 is_stmt 0 discriminator 1
+ 520              	@ 828 "../FreeRTOS/Source/queue.c" 1
+ 521 0014 4FF05000 			mov r0, #80								
+ 522 0018 80F31188 		msr basepri, r0							
+ 523              	
+ 524              	@ 0 "" 2
+ 525              		.thumb
+ 526              	.L35:
+ 527 001c FEE7     		b	.L35
+ 528              	.L34:
+ 829:../FreeRTOS/Source/queue.c **** 	configASSERT( pxHigherPriorityTaskWoken );
+ 529              		.loc 1 829 0 is_stmt 1
+ 530 001e 7B68     		ldr	r3, [r7, #4]
+ 531 0020 002B     		cmp	r3, #0
+ 532 0022 04D1     		bne	.L36
+ 533              		.loc 1 829 0 is_stmt 0 discriminator 1
+ 534              	@ 829 "../FreeRTOS/Source/queue.c" 1
+ 535 0024 4FF05000 			mov r0, #80								
+ 536 0028 80F31188 		msr basepri, r0							
+ 537              	
+ 538              	@ 0 "" 2
+ 539              		.thumb
+ 540              	.L37:
+ 541 002c FEE7     		b	.L37
+ 542              	.L36:
+ 830:../FreeRTOS/Source/queue.c **** 	configASSERT( !( ( pvItemToQueue == NULL ) && ( pxQueue->uxItemSize != ( unsigned portBASE_TYPE ) 
+ 543              		.loc 1 830 0 is_stmt 1
+ 544 002e BB68     		ldr	r3, [r7, #8]
+ 545 0030 002B     		cmp	r3, #0
+ 546 0032 03D1     		bne	.L38
+ 547              		.loc 1 830 0 is_stmt 0 discriminator 2
+ 548 0034 FB68     		ldr	r3, [r7, #12]
+ 549 0036 1B6C     		ldr	r3, [r3, #64]
+ 550 0038 002B     		cmp	r3, #0
+ 551 003a 01D1     		bne	.L39
+ 552              	.L38:
+ 553              		.loc 1 830 0 discriminator 1
+ 554 003c 0123     		movs	r3, #1
+ 555 003e 00E0     		b	.L40
+ 556              	.L39:
+ 557              		.loc 1 830 0 discriminator 3
+ 558 0040 0023     		movs	r3, #0
+ 559              	.L40:
+ 560              		.loc 1 830 0 discriminator 4
+ 561 0042 002B     		cmp	r3, #0
+ 562 0044 04D1     		bne	.L41
+ 563              		.loc 1 830 0 discriminator 1
+ 564              	@ 830 "../FreeRTOS/Source/queue.c" 1
+ 565 0046 4FF05000 			mov r0, #80								
+ 566 004a 80F31188 		msr basepri, r0							
+ 567              	
+ 568              	@ 0 "" 2
+ 569              		.thumb
+ 570              	.L42:
+ 571 004e FEE7     		b	.L42
+ 572              	.L41:
+ 831:../FreeRTOS/Source/queue.c **** 
+ 832:../FreeRTOS/Source/queue.c **** 	/* Similar to xQueueGenericSend, except we don't block if there is no room
+ 833:../FreeRTOS/Source/queue.c **** 	in the queue.  Also we don't directly wake a task that was blocked on a
+ 834:../FreeRTOS/Source/queue.c **** 	queue read, instead we return a flag to say whether a context switch is
+ 835:../FreeRTOS/Source/queue.c **** 	required or not (i.e. has a task with a higher priority than us been woken
+ 836:../FreeRTOS/Source/queue.c **** 	by this	post). */
+ 837:../FreeRTOS/Source/queue.c **** 	uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
+ 573              		.loc 1 837 0 is_stmt 1
+ 574 0050 0023     		movs	r3, #0
+ 575 0052 3B61     		str	r3, [r7, #16]
+ 576              	@ 837 "../FreeRTOS/Source/queue.c" 1
+ 577 0054 4FF05000 			mov r0, #80								
+ 578 0058 80F31188 		msr basepri, r0							
+ 579              	
+ 580              	@ 0 "" 2
+ 838:../FreeRTOS/Source/queue.c **** 	{
+ 839:../FreeRTOS/Source/queue.c **** 		if( pxQueue->uxMessagesWaiting < pxQueue->uxLength )
+ 581              		.loc 1 839 0
+ 582              		.thumb
+ 583 005c FB68     		ldr	r3, [r7, #12]
+ 584 005e 9A6B     		ldr	r2, [r3, #56]
+ 585 0060 FB68     		ldr	r3, [r7, #12]
+ 586 0062 DB6B     		ldr	r3, [r3, #60]
+ 587 0064 9A42     		cmp	r2, r3
+ 588 0066 21D2     		bcs	.L43
+ 840:../FreeRTOS/Source/queue.c **** 		{
+ 841:../FreeRTOS/Source/queue.c **** 			traceQUEUE_SEND_FROM_ISR( pxQueue );
+ 842:../FreeRTOS/Source/queue.c **** 
+ 843:../FreeRTOS/Source/queue.c **** 			prvCopyDataToQueue( pxQueue, pvItemToQueue, xCopyPosition );
+ 589              		.loc 1 843 0
+ 590 0068 F868     		ldr	r0, [r7, #12]
+ 591 006a B968     		ldr	r1, [r7, #8]
+ 592 006c 3A68     		ldr	r2, [r7]
+ 593 006e FFF7FEFF 		bl	prvCopyDataToQueue
+ 844:../FreeRTOS/Source/queue.c **** 
+ 845:../FreeRTOS/Source/queue.c **** 			/* If the queue is locked we do not alter the event list.  This will
+ 846:../FreeRTOS/Source/queue.c **** 			be done when the queue is unlocked later. */
+ 847:../FreeRTOS/Source/queue.c **** 			if( pxQueue->xTxLock == queueUNLOCKED )
+ 594              		.loc 1 847 0
+ 595 0072 FB68     		ldr	r3, [r7, #12]
+ 596 0074 9B6C     		ldr	r3, [r3, #72]
+ 597 0076 B3F1FF3F 		cmp	r3, #-1
+ 598 007a 0FD1     		bne	.L44
+ 848:../FreeRTOS/Source/queue.c **** 			{
+ 849:../FreeRTOS/Source/queue.c **** 				if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) == pdFALSE )
+ 599              		.loc 1 849 0
+ 600 007c FB68     		ldr	r3, [r7, #12]
+ 601 007e 5B6A     		ldr	r3, [r3, #36]
+ 602 0080 002B     		cmp	r3, #0
+ 603 0082 10D0     		beq	.L46
+ 850:../FreeRTOS/Source/queue.c **** 				{
+ 851:../FreeRTOS/Source/queue.c **** 					if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToReceive ) ) != pdFALSE )
+ 604              		.loc 1 851 0
+ 605 0084 FB68     		ldr	r3, [r7, #12]
+ 606 0086 2433     		adds	r3, r3, #36
+ 607 0088 1846     		mov	r0, r3
+ 608 008a FFF7FEFF 		bl	xTaskRemoveFromEventList
+ 609 008e 0346     		mov	r3, r0
+ 610 0090 002B     		cmp	r3, #0
+ 611 0092 08D0     		beq	.L46
+ 852:../FreeRTOS/Source/queue.c **** 					{
+ 853:../FreeRTOS/Source/queue.c **** 						/* The task waiting has a higher priority so record that a
+ 854:../FreeRTOS/Source/queue.c **** 						context	switch is required. */
+ 855:../FreeRTOS/Source/queue.c **** 						*pxHigherPriorityTaskWoken = pdTRUE;
+ 612              		.loc 1 855 0
+ 613 0094 7B68     		ldr	r3, [r7, #4]
+ 614 0096 0122     		movs	r2, #1
+ 615 0098 1A60     		str	r2, [r3]
+ 616 009a 04E0     		b	.L46
+ 617              	.L44:
+ 856:../FreeRTOS/Source/queue.c **** 					}
+ 857:../FreeRTOS/Source/queue.c **** 				}
+ 858:../FreeRTOS/Source/queue.c **** 			}
+ 859:../FreeRTOS/Source/queue.c **** 			else
+ 860:../FreeRTOS/Source/queue.c **** 			{
+ 861:../FreeRTOS/Source/queue.c **** 				/* Increment the lock count so the task that unlocks the queue
+ 862:../FreeRTOS/Source/queue.c **** 				knows that data was posted while it was locked. */
+ 863:../FreeRTOS/Source/queue.c **** 				++( pxQueue->xTxLock );
+ 618              		.loc 1 863 0
+ 619 009c FB68     		ldr	r3, [r7, #12]
+ 620 009e 9B6C     		ldr	r3, [r3, #72]
+ 621 00a0 5A1C     		adds	r2, r3, #1
+ 622 00a2 FB68     		ldr	r3, [r7, #12]
+ 623 00a4 9A64     		str	r2, [r3, #72]
+ 624              	.L46:
+ 864:../FreeRTOS/Source/queue.c **** 			}
+ 865:../FreeRTOS/Source/queue.c **** 
+ 866:../FreeRTOS/Source/queue.c **** 			xReturn = pdPASS;
+ 625              		.loc 1 866 0 discriminator 1
+ 626 00a6 0123     		movs	r3, #1
+ 627 00a8 7B61     		str	r3, [r7, #20]
+ 628 00aa 01E0     		b	.L47
+ 629              	.L43:
+ 867:../FreeRTOS/Source/queue.c **** 		}
+ 868:../FreeRTOS/Source/queue.c **** 		else
+ 869:../FreeRTOS/Source/queue.c **** 		{
+ 870:../FreeRTOS/Source/queue.c **** 			traceQUEUE_SEND_FROM_ISR_FAILED( pxQueue );
+ 871:../FreeRTOS/Source/queue.c **** 			xReturn = errQUEUE_FULL;
+ 630              		.loc 1 871 0
+ 631 00ac 0023     		movs	r3, #0
+ 632 00ae 7B61     		str	r3, [r7, #20]
+ 633              	.L47:
+ 872:../FreeRTOS/Source/queue.c **** 		}
+ 873:../FreeRTOS/Source/queue.c **** 	}
+ 874:../FreeRTOS/Source/queue.c **** 	portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus );
+ 634              		.loc 1 874 0
+ 635              	@ 874 "../FreeRTOS/Source/queue.c" 1
+ 636 00b0 4FF00000 			mov r0, #0					
+ 637 00b4 80F31188 		msr basepri, r0				
+ 638              	
+ 639              	@ 0 "" 2
+ 875:../FreeRTOS/Source/queue.c **** 
+ 876:../FreeRTOS/Source/queue.c **** 	return xReturn;
+ 640              		.loc 1 876 0
+ 641              		.thumb
+ 642 00b8 7B69     		ldr	r3, [r7, #20]
+ 877:../FreeRTOS/Source/queue.c **** }
+ 643              		.loc 1 877 0
+ 644 00ba 1846     		mov	r0, r3
+ 645 00bc 1837     		adds	r7, r7, #24
+ 646 00be BD46     		mov	sp, r7
+ 647              		@ sp needed
+ 648 00c0 80BD     		pop	{r7, pc}
+ 649              		.cfi_endproc
+ 650              	.LFE3:
+ 652 00c2 00BF     		.section	.text.xQueueGenericReceive,"ax",%progbits
+ 653              		.align	2
+ 654              		.global	xQueueGenericReceive
+ 655              		.thumb
+ 656              		.thumb_func
+ 658              	xQueueGenericReceive:
+ 659              	.LFB4:
+ 878:../FreeRTOS/Source/queue.c **** /*-----------------------------------------------------------*/
+ 879:../FreeRTOS/Source/queue.c **** 
+ 880:../FreeRTOS/Source/queue.c **** signed portBASE_TYPE xQueueGenericReceive( xQueueHandle pxQueue, void * const pvBuffer, portTickTyp
+ 881:../FreeRTOS/Source/queue.c **** {
+ 660              		.loc 1 881 0
+ 661              		.cfi_startproc
+ 662              		@ args = 0, pretend = 0, frame = 32
+ 663              		@ frame_needed = 1, uses_anonymous_args = 0
+ 664 0000 80B5     		push	{r7, lr}
+ 665              		.cfi_def_cfa_offset 8
+ 666              		.cfi_offset 7, -8
+ 667              		.cfi_offset 14, -4
+ 668 0002 88B0     		sub	sp, sp, #32
+ 669              		.cfi_def_cfa_offset 40
+ 670 0004 00AF     		add	r7, sp, #0
+ 671              		.cfi_def_cfa_register 7
+ 672 0006 F860     		str	r0, [r7, #12]
+ 673 0008 B960     		str	r1, [r7, #8]
+ 674 000a 7A60     		str	r2, [r7, #4]
+ 675 000c 3B60     		str	r3, [r7]
+ 882:../FreeRTOS/Source/queue.c **** signed portBASE_TYPE xEntryTimeSet = pdFALSE;
+ 676              		.loc 1 882 0
+ 677 000e 0023     		movs	r3, #0
+ 678 0010 FB61     		str	r3, [r7, #28]
+ 883:../FreeRTOS/Source/queue.c **** xTimeOutType xTimeOut;
+ 884:../FreeRTOS/Source/queue.c **** signed char *pcOriginalReadPosition;
+ 885:../FreeRTOS/Source/queue.c **** 
+ 886:../FreeRTOS/Source/queue.c **** 	configASSERT( pxQueue );
+ 679              		.loc 1 886 0
+ 680 0012 FB68     		ldr	r3, [r7, #12]
+ 681 0014 002B     		cmp	r3, #0
+ 682 0016 04D1     		bne	.L50
+ 683              		.loc 1 886 0 is_stmt 0 discriminator 1
+ 684              	@ 886 "../FreeRTOS/Source/queue.c" 1
+ 685 0018 4FF05000 			mov r0, #80								
+ 686 001c 80F31188 		msr basepri, r0							
+ 687              	
+ 688              	@ 0 "" 2
+ 689              		.thumb
+ 690              	.L51:
+ 691 0020 FEE7     		b	.L51
+ 692              	.L50:
+ 887:../FreeRTOS/Source/queue.c **** 	configASSERT( !( ( pvBuffer == NULL ) && ( pxQueue->uxItemSize != ( unsigned portBASE_TYPE ) 0U ) 
+ 693              		.loc 1 887 0 is_stmt 1
+ 694 0022 BB68     		ldr	r3, [r7, #8]
+ 695 0024 002B     		cmp	r3, #0
+ 696 0026 03D1     		bne	.L52
+ 697              		.loc 1 887 0 is_stmt 0 discriminator 2
+ 698 0028 FB68     		ldr	r3, [r7, #12]
+ 699 002a 1B6C     		ldr	r3, [r3, #64]
+ 700 002c 002B     		cmp	r3, #0
+ 701 002e 01D1     		bne	.L53
+ 702              	.L52:
+ 703              		.loc 1 887 0 discriminator 1
+ 704 0030 0123     		movs	r3, #1
+ 705 0032 00E0     		b	.L54
+ 706              	.L53:
+ 707              		.loc 1 887 0 discriminator 3
+ 708 0034 0023     		movs	r3, #0
+ 709              	.L54:
+ 710              		.loc 1 887 0 discriminator 4
+ 711 0036 002B     		cmp	r3, #0
+ 712 0038 04D1     		bne	.L55
+ 713              		.loc 1 887 0 discriminator 1
+ 714              	@ 887 "../FreeRTOS/Source/queue.c" 1
+ 715 003a 4FF05000 			mov r0, #80								
+ 716 003e 80F31188 		msr basepri, r0							
+ 717              	
+ 718              	@ 0 "" 2
+ 719              		.thumb
+ 720              	.L56:
+ 721 0042 FEE7     		b	.L56
+ 722              	.L55:
+ 888:../FreeRTOS/Source/queue.c **** 
+ 889:../FreeRTOS/Source/queue.c **** 	/* This function relaxes the coding standard somewhat to allow return
+ 890:../FreeRTOS/Source/queue.c **** 	statements within the function itself.  This is done in the interest
+ 891:../FreeRTOS/Source/queue.c **** 	of execution time efficiency. */
+ 892:../FreeRTOS/Source/queue.c **** 
+ 893:../FreeRTOS/Source/queue.c **** 	for( ;; )
+ 894:../FreeRTOS/Source/queue.c **** 	{
+ 895:../FreeRTOS/Source/queue.c **** 		taskENTER_CRITICAL();
+ 723              		.loc 1 895 0 is_stmt 1
+ 724 0044 FFF7FEFF 		bl	vPortEnterCritical
+ 896:../FreeRTOS/Source/queue.c **** 		{
+ 897:../FreeRTOS/Source/queue.c **** 			/* Is there data in the queue now?  To be running we must be
+ 898:../FreeRTOS/Source/queue.c **** 			the highest priority task wanting to access the queue. */
+ 899:../FreeRTOS/Source/queue.c **** 			if( pxQueue->uxMessagesWaiting > ( unsigned portBASE_TYPE ) 0 )
+ 725              		.loc 1 899 0
+ 726 0048 FB68     		ldr	r3, [r7, #12]
+ 727 004a 9B6B     		ldr	r3, [r3, #56]
+ 728 004c 002B     		cmp	r3, #0
+ 729 004e 3BD0     		beq	.L57
+ 900:../FreeRTOS/Source/queue.c **** 			{
+ 901:../FreeRTOS/Source/queue.c **** 				/* Remember our read position in case we are just peeking. */
+ 902:../FreeRTOS/Source/queue.c **** 				pcOriginalReadPosition = pxQueue->pcReadFrom;
+ 730              		.loc 1 902 0
+ 731 0050 FB68     		ldr	r3, [r7, #12]
+ 732 0052 DB68     		ldr	r3, [r3, #12]
+ 733 0054 BB61     		str	r3, [r7, #24]
+ 903:../FreeRTOS/Source/queue.c **** 
+ 904:../FreeRTOS/Source/queue.c **** 				prvCopyDataFromQueue( pxQueue, pvBuffer );
+ 734              		.loc 1 904 0
+ 735 0056 F868     		ldr	r0, [r7, #12]
+ 736 0058 B968     		ldr	r1, [r7, #8]
+ 737 005a FFF7FEFF 		bl	prvCopyDataFromQueue
+ 905:../FreeRTOS/Source/queue.c **** 
+ 906:../FreeRTOS/Source/queue.c **** 				if( xJustPeeking == pdFALSE )
+ 738              		.loc 1 906 0
+ 739 005e 3B68     		ldr	r3, [r7]
+ 740 0060 002B     		cmp	r3, #0
+ 741 0062 1CD1     		bne	.L58
+ 907:../FreeRTOS/Source/queue.c **** 				{
+ 908:../FreeRTOS/Source/queue.c **** 					traceQUEUE_RECEIVE( pxQueue );
+ 909:../FreeRTOS/Source/queue.c **** 
+ 910:../FreeRTOS/Source/queue.c **** 					/* We are actually removing data. */
+ 911:../FreeRTOS/Source/queue.c **** 					--( pxQueue->uxMessagesWaiting );
+ 742              		.loc 1 911 0
+ 743 0064 FB68     		ldr	r3, [r7, #12]
+ 744 0066 9B6B     		ldr	r3, [r3, #56]
+ 745 0068 5A1E     		subs	r2, r3, #1
+ 746 006a FB68     		ldr	r3, [r7, #12]
+ 747 006c 9A63     		str	r2, [r3, #56]
+ 912:../FreeRTOS/Source/queue.c **** 
+ 913:../FreeRTOS/Source/queue.c **** 					#if ( configUSE_MUTEXES == 1 )
+ 914:../FreeRTOS/Source/queue.c **** 					{
+ 915:../FreeRTOS/Source/queue.c **** 						if( pxQueue->uxQueueType == queueQUEUE_IS_MUTEX )
+ 748              		.loc 1 915 0
+ 749 006e FB68     		ldr	r3, [r7, #12]
+ 750 0070 1B68     		ldr	r3, [r3]
+ 751 0072 002B     		cmp	r3, #0
+ 752 0074 04D1     		bne	.L59
+ 916:../FreeRTOS/Source/queue.c **** 						{
+ 917:../FreeRTOS/Source/queue.c **** 							/* Record the information required to implement
+ 918:../FreeRTOS/Source/queue.c **** 							priority inheritance should it become necessary. */
+ 919:../FreeRTOS/Source/queue.c **** 							pxQueue->pxMutexHolder = xTaskGetCurrentTaskHandle();
+ 753              		.loc 1 919 0
+ 754 0076 FFF7FEFF 		bl	xTaskGetCurrentTaskHandle
+ 755 007a 0246     		mov	r2, r0
+ 756 007c FB68     		ldr	r3, [r7, #12]
+ 757 007e 5A60     		str	r2, [r3, #4]
+ 758              	.L59:
+ 920:../FreeRTOS/Source/queue.c **** 						}
+ 921:../FreeRTOS/Source/queue.c **** 					}
+ 922:../FreeRTOS/Source/queue.c **** 					#endif
+ 923:../FreeRTOS/Source/queue.c **** 
+ 924:../FreeRTOS/Source/queue.c **** 					if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToSend ) ) == pdFALSE )
+ 759              		.loc 1 924 0
+ 760 0080 FB68     		ldr	r3, [r7, #12]
+ 761 0082 1B69     		ldr	r3, [r3, #16]
+ 762 0084 002B     		cmp	r3, #0
+ 763 0086 1BD0     		beq	.L61
+ 925:../FreeRTOS/Source/queue.c **** 					{
+ 926:../FreeRTOS/Source/queue.c **** 						if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToSend ) ) == pdTRUE )
+ 764              		.loc 1 926 0
+ 765 0088 FB68     		ldr	r3, [r7, #12]
+ 766 008a 1033     		adds	r3, r3, #16
+ 767 008c 1846     		mov	r0, r3
+ 768 008e FFF7FEFF 		bl	xTaskRemoveFromEventList
+ 769 0092 0346     		mov	r3, r0
+ 770 0094 012B     		cmp	r3, #1
+ 771 0096 13D1     		bne	.L61
+ 927:../FreeRTOS/Source/queue.c **** 						{
+ 928:../FreeRTOS/Source/queue.c **** 							portYIELD_WITHIN_API();
+ 772              		.loc 1 928 0
+ 773 0098 FFF7FEFF 		bl	vPortYieldFromISR
+ 774 009c 10E0     		b	.L61
+ 775              	.L58:
+ 929:../FreeRTOS/Source/queue.c **** 						}
+ 930:../FreeRTOS/Source/queue.c **** 					}
+ 931:../FreeRTOS/Source/queue.c **** 				}
+ 932:../FreeRTOS/Source/queue.c **** 				else
+ 933:../FreeRTOS/Source/queue.c **** 				{
+ 934:../FreeRTOS/Source/queue.c **** 					traceQUEUE_PEEK( pxQueue );
+ 935:../FreeRTOS/Source/queue.c **** 
+ 936:../FreeRTOS/Source/queue.c **** 					/* We are not removing the data, so reset our read
+ 937:../FreeRTOS/Source/queue.c **** 					pointer. */
+ 938:../FreeRTOS/Source/queue.c **** 					pxQueue->pcReadFrom = pcOriginalReadPosition;
+ 776              		.loc 1 938 0
+ 777 009e FB68     		ldr	r3, [r7, #12]
+ 778 00a0 BA69     		ldr	r2, [r7, #24]
+ 779 00a2 DA60     		str	r2, [r3, #12]
+ 939:../FreeRTOS/Source/queue.c **** 
+ 940:../FreeRTOS/Source/queue.c **** 					/* The data is being left in the queue, so see if there are
+ 941:../FreeRTOS/Source/queue.c **** 					any other tasks waiting for the data. */
+ 942:../FreeRTOS/Source/queue.c **** 					if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) == pdFALSE )
+ 780              		.loc 1 942 0
+ 781 00a4 FB68     		ldr	r3, [r7, #12]
+ 782 00a6 5B6A     		ldr	r3, [r3, #36]
+ 783 00a8 002B     		cmp	r3, #0
+ 784 00aa 09D0     		beq	.L61
+ 943:../FreeRTOS/Source/queue.c **** 					{
+ 944:../FreeRTOS/Source/queue.c **** 						/* Tasks that are removed from the event list will get added to
+ 945:../FreeRTOS/Source/queue.c **** 						the pending ready list as the scheduler is still suspended. */
+ 946:../FreeRTOS/Source/queue.c **** 						if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToReceive ) ) != pdFALSE )
+ 785              		.loc 1 946 0
+ 786 00ac FB68     		ldr	r3, [r7, #12]
+ 787 00ae 2433     		adds	r3, r3, #36
+ 788 00b0 1846     		mov	r0, r3
+ 789 00b2 FFF7FEFF 		bl	xTaskRemoveFromEventList
+ 790 00b6 0346     		mov	r3, r0
+ 791 00b8 002B     		cmp	r3, #0
+ 792 00ba 01D0     		beq	.L61
+ 947:../FreeRTOS/Source/queue.c **** 						{
+ 948:../FreeRTOS/Source/queue.c **** 							/* The task waiting has a higher priority than this task. */
+ 949:../FreeRTOS/Source/queue.c **** 							portYIELD_WITHIN_API();
+ 793              		.loc 1 949 0
+ 794 00bc FFF7FEFF 		bl	vPortYieldFromISR
+ 795              	.L61:
+ 950:../FreeRTOS/Source/queue.c **** 						}
+ 951:../FreeRTOS/Source/queue.c **** 					}
+ 952:../FreeRTOS/Source/queue.c **** 
+ 953:../FreeRTOS/Source/queue.c **** 				}
+ 954:../FreeRTOS/Source/queue.c **** 
+ 955:../FreeRTOS/Source/queue.c **** 				taskEXIT_CRITICAL();
+ 796              		.loc 1 955 0
+ 797 00c0 FFF7FEFF 		bl	vPortExitCritical
+ 956:../FreeRTOS/Source/queue.c **** 				return pdPASS;
+ 798              		.loc 1 956 0
+ 799 00c4 0123     		movs	r3, #1
+ 800 00c6 66E0     		b	.L73
+ 801              	.L57:
+ 957:../FreeRTOS/Source/queue.c **** 			}
+ 958:../FreeRTOS/Source/queue.c **** 			else
+ 959:../FreeRTOS/Source/queue.c **** 			{
+ 960:../FreeRTOS/Source/queue.c **** 				if( xTicksToWait == ( portTickType ) 0 )
+ 802              		.loc 1 960 0
+ 803 00c8 7B68     		ldr	r3, [r7, #4]
+ 804 00ca 002B     		cmp	r3, #0
+ 805 00cc 03D1     		bne	.L63
+ 961:../FreeRTOS/Source/queue.c **** 				{
+ 962:../FreeRTOS/Source/queue.c **** 					/* The queue was empty and no block time is specified (or
+ 963:../FreeRTOS/Source/queue.c **** 					the block time has expired) so leave now. */
+ 964:../FreeRTOS/Source/queue.c **** 					taskEXIT_CRITICAL();
+ 806              		.loc 1 964 0
+ 807 00ce FFF7FEFF 		bl	vPortExitCritical
+ 965:../FreeRTOS/Source/queue.c **** 					traceQUEUE_RECEIVE_FAILED( pxQueue );
+ 966:../FreeRTOS/Source/queue.c **** 					return errQUEUE_EMPTY;
+ 808              		.loc 1 966 0
+ 809 00d2 0023     		movs	r3, #0
+ 810 00d4 5FE0     		b	.L73
+ 811              	.L63:
+ 967:../FreeRTOS/Source/queue.c **** 				}
+ 968:../FreeRTOS/Source/queue.c **** 				else if( xEntryTimeSet == pdFALSE )
+ 812              		.loc 1 968 0
+ 813 00d6 FB69     		ldr	r3, [r7, #28]
+ 814 00d8 002B     		cmp	r3, #0
+ 815 00da 06D1     		bne	.L64
+ 969:../FreeRTOS/Source/queue.c **** 				{
+ 970:../FreeRTOS/Source/queue.c **** 					/* The queue was empty and a block time was specified so
+ 971:../FreeRTOS/Source/queue.c **** 					configure the timeout structure. */
+ 972:../FreeRTOS/Source/queue.c **** 					vTaskSetTimeOutState( &xTimeOut );
+ 816              		.loc 1 972 0
+ 817 00dc 07F11003 		add	r3, r7, #16
+ 818 00e0 1846     		mov	r0, r3
+ 819 00e2 FFF7FEFF 		bl	vTaskSetTimeOutState
+ 973:../FreeRTOS/Source/queue.c **** 					xEntryTimeSet = pdTRUE;
+ 820              		.loc 1 973 0
+ 821 00e6 0123     		movs	r3, #1
+ 822 00e8 FB61     		str	r3, [r7, #28]
+ 823              	.L64:
+ 974:../FreeRTOS/Source/queue.c **** 				}
+ 975:../FreeRTOS/Source/queue.c **** 			}
+ 976:../FreeRTOS/Source/queue.c **** 		}
+ 977:../FreeRTOS/Source/queue.c **** 		taskEXIT_CRITICAL();
+ 824              		.loc 1 977 0
+ 825 00ea FFF7FEFF 		bl	vPortExitCritical
+ 978:../FreeRTOS/Source/queue.c **** 
+ 979:../FreeRTOS/Source/queue.c **** 		/* Interrupts and other tasks can send to and receive from the queue
+ 980:../FreeRTOS/Source/queue.c **** 		now the critical section has been exited. */
+ 981:../FreeRTOS/Source/queue.c **** 
+ 982:../FreeRTOS/Source/queue.c **** 		vTaskSuspendAll();
+ 826              		.loc 1 982 0
+ 827 00ee FFF7FEFF 		bl	vTaskSuspendAll
+ 983:../FreeRTOS/Source/queue.c **** 		prvLockQueue( pxQueue );
+ 828              		.loc 1 983 0
+ 829 00f2 FFF7FEFF 		bl	vPortEnterCritical
+ 830 00f6 FB68     		ldr	r3, [r7, #12]
+ 831 00f8 5B6C     		ldr	r3, [r3, #68]
+ 832 00fa B3F1FF3F 		cmp	r3, #-1
+ 833 00fe 02D1     		bne	.L65
+ 834              		.loc 1 983 0 is_stmt 0 discriminator 1
+ 835 0100 FB68     		ldr	r3, [r7, #12]
+ 836 0102 0022     		movs	r2, #0
+ 837 0104 5A64     		str	r2, [r3, #68]
+ 838              	.L65:
+ 839              		.loc 1 983 0 discriminator 2
+ 840 0106 FB68     		ldr	r3, [r7, #12]
+ 841 0108 9B6C     		ldr	r3, [r3, #72]
+ 842 010a B3F1FF3F 		cmp	r3, #-1
+ 843 010e 02D1     		bne	.L66
+ 844              		.loc 1 983 0 discriminator 1
+ 845 0110 FB68     		ldr	r3, [r7, #12]
+ 846 0112 0022     		movs	r2, #0
+ 847 0114 9A64     		str	r2, [r3, #72]
+ 848              	.L66:
+ 849              		.loc 1 983 0 discriminator 2
+ 850 0116 FFF7FEFF 		bl	vPortExitCritical
+ 984:../FreeRTOS/Source/queue.c **** 
+ 985:../FreeRTOS/Source/queue.c **** 		/* Update the timeout state to see if it has expired yet. */
+ 986:../FreeRTOS/Source/queue.c **** 		if( xTaskCheckForTimeOut( &xTimeOut, &xTicksToWait ) == pdFALSE )
+ 851              		.loc 1 986 0 is_stmt 1 discriminator 2
+ 852 011a 07F11002 		add	r2, r7, #16
+ 853 011e 3B1D     		adds	r3, r7, #4
+ 854 0120 1046     		mov	r0, r2
+ 855 0122 1946     		mov	r1, r3
+ 856 0124 FFF7FEFF 		bl	xTaskCheckForTimeOut
+ 857 0128 0346     		mov	r3, r0
+ 858 012a 002B     		cmp	r3, #0
+ 859 012c 2BD1     		bne	.L67
+ 987:../FreeRTOS/Source/queue.c **** 		{
+ 988:../FreeRTOS/Source/queue.c **** 			if( prvIsQueueEmpty( pxQueue ) != pdFALSE )
+ 860              		.loc 1 988 0
+ 861 012e F868     		ldr	r0, [r7, #12]
+ 862 0130 FFF7FEFF 		bl	prvIsQueueEmpty
+ 863 0134 0346     		mov	r3, r0
+ 864 0136 002B     		cmp	r3, #0
+ 865 0138 1FD0     		beq	.L68
+ 989:../FreeRTOS/Source/queue.c **** 			{
+ 990:../FreeRTOS/Source/queue.c **** 				traceBLOCKING_ON_QUEUE_RECEIVE( pxQueue );
+ 991:../FreeRTOS/Source/queue.c **** 
+ 992:../FreeRTOS/Source/queue.c **** 				#if ( configUSE_MUTEXES == 1 )
+ 993:../FreeRTOS/Source/queue.c **** 				{
+ 994:../FreeRTOS/Source/queue.c **** 					if( pxQueue->uxQueueType == queueQUEUE_IS_MUTEX )
+ 866              		.loc 1 994 0
+ 867 013a FB68     		ldr	r3, [r7, #12]
+ 868 013c 1B68     		ldr	r3, [r3]
+ 869 013e 002B     		cmp	r3, #0
+ 870 0140 08D1     		bne	.L69
+ 995:../FreeRTOS/Source/queue.c **** 					{
+ 996:../FreeRTOS/Source/queue.c **** 						portENTER_CRITICAL();
+ 871              		.loc 1 996 0
+ 872 0142 FFF7FEFF 		bl	vPortEnterCritical
+ 997:../FreeRTOS/Source/queue.c **** 						{
+ 998:../FreeRTOS/Source/queue.c **** 							vTaskPriorityInherit( ( void * ) pxQueue->pxMutexHolder );
+ 873              		.loc 1 998 0
+ 874 0146 FB68     		ldr	r3, [r7, #12]
+ 875 0148 5B68     		ldr	r3, [r3, #4]
+ 876 014a 1846     		mov	r0, r3
+ 877 014c FFF7FEFF 		bl	vTaskPriorityInherit
+ 999:../FreeRTOS/Source/queue.c **** 						}
+1000:../FreeRTOS/Source/queue.c **** 						portEXIT_CRITICAL();
+ 878              		.loc 1 1000 0
+ 879 0150 FFF7FEFF 		bl	vPortExitCritical
+ 880              	.L69:
+1001:../FreeRTOS/Source/queue.c **** 					}
+1002:../FreeRTOS/Source/queue.c **** 				}
+1003:../FreeRTOS/Source/queue.c **** 				#endif
+1004:../FreeRTOS/Source/queue.c **** 
+1005:../FreeRTOS/Source/queue.c **** 				vTaskPlaceOnEventList( &( pxQueue->xTasksWaitingToReceive ), xTicksToWait );
+ 881              		.loc 1 1005 0
+ 882 0154 FB68     		ldr	r3, [r7, #12]
+ 883 0156 03F12402 		add	r2, r3, #36
+ 884 015a 7B68     		ldr	r3, [r7, #4]
+ 885 015c 1046     		mov	r0, r2
+ 886 015e 1946     		mov	r1, r3
+ 887 0160 FFF7FEFF 		bl	vTaskPlaceOnEventList
+1006:../FreeRTOS/Source/queue.c **** 				prvUnlockQueue( pxQueue );
+ 888              		.loc 1 1006 0
+ 889 0164 F868     		ldr	r0, [r7, #12]
+ 890 0166 FFF7FEFF 		bl	prvUnlockQueue
+1007:../FreeRTOS/Source/queue.c **** 				if( xTaskResumeAll() == pdFALSE )
+ 891              		.loc 1 1007 0
+ 892 016a FFF7FEFF 		bl	xTaskResumeAll
+ 893 016e 0346     		mov	r3, r0
+ 894 0170 002B     		cmp	r3, #0
+ 895 0172 0FD1     		bne	.L72
+1008:../FreeRTOS/Source/queue.c **** 				{
+1009:../FreeRTOS/Source/queue.c **** 					portYIELD_WITHIN_API();
+ 896              		.loc 1 1009 0
+ 897 0174 FFF7FEFF 		bl	vPortYieldFromISR
+ 898 0178 0CE0     		b	.L72
+ 899              	.L68:
+1010:../FreeRTOS/Source/queue.c **** 				}
+1011:../FreeRTOS/Source/queue.c **** 			}
+1012:../FreeRTOS/Source/queue.c **** 			else
+1013:../FreeRTOS/Source/queue.c **** 			{
+1014:../FreeRTOS/Source/queue.c **** 				/* Try again. */
+1015:../FreeRTOS/Source/queue.c **** 				prvUnlockQueue( pxQueue );
+ 900              		.loc 1 1015 0
+ 901 017a F868     		ldr	r0, [r7, #12]
+ 902 017c FFF7FEFF 		bl	prvUnlockQueue
+1016:../FreeRTOS/Source/queue.c **** 				( void ) xTaskResumeAll();
+ 903              		.loc 1 1016 0
+ 904 0180 FFF7FEFF 		bl	xTaskResumeAll
+1017:../FreeRTOS/Source/queue.c **** 			}
+1018:../FreeRTOS/Source/queue.c **** 		}
+1019:../FreeRTOS/Source/queue.c **** 		else
+1020:../FreeRTOS/Source/queue.c **** 		{
+1021:../FreeRTOS/Source/queue.c **** 			prvUnlockQueue( pxQueue );
+1022:../FreeRTOS/Source/queue.c **** 			( void ) xTaskResumeAll();
+1023:../FreeRTOS/Source/queue.c **** 			traceQUEUE_RECEIVE_FAILED( pxQueue );
+1024:../FreeRTOS/Source/queue.c **** 			return errQUEUE_EMPTY;
+1025:../FreeRTOS/Source/queue.c **** 		}
+1026:../FreeRTOS/Source/queue.c **** 	}
+ 905              		.loc 1 1026 0
+ 906 0184 5EE7     		b	.L55
+ 907              	.L67:
+1021:../FreeRTOS/Source/queue.c **** 			( void ) xTaskResumeAll();
+ 908              		.loc 1 1021 0
+ 909 0186 F868     		ldr	r0, [r7, #12]
+ 910 0188 FFF7FEFF 		bl	prvUnlockQueue
+1022:../FreeRTOS/Source/queue.c **** 			traceQUEUE_RECEIVE_FAILED( pxQueue );
+ 911              		.loc 1 1022 0
+ 912 018c FFF7FEFF 		bl	xTaskResumeAll
+1024:../FreeRTOS/Source/queue.c **** 		}
+ 913              		.loc 1 1024 0
+ 914 0190 0023     		movs	r3, #0
+ 915 0192 00E0     		b	.L73
+ 916              	.L72:
+ 917              		.loc 1 1026 0
+ 918 0194 56E7     		b	.L55
+ 919              	.L73:
+1027:../FreeRTOS/Source/queue.c **** }
+ 920              		.loc 1 1027 0
+ 921 0196 1846     		mov	r0, r3
+ 922 0198 2037     		adds	r7, r7, #32
+ 923 019a BD46     		mov	sp, r7
+ 924              		@ sp needed
+ 925 019c 80BD     		pop	{r7, pc}
+ 926              		.cfi_endproc
+ 927              	.LFE4:
+ 929 019e 00BF     		.section	.text.xQueueReceiveFromISR,"ax",%progbits
+ 930              		.align	2
+ 931              		.global	xQueueReceiveFromISR
+ 932              		.thumb
+ 933              		.thumb_func
+ 935              	xQueueReceiveFromISR:
+ 936              	.LFB5:
+1028:../FreeRTOS/Source/queue.c **** /*-----------------------------------------------------------*/
+1029:../FreeRTOS/Source/queue.c **** 
+1030:../FreeRTOS/Source/queue.c **** signed portBASE_TYPE xQueueReceiveFromISR( xQueueHandle pxQueue, void * const pvBuffer, signed port
+1031:../FreeRTOS/Source/queue.c **** {
+ 937              		.loc 1 1031 0
+ 938              		.cfi_startproc
+ 939              		@ args = 0, pretend = 0, frame = 24
+ 940              		@ frame_needed = 1, uses_anonymous_args = 0
+ 941 0000 80B5     		push	{r7, lr}
+ 942              		.cfi_def_cfa_offset 8
+ 943              		.cfi_offset 7, -8
+ 944              		.cfi_offset 14, -4
+ 945 0002 86B0     		sub	sp, sp, #24
+ 946              		.cfi_def_cfa_offset 32
+ 947 0004 00AF     		add	r7, sp, #0
+ 948              		.cfi_def_cfa_register 7
+ 949 0006 F860     		str	r0, [r7, #12]
+ 950 0008 B960     		str	r1, [r7, #8]
+ 951 000a 7A60     		str	r2, [r7, #4]
+1032:../FreeRTOS/Source/queue.c **** signed portBASE_TYPE xReturn;
+1033:../FreeRTOS/Source/queue.c **** unsigned portBASE_TYPE uxSavedInterruptStatus;
+1034:../FreeRTOS/Source/queue.c **** 
+1035:../FreeRTOS/Source/queue.c **** 	configASSERT( pxQueue );
+ 952              		.loc 1 1035 0
+ 953 000c FB68     		ldr	r3, [r7, #12]
+ 954 000e 002B     		cmp	r3, #0
+ 955 0010 04D1     		bne	.L75
+ 956              		.loc 1 1035 0 is_stmt 0 discriminator 1
+ 957              	@ 1035 "../FreeRTOS/Source/queue.c" 1
+ 958 0012 4FF05000 			mov r0, #80								
+ 959 0016 80F31188 		msr basepri, r0							
+ 960              	
+ 961              	@ 0 "" 2
+ 962              		.thumb
+ 963              	.L76:
+ 964 001a FEE7     		b	.L76
+ 965              	.L75:
+1036:../FreeRTOS/Source/queue.c **** 	configASSERT( pxTaskWoken );
+ 966              		.loc 1 1036 0 is_stmt 1
+ 967 001c 7B68     		ldr	r3, [r7, #4]
+ 968 001e 002B     		cmp	r3, #0
+ 969 0020 04D1     		bne	.L77
+ 970              		.loc 1 1036 0 is_stmt 0 discriminator 1
+ 971              	@ 1036 "../FreeRTOS/Source/queue.c" 1
+ 972 0022 4FF05000 			mov r0, #80								
+ 973 0026 80F31188 		msr basepri, r0							
+ 974              	
+ 975              	@ 0 "" 2
+ 976              		.thumb
+ 977              	.L78:
+ 978 002a FEE7     		b	.L78
+ 979              	.L77:
+1037:../FreeRTOS/Source/queue.c **** 	configASSERT( !( ( pvBuffer == NULL ) && ( pxQueue->uxItemSize != ( unsigned portBASE_TYPE ) 0U ) 
+ 980              		.loc 1 1037 0 is_stmt 1
+ 981 002c BB68     		ldr	r3, [r7, #8]
+ 982 002e 002B     		cmp	r3, #0
+ 983 0030 03D1     		bne	.L79
+ 984              		.loc 1 1037 0 is_stmt 0 discriminator 2
+ 985 0032 FB68     		ldr	r3, [r7, #12]
+ 986 0034 1B6C     		ldr	r3, [r3, #64]
+ 987 0036 002B     		cmp	r3, #0
+ 988 0038 01D1     		bne	.L80
+ 989              	.L79:
+ 990              		.loc 1 1037 0 discriminator 1
+ 991 003a 0123     		movs	r3, #1
+ 992 003c 00E0     		b	.L81
+ 993              	.L80:
+ 994              		.loc 1 1037 0 discriminator 3
+ 995 003e 0023     		movs	r3, #0
+ 996              	.L81:
+ 997              		.loc 1 1037 0 discriminator 4
+ 998 0040 002B     		cmp	r3, #0
+ 999 0042 04D1     		bne	.L82
+ 1000              		.loc 1 1037 0 discriminator 1
+ 1001              	@ 1037 "../FreeRTOS/Source/queue.c" 1
+ 1002 0044 4FF05000 			mov r0, #80								
+ 1003 0048 80F31188 		msr basepri, r0							
+ 1004              	
+ 1005              	@ 0 "" 2
+ 1006              		.thumb
+ 1007              	.L83:
+ 1008 004c FEE7     		b	.L83
+ 1009              	.L82:
+1038:../FreeRTOS/Source/queue.c **** 
+1039:../FreeRTOS/Source/queue.c **** 	uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
+ 1010              		.loc 1 1039 0 is_stmt 1
+ 1011 004e 0023     		movs	r3, #0
+ 1012 0050 3B61     		str	r3, [r7, #16]
+ 1013              	@ 1039 "../FreeRTOS/Source/queue.c" 1
+ 1014 0052 4FF05000 			mov r0, #80								
+ 1015 0056 80F31188 		msr basepri, r0							
+ 1016              	
+ 1017              	@ 0 "" 2
+1040:../FreeRTOS/Source/queue.c **** 	{
+1041:../FreeRTOS/Source/queue.c **** 		/* We cannot block from an ISR, so check there is data available. */
+1042:../FreeRTOS/Source/queue.c **** 		if( pxQueue->uxMessagesWaiting > ( unsigned portBASE_TYPE ) 0 )
+ 1018              		.loc 1 1042 0
+ 1019              		.thumb
+ 1020 005a FB68     		ldr	r3, [r7, #12]
+ 1021 005c 9B6B     		ldr	r3, [r3, #56]
+ 1022 005e 002B     		cmp	r3, #0
+ 1023 0060 25D0     		beq	.L84
+1043:../FreeRTOS/Source/queue.c **** 		{
+1044:../FreeRTOS/Source/queue.c **** 			traceQUEUE_RECEIVE_FROM_ISR( pxQueue );
+1045:../FreeRTOS/Source/queue.c **** 
+1046:../FreeRTOS/Source/queue.c **** 			prvCopyDataFromQueue( pxQueue, pvBuffer );
+ 1024              		.loc 1 1046 0
+ 1025 0062 F868     		ldr	r0, [r7, #12]
+ 1026 0064 B968     		ldr	r1, [r7, #8]
+ 1027 0066 FFF7FEFF 		bl	prvCopyDataFromQueue
+1047:../FreeRTOS/Source/queue.c **** 			--( pxQueue->uxMessagesWaiting );
+ 1028              		.loc 1 1047 0
+ 1029 006a FB68     		ldr	r3, [r7, #12]
+ 1030 006c 9B6B     		ldr	r3, [r3, #56]
+ 1031 006e 5A1E     		subs	r2, r3, #1
+ 1032 0070 FB68     		ldr	r3, [r7, #12]
+ 1033 0072 9A63     		str	r2, [r3, #56]
+1048:../FreeRTOS/Source/queue.c **** 
+1049:../FreeRTOS/Source/queue.c **** 			/* If the queue is locked we will not modify the event list.  Instead
+1050:../FreeRTOS/Source/queue.c **** 			we update the lock count so the task that unlocks the queue will know
+1051:../FreeRTOS/Source/queue.c **** 			that an ISR has removed data while the queue was locked. */
+1052:../FreeRTOS/Source/queue.c **** 			if( pxQueue->xRxLock == queueUNLOCKED )
+ 1034              		.loc 1 1052 0
+ 1035 0074 FB68     		ldr	r3, [r7, #12]
+ 1036 0076 5B6C     		ldr	r3, [r3, #68]
+ 1037 0078 B3F1FF3F 		cmp	r3, #-1
+ 1038 007c 0FD1     		bne	.L85
+1053:../FreeRTOS/Source/queue.c **** 			{
+1054:../FreeRTOS/Source/queue.c **** 				if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToSend ) ) == pdFALSE )
+ 1039              		.loc 1 1054 0
+ 1040 007e FB68     		ldr	r3, [r7, #12]
+ 1041 0080 1B69     		ldr	r3, [r3, #16]
+ 1042 0082 002B     		cmp	r3, #0
+ 1043 0084 10D0     		beq	.L87
+1055:../FreeRTOS/Source/queue.c **** 				{
+1056:../FreeRTOS/Source/queue.c **** 					if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToSend ) ) != pdFALSE )
+ 1044              		.loc 1 1056 0
+ 1045 0086 FB68     		ldr	r3, [r7, #12]
+ 1046 0088 1033     		adds	r3, r3, #16
+ 1047 008a 1846     		mov	r0, r3
+ 1048 008c FFF7FEFF 		bl	xTaskRemoveFromEventList
+ 1049 0090 0346     		mov	r3, r0
+ 1050 0092 002B     		cmp	r3, #0
+ 1051 0094 08D0     		beq	.L87
+1057:../FreeRTOS/Source/queue.c **** 					{
+1058:../FreeRTOS/Source/queue.c **** 						/* The task waiting has a higher priority than us so
+1059:../FreeRTOS/Source/queue.c **** 						force a context switch. */
+1060:../FreeRTOS/Source/queue.c **** 						*pxTaskWoken = pdTRUE;
+ 1052              		.loc 1 1060 0
+ 1053 0096 7B68     		ldr	r3, [r7, #4]
+ 1054 0098 0122     		movs	r2, #1
+ 1055 009a 1A60     		str	r2, [r3]
+ 1056 009c 04E0     		b	.L87
+ 1057              	.L85:
+1061:../FreeRTOS/Source/queue.c **** 					}
+1062:../FreeRTOS/Source/queue.c **** 				}
+1063:../FreeRTOS/Source/queue.c **** 			}
+1064:../FreeRTOS/Source/queue.c **** 			else
+1065:../FreeRTOS/Source/queue.c **** 			{
+1066:../FreeRTOS/Source/queue.c **** 				/* Increment the lock count so the task that unlocks the queue
+1067:../FreeRTOS/Source/queue.c **** 				knows that data was removed while it was locked. */
+1068:../FreeRTOS/Source/queue.c **** 				++( pxQueue->xRxLock );
+ 1058              		.loc 1 1068 0
+ 1059 009e FB68     		ldr	r3, [r7, #12]
+ 1060 00a0 5B6C     		ldr	r3, [r3, #68]
+ 1061 00a2 5A1C     		adds	r2, r3, #1
+ 1062 00a4 FB68     		ldr	r3, [r7, #12]
+ 1063 00a6 5A64     		str	r2, [r3, #68]
+ 1064              	.L87:
+1069:../FreeRTOS/Source/queue.c **** 			}
+1070:../FreeRTOS/Source/queue.c **** 
+1071:../FreeRTOS/Source/queue.c **** 			xReturn = pdPASS;
+ 1065              		.loc 1 1071 0 discriminator 1
+ 1066 00a8 0123     		movs	r3, #1
+ 1067 00aa 7B61     		str	r3, [r7, #20]
+ 1068 00ac 01E0     		b	.L88
+ 1069              	.L84:
+1072:../FreeRTOS/Source/queue.c **** 		}
+1073:../FreeRTOS/Source/queue.c **** 		else
+1074:../FreeRTOS/Source/queue.c **** 		{
+1075:../FreeRTOS/Source/queue.c **** 			xReturn = pdFAIL;
+ 1070              		.loc 1 1075 0
+ 1071 00ae 0023     		movs	r3, #0
+ 1072 00b0 7B61     		str	r3, [r7, #20]
+ 1073              	.L88:
+1076:../FreeRTOS/Source/queue.c **** 			traceQUEUE_RECEIVE_FROM_ISR_FAILED( pxQueue );
+1077:../FreeRTOS/Source/queue.c **** 		}
+1078:../FreeRTOS/Source/queue.c **** 	}
+1079:../FreeRTOS/Source/queue.c **** 	portCLEAR_INTERRUPT_MASK_FROM_ISR( uxSavedInterruptStatus );
+ 1074              		.loc 1 1079 0
+ 1075              	@ 1079 "../FreeRTOS/Source/queue.c" 1
+ 1076 00b2 4FF00000 			mov r0, #0					
+ 1077 00b6 80F31188 		msr basepri, r0				
+ 1078              	
+ 1079              	@ 0 "" 2
+1080:../FreeRTOS/Source/queue.c **** 
+1081:../FreeRTOS/Source/queue.c **** 	return xReturn;
+ 1080              		.loc 1 1081 0
+ 1081              		.thumb
+ 1082 00ba 7B69     		ldr	r3, [r7, #20]
+1082:../FreeRTOS/Source/queue.c **** }
+ 1083              		.loc 1 1082 0
+ 1084 00bc 1846     		mov	r0, r3
+ 1085 00be 1837     		adds	r7, r7, #24
+ 1086 00c0 BD46     		mov	sp, r7
+ 1087              		@ sp needed
+ 1088 00c2 80BD     		pop	{r7, pc}
+ 1089              		.cfi_endproc
+ 1090              	.LFE5:
+ 1092              		.section	.text.uxQueueMessagesWaiting,"ax",%progbits
+ 1093              		.align	2
+ 1094              		.global	uxQueueMessagesWaiting
+ 1095              		.thumb
+ 1096              		.thumb_func
+ 1098              	uxQueueMessagesWaiting:
+ 1099              	.LFB6:
+1083:../FreeRTOS/Source/queue.c **** /*-----------------------------------------------------------*/
+1084:../FreeRTOS/Source/queue.c **** 
+1085:../FreeRTOS/Source/queue.c **** unsigned portBASE_TYPE uxQueueMessagesWaiting( const xQueueHandle pxQueue )
+1086:../FreeRTOS/Source/queue.c **** {
+ 1100              		.loc 1 1086 0
+ 1101              		.cfi_startproc
+ 1102              		@ args = 0, pretend = 0, frame = 16
+ 1103              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1104 0000 80B5     		push	{r7, lr}
+ 1105              		.cfi_def_cfa_offset 8
+ 1106              		.cfi_offset 7, -8
+ 1107              		.cfi_offset 14, -4
+ 1108 0002 84B0     		sub	sp, sp, #16
+ 1109              		.cfi_def_cfa_offset 24
+ 1110 0004 00AF     		add	r7, sp, #0
+ 1111              		.cfi_def_cfa_register 7
+ 1112 0006 7860     		str	r0, [r7, #4]
+1087:../FreeRTOS/Source/queue.c **** unsigned portBASE_TYPE uxReturn;
+1088:../FreeRTOS/Source/queue.c **** 
+1089:../FreeRTOS/Source/queue.c **** 	configASSERT( pxQueue );
+ 1113              		.loc 1 1089 0
+ 1114 0008 7B68     		ldr	r3, [r7, #4]
+ 1115 000a 002B     		cmp	r3, #0
+ 1116 000c 04D1     		bne	.L91
+ 1117              		.loc 1 1089 0 is_stmt 0 discriminator 1
+ 1118              	@ 1089 "../FreeRTOS/Source/queue.c" 1
+ 1119 000e 4FF05000 			mov r0, #80								
+ 1120 0012 80F31188 		msr basepri, r0							
+ 1121              	
+ 1122              	@ 0 "" 2
+ 1123              		.thumb
+ 1124              	.L92:
+ 1125 0016 FEE7     		b	.L92
+ 1126              	.L91:
+1090:../FreeRTOS/Source/queue.c **** 
+1091:../FreeRTOS/Source/queue.c **** 	taskENTER_CRITICAL();
+ 1127              		.loc 1 1091 0 is_stmt 1
+ 1128 0018 FFF7FEFF 		bl	vPortEnterCritical
+1092:../FreeRTOS/Source/queue.c **** 		uxReturn = pxQueue->uxMessagesWaiting;
+ 1129              		.loc 1 1092 0
+ 1130 001c 7B68     		ldr	r3, [r7, #4]
+ 1131 001e 9B6B     		ldr	r3, [r3, #56]
+ 1132 0020 FB60     		str	r3, [r7, #12]
+1093:../FreeRTOS/Source/queue.c **** 	taskEXIT_CRITICAL();
+ 1133              		.loc 1 1093 0
+ 1134 0022 FFF7FEFF 		bl	vPortExitCritical
+1094:../FreeRTOS/Source/queue.c **** 
+1095:../FreeRTOS/Source/queue.c **** 	return uxReturn;
+ 1135              		.loc 1 1095 0
+ 1136 0026 FB68     		ldr	r3, [r7, #12]
+1096:../FreeRTOS/Source/queue.c **** }
+ 1137              		.loc 1 1096 0
+ 1138 0028 1846     		mov	r0, r3
+ 1139 002a 1037     		adds	r7, r7, #16
+ 1140 002c BD46     		mov	sp, r7
+ 1141              		@ sp needed
+ 1142 002e 80BD     		pop	{r7, pc}
+ 1143              		.cfi_endproc
+ 1144              	.LFE6:
+ 1146              		.section	.text.uxQueueMessagesWaitingFromISR,"ax",%progbits
+ 1147              		.align	2
+ 1148              		.global	uxQueueMessagesWaitingFromISR
+ 1149              		.thumb
+ 1150              		.thumb_func
+ 1152              	uxQueueMessagesWaitingFromISR:
+ 1153              	.LFB7:
+1097:../FreeRTOS/Source/queue.c **** /*-----------------------------------------------------------*/
+1098:../FreeRTOS/Source/queue.c **** 
+1099:../FreeRTOS/Source/queue.c **** unsigned portBASE_TYPE uxQueueMessagesWaitingFromISR( const xQueueHandle pxQueue )
+1100:../FreeRTOS/Source/queue.c **** {
+ 1154              		.loc 1 1100 0
+ 1155              		.cfi_startproc
+ 1156              		@ args = 0, pretend = 0, frame = 16
+ 1157              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1158              		@ link register save eliminated.
+ 1159 0000 80B4     		push	{r7}
+ 1160              		.cfi_def_cfa_offset 4
+ 1161              		.cfi_offset 7, -4
+ 1162 0002 85B0     		sub	sp, sp, #20
+ 1163              		.cfi_def_cfa_offset 24
+ 1164 0004 00AF     		add	r7, sp, #0
+ 1165              		.cfi_def_cfa_register 7
+ 1166 0006 7860     		str	r0, [r7, #4]
+1101:../FreeRTOS/Source/queue.c **** unsigned portBASE_TYPE uxReturn;
+1102:../FreeRTOS/Source/queue.c **** 
+1103:../FreeRTOS/Source/queue.c **** 	configASSERT( pxQueue );
+ 1167              		.loc 1 1103 0
+ 1168 0008 7B68     		ldr	r3, [r7, #4]
+ 1169 000a 002B     		cmp	r3, #0
+ 1170 000c 04D1     		bne	.L95
+ 1171              		.loc 1 1103 0 is_stmt 0 discriminator 1
+ 1172              	@ 1103 "../FreeRTOS/Source/queue.c" 1
+ 1173 000e 4FF05000 			mov r0, #80								
+ 1174 0012 80F31188 		msr basepri, r0							
+ 1175              	
+ 1176              	@ 0 "" 2
+ 1177              		.thumb
+ 1178              	.L96:
+ 1179 0016 FEE7     		b	.L96
+ 1180              	.L95:
+1104:../FreeRTOS/Source/queue.c **** 
+1105:../FreeRTOS/Source/queue.c **** 	uxReturn = pxQueue->uxMessagesWaiting;
+ 1181              		.loc 1 1105 0 is_stmt 1
+ 1182 0018 7B68     		ldr	r3, [r7, #4]
+ 1183 001a 9B6B     		ldr	r3, [r3, #56]
+ 1184 001c FB60     		str	r3, [r7, #12]
+1106:../FreeRTOS/Source/queue.c **** 
+1107:../FreeRTOS/Source/queue.c **** 	return uxReturn;
+ 1185              		.loc 1 1107 0
+ 1186 001e FB68     		ldr	r3, [r7, #12]
+1108:../FreeRTOS/Source/queue.c **** }
+ 1187              		.loc 1 1108 0
+ 1188 0020 1846     		mov	r0, r3
+ 1189 0022 1437     		adds	r7, r7, #20
+ 1190 0024 BD46     		mov	sp, r7
+ 1191              		@ sp needed
+ 1192 0026 5DF8047B 		ldr	r7, [sp], #4
+ 1193 002a 7047     		bx	lr
+ 1194              		.cfi_endproc
+ 1195              	.LFE7:
+ 1197              		.section	.text.vQueueDelete,"ax",%progbits
+ 1198              		.align	2
+ 1199              		.global	vQueueDelete
+ 1200              		.thumb
+ 1201              		.thumb_func
+ 1203              	vQueueDelete:
+ 1204              	.LFB8:
+1109:../FreeRTOS/Source/queue.c **** /*-----------------------------------------------------------*/
+1110:../FreeRTOS/Source/queue.c **** 
+1111:../FreeRTOS/Source/queue.c **** void vQueueDelete( xQueueHandle pxQueue )
+1112:../FreeRTOS/Source/queue.c **** {
+ 1205              		.loc 1 1112 0
+ 1206              		.cfi_startproc
+ 1207              		@ args = 0, pretend = 0, frame = 8
+ 1208              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1209 0000 80B5     		push	{r7, lr}
+ 1210              		.cfi_def_cfa_offset 8
+ 1211              		.cfi_offset 7, -8
+ 1212              		.cfi_offset 14, -4
+ 1213 0002 82B0     		sub	sp, sp, #8
+ 1214              		.cfi_def_cfa_offset 16
+ 1215 0004 00AF     		add	r7, sp, #0
+ 1216              		.cfi_def_cfa_register 7
+ 1217 0006 7860     		str	r0, [r7, #4]
+1113:../FreeRTOS/Source/queue.c **** 	configASSERT( pxQueue );
+ 1218              		.loc 1 1113 0
+ 1219 0008 7B68     		ldr	r3, [r7, #4]
+ 1220 000a 002B     		cmp	r3, #0
+ 1221 000c 04D1     		bne	.L99
+ 1222              		.loc 1 1113 0 is_stmt 0 discriminator 1
+ 1223              	@ 1113 "../FreeRTOS/Source/queue.c" 1
+ 1224 000e 4FF05000 			mov r0, #80								
+ 1225 0012 80F31188 		msr basepri, r0							
+ 1226              	
+ 1227              	@ 0 "" 2
+ 1228              		.thumb
+ 1229              	.L100:
+ 1230 0016 FEE7     		b	.L100
+ 1231              	.L99:
+1114:../FreeRTOS/Source/queue.c **** 
+1115:../FreeRTOS/Source/queue.c **** 	traceQUEUE_DELETE( pxQueue );
+1116:../FreeRTOS/Source/queue.c **** 	vQueueUnregisterQueue( pxQueue );
+ 1232              		.loc 1 1116 0 is_stmt 1
+ 1233 0018 7868     		ldr	r0, [r7, #4]
+ 1234 001a FFF7FEFF 		bl	vQueueUnregisterQueue
+1117:../FreeRTOS/Source/queue.c **** 	vPortFree( pxQueue->pcHead );
+ 1235              		.loc 1 1117 0
+ 1236 001e 7B68     		ldr	r3, [r7, #4]
+ 1237 0020 1B68     		ldr	r3, [r3]
+ 1238 0022 1846     		mov	r0, r3
+ 1239 0024 FFF7FEFF 		bl	vPortFree
+1118:../FreeRTOS/Source/queue.c **** 	vPortFree( pxQueue );
+ 1240              		.loc 1 1118 0
+ 1241 0028 7868     		ldr	r0, [r7, #4]
+ 1242 002a FFF7FEFF 		bl	vPortFree
+1119:../FreeRTOS/Source/queue.c **** }
+ 1243              		.loc 1 1119 0
+ 1244 002e 0837     		adds	r7, r7, #8
+ 1245 0030 BD46     		mov	sp, r7
+ 1246              		@ sp needed
+ 1247 0032 80BD     		pop	{r7, pc}
+ 1248              		.cfi_endproc
+ 1249              	.LFE8:
+ 1251              		.section	.text.prvCopyDataToQueue,"ax",%progbits
+ 1252              		.align	2
+ 1253              		.thumb
+ 1254              		.thumb_func
+ 1256              	prvCopyDataToQueue:
+ 1257              	.LFB9:
+1120:../FreeRTOS/Source/queue.c **** /*-----------------------------------------------------------*/
+1121:../FreeRTOS/Source/queue.c **** 
+1122:../FreeRTOS/Source/queue.c **** #if ( configUSE_TRACE_FACILITY == 1 )
+1123:../FreeRTOS/Source/queue.c **** 
+1124:../FreeRTOS/Source/queue.c **** 	unsigned char ucQueueGetQueueNumber( xQueueHandle pxQueue )
+1125:../FreeRTOS/Source/queue.c **** 	{
+1126:../FreeRTOS/Source/queue.c **** 		return pxQueue->ucQueueNumber;
+1127:../FreeRTOS/Source/queue.c **** 	}
+1128:../FreeRTOS/Source/queue.c **** 
+1129:../FreeRTOS/Source/queue.c **** #endif
+1130:../FreeRTOS/Source/queue.c **** /*-----------------------------------------------------------*/
+1131:../FreeRTOS/Source/queue.c **** 
+1132:../FreeRTOS/Source/queue.c **** #if ( configUSE_TRACE_FACILITY == 1 )
+1133:../FreeRTOS/Source/queue.c **** 
+1134:../FreeRTOS/Source/queue.c **** 	void vQueueSetQueueNumber( xQueueHandle pxQueue, unsigned char ucQueueNumber )
+1135:../FreeRTOS/Source/queue.c **** 	{
+1136:../FreeRTOS/Source/queue.c **** 		pxQueue->ucQueueNumber = ucQueueNumber;
+1137:../FreeRTOS/Source/queue.c **** 	}
+1138:../FreeRTOS/Source/queue.c **** 
+1139:../FreeRTOS/Source/queue.c **** #endif
+1140:../FreeRTOS/Source/queue.c **** /*-----------------------------------------------------------*/
+1141:../FreeRTOS/Source/queue.c **** 
+1142:../FreeRTOS/Source/queue.c **** #if ( configUSE_TRACE_FACILITY == 1 )
+1143:../FreeRTOS/Source/queue.c **** 
+1144:../FreeRTOS/Source/queue.c **** 	unsigned char ucQueueGetQueueType( xQueueHandle pxQueue )
+1145:../FreeRTOS/Source/queue.c **** 	{
+1146:../FreeRTOS/Source/queue.c **** 		return pxQueue->ucQueueType;
+1147:../FreeRTOS/Source/queue.c **** 	}
+1148:../FreeRTOS/Source/queue.c **** 
+1149:../FreeRTOS/Source/queue.c **** #endif
+1150:../FreeRTOS/Source/queue.c **** /*-----------------------------------------------------------*/
+1151:../FreeRTOS/Source/queue.c **** 
+1152:../FreeRTOS/Source/queue.c **** static void prvCopyDataToQueue( xQUEUE *pxQueue, const void *pvItemToQueue, portBASE_TYPE xPosition
+1153:../FreeRTOS/Source/queue.c **** {
+ 1258              		.loc 1 1153 0
+ 1259              		.cfi_startproc
+ 1260              		@ args = 0, pretend = 0, frame = 16
+ 1261              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1262 0000 80B5     		push	{r7, lr}
+ 1263              		.cfi_def_cfa_offset 8
+ 1264              		.cfi_offset 7, -8
+ 1265              		.cfi_offset 14, -4
+ 1266 0002 84B0     		sub	sp, sp, #16
+ 1267              		.cfi_def_cfa_offset 24
+ 1268 0004 00AF     		add	r7, sp, #0
+ 1269              		.cfi_def_cfa_register 7
+ 1270 0006 F860     		str	r0, [r7, #12]
+ 1271 0008 B960     		str	r1, [r7, #8]
+ 1272 000a 7A60     		str	r2, [r7, #4]
+1154:../FreeRTOS/Source/queue.c **** 	if( pxQueue->uxItemSize == ( unsigned portBASE_TYPE ) 0 )
+ 1273              		.loc 1 1154 0
+ 1274 000c FB68     		ldr	r3, [r7, #12]
+ 1275 000e 1B6C     		ldr	r3, [r3, #64]
+ 1276 0010 002B     		cmp	r3, #0
+ 1277 0012 0CD1     		bne	.L102
+1155:../FreeRTOS/Source/queue.c **** 	{
+1156:../FreeRTOS/Source/queue.c **** 		#if ( configUSE_MUTEXES == 1 )
+1157:../FreeRTOS/Source/queue.c **** 		{
+1158:../FreeRTOS/Source/queue.c **** 			if( pxQueue->uxQueueType == queueQUEUE_IS_MUTEX )
+ 1278              		.loc 1 1158 0
+ 1279 0014 FB68     		ldr	r3, [r7, #12]
+ 1280 0016 1B68     		ldr	r3, [r3]
+ 1281 0018 002B     		cmp	r3, #0
+ 1282 001a 45D1     		bne	.L104
+1159:../FreeRTOS/Source/queue.c **** 			{
+1160:../FreeRTOS/Source/queue.c **** 				/* The mutex is no longer being held. */
+1161:../FreeRTOS/Source/queue.c **** 				vTaskPriorityDisinherit( ( void * ) pxQueue->pxMutexHolder );
+ 1283              		.loc 1 1161 0
+ 1284 001c FB68     		ldr	r3, [r7, #12]
+ 1285 001e 5B68     		ldr	r3, [r3, #4]
+ 1286 0020 1846     		mov	r0, r3
+ 1287 0022 FFF7FEFF 		bl	vTaskPriorityDisinherit
+1162:../FreeRTOS/Source/queue.c **** 				pxQueue->pxMutexHolder = NULL;
+ 1288              		.loc 1 1162 0
+ 1289 0026 FB68     		ldr	r3, [r7, #12]
+ 1290 0028 0022     		movs	r2, #0
+ 1291 002a 5A60     		str	r2, [r3, #4]
+ 1292 002c 3CE0     		b	.L104
+ 1293              	.L102:
+1163:../FreeRTOS/Source/queue.c **** 			}
+1164:../FreeRTOS/Source/queue.c **** 		}
+1165:../FreeRTOS/Source/queue.c **** 		#endif
+1166:../FreeRTOS/Source/queue.c **** 	}
+1167:../FreeRTOS/Source/queue.c **** 	else if( xPosition == queueSEND_TO_BACK )
+ 1294              		.loc 1 1167 0
+ 1295 002e 7B68     		ldr	r3, [r7, #4]
+ 1296 0030 002B     		cmp	r3, #0
+ 1297 0032 1AD1     		bne	.L105
+1168:../FreeRTOS/Source/queue.c **** 	{
+1169:../FreeRTOS/Source/queue.c **** 		memcpy( ( void * ) pxQueue->pcWriteTo, pvItemToQueue, ( unsigned ) pxQueue->uxItemSize );
+ 1298              		.loc 1 1169 0
+ 1299 0034 FB68     		ldr	r3, [r7, #12]
+ 1300 0036 9A68     		ldr	r2, [r3, #8]
+ 1301 0038 FB68     		ldr	r3, [r7, #12]
+ 1302 003a 1B6C     		ldr	r3, [r3, #64]
+ 1303 003c 1046     		mov	r0, r2
+ 1304 003e B968     		ldr	r1, [r7, #8]
+ 1305 0040 1A46     		mov	r2, r3
+ 1306 0042 FFF7FEFF 		bl	memcpy
+1170:../FreeRTOS/Source/queue.c **** 		pxQueue->pcWriteTo += pxQueue->uxItemSize;
+ 1307              		.loc 1 1170 0
+ 1308 0046 FB68     		ldr	r3, [r7, #12]
+ 1309 0048 9A68     		ldr	r2, [r3, #8]
+ 1310 004a FB68     		ldr	r3, [r7, #12]
+ 1311 004c 1B6C     		ldr	r3, [r3, #64]
+ 1312 004e 1A44     		add	r2, r2, r3
+ 1313 0050 FB68     		ldr	r3, [r7, #12]
+ 1314 0052 9A60     		str	r2, [r3, #8]
+1171:../FreeRTOS/Source/queue.c **** 		if( pxQueue->pcWriteTo >= pxQueue->pcTail )
+ 1315              		.loc 1 1171 0
+ 1316 0054 FB68     		ldr	r3, [r7, #12]
+ 1317 0056 9A68     		ldr	r2, [r3, #8]
+ 1318 0058 FB68     		ldr	r3, [r7, #12]
+ 1319 005a 5B68     		ldr	r3, [r3, #4]
+ 1320 005c 9A42     		cmp	r2, r3
+ 1321 005e 23D3     		bcc	.L104
+1172:../FreeRTOS/Source/queue.c **** 		{
+1173:../FreeRTOS/Source/queue.c **** 			pxQueue->pcWriteTo = pxQueue->pcHead;
+ 1322              		.loc 1 1173 0
+ 1323 0060 FB68     		ldr	r3, [r7, #12]
+ 1324 0062 1A68     		ldr	r2, [r3]
+ 1325 0064 FB68     		ldr	r3, [r7, #12]
+ 1326 0066 9A60     		str	r2, [r3, #8]
+ 1327 0068 1EE0     		b	.L104
+ 1328              	.L105:
+1174:../FreeRTOS/Source/queue.c **** 		}
+1175:../FreeRTOS/Source/queue.c **** 	}
+1176:../FreeRTOS/Source/queue.c **** 	else
+1177:../FreeRTOS/Source/queue.c **** 	{
+1178:../FreeRTOS/Source/queue.c **** 		memcpy( ( void * ) pxQueue->pcReadFrom, pvItemToQueue, ( unsigned ) pxQueue->uxItemSize );
+ 1329              		.loc 1 1178 0
+ 1330 006a FB68     		ldr	r3, [r7, #12]
+ 1331 006c DA68     		ldr	r2, [r3, #12]
+ 1332 006e FB68     		ldr	r3, [r7, #12]
+ 1333 0070 1B6C     		ldr	r3, [r3, #64]
+ 1334 0072 1046     		mov	r0, r2
+ 1335 0074 B968     		ldr	r1, [r7, #8]
+ 1336 0076 1A46     		mov	r2, r3
+ 1337 0078 FFF7FEFF 		bl	memcpy
+1179:../FreeRTOS/Source/queue.c **** 		pxQueue->pcReadFrom -= pxQueue->uxItemSize;
+ 1338              		.loc 1 1179 0
+ 1339 007c FB68     		ldr	r3, [r7, #12]
+ 1340 007e DA68     		ldr	r2, [r3, #12]
+ 1341 0080 FB68     		ldr	r3, [r7, #12]
+ 1342 0082 1B6C     		ldr	r3, [r3, #64]
+ 1343 0084 5B42     		negs	r3, r3
+ 1344 0086 1A44     		add	r2, r2, r3
+ 1345 0088 FB68     		ldr	r3, [r7, #12]
+ 1346 008a DA60     		str	r2, [r3, #12]
+1180:../FreeRTOS/Source/queue.c **** 		if( pxQueue->pcReadFrom < pxQueue->pcHead )
+ 1347              		.loc 1 1180 0
+ 1348 008c FB68     		ldr	r3, [r7, #12]
+ 1349 008e DA68     		ldr	r2, [r3, #12]
+ 1350 0090 FB68     		ldr	r3, [r7, #12]
+ 1351 0092 1B68     		ldr	r3, [r3]
+ 1352 0094 9A42     		cmp	r2, r3
+ 1353 0096 07D2     		bcs	.L104
+1181:../FreeRTOS/Source/queue.c **** 		{
+1182:../FreeRTOS/Source/queue.c **** 			pxQueue->pcReadFrom = ( pxQueue->pcTail - pxQueue->uxItemSize );
+ 1354              		.loc 1 1182 0
+ 1355 0098 FB68     		ldr	r3, [r7, #12]
+ 1356 009a 5A68     		ldr	r2, [r3, #4]
+ 1357 009c FB68     		ldr	r3, [r7, #12]
+ 1358 009e 1B6C     		ldr	r3, [r3, #64]
+ 1359 00a0 5B42     		negs	r3, r3
+ 1360 00a2 1A44     		add	r2, r2, r3
+ 1361 00a4 FB68     		ldr	r3, [r7, #12]
+ 1362 00a6 DA60     		str	r2, [r3, #12]
+ 1363              	.L104:
+1183:../FreeRTOS/Source/queue.c **** 		}
+1184:../FreeRTOS/Source/queue.c **** 	}
+1185:../FreeRTOS/Source/queue.c **** 
+1186:../FreeRTOS/Source/queue.c **** 	++( pxQueue->uxMessagesWaiting );
+ 1364              		.loc 1 1186 0
+ 1365 00a8 FB68     		ldr	r3, [r7, #12]
+ 1366 00aa 9B6B     		ldr	r3, [r3, #56]
+ 1367 00ac 5A1C     		adds	r2, r3, #1
+ 1368 00ae FB68     		ldr	r3, [r7, #12]
+ 1369 00b0 9A63     		str	r2, [r3, #56]
+1187:../FreeRTOS/Source/queue.c **** }
+ 1370              		.loc 1 1187 0
+ 1371 00b2 1037     		adds	r7, r7, #16
+ 1372 00b4 BD46     		mov	sp, r7
+ 1373              		@ sp needed
+ 1374 00b6 80BD     		pop	{r7, pc}
+ 1375              		.cfi_endproc
+ 1376              	.LFE9:
+ 1378              		.section	.text.prvCopyDataFromQueue,"ax",%progbits
+ 1379              		.align	2
+ 1380              		.thumb
+ 1381              		.thumb_func
+ 1383              	prvCopyDataFromQueue:
+ 1384              	.LFB10:
+1188:../FreeRTOS/Source/queue.c **** /*-----------------------------------------------------------*/
+1189:../FreeRTOS/Source/queue.c **** 
+1190:../FreeRTOS/Source/queue.c **** static void prvCopyDataFromQueue( xQUEUE * const pxQueue, const void *pvBuffer )
+1191:../FreeRTOS/Source/queue.c **** {
+ 1385              		.loc 1 1191 0
+ 1386              		.cfi_startproc
+ 1387              		@ args = 0, pretend = 0, frame = 8
+ 1388              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1389 0000 80B5     		push	{r7, lr}
+ 1390              		.cfi_def_cfa_offset 8
+ 1391              		.cfi_offset 7, -8
+ 1392              		.cfi_offset 14, -4
+ 1393 0002 82B0     		sub	sp, sp, #8
+ 1394              		.cfi_def_cfa_offset 16
+ 1395 0004 00AF     		add	r7, sp, #0
+ 1396              		.cfi_def_cfa_register 7
+ 1397 0006 7860     		str	r0, [r7, #4]
+ 1398 0008 3960     		str	r1, [r7]
+1192:../FreeRTOS/Source/queue.c **** 	if( pxQueue->uxQueueType != queueQUEUE_IS_MUTEX )
+ 1399              		.loc 1 1192 0
+ 1400 000a 7B68     		ldr	r3, [r7, #4]
+ 1401 000c 1B68     		ldr	r3, [r3]
+ 1402 000e 002B     		cmp	r3, #0
+ 1403 0010 19D0     		beq	.L107
+1193:../FreeRTOS/Source/queue.c **** 	{
+1194:../FreeRTOS/Source/queue.c **** 		pxQueue->pcReadFrom += pxQueue->uxItemSize;
+ 1404              		.loc 1 1194 0
+ 1405 0012 7B68     		ldr	r3, [r7, #4]
+ 1406 0014 DA68     		ldr	r2, [r3, #12]
+ 1407 0016 7B68     		ldr	r3, [r7, #4]
+ 1408 0018 1B6C     		ldr	r3, [r3, #64]
+ 1409 001a 1A44     		add	r2, r2, r3
+ 1410 001c 7B68     		ldr	r3, [r7, #4]
+ 1411 001e DA60     		str	r2, [r3, #12]
+1195:../FreeRTOS/Source/queue.c **** 		if( pxQueue->pcReadFrom >= pxQueue->pcTail )
+ 1412              		.loc 1 1195 0
+ 1413 0020 7B68     		ldr	r3, [r7, #4]
+ 1414 0022 DA68     		ldr	r2, [r3, #12]
+ 1415 0024 7B68     		ldr	r3, [r7, #4]
+ 1416 0026 5B68     		ldr	r3, [r3, #4]
+ 1417 0028 9A42     		cmp	r2, r3
+ 1418 002a 03D3     		bcc	.L109
+1196:../FreeRTOS/Source/queue.c **** 		{
+1197:../FreeRTOS/Source/queue.c **** 			pxQueue->pcReadFrom = pxQueue->pcHead;
+ 1419              		.loc 1 1197 0
+ 1420 002c 7B68     		ldr	r3, [r7, #4]
+ 1421 002e 1A68     		ldr	r2, [r3]
+ 1422 0030 7B68     		ldr	r3, [r7, #4]
+ 1423 0032 DA60     		str	r2, [r3, #12]
+ 1424              	.L109:
+1198:../FreeRTOS/Source/queue.c **** 		}
+1199:../FreeRTOS/Source/queue.c **** 		memcpy( ( void * ) pvBuffer, ( void * ) pxQueue->pcReadFrom, ( unsigned ) pxQueue->uxItemSize );
+ 1425              		.loc 1 1199 0
+ 1426 0034 7B68     		ldr	r3, [r7, #4]
+ 1427 0036 DA68     		ldr	r2, [r3, #12]
+ 1428 0038 7B68     		ldr	r3, [r7, #4]
+ 1429 003a 1B6C     		ldr	r3, [r3, #64]
+ 1430 003c 3868     		ldr	r0, [r7]
+ 1431 003e 1146     		mov	r1, r2
+ 1432 0040 1A46     		mov	r2, r3
+ 1433 0042 FFF7FEFF 		bl	memcpy
+ 1434              	.L107:
+1200:../FreeRTOS/Source/queue.c **** 	}
+1201:../FreeRTOS/Source/queue.c **** }
+ 1435              		.loc 1 1201 0
+ 1436 0046 0837     		adds	r7, r7, #8
+ 1437 0048 BD46     		mov	sp, r7
+ 1438              		@ sp needed
+ 1439 004a 80BD     		pop	{r7, pc}
+ 1440              		.cfi_endproc
+ 1441              	.LFE10:
+ 1443              		.section	.text.prvUnlockQueue,"ax",%progbits
+ 1444              		.align	2
+ 1445              		.thumb
+ 1446              		.thumb_func
+ 1448              	prvUnlockQueue:
+ 1449              	.LFB11:
+1202:../FreeRTOS/Source/queue.c **** /*-----------------------------------------------------------*/
+1203:../FreeRTOS/Source/queue.c **** 
+1204:../FreeRTOS/Source/queue.c **** static void prvUnlockQueue( xQueueHandle pxQueue )
+1205:../FreeRTOS/Source/queue.c **** {
+ 1450              		.loc 1 1205 0
+ 1451              		.cfi_startproc
+ 1452              		@ args = 0, pretend = 0, frame = 8
+ 1453              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1454 0000 80B5     		push	{r7, lr}
+ 1455              		.cfi_def_cfa_offset 8
+ 1456              		.cfi_offset 7, -8
+ 1457              		.cfi_offset 14, -4
+ 1458 0002 82B0     		sub	sp, sp, #8
+ 1459              		.cfi_def_cfa_offset 16
+ 1460 0004 00AF     		add	r7, sp, #0
+ 1461              		.cfi_def_cfa_register 7
+ 1462 0006 7860     		str	r0, [r7, #4]
+1206:../FreeRTOS/Source/queue.c **** 	/* THIS FUNCTION MUST BE CALLED WITH THE SCHEDULER SUSPENDED. */
+1207:../FreeRTOS/Source/queue.c **** 
+1208:../FreeRTOS/Source/queue.c **** 	/* The lock counts contains the number of extra data items placed or
+1209:../FreeRTOS/Source/queue.c **** 	removed from the queue while the queue was locked.  When a queue is
+1210:../FreeRTOS/Source/queue.c **** 	locked items can be added or removed, but the event lists cannot be
+1211:../FreeRTOS/Source/queue.c **** 	updated. */
+1212:../FreeRTOS/Source/queue.c **** 	taskENTER_CRITICAL();
+ 1463              		.loc 1 1212 0
+ 1464 0008 FFF7FEFF 		bl	vPortEnterCritical
+1213:../FreeRTOS/Source/queue.c **** 	{
+1214:../FreeRTOS/Source/queue.c **** 		/* See if data was added to the queue while it was locked. */
+1215:../FreeRTOS/Source/queue.c **** 		while( pxQueue->xTxLock > queueLOCKED_UNMODIFIED )
+ 1465              		.loc 1 1215 0
+ 1466 000c 14E0     		b	.L111
+ 1467              	.L115:
+1216:../FreeRTOS/Source/queue.c **** 		{
+1217:../FreeRTOS/Source/queue.c **** 			/* Data was posted while the queue was locked.  Are any tasks
+1218:../FreeRTOS/Source/queue.c **** 			blocked waiting for data to become available? */
+1219:../FreeRTOS/Source/queue.c **** 			if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) == pdFALSE )
+ 1468              		.loc 1 1219 0
+ 1469 000e 7B68     		ldr	r3, [r7, #4]
+ 1470 0010 5B6A     		ldr	r3, [r3, #36]
+ 1471 0012 002B     		cmp	r3, #0
+ 1472 0014 0FD0     		beq	.L112
+1220:../FreeRTOS/Source/queue.c **** 			{
+1221:../FreeRTOS/Source/queue.c **** 				/* Tasks that are removed from the event list will get added to
+1222:../FreeRTOS/Source/queue.c **** 				the pending ready list as the scheduler is still suspended. */
+1223:../FreeRTOS/Source/queue.c **** 				if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToReceive ) ) != pdFALSE )
+ 1473              		.loc 1 1223 0
+ 1474 0016 7B68     		ldr	r3, [r7, #4]
+ 1475 0018 2433     		adds	r3, r3, #36
+ 1476 001a 1846     		mov	r0, r3
+ 1477 001c FFF7FEFF 		bl	xTaskRemoveFromEventList
+ 1478 0020 0346     		mov	r3, r0
+ 1479 0022 002B     		cmp	r3, #0
+ 1480 0024 01D0     		beq	.L113
+1224:../FreeRTOS/Source/queue.c **** 				{
+1225:../FreeRTOS/Source/queue.c **** 					/* The task waiting has a higher priority so record that a
+1226:../FreeRTOS/Source/queue.c **** 					context	switch is required. */
+1227:../FreeRTOS/Source/queue.c **** 					vTaskMissedYield();
+ 1481              		.loc 1 1227 0
+ 1482 0026 FFF7FEFF 		bl	vTaskMissedYield
+ 1483              	.L113:
+1228:../FreeRTOS/Source/queue.c **** 				}
+1229:../FreeRTOS/Source/queue.c **** 
+1230:../FreeRTOS/Source/queue.c **** 				--( pxQueue->xTxLock );
+ 1484              		.loc 1 1230 0
+ 1485 002a 7B68     		ldr	r3, [r7, #4]
+ 1486 002c 9B6C     		ldr	r3, [r3, #72]
+ 1487 002e 5A1E     		subs	r2, r3, #1
+ 1488 0030 7B68     		ldr	r3, [r7, #4]
+ 1489 0032 9A64     		str	r2, [r3, #72]
+ 1490 0034 00E0     		b	.L111
+ 1491              	.L112:
+1231:../FreeRTOS/Source/queue.c **** 			}
+1232:../FreeRTOS/Source/queue.c **** 			else
+1233:../FreeRTOS/Source/queue.c **** 			{
+1234:../FreeRTOS/Source/queue.c **** 				break;
+ 1492              		.loc 1 1234 0
+ 1493 0036 03E0     		b	.L114
+ 1494              	.L111:
+1215:../FreeRTOS/Source/queue.c **** 		{
+ 1495              		.loc 1 1215 0 discriminator 1
+ 1496 0038 7B68     		ldr	r3, [r7, #4]
+ 1497 003a 9B6C     		ldr	r3, [r3, #72]
+ 1498 003c 002B     		cmp	r3, #0
+ 1499 003e E6DC     		bgt	.L115
+ 1500              	.L114:
+1235:../FreeRTOS/Source/queue.c **** 			}
+1236:../FreeRTOS/Source/queue.c **** 		}
+1237:../FreeRTOS/Source/queue.c **** 
+1238:../FreeRTOS/Source/queue.c **** 		pxQueue->xTxLock = queueUNLOCKED;
+ 1501              		.loc 1 1238 0
+ 1502 0040 7B68     		ldr	r3, [r7, #4]
+ 1503 0042 4FF0FF32 		mov	r2, #-1
+ 1504 0046 9A64     		str	r2, [r3, #72]
+1239:../FreeRTOS/Source/queue.c **** 	}
+1240:../FreeRTOS/Source/queue.c **** 	taskEXIT_CRITICAL();
+ 1505              		.loc 1 1240 0
+ 1506 0048 FFF7FEFF 		bl	vPortExitCritical
+1241:../FreeRTOS/Source/queue.c **** 
+1242:../FreeRTOS/Source/queue.c **** 	/* Do the same for the Rx lock. */
+1243:../FreeRTOS/Source/queue.c **** 	taskENTER_CRITICAL();
+ 1507              		.loc 1 1243 0
+ 1508 004c FFF7FEFF 		bl	vPortEnterCritical
+1244:../FreeRTOS/Source/queue.c **** 	{
+1245:../FreeRTOS/Source/queue.c **** 		while( pxQueue->xRxLock > queueLOCKED_UNMODIFIED )
+ 1509              		.loc 1 1245 0
+ 1510 0050 14E0     		b	.L116
+ 1511              	.L120:
+1246:../FreeRTOS/Source/queue.c **** 		{
+1247:../FreeRTOS/Source/queue.c **** 			if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToSend ) ) == pdFALSE )
+ 1512              		.loc 1 1247 0
+ 1513 0052 7B68     		ldr	r3, [r7, #4]
+ 1514 0054 1B69     		ldr	r3, [r3, #16]
+ 1515 0056 002B     		cmp	r3, #0
+ 1516 0058 0FD0     		beq	.L117
+1248:../FreeRTOS/Source/queue.c **** 			{
+1249:../FreeRTOS/Source/queue.c **** 				if( xTaskRemoveFromEventList( &( pxQueue->xTasksWaitingToSend ) ) != pdFALSE )
+ 1517              		.loc 1 1249 0
+ 1518 005a 7B68     		ldr	r3, [r7, #4]
+ 1519 005c 1033     		adds	r3, r3, #16
+ 1520 005e 1846     		mov	r0, r3
+ 1521 0060 FFF7FEFF 		bl	xTaskRemoveFromEventList
+ 1522 0064 0346     		mov	r3, r0
+ 1523 0066 002B     		cmp	r3, #0
+ 1524 0068 01D0     		beq	.L118
+1250:../FreeRTOS/Source/queue.c **** 				{
+1251:../FreeRTOS/Source/queue.c **** 					vTaskMissedYield();
+ 1525              		.loc 1 1251 0
+ 1526 006a FFF7FEFF 		bl	vTaskMissedYield
+ 1527              	.L118:
+1252:../FreeRTOS/Source/queue.c **** 				}
+1253:../FreeRTOS/Source/queue.c **** 
+1254:../FreeRTOS/Source/queue.c **** 				--( pxQueue->xRxLock );
+ 1528              		.loc 1 1254 0
+ 1529 006e 7B68     		ldr	r3, [r7, #4]
+ 1530 0070 5B6C     		ldr	r3, [r3, #68]
+ 1531 0072 5A1E     		subs	r2, r3, #1
+ 1532 0074 7B68     		ldr	r3, [r7, #4]
+ 1533 0076 5A64     		str	r2, [r3, #68]
+ 1534 0078 00E0     		b	.L116
+ 1535              	.L117:
+1255:../FreeRTOS/Source/queue.c **** 			}
+1256:../FreeRTOS/Source/queue.c **** 			else
+1257:../FreeRTOS/Source/queue.c **** 			{
+1258:../FreeRTOS/Source/queue.c **** 				break;
+ 1536              		.loc 1 1258 0
+ 1537 007a 03E0     		b	.L119
+ 1538              	.L116:
+1245:../FreeRTOS/Source/queue.c **** 		{
+ 1539              		.loc 1 1245 0 discriminator 1
+ 1540 007c 7B68     		ldr	r3, [r7, #4]
+ 1541 007e 5B6C     		ldr	r3, [r3, #68]
+ 1542 0080 002B     		cmp	r3, #0
+ 1543 0082 E6DC     		bgt	.L120
+ 1544              	.L119:
+1259:../FreeRTOS/Source/queue.c **** 			}
+1260:../FreeRTOS/Source/queue.c **** 		}
+1261:../FreeRTOS/Source/queue.c **** 
+1262:../FreeRTOS/Source/queue.c **** 		pxQueue->xRxLock = queueUNLOCKED;
+ 1545              		.loc 1 1262 0
+ 1546 0084 7B68     		ldr	r3, [r7, #4]
+ 1547 0086 4FF0FF32 		mov	r2, #-1
+ 1548 008a 5A64     		str	r2, [r3, #68]
+1263:../FreeRTOS/Source/queue.c **** 	}
+1264:../FreeRTOS/Source/queue.c **** 	taskEXIT_CRITICAL();
+ 1549              		.loc 1 1264 0
+ 1550 008c FFF7FEFF 		bl	vPortExitCritical
+1265:../FreeRTOS/Source/queue.c **** }
+ 1551              		.loc 1 1265 0
+ 1552 0090 0837     		adds	r7, r7, #8
+ 1553 0092 BD46     		mov	sp, r7
+ 1554              		@ sp needed
+ 1555 0094 80BD     		pop	{r7, pc}
+ 1556              		.cfi_endproc
+ 1557              	.LFE11:
+ 1559 0096 00BF     		.section	.text.prvIsQueueEmpty,"ax",%progbits
+ 1560              		.align	2
+ 1561              		.thumb
+ 1562              		.thumb_func
+ 1564              	prvIsQueueEmpty:
+ 1565              	.LFB12:
+1266:../FreeRTOS/Source/queue.c **** /*-----------------------------------------------------------*/
+1267:../FreeRTOS/Source/queue.c **** 
+1268:../FreeRTOS/Source/queue.c **** static signed portBASE_TYPE prvIsQueueEmpty( const xQueueHandle pxQueue )
+1269:../FreeRTOS/Source/queue.c **** {
+ 1566              		.loc 1 1269 0
+ 1567              		.cfi_startproc
+ 1568              		@ args = 0, pretend = 0, frame = 16
+ 1569              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1570 0000 80B5     		push	{r7, lr}
+ 1571              		.cfi_def_cfa_offset 8
+ 1572              		.cfi_offset 7, -8
+ 1573              		.cfi_offset 14, -4
+ 1574 0002 84B0     		sub	sp, sp, #16
+ 1575              		.cfi_def_cfa_offset 24
+ 1576 0004 00AF     		add	r7, sp, #0
+ 1577              		.cfi_def_cfa_register 7
+ 1578 0006 7860     		str	r0, [r7, #4]
+1270:../FreeRTOS/Source/queue.c **** signed portBASE_TYPE xReturn;
+1271:../FreeRTOS/Source/queue.c **** 
+1272:../FreeRTOS/Source/queue.c **** 	taskENTER_CRITICAL();
+ 1579              		.loc 1 1272 0
+ 1580 0008 FFF7FEFF 		bl	vPortEnterCritical
+1273:../FreeRTOS/Source/queue.c **** 		xReturn = ( pxQueue->uxMessagesWaiting == ( unsigned portBASE_TYPE ) 0 );
+ 1581              		.loc 1 1273 0
+ 1582 000c 7B68     		ldr	r3, [r7, #4]
+ 1583 000e 9B6B     		ldr	r3, [r3, #56]
+ 1584 0010 002B     		cmp	r3, #0
+ 1585 0012 14BF     		ite	ne
+ 1586 0014 0023     		movne	r3, #0
+ 1587 0016 0123     		moveq	r3, #1
+ 1588 0018 DBB2     		uxtb	r3, r3
+ 1589 001a FB60     		str	r3, [r7, #12]
+1274:../FreeRTOS/Source/queue.c **** 	taskEXIT_CRITICAL();
+ 1590              		.loc 1 1274 0
+ 1591 001c FFF7FEFF 		bl	vPortExitCritical
+1275:../FreeRTOS/Source/queue.c **** 
+1276:../FreeRTOS/Source/queue.c **** 	return xReturn;
+ 1592              		.loc 1 1276 0
+ 1593 0020 FB68     		ldr	r3, [r7, #12]
+1277:../FreeRTOS/Source/queue.c **** }
+ 1594              		.loc 1 1277 0
+ 1595 0022 1846     		mov	r0, r3
+ 1596 0024 1037     		adds	r7, r7, #16
+ 1597 0026 BD46     		mov	sp, r7
+ 1598              		@ sp needed
+ 1599 0028 80BD     		pop	{r7, pc}
+ 1600              		.cfi_endproc
+ 1601              	.LFE12:
+ 1603 002a 00BF     		.section	.text.xQueueIsQueueEmptyFromISR,"ax",%progbits
+ 1604              		.align	2
+ 1605              		.global	xQueueIsQueueEmptyFromISR
+ 1606              		.thumb
+ 1607              		.thumb_func
+ 1609              	xQueueIsQueueEmptyFromISR:
+ 1610              	.LFB13:
+1278:../FreeRTOS/Source/queue.c **** /*-----------------------------------------------------------*/
+1279:../FreeRTOS/Source/queue.c **** 
+1280:../FreeRTOS/Source/queue.c **** signed portBASE_TYPE xQueueIsQueueEmptyFromISR( const xQueueHandle pxQueue )
+1281:../FreeRTOS/Source/queue.c **** {
+ 1611              		.loc 1 1281 0
+ 1612              		.cfi_startproc
+ 1613              		@ args = 0, pretend = 0, frame = 16
+ 1614              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1615              		@ link register save eliminated.
+ 1616 0000 80B4     		push	{r7}
+ 1617              		.cfi_def_cfa_offset 4
+ 1618              		.cfi_offset 7, -4
+ 1619 0002 85B0     		sub	sp, sp, #20
+ 1620              		.cfi_def_cfa_offset 24
+ 1621 0004 00AF     		add	r7, sp, #0
+ 1622              		.cfi_def_cfa_register 7
+ 1623 0006 7860     		str	r0, [r7, #4]
+1282:../FreeRTOS/Source/queue.c **** signed portBASE_TYPE xReturn;
+1283:../FreeRTOS/Source/queue.c **** 
+1284:../FreeRTOS/Source/queue.c **** 	configASSERT( pxQueue );
+ 1624              		.loc 1 1284 0
+ 1625 0008 7B68     		ldr	r3, [r7, #4]
+ 1626 000a 002B     		cmp	r3, #0
+ 1627 000c 04D1     		bne	.L124
+ 1628              		.loc 1 1284 0 is_stmt 0 discriminator 1
+ 1629              	@ 1284 "../FreeRTOS/Source/queue.c" 1
+ 1630 000e 4FF05000 			mov r0, #80								
+ 1631 0012 80F31188 		msr basepri, r0							
+ 1632              	
+ 1633              	@ 0 "" 2
+ 1634              		.thumb
+ 1635              	.L125:
+ 1636 0016 FEE7     		b	.L125
+ 1637              	.L124:
+1285:../FreeRTOS/Source/queue.c **** 	xReturn = ( pxQueue->uxMessagesWaiting == ( unsigned portBASE_TYPE ) 0 );
+ 1638              		.loc 1 1285 0 is_stmt 1
+ 1639 0018 7B68     		ldr	r3, [r7, #4]
+ 1640 001a 9B6B     		ldr	r3, [r3, #56]
+ 1641 001c 002B     		cmp	r3, #0
+ 1642 001e 14BF     		ite	ne
+ 1643 0020 0023     		movne	r3, #0
+ 1644 0022 0123     		moveq	r3, #1
+ 1645 0024 DBB2     		uxtb	r3, r3
+ 1646 0026 FB60     		str	r3, [r7, #12]
+1286:../FreeRTOS/Source/queue.c **** 
+1287:../FreeRTOS/Source/queue.c **** 	return xReturn;
+ 1647              		.loc 1 1287 0
+ 1648 0028 FB68     		ldr	r3, [r7, #12]
+1288:../FreeRTOS/Source/queue.c **** }
+ 1649              		.loc 1 1288 0
+ 1650 002a 1846     		mov	r0, r3
+ 1651 002c 1437     		adds	r7, r7, #20
+ 1652 002e BD46     		mov	sp, r7
+ 1653              		@ sp needed
+ 1654 0030 5DF8047B 		ldr	r7, [sp], #4
+ 1655 0034 7047     		bx	lr
+ 1656              		.cfi_endproc
+ 1657              	.LFE13:
+ 1659 0036 00BF     		.section	.text.prvIsQueueFull,"ax",%progbits
+ 1660              		.align	2
+ 1661              		.thumb
+ 1662              		.thumb_func
+ 1664              	prvIsQueueFull:
+ 1665              	.LFB14:
+1289:../FreeRTOS/Source/queue.c **** /*-----------------------------------------------------------*/
+1290:../FreeRTOS/Source/queue.c **** 
+1291:../FreeRTOS/Source/queue.c **** static signed portBASE_TYPE prvIsQueueFull( const xQueueHandle pxQueue )
+1292:../FreeRTOS/Source/queue.c **** {
+ 1666              		.loc 1 1292 0
+ 1667              		.cfi_startproc
+ 1668              		@ args = 0, pretend = 0, frame = 16
+ 1669              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1670 0000 80B5     		push	{r7, lr}
+ 1671              		.cfi_def_cfa_offset 8
+ 1672              		.cfi_offset 7, -8
+ 1673              		.cfi_offset 14, -4
+ 1674 0002 84B0     		sub	sp, sp, #16
+ 1675              		.cfi_def_cfa_offset 24
+ 1676 0004 00AF     		add	r7, sp, #0
+ 1677              		.cfi_def_cfa_register 7
+ 1678 0006 7860     		str	r0, [r7, #4]
+1293:../FreeRTOS/Source/queue.c **** signed portBASE_TYPE xReturn;
+1294:../FreeRTOS/Source/queue.c **** 
+1295:../FreeRTOS/Source/queue.c **** 	taskENTER_CRITICAL();
+ 1679              		.loc 1 1295 0
+ 1680 0008 FFF7FEFF 		bl	vPortEnterCritical
+1296:../FreeRTOS/Source/queue.c **** 		xReturn = ( pxQueue->uxMessagesWaiting == pxQueue->uxLength );
+ 1681              		.loc 1 1296 0
+ 1682 000c 7B68     		ldr	r3, [r7, #4]
+ 1683 000e 9A6B     		ldr	r2, [r3, #56]
+ 1684 0010 7B68     		ldr	r3, [r7, #4]
+ 1685 0012 DB6B     		ldr	r3, [r3, #60]
+ 1686 0014 9A42     		cmp	r2, r3
+ 1687 0016 14BF     		ite	ne
+ 1688 0018 0023     		movne	r3, #0
+ 1689 001a 0123     		moveq	r3, #1
+ 1690 001c DBB2     		uxtb	r3, r3
+ 1691 001e FB60     		str	r3, [r7, #12]
+1297:../FreeRTOS/Source/queue.c **** 	taskEXIT_CRITICAL();
+ 1692              		.loc 1 1297 0
+ 1693 0020 FFF7FEFF 		bl	vPortExitCritical
+1298:../FreeRTOS/Source/queue.c **** 
+1299:../FreeRTOS/Source/queue.c **** 	return xReturn;
+ 1694              		.loc 1 1299 0
+ 1695 0024 FB68     		ldr	r3, [r7, #12]
+1300:../FreeRTOS/Source/queue.c **** }
+ 1696              		.loc 1 1300 0
+ 1697 0026 1846     		mov	r0, r3
+ 1698 0028 1037     		adds	r7, r7, #16
+ 1699 002a BD46     		mov	sp, r7
+ 1700              		@ sp needed
+ 1701 002c 80BD     		pop	{r7, pc}
+ 1702              		.cfi_endproc
+ 1703              	.LFE14:
+ 1705 002e 00BF     		.section	.text.xQueueIsQueueFullFromISR,"ax",%progbits
+ 1706              		.align	2
+ 1707              		.global	xQueueIsQueueFullFromISR
+ 1708              		.thumb
+ 1709              		.thumb_func
+ 1711              	xQueueIsQueueFullFromISR:
+ 1712              	.LFB15:
+1301:../FreeRTOS/Source/queue.c **** /*-----------------------------------------------------------*/
+1302:../FreeRTOS/Source/queue.c **** 
+1303:../FreeRTOS/Source/queue.c **** signed portBASE_TYPE xQueueIsQueueFullFromISR( const xQueueHandle pxQueue )
+1304:../FreeRTOS/Source/queue.c **** {
+ 1713              		.loc 1 1304 0
+ 1714              		.cfi_startproc
+ 1715              		@ args = 0, pretend = 0, frame = 16
+ 1716              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1717              		@ link register save eliminated.
+ 1718 0000 80B4     		push	{r7}
+ 1719              		.cfi_def_cfa_offset 4
+ 1720              		.cfi_offset 7, -4
+ 1721 0002 85B0     		sub	sp, sp, #20
+ 1722              		.cfi_def_cfa_offset 24
+ 1723 0004 00AF     		add	r7, sp, #0
+ 1724              		.cfi_def_cfa_register 7
+ 1725 0006 7860     		str	r0, [r7, #4]
+1305:../FreeRTOS/Source/queue.c **** signed portBASE_TYPE xReturn;
+1306:../FreeRTOS/Source/queue.c **** 
+1307:../FreeRTOS/Source/queue.c **** 	configASSERT( pxQueue );
+ 1726              		.loc 1 1307 0
+ 1727 0008 7B68     		ldr	r3, [r7, #4]
+ 1728 000a 002B     		cmp	r3, #0
+ 1729 000c 04D1     		bne	.L130
+ 1730              		.loc 1 1307 0 is_stmt 0 discriminator 1
+ 1731              	@ 1307 "../FreeRTOS/Source/queue.c" 1
+ 1732 000e 4FF05000 			mov r0, #80								
+ 1733 0012 80F31188 		msr basepri, r0							
+ 1734              	
+ 1735              	@ 0 "" 2
+ 1736              		.thumb
+ 1737              	.L131:
+ 1738 0016 FEE7     		b	.L131
+ 1739              	.L130:
+1308:../FreeRTOS/Source/queue.c **** 	xReturn = ( pxQueue->uxMessagesWaiting == pxQueue->uxLength );
+ 1740              		.loc 1 1308 0 is_stmt 1
+ 1741 0018 7B68     		ldr	r3, [r7, #4]
+ 1742 001a 9A6B     		ldr	r2, [r3, #56]
+ 1743 001c 7B68     		ldr	r3, [r7, #4]
+ 1744 001e DB6B     		ldr	r3, [r3, #60]
+ 1745 0020 9A42     		cmp	r2, r3
+ 1746 0022 14BF     		ite	ne
+ 1747 0024 0023     		movne	r3, #0
+ 1748 0026 0123     		moveq	r3, #1
+ 1749 0028 DBB2     		uxtb	r3, r3
+ 1750 002a FB60     		str	r3, [r7, #12]
+1309:../FreeRTOS/Source/queue.c **** 
+1310:../FreeRTOS/Source/queue.c **** 	return xReturn;
+ 1751              		.loc 1 1310 0
+ 1752 002c FB68     		ldr	r3, [r7, #12]
+1311:../FreeRTOS/Source/queue.c **** }
+ 1753              		.loc 1 1311 0
+ 1754 002e 1846     		mov	r0, r3
+ 1755 0030 1437     		adds	r7, r7, #20
+ 1756 0032 BD46     		mov	sp, r7
+ 1757              		@ sp needed
+ 1758 0034 5DF8047B 		ldr	r7, [sp], #4
+ 1759 0038 7047     		bx	lr
+ 1760              		.cfi_endproc
+ 1761              	.LFE15:
+ 1763 003a 00BF     		.section	.text.vQueueAddToRegistry,"ax",%progbits
+ 1764              		.align	2
+ 1765              		.global	vQueueAddToRegistry
+ 1766              		.thumb
+ 1767              		.thumb_func
+ 1769              	vQueueAddToRegistry:
+ 1770              	.LFB16:
+1312:../FreeRTOS/Source/queue.c **** /*-----------------------------------------------------------*/
+1313:../FreeRTOS/Source/queue.c **** 
+1314:../FreeRTOS/Source/queue.c **** #if configUSE_CO_ROUTINES == 1
+1315:../FreeRTOS/Source/queue.c **** signed portBASE_TYPE xQueueCRSend( xQueueHandle pxQueue, const void *pvItemToQueue, portTickType xT
+1316:../FreeRTOS/Source/queue.c **** {
+1317:../FreeRTOS/Source/queue.c **** signed portBASE_TYPE xReturn;
+1318:../FreeRTOS/Source/queue.c **** 
+1319:../FreeRTOS/Source/queue.c **** 	/* If the queue is already full we may have to block.  A critical section
+1320:../FreeRTOS/Source/queue.c **** 	is required to prevent an interrupt removing something from the queue
+1321:../FreeRTOS/Source/queue.c **** 	between the check to see if the queue is full and blocking on the queue. */
+1322:../FreeRTOS/Source/queue.c **** 	portDISABLE_INTERRUPTS();
+1323:../FreeRTOS/Source/queue.c **** 	{
+1324:../FreeRTOS/Source/queue.c **** 		if( prvIsQueueFull( pxQueue ) != pdFALSE )
+1325:../FreeRTOS/Source/queue.c **** 		{
+1326:../FreeRTOS/Source/queue.c **** 			/* The queue is full - do we want to block or just leave without
+1327:../FreeRTOS/Source/queue.c **** 			posting? */
+1328:../FreeRTOS/Source/queue.c **** 			if( xTicksToWait > ( portTickType ) 0 )
+1329:../FreeRTOS/Source/queue.c **** 			{
+1330:../FreeRTOS/Source/queue.c **** 				/* As this is called from a coroutine we cannot block directly, but
+1331:../FreeRTOS/Source/queue.c **** 				return indicating that we need to block. */
+1332:../FreeRTOS/Source/queue.c **** 				vCoRoutineAddToDelayedList( xTicksToWait, &( pxQueue->xTasksWaitingToSend ) );
+1333:../FreeRTOS/Source/queue.c **** 				portENABLE_INTERRUPTS();
+1334:../FreeRTOS/Source/queue.c **** 				return errQUEUE_BLOCKED;
+1335:../FreeRTOS/Source/queue.c **** 			}
+1336:../FreeRTOS/Source/queue.c **** 			else
+1337:../FreeRTOS/Source/queue.c **** 			{
+1338:../FreeRTOS/Source/queue.c **** 				portENABLE_INTERRUPTS();
+1339:../FreeRTOS/Source/queue.c **** 				return errQUEUE_FULL;
+1340:../FreeRTOS/Source/queue.c **** 			}
+1341:../FreeRTOS/Source/queue.c **** 		}
+1342:../FreeRTOS/Source/queue.c **** 	}
+1343:../FreeRTOS/Source/queue.c **** 	portENABLE_INTERRUPTS();
+1344:../FreeRTOS/Source/queue.c **** 
+1345:../FreeRTOS/Source/queue.c **** 	portNOP();
+1346:../FreeRTOS/Source/queue.c **** 
+1347:../FreeRTOS/Source/queue.c **** 	portDISABLE_INTERRUPTS();
+1348:../FreeRTOS/Source/queue.c **** 	{
+1349:../FreeRTOS/Source/queue.c **** 		if( pxQueue->uxMessagesWaiting < pxQueue->uxLength )
+1350:../FreeRTOS/Source/queue.c **** 		{
+1351:../FreeRTOS/Source/queue.c **** 			/* There is room in the queue, copy the data into the queue. */
+1352:../FreeRTOS/Source/queue.c **** 			prvCopyDataToQueue( pxQueue, pvItemToQueue, queueSEND_TO_BACK );
+1353:../FreeRTOS/Source/queue.c **** 			xReturn = pdPASS;
+1354:../FreeRTOS/Source/queue.c **** 
+1355:../FreeRTOS/Source/queue.c **** 			/* Were any co-routines waiting for data to become available? */
+1356:../FreeRTOS/Source/queue.c **** 			if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) == pdFALSE )
+1357:../FreeRTOS/Source/queue.c **** 			{
+1358:../FreeRTOS/Source/queue.c **** 				/* In this instance the co-routine could be placed directly
+1359:../FreeRTOS/Source/queue.c **** 				into the ready list as we are within a critical section.
+1360:../FreeRTOS/Source/queue.c **** 				Instead the same pending ready list mechanism is used as if
+1361:../FreeRTOS/Source/queue.c **** 				the event were caused from within an interrupt. */
+1362:../FreeRTOS/Source/queue.c **** 				if( xCoRoutineRemoveFromEventList( &( pxQueue->xTasksWaitingToReceive ) ) != pdFALSE )
+1363:../FreeRTOS/Source/queue.c **** 				{
+1364:../FreeRTOS/Source/queue.c **** 					/* The co-routine waiting has a higher priority so record
+1365:../FreeRTOS/Source/queue.c **** 					that a yield might be appropriate. */
+1366:../FreeRTOS/Source/queue.c **** 					xReturn = errQUEUE_YIELD;
+1367:../FreeRTOS/Source/queue.c **** 				}
+1368:../FreeRTOS/Source/queue.c **** 			}
+1369:../FreeRTOS/Source/queue.c **** 		}
+1370:../FreeRTOS/Source/queue.c **** 		else
+1371:../FreeRTOS/Source/queue.c **** 		{
+1372:../FreeRTOS/Source/queue.c **** 			xReturn = errQUEUE_FULL;
+1373:../FreeRTOS/Source/queue.c **** 		}
+1374:../FreeRTOS/Source/queue.c **** 	}
+1375:../FreeRTOS/Source/queue.c **** 	portENABLE_INTERRUPTS();
+1376:../FreeRTOS/Source/queue.c **** 
+1377:../FreeRTOS/Source/queue.c **** 	return xReturn;
+1378:../FreeRTOS/Source/queue.c **** }
+1379:../FreeRTOS/Source/queue.c **** #endif
+1380:../FreeRTOS/Source/queue.c **** /*-----------------------------------------------------------*/
+1381:../FreeRTOS/Source/queue.c **** 
+1382:../FreeRTOS/Source/queue.c **** #if configUSE_CO_ROUTINES == 1
+1383:../FreeRTOS/Source/queue.c **** signed portBASE_TYPE xQueueCRReceive( xQueueHandle pxQueue, void *pvBuffer, portTickType xTicksToWa
+1384:../FreeRTOS/Source/queue.c **** {
+1385:../FreeRTOS/Source/queue.c **** signed portBASE_TYPE xReturn;
+1386:../FreeRTOS/Source/queue.c **** 
+1387:../FreeRTOS/Source/queue.c **** 	/* If the queue is already empty we may have to block.  A critical section
+1388:../FreeRTOS/Source/queue.c **** 	is required to prevent an interrupt adding something to the queue
+1389:../FreeRTOS/Source/queue.c **** 	between the check to see if the queue is empty and blocking on the queue. */
+1390:../FreeRTOS/Source/queue.c **** 	portDISABLE_INTERRUPTS();
+1391:../FreeRTOS/Source/queue.c **** 	{
+1392:../FreeRTOS/Source/queue.c **** 		if( pxQueue->uxMessagesWaiting == ( unsigned portBASE_TYPE ) 0 )
+1393:../FreeRTOS/Source/queue.c **** 		{
+1394:../FreeRTOS/Source/queue.c **** 			/* There are no messages in the queue, do we want to block or just
+1395:../FreeRTOS/Source/queue.c **** 			leave with nothing? */
+1396:../FreeRTOS/Source/queue.c **** 			if( xTicksToWait > ( portTickType ) 0 )
+1397:../FreeRTOS/Source/queue.c **** 			{
+1398:../FreeRTOS/Source/queue.c **** 				/* As this is a co-routine we cannot block directly, but return
+1399:../FreeRTOS/Source/queue.c **** 				indicating that we need to block. */
+1400:../FreeRTOS/Source/queue.c **** 				vCoRoutineAddToDelayedList( xTicksToWait, &( pxQueue->xTasksWaitingToReceive ) );
+1401:../FreeRTOS/Source/queue.c **** 				portENABLE_INTERRUPTS();
+1402:../FreeRTOS/Source/queue.c **** 				return errQUEUE_BLOCKED;
+1403:../FreeRTOS/Source/queue.c **** 			}
+1404:../FreeRTOS/Source/queue.c **** 			else
+1405:../FreeRTOS/Source/queue.c **** 			{
+1406:../FreeRTOS/Source/queue.c **** 				portENABLE_INTERRUPTS();
+1407:../FreeRTOS/Source/queue.c **** 				return errQUEUE_FULL;
+1408:../FreeRTOS/Source/queue.c **** 			}
+1409:../FreeRTOS/Source/queue.c **** 		}
+1410:../FreeRTOS/Source/queue.c **** 	}
+1411:../FreeRTOS/Source/queue.c **** 	portENABLE_INTERRUPTS();
+1412:../FreeRTOS/Source/queue.c **** 
+1413:../FreeRTOS/Source/queue.c **** 	portNOP();
+1414:../FreeRTOS/Source/queue.c **** 
+1415:../FreeRTOS/Source/queue.c **** 	portDISABLE_INTERRUPTS();
+1416:../FreeRTOS/Source/queue.c **** 	{
+1417:../FreeRTOS/Source/queue.c **** 		if( pxQueue->uxMessagesWaiting > ( unsigned portBASE_TYPE ) 0 )
+1418:../FreeRTOS/Source/queue.c **** 		{
+1419:../FreeRTOS/Source/queue.c **** 			/* Data is available from the queue. */
+1420:../FreeRTOS/Source/queue.c **** 			pxQueue->pcReadFrom += pxQueue->uxItemSize;
+1421:../FreeRTOS/Source/queue.c **** 			if( pxQueue->pcReadFrom >= pxQueue->pcTail )
+1422:../FreeRTOS/Source/queue.c **** 			{
+1423:../FreeRTOS/Source/queue.c **** 				pxQueue->pcReadFrom = pxQueue->pcHead;
+1424:../FreeRTOS/Source/queue.c **** 			}
+1425:../FreeRTOS/Source/queue.c **** 			--( pxQueue->uxMessagesWaiting );
+1426:../FreeRTOS/Source/queue.c **** 			memcpy( ( void * ) pvBuffer, ( void * ) pxQueue->pcReadFrom, ( unsigned ) pxQueue->uxItemSize );
+1427:../FreeRTOS/Source/queue.c **** 
+1428:../FreeRTOS/Source/queue.c **** 			xReturn = pdPASS;
+1429:../FreeRTOS/Source/queue.c **** 
+1430:../FreeRTOS/Source/queue.c **** 			/* Were any co-routines waiting for space to become available? */
+1431:../FreeRTOS/Source/queue.c **** 			if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToSend ) ) == pdFALSE )
+1432:../FreeRTOS/Source/queue.c **** 			{
+1433:../FreeRTOS/Source/queue.c **** 				/* In this instance the co-routine could be placed directly
+1434:../FreeRTOS/Source/queue.c **** 				into the ready list as we are within a critical section.
+1435:../FreeRTOS/Source/queue.c **** 				Instead the same pending ready list mechanism is used as if
+1436:../FreeRTOS/Source/queue.c **** 				the event were caused from within an interrupt. */
+1437:../FreeRTOS/Source/queue.c **** 				if( xCoRoutineRemoveFromEventList( &( pxQueue->xTasksWaitingToSend ) ) != pdFALSE )
+1438:../FreeRTOS/Source/queue.c **** 				{
+1439:../FreeRTOS/Source/queue.c **** 					xReturn = errQUEUE_YIELD;
+1440:../FreeRTOS/Source/queue.c **** 				}
+1441:../FreeRTOS/Source/queue.c **** 			}
+1442:../FreeRTOS/Source/queue.c **** 		}
+1443:../FreeRTOS/Source/queue.c **** 		else
+1444:../FreeRTOS/Source/queue.c **** 		{
+1445:../FreeRTOS/Source/queue.c **** 			xReturn = pdFAIL;
+1446:../FreeRTOS/Source/queue.c **** 		}
+1447:../FreeRTOS/Source/queue.c **** 	}
+1448:../FreeRTOS/Source/queue.c **** 	portENABLE_INTERRUPTS();
+1449:../FreeRTOS/Source/queue.c **** 
+1450:../FreeRTOS/Source/queue.c **** 	return xReturn;
+1451:../FreeRTOS/Source/queue.c **** }
+1452:../FreeRTOS/Source/queue.c **** #endif
+1453:../FreeRTOS/Source/queue.c **** /*-----------------------------------------------------------*/
+1454:../FreeRTOS/Source/queue.c **** 
+1455:../FreeRTOS/Source/queue.c **** 
+1456:../FreeRTOS/Source/queue.c **** 
+1457:../FreeRTOS/Source/queue.c **** #if configUSE_CO_ROUTINES == 1
+1458:../FreeRTOS/Source/queue.c **** signed portBASE_TYPE xQueueCRSendFromISR( xQueueHandle pxQueue, const void *pvItemToQueue, signed p
+1459:../FreeRTOS/Source/queue.c **** {
+1460:../FreeRTOS/Source/queue.c **** 	/* Cannot block within an ISR so if there is no space on the queue then
+1461:../FreeRTOS/Source/queue.c **** 	exit without doing anything. */
+1462:../FreeRTOS/Source/queue.c **** 	if( pxQueue->uxMessagesWaiting < pxQueue->uxLength )
+1463:../FreeRTOS/Source/queue.c **** 	{
+1464:../FreeRTOS/Source/queue.c **** 		prvCopyDataToQueue( pxQueue, pvItemToQueue, queueSEND_TO_BACK );
+1465:../FreeRTOS/Source/queue.c **** 
+1466:../FreeRTOS/Source/queue.c **** 		/* We only want to wake one co-routine per ISR, so check that a
+1467:../FreeRTOS/Source/queue.c **** 		co-routine has not already been woken. */
+1468:../FreeRTOS/Source/queue.c **** 		if( xCoRoutinePreviouslyWoken == pdFALSE )
+1469:../FreeRTOS/Source/queue.c **** 		{
+1470:../FreeRTOS/Source/queue.c **** 			if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToReceive ) ) == pdFALSE )
+1471:../FreeRTOS/Source/queue.c **** 			{
+1472:../FreeRTOS/Source/queue.c **** 				if( xCoRoutineRemoveFromEventList( &( pxQueue->xTasksWaitingToReceive ) ) != pdFALSE )
+1473:../FreeRTOS/Source/queue.c **** 				{
+1474:../FreeRTOS/Source/queue.c **** 					return pdTRUE;
+1475:../FreeRTOS/Source/queue.c **** 				}
+1476:../FreeRTOS/Source/queue.c **** 			}
+1477:../FreeRTOS/Source/queue.c **** 		}
+1478:../FreeRTOS/Source/queue.c **** 	}
+1479:../FreeRTOS/Source/queue.c **** 
+1480:../FreeRTOS/Source/queue.c **** 	return xCoRoutinePreviouslyWoken;
+1481:../FreeRTOS/Source/queue.c **** }
+1482:../FreeRTOS/Source/queue.c **** #endif
+1483:../FreeRTOS/Source/queue.c **** /*-----------------------------------------------------------*/
+1484:../FreeRTOS/Source/queue.c **** 
+1485:../FreeRTOS/Source/queue.c **** #if configUSE_CO_ROUTINES == 1
+1486:../FreeRTOS/Source/queue.c **** signed portBASE_TYPE xQueueCRReceiveFromISR( xQueueHandle pxQueue, void *pvBuffer, signed portBASE_
+1487:../FreeRTOS/Source/queue.c **** {
+1488:../FreeRTOS/Source/queue.c **** signed portBASE_TYPE xReturn;
+1489:../FreeRTOS/Source/queue.c **** 
+1490:../FreeRTOS/Source/queue.c **** 	/* We cannot block from an ISR, so check there is data available. If
+1491:../FreeRTOS/Source/queue.c **** 	not then just leave without doing anything. */
+1492:../FreeRTOS/Source/queue.c **** 	if( pxQueue->uxMessagesWaiting > ( unsigned portBASE_TYPE ) 0 )
+1493:../FreeRTOS/Source/queue.c **** 	{
+1494:../FreeRTOS/Source/queue.c **** 		/* Copy the data from the queue. */
+1495:../FreeRTOS/Source/queue.c **** 		pxQueue->pcReadFrom += pxQueue->uxItemSize;
+1496:../FreeRTOS/Source/queue.c **** 		if( pxQueue->pcReadFrom >= pxQueue->pcTail )
+1497:../FreeRTOS/Source/queue.c **** 		{
+1498:../FreeRTOS/Source/queue.c **** 			pxQueue->pcReadFrom = pxQueue->pcHead;
+1499:../FreeRTOS/Source/queue.c **** 		}
+1500:../FreeRTOS/Source/queue.c **** 		--( pxQueue->uxMessagesWaiting );
+1501:../FreeRTOS/Source/queue.c **** 		memcpy( ( void * ) pvBuffer, ( void * ) pxQueue->pcReadFrom, ( unsigned ) pxQueue->uxItemSize );
+1502:../FreeRTOS/Source/queue.c **** 
+1503:../FreeRTOS/Source/queue.c **** 		if( ( *pxCoRoutineWoken ) == pdFALSE )
+1504:../FreeRTOS/Source/queue.c **** 		{
+1505:../FreeRTOS/Source/queue.c **** 			if( listLIST_IS_EMPTY( &( pxQueue->xTasksWaitingToSend ) ) == pdFALSE )
+1506:../FreeRTOS/Source/queue.c **** 			{
+1507:../FreeRTOS/Source/queue.c **** 				if( xCoRoutineRemoveFromEventList( &( pxQueue->xTasksWaitingToSend ) ) != pdFALSE )
+1508:../FreeRTOS/Source/queue.c **** 				{
+1509:../FreeRTOS/Source/queue.c **** 					*pxCoRoutineWoken = pdTRUE;
+1510:../FreeRTOS/Source/queue.c **** 				}
+1511:../FreeRTOS/Source/queue.c **** 			}
+1512:../FreeRTOS/Source/queue.c **** 		}
+1513:../FreeRTOS/Source/queue.c **** 
+1514:../FreeRTOS/Source/queue.c **** 		xReturn = pdPASS;
+1515:../FreeRTOS/Source/queue.c **** 	}
+1516:../FreeRTOS/Source/queue.c **** 	else
+1517:../FreeRTOS/Source/queue.c **** 	{
+1518:../FreeRTOS/Source/queue.c **** 		xReturn = pdFAIL;
+1519:../FreeRTOS/Source/queue.c **** 	}
+1520:../FreeRTOS/Source/queue.c **** 
+1521:../FreeRTOS/Source/queue.c **** 	return xReturn;
+1522:../FreeRTOS/Source/queue.c **** }
+1523:../FreeRTOS/Source/queue.c **** #endif
+1524:../FreeRTOS/Source/queue.c **** /*-----------------------------------------------------------*/
+1525:../FreeRTOS/Source/queue.c **** 
+1526:../FreeRTOS/Source/queue.c **** #if configQUEUE_REGISTRY_SIZE > 0
+1527:../FreeRTOS/Source/queue.c **** 
+1528:../FreeRTOS/Source/queue.c **** 	void vQueueAddToRegistry( xQueueHandle xQueue, signed char *pcQueueName )
+1529:../FreeRTOS/Source/queue.c **** 	{
+ 1771              		.loc 1 1529 0
+ 1772              		.cfi_startproc
+ 1773              		@ args = 0, pretend = 0, frame = 16
+ 1774              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1775              		@ link register save eliminated.
+ 1776 0000 80B4     		push	{r7}
+ 1777              		.cfi_def_cfa_offset 4
+ 1778              		.cfi_offset 7, -4
+ 1779 0002 85B0     		sub	sp, sp, #20
+ 1780              		.cfi_def_cfa_offset 24
+ 1781 0004 00AF     		add	r7, sp, #0
+ 1782              		.cfi_def_cfa_register 7
+ 1783 0006 7860     		str	r0, [r7, #4]
+ 1784 0008 3960     		str	r1, [r7]
+1530:../FreeRTOS/Source/queue.c **** 	unsigned portBASE_TYPE ux;
+1531:../FreeRTOS/Source/queue.c **** 
+1532:../FreeRTOS/Source/queue.c **** 		/* See if there is an empty space in the registry.  A NULL name denotes
+1533:../FreeRTOS/Source/queue.c **** 		a free slot. */
+1534:../FreeRTOS/Source/queue.c **** 		for( ux = ( unsigned portBASE_TYPE ) 0U; ux < ( unsigned portBASE_TYPE ) configQUEUE_REGISTRY_SIZ
+ 1785              		.loc 1 1534 0
+ 1786 000a 0023     		movs	r3, #0
+ 1787 000c FB60     		str	r3, [r7, #12]
+ 1788 000e 1DE0     		b	.L134
+ 1789              	.L137:
+1535:../FreeRTOS/Source/queue.c **** 		{
+1536:../FreeRTOS/Source/queue.c **** 			if( xQueueRegistry[ ux ].pcQueueName == NULL )
+ 1790              		.loc 1 1536 0
+ 1791 0010 40F20003 		movw	r3, #:lower16:xQueueRegistry
+ 1792 0014 C0F20003 		movt	r3, #:upper16:xQueueRegistry
+ 1793 0018 FA68     		ldr	r2, [r7, #12]
+ 1794 001a 53F83230 		ldr	r3, [r3, r2, lsl #3]
+ 1795 001e 002B     		cmp	r3, #0
+ 1796 0020 11D1     		bne	.L135
+1537:../FreeRTOS/Source/queue.c **** 			{
+1538:../FreeRTOS/Source/queue.c **** 				/* Store the information on this queue. */
+1539:../FreeRTOS/Source/queue.c **** 				xQueueRegistry[ ux ].pcQueueName = pcQueueName;
+ 1797              		.loc 1 1539 0
+ 1798 0022 40F20003 		movw	r3, #:lower16:xQueueRegistry
+ 1799 0026 C0F20003 		movt	r3, #:upper16:xQueueRegistry
+ 1800 002a FA68     		ldr	r2, [r7, #12]
+ 1801 002c 3968     		ldr	r1, [r7]
+ 1802 002e 43F83210 		str	r1, [r3, r2, lsl #3]
+1540:../FreeRTOS/Source/queue.c **** 				xQueueRegistry[ ux ].xHandle = xQueue;
+ 1803              		.loc 1 1540 0
+ 1804 0032 40F20002 		movw	r2, #:lower16:xQueueRegistry
+ 1805 0036 C0F20002 		movt	r2, #:upper16:xQueueRegistry
+ 1806 003a FB68     		ldr	r3, [r7, #12]
+ 1807 003c DB00     		lsls	r3, r3, #3
+ 1808 003e 1344     		add	r3, r3, r2
+ 1809 0040 7A68     		ldr	r2, [r7, #4]
+ 1810 0042 5A60     		str	r2, [r3, #4]
+1541:../FreeRTOS/Source/queue.c **** 				break;
+ 1811              		.loc 1 1541 0
+ 1812 0044 05E0     		b	.L133
+ 1813              	.L135:
+1534:../FreeRTOS/Source/queue.c **** 		{
+ 1814              		.loc 1 1534 0
+ 1815 0046 FB68     		ldr	r3, [r7, #12]
+ 1816 0048 0133     		adds	r3, r3, #1
+ 1817 004a FB60     		str	r3, [r7, #12]
+ 1818              	.L134:
+1534:../FreeRTOS/Source/queue.c **** 		{
+ 1819              		.loc 1 1534 0 is_stmt 0 discriminator 1
+ 1820 004c FB68     		ldr	r3, [r7, #12]
+ 1821 004e 002B     		cmp	r3, #0
+ 1822 0050 DED0     		beq	.L137
+ 1823              	.L133:
+1542:../FreeRTOS/Source/queue.c **** 			}
+1543:../FreeRTOS/Source/queue.c **** 		}
+1544:../FreeRTOS/Source/queue.c **** 	}
+ 1824              		.loc 1 1544 0 is_stmt 1
+ 1825 0052 1437     		adds	r7, r7, #20
+ 1826 0054 BD46     		mov	sp, r7
+ 1827              		@ sp needed
+ 1828 0056 5DF8047B 		ldr	r7, [sp], #4
+ 1829 005a 7047     		bx	lr
+ 1830              		.cfi_endproc
+ 1831              	.LFE16:
+ 1833              		.section	.text.vQueueUnregisterQueue,"ax",%progbits
+ 1834              		.align	2
+ 1835              		.thumb
+ 1836              		.thumb_func
+ 1838              	vQueueUnregisterQueue:
+ 1839              	.LFB17:
+1545:../FreeRTOS/Source/queue.c **** 
+1546:../FreeRTOS/Source/queue.c **** #endif
+1547:../FreeRTOS/Source/queue.c **** /*-----------------------------------------------------------*/
+1548:../FreeRTOS/Source/queue.c **** 
+1549:../FreeRTOS/Source/queue.c **** #if configQUEUE_REGISTRY_SIZE > 0
+1550:../FreeRTOS/Source/queue.c **** 
+1551:../FreeRTOS/Source/queue.c **** 	static void vQueueUnregisterQueue( xQueueHandle xQueue )
+1552:../FreeRTOS/Source/queue.c **** 	{
+ 1840              		.loc 1 1552 0
+ 1841              		.cfi_startproc
+ 1842              		@ args = 0, pretend = 0, frame = 16
+ 1843              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1844              		@ link register save eliminated.
+ 1845 0000 80B4     		push	{r7}
+ 1846              		.cfi_def_cfa_offset 4
+ 1847              		.cfi_offset 7, -4
+ 1848 0002 85B0     		sub	sp, sp, #20
+ 1849              		.cfi_def_cfa_offset 24
+ 1850 0004 00AF     		add	r7, sp, #0
+ 1851              		.cfi_def_cfa_register 7
+ 1852 0006 7860     		str	r0, [r7, #4]
+1553:../FreeRTOS/Source/queue.c **** 	unsigned portBASE_TYPE ux;
+1554:../FreeRTOS/Source/queue.c **** 
+1555:../FreeRTOS/Source/queue.c **** 		/* See if the handle of the queue being unregistered in actually in the
+1556:../FreeRTOS/Source/queue.c **** 		registry. */
+1557:../FreeRTOS/Source/queue.c **** 		for( ux = ( unsigned portBASE_TYPE ) 0U; ux < ( unsigned portBASE_TYPE ) configQUEUE_REGISTRY_SIZ
+ 1853              		.loc 1 1557 0
+ 1854 0008 0023     		movs	r3, #0
+ 1855 000a FB60     		str	r3, [r7, #12]
+ 1856 000c 16E0     		b	.L139
+ 1857              	.L142:
+1558:../FreeRTOS/Source/queue.c **** 		{
+1559:../FreeRTOS/Source/queue.c **** 			if( xQueueRegistry[ ux ].xHandle == xQueue )
+ 1858              		.loc 1 1559 0
+ 1859 000e 40F20002 		movw	r2, #:lower16:xQueueRegistry
+ 1860 0012 C0F20002 		movt	r2, #:upper16:xQueueRegistry
+ 1861 0016 FB68     		ldr	r3, [r7, #12]
+ 1862 0018 DB00     		lsls	r3, r3, #3
+ 1863 001a 1344     		add	r3, r3, r2
+ 1864 001c 5A68     		ldr	r2, [r3, #4]
+ 1865 001e 7B68     		ldr	r3, [r7, #4]
+ 1866 0020 9A42     		cmp	r2, r3
+ 1867 0022 08D1     		bne	.L140
+1560:../FreeRTOS/Source/queue.c **** 			{
+1561:../FreeRTOS/Source/queue.c **** 				/* Set the name to NULL to show that this slot if free again. */
+1562:../FreeRTOS/Source/queue.c **** 				xQueueRegistry[ ux ].pcQueueName = NULL;
+ 1868              		.loc 1 1562 0
+ 1869 0024 40F20003 		movw	r3, #:lower16:xQueueRegistry
+ 1870 0028 C0F20003 		movt	r3, #:upper16:xQueueRegistry
+ 1871 002c FA68     		ldr	r2, [r7, #12]
+ 1872 002e 0021     		movs	r1, #0
+ 1873 0030 43F83210 		str	r1, [r3, r2, lsl #3]
+1563:../FreeRTOS/Source/queue.c **** 				break;
+ 1874              		.loc 1 1563 0
+ 1875 0034 05E0     		b	.L138
+ 1876              	.L140:
+1557:../FreeRTOS/Source/queue.c **** 		{
+ 1877              		.loc 1 1557 0
+ 1878 0036 FB68     		ldr	r3, [r7, #12]
+ 1879 0038 0133     		adds	r3, r3, #1
+ 1880 003a FB60     		str	r3, [r7, #12]
+ 1881              	.L139:
+1557:../FreeRTOS/Source/queue.c **** 		{
+ 1882              		.loc 1 1557 0 is_stmt 0 discriminator 1
+ 1883 003c FB68     		ldr	r3, [r7, #12]
+ 1884 003e 002B     		cmp	r3, #0
+ 1885 0040 E5D0     		beq	.L142
+ 1886              	.L138:
+1564:../FreeRTOS/Source/queue.c **** 			}
+1565:../FreeRTOS/Source/queue.c **** 		}
+1566:../FreeRTOS/Source/queue.c **** 
+1567:../FreeRTOS/Source/queue.c **** 	}
+ 1887              		.loc 1 1567 0 is_stmt 1
+ 1888 0042 1437     		adds	r7, r7, #20
+ 1889 0044 BD46     		mov	sp, r7
+ 1890              		@ sp needed
+ 1891 0046 5DF8047B 		ldr	r7, [sp], #4
+ 1892 004a 7047     		bx	lr
+ 1893              		.cfi_endproc
+ 1894              	.LFE17:
+ 1896              		.section	.text.vQueueWaitForMessageRestricted,"ax",%progbits
+ 1897              		.align	2
+ 1898              		.global	vQueueWaitForMessageRestricted
+ 1899              		.thumb
+ 1900              		.thumb_func
+ 1902              	vQueueWaitForMessageRestricted:
+ 1903              	.LFB18:
+1568:../FreeRTOS/Source/queue.c **** 
+1569:../FreeRTOS/Source/queue.c **** #endif
+1570:../FreeRTOS/Source/queue.c **** /*-----------------------------------------------------------*/
+1571:../FreeRTOS/Source/queue.c **** 
+1572:../FreeRTOS/Source/queue.c **** #if configUSE_TIMERS == 1
+1573:../FreeRTOS/Source/queue.c **** 
+1574:../FreeRTOS/Source/queue.c **** 	void vQueueWaitForMessageRestricted( xQueueHandle pxQueue, portTickType xTicksToWait )
+1575:../FreeRTOS/Source/queue.c **** 	{
+ 1904              		.loc 1 1575 0
+ 1905              		.cfi_startproc
+ 1906              		@ args = 0, pretend = 0, frame = 8
+ 1907              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1908 0000 80B5     		push	{r7, lr}
+ 1909              		.cfi_def_cfa_offset 8
+ 1910              		.cfi_offset 7, -8
+ 1911              		.cfi_offset 14, -4
+ 1912 0002 82B0     		sub	sp, sp, #8
+ 1913              		.cfi_def_cfa_offset 16
+ 1914 0004 00AF     		add	r7, sp, #0
+ 1915              		.cfi_def_cfa_register 7
+ 1916 0006 7860     		str	r0, [r7, #4]
+ 1917 0008 3960     		str	r1, [r7]
+1576:../FreeRTOS/Source/queue.c **** 		/* This function should not be called by application code hence the
+1577:../FreeRTOS/Source/queue.c **** 		'Restricted' in its name.  It is not part of the public API.  It is
+1578:../FreeRTOS/Source/queue.c **** 		designed for use by kernel code, and has special calling requirements.
+1579:../FreeRTOS/Source/queue.c **** 		It can result in vListInsert() being called on a list that can only
+1580:../FreeRTOS/Source/queue.c **** 		possibly ever have one item in it, so the list will be fast, but even
+1581:../FreeRTOS/Source/queue.c **** 		so it should be called with the scheduler locked and not from a critical
+1582:../FreeRTOS/Source/queue.c **** 		section. */
+1583:../FreeRTOS/Source/queue.c **** 
+1584:../FreeRTOS/Source/queue.c **** 		/* Only do anything if there are no messages in the queue.  This function
+1585:../FreeRTOS/Source/queue.c **** 		will not actually cause the task to block, just place it on a blocked
+1586:../FreeRTOS/Source/queue.c **** 		list.  It will not block until the scheduler is unlocked - at which
+1587:../FreeRTOS/Source/queue.c **** 		time a yield will be performed.  If an item is added to the queue while
+1588:../FreeRTOS/Source/queue.c **** 		the queue is locked, and the calling task blocks on the queue, then the
+1589:../FreeRTOS/Source/queue.c **** 		calling task will be immediately unblocked when the queue is unlocked. */
+1590:../FreeRTOS/Source/queue.c **** 		prvLockQueue( pxQueue );
+ 1918              		.loc 1 1590 0
+ 1919 000a FFF7FEFF 		bl	vPortEnterCritical
+ 1920 000e 7B68     		ldr	r3, [r7, #4]
+ 1921 0010 5B6C     		ldr	r3, [r3, #68]
+ 1922 0012 B3F1FF3F 		cmp	r3, #-1
+ 1923 0016 02D1     		bne	.L144
+ 1924              		.loc 1 1590 0 is_stmt 0 discriminator 1
+ 1925 0018 7B68     		ldr	r3, [r7, #4]
+ 1926 001a 0022     		movs	r2, #0
+ 1927 001c 5A64     		str	r2, [r3, #68]
+ 1928              	.L144:
+ 1929              		.loc 1 1590 0 discriminator 2
+ 1930 001e 7B68     		ldr	r3, [r7, #4]
+ 1931 0020 9B6C     		ldr	r3, [r3, #72]
+ 1932 0022 B3F1FF3F 		cmp	r3, #-1
+ 1933 0026 02D1     		bne	.L145
+ 1934              		.loc 1 1590 0 discriminator 1
+ 1935 0028 7B68     		ldr	r3, [r7, #4]
+ 1936 002a 0022     		movs	r2, #0
+ 1937 002c 9A64     		str	r2, [r3, #72]
+ 1938              	.L145:
+ 1939              		.loc 1 1590 0 discriminator 2
+ 1940 002e FFF7FEFF 		bl	vPortExitCritical
+1591:../FreeRTOS/Source/queue.c **** 		if( pxQueue->uxMessagesWaiting == ( unsigned portBASE_TYPE ) 0U )
+ 1941              		.loc 1 1591 0 is_stmt 1 discriminator 2
+ 1942 0032 7B68     		ldr	r3, [r7, #4]
+ 1943 0034 9B6B     		ldr	r3, [r3, #56]
+ 1944 0036 002B     		cmp	r3, #0
+ 1945 0038 05D1     		bne	.L146
+1592:../FreeRTOS/Source/queue.c **** 		{
+1593:../FreeRTOS/Source/queue.c **** 			/* There is nothing in the queue, block for the specified period. */
+1594:../FreeRTOS/Source/queue.c **** 			vTaskPlaceOnEventListRestricted( &( pxQueue->xTasksWaitingToReceive ), xTicksToWait );
+ 1946              		.loc 1 1594 0
+ 1947 003a 7B68     		ldr	r3, [r7, #4]
+ 1948 003c 2433     		adds	r3, r3, #36
+ 1949 003e 1846     		mov	r0, r3
+ 1950 0040 3968     		ldr	r1, [r7]
+ 1951 0042 FFF7FEFF 		bl	vTaskPlaceOnEventListRestricted
+ 1952              	.L146:
+1595:../FreeRTOS/Source/queue.c **** 		}
+1596:../FreeRTOS/Source/queue.c **** 		prvUnlockQueue( pxQueue );
+ 1953              		.loc 1 1596 0
+ 1954 0046 7868     		ldr	r0, [r7, #4]
+ 1955 0048 FFF7FEFF 		bl	prvUnlockQueue
+1597:../FreeRTOS/Source/queue.c **** 	}
+ 1956              		.loc 1 1597 0
+ 1957 004c 0837     		adds	r7, r7, #8
+ 1958 004e BD46     		mov	sp, r7
+ 1959              		@ sp needed
+ 1960 0050 80BD     		pop	{r7, pc}
+ 1961              		.cfi_endproc
+ 1962              	.LFE18:
+ 1964 0052 00BF     		.text
+ 1965              	.Letext0:
+ 1966              		.file 2 "c:\\tools\\lib\\gcc\\arm-none-eabi\\4.8.1\\include\\stddef.h"
+ 1967              		.file 3 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeRTOS\\Source\\portable\\GCC\\ARM_CM3/por
+ 1968              		.file 4 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeRTOS\\Source\\include/list.h"
+ 1969              		.file 5 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeRTOS\\Source\\include/task.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 queue.c
+                            *COM*:00000008 xQueueRegistry
+C:\Users\Alex\AppData\Local\Temp\cck7WfNA.s:20     .text.xQueueGenericCreate:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cck7WfNA.s:25     .text.xQueueGenericCreate:00000000 xQueueGenericCreate
+C:\Users\Alex\AppData\Local\Temp\cck7WfNA.s:165    .text.xQueueCreateMutex:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cck7WfNA.s:170    .text.xQueueCreateMutex:00000000 xQueueCreateMutex
+C:\Users\Alex\AppData\Local\Temp\cck7WfNA.s:278    .text.xQueueGenericSend:00000000 xQueueGenericSend
+C:\Users\Alex\AppData\Local\Temp\cck7WfNA.s:273    .text.xQueueGenericSend:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cck7WfNA.s:1256   .text.prvCopyDataToQueue:00000000 prvCopyDataToQueue
+C:\Users\Alex\AppData\Local\Temp\cck7WfNA.s:1664   .text.prvIsQueueFull:00000000 prvIsQueueFull
+C:\Users\Alex\AppData\Local\Temp\cck7WfNA.s:1448   .text.prvUnlockQueue:00000000 prvUnlockQueue
+C:\Users\Alex\AppData\Local\Temp\cck7WfNA.s:492    .text.xQueueGenericSendFromISR:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cck7WfNA.s:497    .text.xQueueGenericSendFromISR:00000000 xQueueGenericSendFromISR
+C:\Users\Alex\AppData\Local\Temp\cck7WfNA.s:653    .text.xQueueGenericReceive:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cck7WfNA.s:658    .text.xQueueGenericReceive:00000000 xQueueGenericReceive
+C:\Users\Alex\AppData\Local\Temp\cck7WfNA.s:1383   .text.prvCopyDataFromQueue:00000000 prvCopyDataFromQueue
+C:\Users\Alex\AppData\Local\Temp\cck7WfNA.s:1564   .text.prvIsQueueEmpty:00000000 prvIsQueueEmpty
+C:\Users\Alex\AppData\Local\Temp\cck7WfNA.s:930    .text.xQueueReceiveFromISR:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cck7WfNA.s:935    .text.xQueueReceiveFromISR:00000000 xQueueReceiveFromISR
+C:\Users\Alex\AppData\Local\Temp\cck7WfNA.s:1093   .text.uxQueueMessagesWaiting:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cck7WfNA.s:1098   .text.uxQueueMessagesWaiting:00000000 uxQueueMessagesWaiting
+C:\Users\Alex\AppData\Local\Temp\cck7WfNA.s:1147   .text.uxQueueMessagesWaitingFromISR:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cck7WfNA.s:1152   .text.uxQueueMessagesWaitingFromISR:00000000 uxQueueMessagesWaitingFromISR
+C:\Users\Alex\AppData\Local\Temp\cck7WfNA.s:1198   .text.vQueueDelete:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cck7WfNA.s:1203   .text.vQueueDelete:00000000 vQueueDelete
+C:\Users\Alex\AppData\Local\Temp\cck7WfNA.s:1838   .text.vQueueUnregisterQueue:00000000 vQueueUnregisterQueue
+C:\Users\Alex\AppData\Local\Temp\cck7WfNA.s:1252   .text.prvCopyDataToQueue:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cck7WfNA.s:1379   .text.prvCopyDataFromQueue:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cck7WfNA.s:1444   .text.prvUnlockQueue:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cck7WfNA.s:1560   .text.prvIsQueueEmpty:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cck7WfNA.s:1604   .text.xQueueIsQueueEmptyFromISR:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cck7WfNA.s:1609   .text.xQueueIsQueueEmptyFromISR:00000000 xQueueIsQueueEmptyFromISR
+C:\Users\Alex\AppData\Local\Temp\cck7WfNA.s:1660   .text.prvIsQueueFull:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cck7WfNA.s:1706   .text.xQueueIsQueueFullFromISR:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cck7WfNA.s:1711   .text.xQueueIsQueueFullFromISR:00000000 xQueueIsQueueFullFromISR
+C:\Users\Alex\AppData\Local\Temp\cck7WfNA.s:1764   .text.vQueueAddToRegistry:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cck7WfNA.s:1769   .text.vQueueAddToRegistry:00000000 vQueueAddToRegistry
+C:\Users\Alex\AppData\Local\Temp\cck7WfNA.s:1834   .text.vQueueUnregisterQueue:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cck7WfNA.s:1897   .text.vQueueWaitForMessageRestricted:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cck7WfNA.s:1902   .text.vQueueWaitForMessageRestricted:00000000 vQueueWaitForMessageRestricted
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.1.98ffea2db242cfdb58f411f7407f2b59
+                           .group:00000000 wm4.newlib.h.8.384a112feabb3bef7b573ae48cde2e3b
+                           .group:00000000 wm4.features.h.22.6a4ca7cd053637cc1d0db6c16f39b2d7
+                           .group:00000000 wm4.config.h.183.aa62afef667fb61d15fa64c48beb2f14
+                           .group:00000000 wm4._ansi.h.23.5644b60c990a4800b02a6e654e88f93a
+                           .group:00000000 wm4.stdlib.h.18.8bab2fb43ac4e90235390733c30a4530
+                           .group:00000000 wm4.stddef.h.184.aa65fb7281d578229bbad41b91862635
+                           .group:00000000 wm4._default_types.h.6.5e12cd604db8ce00b62bb2f02708eaf3
+                           .group:00000000 wm4.lock.h.2.9bc98482741e5e2a9450b12934a684ea
+                           .group:00000000 wm4._types.h.59.db8450f33c1f6150c0372fa1091a887a
+                           .group:00000000 wm4.stddef.h.348.9a99de77b6ba3b4278b57e9cc6d6e349
+                           .group:00000000 wm4.reent.h.16.567d760e6ae9ad7f917851a308bd7a57
+                           .group:00000000 wm4.alloca.h.8.dfc0c703c47ec3e69746825b17d9e66d
+                           .group:00000000 wm4.stdlib.h.55.7091a050e07f1c4abd225630fe3d62f1
+                           .group:00000000 wm4.stddef.h.39.d0197034aa5fd947cae140b9289e6734
+                           .group:00000000 wm4.stdint.h.10.90b695f550ca6cc3fb08fa83baf01e05
+                           .group:00000000 wm4.cdefs.h.56.efab90f4d89fbc41d6b3a5c5fb0d3d0f
+                           .group:00000000 wm4.string.h.15.dab3980bf35408a4c507182805e2de3a
+                           .group:00000000 wm4.stddef.h.158.a7efb00f6cbc6f43213b50e183c9830c
+                           .group:00000000 wm4.string.h.126.6ff3aa59129e7f66b2c273baf353e066
+                           .group:00000000 wm4.projdefs.h.55.cdae9ead80b5a2ac004f41bb277aad45
+                           .group:00000000 wm4.FreeRTOSConfig.h.64.0af6644bda3c4312e69b231c06f0909a
+                           .group:00000000 wm4.portmacro.h.56.a47bdd86bc36d334ca6056492e2d709f
+                           .group:00000000 wm4.portable.h.311.02653c2286cc0addcb8e7b32211fdde5
+                           .group:00000000 wm4.mpu_wrappers.h.55.46a4a008a193040c38098e9a5f07ff9d
+                           .group:00000000 wm4.FreeRTOS.h.132.e7bb8eabd42aedb15fb3c1f00c9886e6
+                           .group:00000000 wm4.list.h.84.e713c47e239b06424d7c93968625e34d
+                           .group:00000000 wm4.task.h.73.4db227e33e5981749a1e912949d705ee
+
+UNDEFINED SYMBOLS
+pvPortMalloc
+vListInitialise
+vPortFree
+vPortEnterCritical
+xTaskRemoveFromEventList
+vPortYieldFromISR
+vPortExitCritical
+vTaskSetTimeOutState
+vTaskSuspendAll
+xTaskCheckForTimeOut
+vTaskPlaceOnEventList
+xTaskResumeAll
+xTaskGetCurrentTaskHandle
+vTaskPriorityInherit
+vTaskPriorityDisinherit
+memcpy
+vTaskMissedYield
+vTaskPlaceOnEventListRestricted

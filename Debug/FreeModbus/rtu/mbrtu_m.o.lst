@@ -1,0 +1,1590 @@
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.file	"mbrtu_m.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.section	.bss.eSndState,"aw",%nobits
+  21              	eSndState:
+  22 0000 00       		.space	1
+  23              		.section	.bss.eRcvState,"aw",%nobits
+  26              	eRcvState:
+  27 0000 00       		.space	1
+  28              		.section	.bss.ucMasterRTUSndBuf,"aw",%nobits
+  29              		.align	2
+  32              	ucMasterRTUSndBuf:
+  33 0000 00000000 		.space	253
+  33      00000000 
+  33      00000000 
+  33      00000000 
+  33      00000000 
+  34 00fd 000000   		.section	.bss.ucMasterRTURcvBuf,"aw",%nobits
+  35              		.align	2
+  38              	ucMasterRTURcvBuf:
+  39 0000 00000000 		.space	256
+  39      00000000 
+  39      00000000 
+  39      00000000 
+  39      00000000 
+  40              		.section	.bss.usMasterSendPDULength,"aw",%nobits
+  41              		.align	1
+  44              	usMasterSendPDULength:
+  45 0000 0000     		.space	2
+  46              		.section	.bss.pucMasterSndBufferCur,"aw",%nobits
+  47              		.align	2
+  50              	pucMasterSndBufferCur:
+  51 0000 00000000 		.space	4
+  52              		.section	.bss.usMasterSndBufferCount,"aw",%nobits
+  53              		.align	1
+  56              	usMasterSndBufferCount:
+  57 0000 0000     		.space	2
+  58              		.section	.bss.usMasterRcvBufferPos,"aw",%nobits
+  59              		.align	1
+  62              	usMasterRcvBufferPos:
+  63 0000 0000     		.space	2
+  64              		.section	.bss.xFrameIsBroadcast,"aw",%nobits
+  67              	xFrameIsBroadcast:
+  68 0000 00       		.space	1
+  69              		.section	.bss.eMasterCurTimerMode,"aw",%nobits
+  72              	eMasterCurTimerMode:
+  73 0000 00       		.space	1
+  74              		.section	.text.eMBMasterRTUInit,"ax",%progbits
+  75              		.align	2
+  76              		.global	eMBMasterRTUInit
+  77              		.thumb
+  78              		.thumb_func
+  80              	eMBMasterRTUInit:
+  81              	.LFB29:
+  82              		.file 1 "../FreeModbus/rtu/mbrtu_m.c"
+   1:../FreeModbus/rtu/mbrtu_m.c **** /* 
+   2:../FreeModbus/rtu/mbrtu_m.c ****  * FreeModbus Libary: A portable Modbus implementation for Modbus ASCII/RTU.
+   3:../FreeModbus/rtu/mbrtu_m.c ****  * Copyright (c) 2013 China Beijing Armink <armink.ztl@gmail.com>
+   4:../FreeModbus/rtu/mbrtu_m.c ****  * All rights reserved.
+   5:../FreeModbus/rtu/mbrtu_m.c ****  *
+   6:../FreeModbus/rtu/mbrtu_m.c ****  * Redistribution and use in source and binary forms, with or without
+   7:../FreeModbus/rtu/mbrtu_m.c ****  * modification, are permitted provided that the following conditions
+   8:../FreeModbus/rtu/mbrtu_m.c ****  * are met:
+   9:../FreeModbus/rtu/mbrtu_m.c ****  * 1. Redistributions of source code must retain the above copyright
+  10:../FreeModbus/rtu/mbrtu_m.c ****  *    notice, this list of conditions and the following disclaimer.
+  11:../FreeModbus/rtu/mbrtu_m.c ****  * 2. Redistributions in binary form must reproduce the above copyright
+  12:../FreeModbus/rtu/mbrtu_m.c ****  *    notice, this list of conditions and the following disclaimer in the
+  13:../FreeModbus/rtu/mbrtu_m.c ****  *    documentation and/or other materials provided with the distribution.
+  14:../FreeModbus/rtu/mbrtu_m.c ****  * 3. The name of the author may not be used to endorse or promote products
+  15:../FreeModbus/rtu/mbrtu_m.c ****  *    derived from this software without specific prior written permission.
+  16:../FreeModbus/rtu/mbrtu_m.c ****  *
+  17:../FreeModbus/rtu/mbrtu_m.c ****  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+  18:../FreeModbus/rtu/mbrtu_m.c ****  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+  19:../FreeModbus/rtu/mbrtu_m.c ****  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+  20:../FreeModbus/rtu/mbrtu_m.c ****  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+  21:../FreeModbus/rtu/mbrtu_m.c ****  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+  22:../FreeModbus/rtu/mbrtu_m.c ****  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  23:../FreeModbus/rtu/mbrtu_m.c ****  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  24:../FreeModbus/rtu/mbrtu_m.c ****  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  25:../FreeModbus/rtu/mbrtu_m.c ****  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+  26:../FreeModbus/rtu/mbrtu_m.c ****  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  27:../FreeModbus/rtu/mbrtu_m.c ****  *
+  28:../FreeModbus/rtu/mbrtu_m.c ****  * File: $Id: mbrtu_m.c,v 1.60 2013/08/17 11:42:56 Armink Add Master Functions $
+  29:../FreeModbus/rtu/mbrtu_m.c ****  */
+  30:../FreeModbus/rtu/mbrtu_m.c **** 
+  31:../FreeModbus/rtu/mbrtu_m.c **** /* ----------------------- System includes ----------------------------------*/
+  32:../FreeModbus/rtu/mbrtu_m.c **** #include "stdlib.h"
+  33:../FreeModbus/rtu/mbrtu_m.c **** #include "string.h"
+  34:../FreeModbus/rtu/mbrtu_m.c **** 
+  35:../FreeModbus/rtu/mbrtu_m.c **** /* ----------------------- Platform includes --------------------------------*/
+  36:../FreeModbus/rtu/mbrtu_m.c **** #include "port.h"
+  37:../FreeModbus/rtu/mbrtu_m.c **** 
+  38:../FreeModbus/rtu/mbrtu_m.c **** /* ----------------------- Modbus includes ----------------------------------*/
+  39:../FreeModbus/rtu/mbrtu_m.c **** #include "mb.h"
+  40:../FreeModbus/rtu/mbrtu_m.c **** #include "mb_m.h"
+  41:../FreeModbus/rtu/mbrtu_m.c **** #include "mbrtu.h"
+  42:../FreeModbus/rtu/mbrtu_m.c **** #include "mbframe.h"
+  43:../FreeModbus/rtu/mbrtu_m.c **** 
+  44:../FreeModbus/rtu/mbrtu_m.c **** #include "mbcrc.h"
+  45:../FreeModbus/rtu/mbrtu_m.c **** #include "mbport.h"
+  46:../FreeModbus/rtu/mbrtu_m.c **** 
+  47:../FreeModbus/rtu/mbrtu_m.c **** #if MB_MASTER_RTU_ENABLED > 0
+  48:../FreeModbus/rtu/mbrtu_m.c **** /* ----------------------- Defines ------------------------------------------*/
+  49:../FreeModbus/rtu/mbrtu_m.c **** #define MB_SER_PDU_SIZE_MIN     4       /*!< Minimum size of a Modbus RTU frame. */
+  50:../FreeModbus/rtu/mbrtu_m.c **** #define MB_SER_PDU_SIZE_MAX     256     /*!< Maximum size of a Modbus RTU frame. */
+  51:../FreeModbus/rtu/mbrtu_m.c **** #define MB_SER_PDU_SIZE_CRC     2       /*!< Size of CRC field in PDU. */
+  52:../FreeModbus/rtu/mbrtu_m.c **** #define MB_SER_PDU_ADDR_OFF     0       /*!< Offset of slave address in Ser-PDU. */
+  53:../FreeModbus/rtu/mbrtu_m.c **** #define MB_SER_PDU_PDU_OFF      1       /*!< Offset of Modbus-PDU in Ser-PDU. */
+  54:../FreeModbus/rtu/mbrtu_m.c **** 
+  55:../FreeModbus/rtu/mbrtu_m.c **** /* ----------------------- Type definitions ---------------------------------*/
+  56:../FreeModbus/rtu/mbrtu_m.c **** typedef enum
+  57:../FreeModbus/rtu/mbrtu_m.c **** {
+  58:../FreeModbus/rtu/mbrtu_m.c ****     STATE_M_RX_INIT,              /*!< Receiver is in initial state. */
+  59:../FreeModbus/rtu/mbrtu_m.c ****     STATE_M_RX_IDLE,              /*!< Receiver is in idle state. */
+  60:../FreeModbus/rtu/mbrtu_m.c ****     STATE_M_RX_RCV,               /*!< Frame is beeing received. */
+  61:../FreeModbus/rtu/mbrtu_m.c ****     STATE_M_RX_ERROR,              /*!< If the frame is invalid. */
+  62:../FreeModbus/rtu/mbrtu_m.c **** } eMBMasterRcvState;
+  63:../FreeModbus/rtu/mbrtu_m.c **** 
+  64:../FreeModbus/rtu/mbrtu_m.c **** typedef enum
+  65:../FreeModbus/rtu/mbrtu_m.c **** {
+  66:../FreeModbus/rtu/mbrtu_m.c ****     STATE_M_TX_IDLE,              /*!< Transmitter is in idle state. */
+  67:../FreeModbus/rtu/mbrtu_m.c ****     STATE_M_TX_XMIT,              /*!< Transmitter is in transfer state. */
+  68:../FreeModbus/rtu/mbrtu_m.c ****     STATE_M_TX_XFWR,              /*!< Transmitter is in transfer finish and wait receive state. */
+  69:../FreeModbus/rtu/mbrtu_m.c **** } eMBMasterSndState;
+  70:../FreeModbus/rtu/mbrtu_m.c **** 
+  71:../FreeModbus/rtu/mbrtu_m.c **** /* ----------------------- Static variables ---------------------------------*/
+  72:../FreeModbus/rtu/mbrtu_m.c **** static volatile eMBMasterSndState eSndState;
+  73:../FreeModbus/rtu/mbrtu_m.c **** static volatile eMBMasterRcvState eRcvState;
+  74:../FreeModbus/rtu/mbrtu_m.c **** 
+  75:../FreeModbus/rtu/mbrtu_m.c **** static volatile UCHAR  ucMasterRTUSndBuf[MB_PDU_SIZE_MAX];
+  76:../FreeModbus/rtu/mbrtu_m.c **** static volatile UCHAR  ucMasterRTURcvBuf[MB_SER_PDU_SIZE_MAX];
+  77:../FreeModbus/rtu/mbrtu_m.c **** static volatile USHORT usMasterSendPDULength;
+  78:../FreeModbus/rtu/mbrtu_m.c **** 
+  79:../FreeModbus/rtu/mbrtu_m.c **** static volatile UCHAR *pucMasterSndBufferCur;
+  80:../FreeModbus/rtu/mbrtu_m.c **** static volatile USHORT usMasterSndBufferCount;
+  81:../FreeModbus/rtu/mbrtu_m.c **** 
+  82:../FreeModbus/rtu/mbrtu_m.c **** static volatile USHORT usMasterRcvBufferPos;
+  83:../FreeModbus/rtu/mbrtu_m.c **** static volatile BOOL   xFrameIsBroadcast = FALSE;
+  84:../FreeModbus/rtu/mbrtu_m.c **** 
+  85:../FreeModbus/rtu/mbrtu_m.c **** static volatile eMBMasterTimerMode eMasterCurTimerMode;
+  86:../FreeModbus/rtu/mbrtu_m.c **** 
+  87:../FreeModbus/rtu/mbrtu_m.c **** /* ----------------------- Start implementation -----------------------------*/
+  88:../FreeModbus/rtu/mbrtu_m.c **** eMBErrorCode
+  89:../FreeModbus/rtu/mbrtu_m.c **** eMBMasterRTUInit(UCHAR ucPort, ULONG ulBaudRate, eMBParity eParity )
+  90:../FreeModbus/rtu/mbrtu_m.c **** {
+  83              		.loc 1 90 0
+  84              		.cfi_startproc
+  85              		@ args = 0, pretend = 0, frame = 16
+  86              		@ frame_needed = 1, uses_anonymous_args = 0
+  87 0000 80B5     		push	{r7, lr}
+  88              		.cfi_def_cfa_offset 8
+  89              		.cfi_offset 7, -8
+  90              		.cfi_offset 14, -4
+  91 0002 84B0     		sub	sp, sp, #16
+  92              		.cfi_def_cfa_offset 24
+  93 0004 00AF     		add	r7, sp, #0
+  94              		.cfi_def_cfa_register 7
+  95 0006 3960     		str	r1, [r7]
+  96 0008 1346     		mov	r3, r2
+  97 000a 0246     		mov	r2, r0
+  98 000c FA71     		strb	r2, [r7, #7]
+  99 000e BB71     		strb	r3, [r7, #6]
+  91:../FreeModbus/rtu/mbrtu_m.c ****     eMBErrorCode    eStatus = MB_ENOERR;
+ 100              		.loc 1 91 0
+ 101 0010 0023     		movs	r3, #0
+ 102 0012 FB73     		strb	r3, [r7, #15]
+  92:../FreeModbus/rtu/mbrtu_m.c ****     ULONG           usTimerT35_50us;
+  93:../FreeModbus/rtu/mbrtu_m.c **** 
+  94:../FreeModbus/rtu/mbrtu_m.c ****     ENTER_CRITICAL_SECTION(  );
+ 103              		.loc 1 94 0
+ 104 0014 FFF7FEFF 		bl	vPortEnterCritical
+  95:../FreeModbus/rtu/mbrtu_m.c **** 
+  96:../FreeModbus/rtu/mbrtu_m.c ****     /* Modbus RTU uses 8 Databits. */
+  97:../FreeModbus/rtu/mbrtu_m.c ****     if( xMBMasterPortSerialInit( ucPort, ulBaudRate, 8, eParity ) != TRUE )
+ 105              		.loc 1 97 0
+ 106 0018 FA79     		ldrb	r2, [r7, #7]	@ zero_extendqisi2
+ 107 001a BB79     		ldrb	r3, [r7, #6]	@ zero_extendqisi2
+ 108 001c 1046     		mov	r0, r2
+ 109 001e 3968     		ldr	r1, [r7]
+ 110 0020 0822     		movs	r2, #8
+ 111 0022 FFF7FEFF 		bl	xMBMasterPortSerialInit
+ 112 0026 0346     		mov	r3, r0
+ 113 0028 012B     		cmp	r3, #1
+ 114 002a 02D0     		beq	.L2
+  98:../FreeModbus/rtu/mbrtu_m.c ****     {
+  99:../FreeModbus/rtu/mbrtu_m.c ****         eStatus = MB_EPORTERR;
+ 115              		.loc 1 99 0
+ 116 002c 0323     		movs	r3, #3
+ 117 002e FB73     		strb	r3, [r7, #15]
+ 118 0030 19E0     		b	.L3
+ 119              	.L2:
+ 100:../FreeModbus/rtu/mbrtu_m.c ****     }
+ 101:../FreeModbus/rtu/mbrtu_m.c ****     else
+ 102:../FreeModbus/rtu/mbrtu_m.c ****     {
+ 103:../FreeModbus/rtu/mbrtu_m.c ****         /* If baudrate > 19200 then we should use the fixed timer values
+ 104:../FreeModbus/rtu/mbrtu_m.c ****          * t35 = 1750us. Otherwise t35 must be 3.5 times the character time.
+ 105:../FreeModbus/rtu/mbrtu_m.c ****          */
+ 106:../FreeModbus/rtu/mbrtu_m.c ****         if( ulBaudRate > 19200 )
+ 120              		.loc 1 106 0
+ 121 0032 3B68     		ldr	r3, [r7]
+ 122 0034 B3F5964F 		cmp	r3, #19200
+ 123 0038 02D9     		bls	.L4
+ 107:../FreeModbus/rtu/mbrtu_m.c ****         {
+ 108:../FreeModbus/rtu/mbrtu_m.c ****             usTimerT35_50us = 35;       /* 1800us. */
+ 124              		.loc 1 108 0
+ 125 003a 2323     		movs	r3, #35
+ 126 003c BB60     		str	r3, [r7, #8]
+ 127 003e 08E0     		b	.L5
+ 128              	.L4:
+ 109:../FreeModbus/rtu/mbrtu_m.c ****         }
+ 110:../FreeModbus/rtu/mbrtu_m.c ****         else
+ 111:../FreeModbus/rtu/mbrtu_m.c ****         {
+ 112:../FreeModbus/rtu/mbrtu_m.c ****             /* The timer reload value for a character is given by:
+ 113:../FreeModbus/rtu/mbrtu_m.c ****              *
+ 114:../FreeModbus/rtu/mbrtu_m.c ****              * ChTimeValue = Ticks_per_1s / ( Baudrate / 11 )
+ 115:../FreeModbus/rtu/mbrtu_m.c ****              *             = 11 * Ticks_per_1s / Baudrate
+ 116:../FreeModbus/rtu/mbrtu_m.c ****              *             = 220000 / Baudrate
+ 117:../FreeModbus/rtu/mbrtu_m.c ****              * The reload for t3.5 is 1.5 times this value and similary
+ 118:../FreeModbus/rtu/mbrtu_m.c ****              * for t3.5.
+ 119:../FreeModbus/rtu/mbrtu_m.c ****              */
+ 120:../FreeModbus/rtu/mbrtu_m.c ****             usTimerT35_50us = ( 7UL * 220000UL ) / ( 2UL * ulBaudRate );
+ 129              		.loc 1 120 0
+ 130 0040 3B68     		ldr	r3, [r7]
+ 131 0042 5A00     		lsls	r2, r3, #1
+ 132 0044 47F6A073 		movw	r3, #32672
+ 133 0048 C0F21703 		movt	r3, 23
+ 134 004c B3FBF2F3 		udiv	r3, r3, r2
+ 135 0050 BB60     		str	r3, [r7, #8]
+ 136              	.L5:
+ 121:../FreeModbus/rtu/mbrtu_m.c ****         }
+ 122:../FreeModbus/rtu/mbrtu_m.c ****         if( xMBMasterPortTimersInit( ( USHORT ) usTimerT35_50us ) != TRUE )
+ 137              		.loc 1 122 0
+ 138 0052 BB68     		ldr	r3, [r7, #8]
+ 139 0054 9BB2     		uxth	r3, r3
+ 140 0056 1846     		mov	r0, r3
+ 141 0058 FFF7FEFF 		bl	xMBMasterPortTimersInit
+ 142 005c 0346     		mov	r3, r0
+ 143 005e 012B     		cmp	r3, #1
+ 144 0060 01D0     		beq	.L3
+ 123:../FreeModbus/rtu/mbrtu_m.c ****         {
+ 124:../FreeModbus/rtu/mbrtu_m.c ****             eStatus = MB_EPORTERR;
+ 145              		.loc 1 124 0
+ 146 0062 0323     		movs	r3, #3
+ 147 0064 FB73     		strb	r3, [r7, #15]
+ 148              	.L3:
+ 125:../FreeModbus/rtu/mbrtu_m.c ****         }
+ 126:../FreeModbus/rtu/mbrtu_m.c ****     }
+ 127:../FreeModbus/rtu/mbrtu_m.c ****     EXIT_CRITICAL_SECTION(  );
+ 149              		.loc 1 127 0
+ 150 0066 FFF7FEFF 		bl	vPortExitCritical
+ 128:../FreeModbus/rtu/mbrtu_m.c **** 
+ 129:../FreeModbus/rtu/mbrtu_m.c ****     return eStatus;
+ 151              		.loc 1 129 0
+ 152 006a FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 130:../FreeModbus/rtu/mbrtu_m.c **** }
+ 153              		.loc 1 130 0
+ 154 006c 1846     		mov	r0, r3
+ 155 006e 1037     		adds	r7, r7, #16
+ 156 0070 BD46     		mov	sp, r7
+ 157              		@ sp needed
+ 158 0072 80BD     		pop	{r7, pc}
+ 159              		.cfi_endproc
+ 160              	.LFE29:
+ 162              		.section	.text.eMBMasterRTUStart,"ax",%progbits
+ 163              		.align	2
+ 164              		.global	eMBMasterRTUStart
+ 165              		.thumb
+ 166              		.thumb_func
+ 168              	eMBMasterRTUStart:
+ 169              	.LFB30:
+ 131:../FreeModbus/rtu/mbrtu_m.c **** 
+ 132:../FreeModbus/rtu/mbrtu_m.c **** void
+ 133:../FreeModbus/rtu/mbrtu_m.c **** eMBMasterRTUStart( void )
+ 134:../FreeModbus/rtu/mbrtu_m.c **** {
+ 170              		.loc 1 134 0
+ 171              		.cfi_startproc
+ 172              		@ args = 0, pretend = 0, frame = 0
+ 173              		@ frame_needed = 1, uses_anonymous_args = 0
+ 174 0000 80B5     		push	{r7, lr}
+ 175              		.cfi_def_cfa_offset 8
+ 176              		.cfi_offset 7, -8
+ 177              		.cfi_offset 14, -4
+ 178 0002 00AF     		add	r7, sp, #0
+ 179              		.cfi_def_cfa_register 7
+ 135:../FreeModbus/rtu/mbrtu_m.c ****     ENTER_CRITICAL_SECTION(  );
+ 180              		.loc 1 135 0
+ 181 0004 FFF7FEFF 		bl	vPortEnterCritical
+ 136:../FreeModbus/rtu/mbrtu_m.c ****     /* Initially the receiver is in the state STATE_M_RX_INIT. we start
+ 137:../FreeModbus/rtu/mbrtu_m.c ****      * the timer and if no character is received within t3.5 we change
+ 138:../FreeModbus/rtu/mbrtu_m.c ****      * to STATE_M_RX_IDLE. This makes sure that we delay startup of the
+ 139:../FreeModbus/rtu/mbrtu_m.c ****      * modbus protocol stack until the bus is free.
+ 140:../FreeModbus/rtu/mbrtu_m.c ****      */
+ 141:../FreeModbus/rtu/mbrtu_m.c ****     eRcvState = STATE_M_RX_INIT;
+ 182              		.loc 1 141 0
+ 183 0008 40F20003 		movw	r3, #:lower16:eRcvState
+ 184 000c C0F20003 		movt	r3, #:upper16:eRcvState
+ 185 0010 0022     		movs	r2, #0
+ 186 0012 1A70     		strb	r2, [r3]
+ 142:../FreeModbus/rtu/mbrtu_m.c ****     vMBMasterPortSerialEnable( TRUE, FALSE );
+ 187              		.loc 1 142 0
+ 188 0014 0120     		movs	r0, #1
+ 189 0016 0021     		movs	r1, #0
+ 190 0018 FFF7FEFF 		bl	vMBMasterPortSerialEnable
+ 143:../FreeModbus/rtu/mbrtu_m.c ****     vMBMasterPortTimersT35Enable(  );
+ 191              		.loc 1 143 0
+ 192 001c FFF7FEFF 		bl	vMBMasterPortTimersT35Enable
+ 144:../FreeModbus/rtu/mbrtu_m.c **** 
+ 145:../FreeModbus/rtu/mbrtu_m.c ****     EXIT_CRITICAL_SECTION(  );
+ 193              		.loc 1 145 0
+ 194 0020 FFF7FEFF 		bl	vPortExitCritical
+ 146:../FreeModbus/rtu/mbrtu_m.c **** }
+ 195              		.loc 1 146 0
+ 196 0024 80BD     		pop	{r7, pc}
+ 197              		.cfi_endproc
+ 198              	.LFE30:
+ 200 0026 00BF     		.section	.text.eMBMasterRTUStop,"ax",%progbits
+ 201              		.align	2
+ 202              		.global	eMBMasterRTUStop
+ 203              		.thumb
+ 204              		.thumb_func
+ 206              	eMBMasterRTUStop:
+ 207              	.LFB31:
+ 147:../FreeModbus/rtu/mbrtu_m.c **** 
+ 148:../FreeModbus/rtu/mbrtu_m.c **** void
+ 149:../FreeModbus/rtu/mbrtu_m.c **** eMBMasterRTUStop( void )
+ 150:../FreeModbus/rtu/mbrtu_m.c **** {
+ 208              		.loc 1 150 0
+ 209              		.cfi_startproc
+ 210              		@ args = 0, pretend = 0, frame = 0
+ 211              		@ frame_needed = 1, uses_anonymous_args = 0
+ 212 0000 80B5     		push	{r7, lr}
+ 213              		.cfi_def_cfa_offset 8
+ 214              		.cfi_offset 7, -8
+ 215              		.cfi_offset 14, -4
+ 216 0002 00AF     		add	r7, sp, #0
+ 217              		.cfi_def_cfa_register 7
+ 151:../FreeModbus/rtu/mbrtu_m.c ****     ENTER_CRITICAL_SECTION(  );
+ 218              		.loc 1 151 0
+ 219 0004 FFF7FEFF 		bl	vPortEnterCritical
+ 152:../FreeModbus/rtu/mbrtu_m.c ****     vMBMasterPortSerialEnable( FALSE, FALSE );
+ 220              		.loc 1 152 0
+ 221 0008 0020     		movs	r0, #0
+ 222 000a 0021     		movs	r1, #0
+ 223 000c FFF7FEFF 		bl	vMBMasterPortSerialEnable
+ 153:../FreeModbus/rtu/mbrtu_m.c ****     vMBMasterPortTimersDisable(  );
+ 224              		.loc 1 153 0
+ 225 0010 FFF7FEFF 		bl	vMBMasterPortTimersDisable
+ 154:../FreeModbus/rtu/mbrtu_m.c ****     EXIT_CRITICAL_SECTION(  );
+ 226              		.loc 1 154 0
+ 227 0014 FFF7FEFF 		bl	vPortExitCritical
+ 155:../FreeModbus/rtu/mbrtu_m.c **** }
+ 228              		.loc 1 155 0
+ 229 0018 80BD     		pop	{r7, pc}
+ 230              		.cfi_endproc
+ 231              	.LFE31:
+ 233 001a 00BF     		.section	.text.eMBMasterRTUReceive,"ax",%progbits
+ 234              		.align	2
+ 235              		.global	eMBMasterRTUReceive
+ 236              		.thumb
+ 237              		.thumb_func
+ 239              	eMBMasterRTUReceive:
+ 240              	.LFB32:
+ 156:../FreeModbus/rtu/mbrtu_m.c **** 
+ 157:../FreeModbus/rtu/mbrtu_m.c **** eMBErrorCode
+ 158:../FreeModbus/rtu/mbrtu_m.c **** eMBMasterRTUReceive( UCHAR * pucRcvAddress, UCHAR ** pucFrame, USHORT * pusLength )
+ 159:../FreeModbus/rtu/mbrtu_m.c **** {
+ 241              		.loc 1 159 0
+ 242              		.cfi_startproc
+ 243              		@ args = 0, pretend = 0, frame = 24
+ 244              		@ frame_needed = 1, uses_anonymous_args = 0
+ 245 0000 80B5     		push	{r7, lr}
+ 246              		.cfi_def_cfa_offset 8
+ 247              		.cfi_offset 7, -8
+ 248              		.cfi_offset 14, -4
+ 249 0002 86B0     		sub	sp, sp, #24
+ 250              		.cfi_def_cfa_offset 32
+ 251 0004 00AF     		add	r7, sp, #0
+ 252              		.cfi_def_cfa_register 7
+ 253 0006 F860     		str	r0, [r7, #12]
+ 254 0008 B960     		str	r1, [r7, #8]
+ 255 000a 7A60     		str	r2, [r7, #4]
+ 160:../FreeModbus/rtu/mbrtu_m.c ****     eMBErrorCode    eStatus = MB_ENOERR;
+ 256              		.loc 1 160 0
+ 257 000c 0023     		movs	r3, #0
+ 258 000e FB75     		strb	r3, [r7, #23]
+ 161:../FreeModbus/rtu/mbrtu_m.c **** 
+ 162:../FreeModbus/rtu/mbrtu_m.c ****     ENTER_CRITICAL_SECTION(  );
+ 259              		.loc 1 162 0
+ 260 0010 FFF7FEFF 		bl	vPortEnterCritical
+ 163:../FreeModbus/rtu/mbrtu_m.c ****     assert_param( usMasterRcvBufferPos < MB_SER_PDU_SIZE_MAX );
+ 164:../FreeModbus/rtu/mbrtu_m.c **** 
+ 165:../FreeModbus/rtu/mbrtu_m.c ****     /* Length and CRC check */
+ 166:../FreeModbus/rtu/mbrtu_m.c ****     if( ( usMasterRcvBufferPos >= MB_SER_PDU_SIZE_MIN )
+ 261              		.loc 1 166 0
+ 262 0014 40F20003 		movw	r3, #:lower16:usMasterRcvBufferPos
+ 263 0018 C0F20003 		movt	r3, #:upper16:usMasterRcvBufferPos
+ 264 001c 1B88     		ldrh	r3, [r3]	@ movhi
+ 265 001e 9BB2     		uxth	r3, r3
+ 266 0020 032B     		cmp	r3, #3
+ 267 0022 25D9     		bls	.L10
+ 167:../FreeModbus/rtu/mbrtu_m.c ****         && ( usMBCRC16( ( UCHAR * ) ucMasterRTURcvBuf, usMasterRcvBufferPos ) == 0 ) )
+ 268              		.loc 1 167 0
+ 269 0024 40F20003 		movw	r3, #:lower16:usMasterRcvBufferPos
+ 270 0028 C0F20003 		movt	r3, #:upper16:usMasterRcvBufferPos
+ 271 002c 1B88     		ldrh	r3, [r3]	@ movhi
+ 272 002e 9BB2     		uxth	r3, r3
+ 273 0030 40F20000 		movw	r0, #:lower16:ucMasterRTURcvBuf
+ 274 0034 C0F20000 		movt	r0, #:upper16:ucMasterRTURcvBuf
+ 275 0038 1946     		mov	r1, r3
+ 276 003a FFF7FEFF 		bl	usMBCRC16
+ 277 003e 0346     		mov	r3, r0
+ 278 0040 002B     		cmp	r3, #0
+ 279 0042 15D1     		bne	.L10
+ 168:../FreeModbus/rtu/mbrtu_m.c ****     {
+ 169:../FreeModbus/rtu/mbrtu_m.c ****         /* Save the address field. All frames are passed to the upper layed
+ 170:../FreeModbus/rtu/mbrtu_m.c ****          * and the decision if a frame is used is done there.
+ 171:../FreeModbus/rtu/mbrtu_m.c ****          */
+ 172:../FreeModbus/rtu/mbrtu_m.c ****         *pucRcvAddress = ucMasterRTURcvBuf[MB_SER_PDU_ADDR_OFF];
+ 280              		.loc 1 172 0
+ 281 0044 40F20003 		movw	r3, #:lower16:ucMasterRTURcvBuf
+ 282 0048 C0F20003 		movt	r3, #:upper16:ucMasterRTURcvBuf
+ 283 004c 1B78     		ldrb	r3, [r3]
+ 284 004e DAB2     		uxtb	r2, r3
+ 285 0050 FB68     		ldr	r3, [r7, #12]
+ 286 0052 1A70     		strb	r2, [r3]
+ 173:../FreeModbus/rtu/mbrtu_m.c **** 
+ 174:../FreeModbus/rtu/mbrtu_m.c ****         /* Total length of Modbus-PDU is Modbus-Serial-Line-PDU minus
+ 175:../FreeModbus/rtu/mbrtu_m.c ****          * size of address field and CRC checksum.
+ 176:../FreeModbus/rtu/mbrtu_m.c ****          */
+ 177:../FreeModbus/rtu/mbrtu_m.c ****         *pusLength = ( USHORT )( usMasterRcvBufferPos - MB_SER_PDU_PDU_OFF - MB_SER_PDU_SIZE_CRC );
+ 287              		.loc 1 177 0
+ 288 0054 40F20003 		movw	r3, #:lower16:usMasterRcvBufferPos
+ 289 0058 C0F20003 		movt	r3, #:upper16:usMasterRcvBufferPos
+ 290 005c 1B88     		ldrh	r3, [r3]	@ movhi
+ 291 005e 9BB2     		uxth	r3, r3
+ 292 0060 033B     		subs	r3, r3, #3
+ 293 0062 9AB2     		uxth	r2, r3
+ 294 0064 7B68     		ldr	r3, [r7, #4]
+ 295 0066 1A80     		strh	r2, [r3]	@ movhi
+ 178:../FreeModbus/rtu/mbrtu_m.c **** 
+ 179:../FreeModbus/rtu/mbrtu_m.c ****         /* Return the start of the Modbus PDU to the caller. */
+ 180:../FreeModbus/rtu/mbrtu_m.c ****         *pucFrame = ( UCHAR * ) & ucMasterRTURcvBuf[MB_SER_PDU_PDU_OFF];
+ 296              		.loc 1 180 0
+ 297 0068 BB68     		ldr	r3, [r7, #8]
+ 298 006a 064A     		ldr	r2, .L13
+ 299 006c 1A60     		str	r2, [r3]
+ 300 006e 01E0     		b	.L11
+ 301              	.L10:
+ 181:../FreeModbus/rtu/mbrtu_m.c ****     }
+ 182:../FreeModbus/rtu/mbrtu_m.c ****     else
+ 183:../FreeModbus/rtu/mbrtu_m.c ****     {
+ 184:../FreeModbus/rtu/mbrtu_m.c ****         eStatus = MB_EIO;
+ 302              		.loc 1 184 0
+ 303 0070 0523     		movs	r3, #5
+ 304 0072 FB75     		strb	r3, [r7, #23]
+ 305              	.L11:
+ 185:../FreeModbus/rtu/mbrtu_m.c ****     }
+ 186:../FreeModbus/rtu/mbrtu_m.c **** 
+ 187:../FreeModbus/rtu/mbrtu_m.c ****     EXIT_CRITICAL_SECTION(  );
+ 306              		.loc 1 187 0
+ 307 0074 FFF7FEFF 		bl	vPortExitCritical
+ 188:../FreeModbus/rtu/mbrtu_m.c ****     return eStatus;
+ 308              		.loc 1 188 0
+ 309 0078 FB7D     		ldrb	r3, [r7, #23]	@ zero_extendqisi2
+ 189:../FreeModbus/rtu/mbrtu_m.c **** }
+ 310              		.loc 1 189 0
+ 311 007a 1846     		mov	r0, r3
+ 312 007c 1837     		adds	r7, r7, #24
+ 313 007e BD46     		mov	sp, r7
+ 314              		@ sp needed
+ 315 0080 80BD     		pop	{r7, pc}
+ 316              	.L14:
+ 317 0082 00BF     		.align	2
+ 318              	.L13:
+ 319 0084 01000000 		.word	ucMasterRTURcvBuf+1
+ 320              		.cfi_endproc
+ 321              	.LFE32:
+ 323              		.section	.text.eMBMasterRTUSend,"ax",%progbits
+ 324              		.align	2
+ 325              		.global	eMBMasterRTUSend
+ 326              		.thumb
+ 327              		.thumb_func
+ 329              	eMBMasterRTUSend:
+ 330              	.LFB33:
+ 190:../FreeModbus/rtu/mbrtu_m.c **** 
+ 191:../FreeModbus/rtu/mbrtu_m.c **** eMBErrorCode
+ 192:../FreeModbus/rtu/mbrtu_m.c **** eMBMasterRTUSend( UCHAR ucSlaveAddress, const UCHAR * pucFrame, USHORT usLength )
+ 193:../FreeModbus/rtu/mbrtu_m.c **** {
+ 331              		.loc 1 193 0
+ 332              		.cfi_startproc
+ 333              		@ args = 0, pretend = 0, frame = 16
+ 334              		@ frame_needed = 1, uses_anonymous_args = 0
+ 335 0000 80B5     		push	{r7, lr}
+ 336              		.cfi_def_cfa_offset 8
+ 337              		.cfi_offset 7, -8
+ 338              		.cfi_offset 14, -4
+ 339 0002 84B0     		sub	sp, sp, #16
+ 340              		.cfi_def_cfa_offset 24
+ 341 0004 00AF     		add	r7, sp, #0
+ 342              		.cfi_def_cfa_register 7
+ 343 0006 3960     		str	r1, [r7]
+ 344 0008 1346     		mov	r3, r2
+ 345 000a 0246     		mov	r2, r0
+ 346 000c FA71     		strb	r2, [r7, #7]
+ 347 000e BB80     		strh	r3, [r7, #4]	@ movhi
+ 194:../FreeModbus/rtu/mbrtu_m.c ****     eMBErrorCode    eStatus = MB_ENOERR;
+ 348              		.loc 1 194 0
+ 349 0010 0023     		movs	r3, #0
+ 350 0012 FB73     		strb	r3, [r7, #15]
+ 195:../FreeModbus/rtu/mbrtu_m.c ****     USHORT          usCRC16;
+ 196:../FreeModbus/rtu/mbrtu_m.c **** 
+ 197:../FreeModbus/rtu/mbrtu_m.c ****     if ( ucSlaveAddress > MB_MASTER_TOTAL_SLAVE_NUM ) return MB_EINVAL;
+ 351              		.loc 1 197 0
+ 352 0014 FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 353 0016 102B     		cmp	r3, #16
+ 354 0018 01D9     		bls	.L16
+ 355              		.loc 1 197 0 is_stmt 0 discriminator 1
+ 356 001a 0223     		movs	r3, #2
+ 357 001c 78E0     		b	.L17
+ 358              	.L16:
+ 198:../FreeModbus/rtu/mbrtu_m.c **** 
+ 199:../FreeModbus/rtu/mbrtu_m.c ****     ENTER_CRITICAL_SECTION(  );
+ 359              		.loc 1 199 0 is_stmt 1
+ 360 001e FFF7FEFF 		bl	vPortEnterCritical
+ 200:../FreeModbus/rtu/mbrtu_m.c **** 
+ 201:../FreeModbus/rtu/mbrtu_m.c ****     /* Check if the receiver is still in idle state. If not we where to
+ 202:../FreeModbus/rtu/mbrtu_m.c ****      * slow with processing the received frame and the master sent another
+ 203:../FreeModbus/rtu/mbrtu_m.c ****      * frame on the network. We have to abort sending the frame.
+ 204:../FreeModbus/rtu/mbrtu_m.c ****      */
+ 205:../FreeModbus/rtu/mbrtu_m.c ****     if( eRcvState == STATE_M_RX_IDLE )
+ 361              		.loc 1 205 0
+ 362 0022 40F20003 		movw	r3, #:lower16:eRcvState
+ 363 0026 C0F20003 		movt	r3, #:upper16:eRcvState
+ 364 002a 1B78     		ldrb	r3, [r3]
+ 365 002c DBB2     		uxtb	r3, r3
+ 366 002e 012B     		cmp	r3, #1
+ 367 0030 69D1     		bne	.L18
+ 206:../FreeModbus/rtu/mbrtu_m.c ****     {
+ 207:../FreeModbus/rtu/mbrtu_m.c ****         /* First byte before the Modbus-PDU is the slave address. */
+ 208:../FreeModbus/rtu/mbrtu_m.c ****         pucMasterSndBufferCur = ( UCHAR * ) pucFrame - 1;
+ 368              		.loc 1 208 0
+ 369 0032 3B68     		ldr	r3, [r7]
+ 370 0034 5A1E     		subs	r2, r3, #1
+ 371 0036 40F20003 		movw	r3, #:lower16:pucMasterSndBufferCur
+ 372 003a C0F20003 		movt	r3, #:upper16:pucMasterSndBufferCur
+ 373 003e 1A60     		str	r2, [r3]
+ 209:../FreeModbus/rtu/mbrtu_m.c ****         usMasterSndBufferCount = 1;
+ 374              		.loc 1 209 0
+ 375 0040 40F20003 		movw	r3, #:lower16:usMasterSndBufferCount
+ 376 0044 C0F20003 		movt	r3, #:upper16:usMasterSndBufferCount
+ 377 0048 0122     		movs	r2, #1
+ 378 004a 1A80     		strh	r2, [r3]	@ movhi
+ 210:../FreeModbus/rtu/mbrtu_m.c **** 
+ 211:../FreeModbus/rtu/mbrtu_m.c ****         /* Now copy the Modbus-PDU into the Modbus-Serial-Line-PDU. */
+ 212:../FreeModbus/rtu/mbrtu_m.c ****         pucMasterSndBufferCur[MB_SER_PDU_ADDR_OFF] = ucSlaveAddress;
+ 379              		.loc 1 212 0
+ 380 004c 40F20003 		movw	r3, #:lower16:pucMasterSndBufferCur
+ 381 0050 C0F20003 		movt	r3, #:upper16:pucMasterSndBufferCur
+ 382 0054 1B68     		ldr	r3, [r3]
+ 383 0056 FA79     		ldrb	r2, [r7, #7]
+ 384 0058 1A70     		strb	r2, [r3]
+ 213:../FreeModbus/rtu/mbrtu_m.c ****         usMasterSndBufferCount += usLength;
+ 385              		.loc 1 213 0
+ 386 005a 40F20003 		movw	r3, #:lower16:usMasterSndBufferCount
+ 387 005e C0F20003 		movt	r3, #:upper16:usMasterSndBufferCount
+ 388 0062 1B88     		ldrh	r3, [r3]	@ movhi
+ 389 0064 9AB2     		uxth	r2, r3
+ 390 0066 BB88     		ldrh	r3, [r7, #4]	@ movhi
+ 391 0068 1344     		add	r3, r3, r2
+ 392 006a 9AB2     		uxth	r2, r3
+ 393 006c 40F20003 		movw	r3, #:lower16:usMasterSndBufferCount
+ 394 0070 C0F20003 		movt	r3, #:upper16:usMasterSndBufferCount
+ 395 0074 1A80     		strh	r2, [r3]	@ movhi
+ 214:../FreeModbus/rtu/mbrtu_m.c **** 
+ 215:../FreeModbus/rtu/mbrtu_m.c ****         /* Calculate CRC16 checksum for Modbus-Serial-Line-PDU. */
+ 216:../FreeModbus/rtu/mbrtu_m.c ****         usCRC16 = usMBCRC16( ( UCHAR * ) pucMasterSndBufferCur, usMasterSndBufferCount );
+ 396              		.loc 1 216 0
+ 397 0076 40F20003 		movw	r3, #:lower16:pucMasterSndBufferCur
+ 398 007a C0F20003 		movt	r3, #:upper16:pucMasterSndBufferCur
+ 399 007e 1A68     		ldr	r2, [r3]
+ 400 0080 40F20003 		movw	r3, #:lower16:usMasterSndBufferCount
+ 401 0084 C0F20003 		movt	r3, #:upper16:usMasterSndBufferCount
+ 402 0088 1B88     		ldrh	r3, [r3]	@ movhi
+ 403 008a 9BB2     		uxth	r3, r3
+ 404 008c 1046     		mov	r0, r2
+ 405 008e 1946     		mov	r1, r3
+ 406 0090 FFF7FEFF 		bl	usMBCRC16
+ 407 0094 0346     		mov	r3, r0
+ 408 0096 BB81     		strh	r3, [r7, #12]	@ movhi
+ 217:../FreeModbus/rtu/mbrtu_m.c ****         ucMasterRTUSndBuf[usMasterSndBufferCount++] = ( UCHAR )( usCRC16 & 0xFF );
+ 409              		.loc 1 217 0
+ 410 0098 40F20003 		movw	r3, #:lower16:usMasterSndBufferCount
+ 411 009c C0F20003 		movt	r3, #:upper16:usMasterSndBufferCount
+ 412 00a0 1B88     		ldrh	r3, [r3]	@ movhi
+ 413 00a2 9BB2     		uxth	r3, r3
+ 414 00a4 1A46     		mov	r2, r3
+ 415 00a6 531C     		adds	r3, r2, #1
+ 416 00a8 99B2     		uxth	r1, r3
+ 417 00aa 40F20003 		movw	r3, #:lower16:usMasterSndBufferCount
+ 418 00ae C0F20003 		movt	r3, #:upper16:usMasterSndBufferCount
+ 419 00b2 1980     		strh	r1, [r3]	@ movhi
+ 420 00b4 BB89     		ldrh	r3, [r7, #12]	@ movhi
+ 421 00b6 D9B2     		uxtb	r1, r3
+ 422 00b8 40F20003 		movw	r3, #:lower16:ucMasterRTUSndBuf
+ 423 00bc C0F20003 		movt	r3, #:upper16:ucMasterRTUSndBuf
+ 424 00c0 9954     		strb	r1, [r3, r2]
+ 218:../FreeModbus/rtu/mbrtu_m.c ****         ucMasterRTUSndBuf[usMasterSndBufferCount++] = ( UCHAR )( usCRC16 >> 8 );
+ 425              		.loc 1 218 0
+ 426 00c2 40F20003 		movw	r3, #:lower16:usMasterSndBufferCount
+ 427 00c6 C0F20003 		movt	r3, #:upper16:usMasterSndBufferCount
+ 428 00ca 1B88     		ldrh	r3, [r3]	@ movhi
+ 429 00cc 9BB2     		uxth	r3, r3
+ 430 00ce 1A46     		mov	r2, r3
+ 431 00d0 531C     		adds	r3, r2, #1
+ 432 00d2 99B2     		uxth	r1, r3
+ 433 00d4 40F20003 		movw	r3, #:lower16:usMasterSndBufferCount
+ 434 00d8 C0F20003 		movt	r3, #:upper16:usMasterSndBufferCount
+ 435 00dc 1980     		strh	r1, [r3]	@ movhi
+ 436 00de BB89     		ldrh	r3, [r7, #12]
+ 437 00e0 1B0A     		lsrs	r3, r3, #8
+ 438 00e2 9BB2     		uxth	r3, r3
+ 439 00e4 D9B2     		uxtb	r1, r3
+ 440 00e6 40F20003 		movw	r3, #:lower16:ucMasterRTUSndBuf
+ 441 00ea C0F20003 		movt	r3, #:upper16:ucMasterRTUSndBuf
+ 442 00ee 9954     		strb	r1, [r3, r2]
+ 219:../FreeModbus/rtu/mbrtu_m.c **** 
+ 220:../FreeModbus/rtu/mbrtu_m.c ****         /* Activate the transmitter. */
+ 221:../FreeModbus/rtu/mbrtu_m.c ****         eSndState = STATE_M_TX_XMIT;
+ 443              		.loc 1 221 0
+ 444 00f0 40F20003 		movw	r3, #:lower16:eSndState
+ 445 00f4 C0F20003 		movt	r3, #:upper16:eSndState
+ 446 00f8 0122     		movs	r2, #1
+ 447 00fa 1A70     		strb	r2, [r3]
+ 222:../FreeModbus/rtu/mbrtu_m.c ****         vMBMasterPortSerialEnable( FALSE, TRUE );
+ 448              		.loc 1 222 0
+ 449 00fc 0020     		movs	r0, #0
+ 450 00fe 0121     		movs	r1, #1
+ 451 0100 FFF7FEFF 		bl	vMBMasterPortSerialEnable
+ 452 0104 01E0     		b	.L19
+ 453              	.L18:
+ 223:../FreeModbus/rtu/mbrtu_m.c ****     }
+ 224:../FreeModbus/rtu/mbrtu_m.c ****     else
+ 225:../FreeModbus/rtu/mbrtu_m.c ****     {
+ 226:../FreeModbus/rtu/mbrtu_m.c ****         eStatus = MB_EIO;
+ 454              		.loc 1 226 0
+ 455 0106 0523     		movs	r3, #5
+ 456 0108 FB73     		strb	r3, [r7, #15]
+ 457              	.L19:
+ 227:../FreeModbus/rtu/mbrtu_m.c ****     }
+ 228:../FreeModbus/rtu/mbrtu_m.c ****     EXIT_CRITICAL_SECTION(  );
+ 458              		.loc 1 228 0
+ 459 010a FFF7FEFF 		bl	vPortExitCritical
+ 229:../FreeModbus/rtu/mbrtu_m.c ****     return eStatus;
+ 460              		.loc 1 229 0
+ 461 010e FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 462              	.L17:
+ 230:../FreeModbus/rtu/mbrtu_m.c **** }
+ 463              		.loc 1 230 0
+ 464 0110 1846     		mov	r0, r3
+ 465 0112 1037     		adds	r7, r7, #16
+ 466 0114 BD46     		mov	sp, r7
+ 467              		@ sp needed
+ 468 0116 80BD     		pop	{r7, pc}
+ 469              		.cfi_endproc
+ 470              	.LFE33:
+ 472              		.section	.text.xMBMasterRTUReceiveFSM,"ax",%progbits
+ 473              		.align	2
+ 474              		.global	xMBMasterRTUReceiveFSM
+ 475              		.thumb
+ 476              		.thumb_func
+ 478              	xMBMasterRTUReceiveFSM:
+ 479              	.LFB34:
+ 231:../FreeModbus/rtu/mbrtu_m.c **** 
+ 232:../FreeModbus/rtu/mbrtu_m.c **** BOOL
+ 233:../FreeModbus/rtu/mbrtu_m.c **** xMBMasterRTUReceiveFSM( void )
+ 234:../FreeModbus/rtu/mbrtu_m.c **** {
+ 480              		.loc 1 234 0
+ 481              		.cfi_startproc
+ 482              		@ args = 0, pretend = 0, frame = 8
+ 483              		@ frame_needed = 1, uses_anonymous_args = 0
+ 484 0000 80B5     		push	{r7, lr}
+ 485              		.cfi_def_cfa_offset 8
+ 486              		.cfi_offset 7, -8
+ 487              		.cfi_offset 14, -4
+ 488 0002 82B0     		sub	sp, sp, #8
+ 489              		.cfi_def_cfa_offset 16
+ 490 0004 00AF     		add	r7, sp, #0
+ 491              		.cfi_def_cfa_register 7
+ 235:../FreeModbus/rtu/mbrtu_m.c ****     BOOL            xTaskNeedSwitch = FALSE;
+ 492              		.loc 1 235 0
+ 493 0006 0023     		movs	r3, #0
+ 494 0008 FB71     		strb	r3, [r7, #7]
+ 236:../FreeModbus/rtu/mbrtu_m.c ****     UCHAR           ucByte;
+ 237:../FreeModbus/rtu/mbrtu_m.c **** 
+ 238:../FreeModbus/rtu/mbrtu_m.c ****     assert_param(( eSndState == STATE_M_TX_IDLE ) || ( eSndState == STATE_M_TX_XFWR ));
+ 239:../FreeModbus/rtu/mbrtu_m.c **** 
+ 240:../FreeModbus/rtu/mbrtu_m.c ****     /* Always read the character. */
+ 241:../FreeModbus/rtu/mbrtu_m.c ****     ( void )xMBMasterPortSerialGetByte( ( CHAR * ) & ucByte );
+ 495              		.loc 1 241 0
+ 496 000a BB1D     		adds	r3, r7, #6
+ 497 000c 1846     		mov	r0, r3
+ 498 000e FFF7FEFF 		bl	xMBMasterPortSerialGetByte
+ 242:../FreeModbus/rtu/mbrtu_m.c **** 
+ 243:../FreeModbus/rtu/mbrtu_m.c ****     switch ( eRcvState )
+ 499              		.loc 1 243 0
+ 500 0012 40F20003 		movw	r3, #:lower16:eRcvState
+ 501 0016 C0F20003 		movt	r3, #:upper16:eRcvState
+ 502 001a 1B78     		ldrb	r3, [r3]
+ 503 001c DBB2     		uxtb	r3, r3
+ 504 001e 032B     		cmp	r3, #3
+ 505 0020 61D8     		bhi	.L21
+ 506 0022 01A2     		adr	r2, .L23
+ 507 0024 52F823F0 		ldr	pc, [r2, r3, lsl #2]
+ 508              		.p2align 2
+ 509              	.L23:
+ 510 0028 39000000 		.word	.L22+1
+ 511 002c 45000000 		.word	.L24+1
+ 512 0030 9B000000 		.word	.L25+1
+ 513 0034 3F000000 		.word	.L26+1
+ 514              	.L22:
+ 244:../FreeModbus/rtu/mbrtu_m.c ****     {
+ 245:../FreeModbus/rtu/mbrtu_m.c ****         /* If we have received a character in the init state we have to
+ 246:../FreeModbus/rtu/mbrtu_m.c ****          * wait until the frame is finished.
+ 247:../FreeModbus/rtu/mbrtu_m.c ****          */
+ 248:../FreeModbus/rtu/mbrtu_m.c ****     case STATE_M_RX_INIT:
+ 249:../FreeModbus/rtu/mbrtu_m.c ****         vMBMasterPortTimersT35Enable( );
+ 515              		.loc 1 249 0
+ 516 0038 FFF7FEFF 		bl	vMBMasterPortTimersT35Enable
+ 250:../FreeModbus/rtu/mbrtu_m.c ****         break;
+ 517              		.loc 1 250 0
+ 518 003c 53E0     		b	.L21
+ 519              	.L26:
+ 251:../FreeModbus/rtu/mbrtu_m.c **** 
+ 252:../FreeModbus/rtu/mbrtu_m.c ****         /* In the error state we wait until all characters in the
+ 253:../FreeModbus/rtu/mbrtu_m.c ****          * damaged frame are transmitted.
+ 254:../FreeModbus/rtu/mbrtu_m.c ****          */
+ 255:../FreeModbus/rtu/mbrtu_m.c ****     case STATE_M_RX_ERROR:
+ 256:../FreeModbus/rtu/mbrtu_m.c ****         vMBMasterPortTimersT35Enable( );
+ 520              		.loc 1 256 0
+ 521 003e FFF7FEFF 		bl	vMBMasterPortTimersT35Enable
+ 257:../FreeModbus/rtu/mbrtu_m.c ****         break;
+ 522              		.loc 1 257 0
+ 523 0042 50E0     		b	.L21
+ 524              	.L24:
+ 258:../FreeModbus/rtu/mbrtu_m.c **** 
+ 259:../FreeModbus/rtu/mbrtu_m.c ****         /* In the idle state we wait for a new character. If a character
+ 260:../FreeModbus/rtu/mbrtu_m.c ****          * is received the t1.5 and t3.5 timers are started and the
+ 261:../FreeModbus/rtu/mbrtu_m.c ****          * receiver is in the state STATE_RX_RECEIVCE and disable early
+ 262:../FreeModbus/rtu/mbrtu_m.c ****          * the timer of respond timeout .
+ 263:../FreeModbus/rtu/mbrtu_m.c ****          */
+ 264:../FreeModbus/rtu/mbrtu_m.c ****     case STATE_M_RX_IDLE:
+ 265:../FreeModbus/rtu/mbrtu_m.c ****     	/* In time of respond timeout,the receiver receive a frame.
+ 266:../FreeModbus/rtu/mbrtu_m.c ****     	 * Disable timer of respond timeout and change the transmiter state to idle.
+ 267:../FreeModbus/rtu/mbrtu_m.c ****     	 */
+ 268:../FreeModbus/rtu/mbrtu_m.c ****     	vMBMasterPortTimersDisable( );
+ 525              		.loc 1 268 0
+ 526 0044 FFF7FEFF 		bl	vMBMasterPortTimersDisable
+ 269:../FreeModbus/rtu/mbrtu_m.c ****     	eSndState = STATE_M_TX_IDLE;
+ 527              		.loc 1 269 0
+ 528 0048 40F20003 		movw	r3, #:lower16:eSndState
+ 529 004c C0F20003 		movt	r3, #:upper16:eSndState
+ 530 0050 0022     		movs	r2, #0
+ 531 0052 1A70     		strb	r2, [r3]
+ 270:../FreeModbus/rtu/mbrtu_m.c **** 
+ 271:../FreeModbus/rtu/mbrtu_m.c ****         usMasterRcvBufferPos = 0;
+ 532              		.loc 1 271 0
+ 533 0054 40F20003 		movw	r3, #:lower16:usMasterRcvBufferPos
+ 534 0058 C0F20003 		movt	r3, #:upper16:usMasterRcvBufferPos
+ 535 005c 0022     		movs	r2, #0
+ 536 005e 1A80     		strh	r2, [r3]	@ movhi
+ 272:../FreeModbus/rtu/mbrtu_m.c ****         ucMasterRTURcvBuf[usMasterRcvBufferPos++] = ucByte;
+ 537              		.loc 1 272 0
+ 538 0060 40F20003 		movw	r3, #:lower16:usMasterRcvBufferPos
+ 539 0064 C0F20003 		movt	r3, #:upper16:usMasterRcvBufferPos
+ 540 0068 1B88     		ldrh	r3, [r3]	@ movhi
+ 541 006a 9BB2     		uxth	r3, r3
+ 542 006c 1A46     		mov	r2, r3
+ 543 006e 531C     		adds	r3, r2, #1
+ 544 0070 99B2     		uxth	r1, r3
+ 545 0072 40F20003 		movw	r3, #:lower16:usMasterRcvBufferPos
+ 546 0076 C0F20003 		movt	r3, #:upper16:usMasterRcvBufferPos
+ 547 007a 1980     		strh	r1, [r3]	@ movhi
+ 548 007c B979     		ldrb	r1, [r7, #6]	@ zero_extendqisi2
+ 549 007e 40F20003 		movw	r3, #:lower16:ucMasterRTURcvBuf
+ 550 0082 C0F20003 		movt	r3, #:upper16:ucMasterRTURcvBuf
+ 551 0086 9954     		strb	r1, [r3, r2]
+ 273:../FreeModbus/rtu/mbrtu_m.c ****         eRcvState = STATE_M_RX_RCV;
+ 552              		.loc 1 273 0
+ 553 0088 40F20003 		movw	r3, #:lower16:eRcvState
+ 554 008c C0F20003 		movt	r3, #:upper16:eRcvState
+ 555 0090 0222     		movs	r2, #2
+ 556 0092 1A70     		strb	r2, [r3]
+ 274:../FreeModbus/rtu/mbrtu_m.c **** 
+ 275:../FreeModbus/rtu/mbrtu_m.c ****         /* Enable t3.5 timers. */
+ 276:../FreeModbus/rtu/mbrtu_m.c ****         vMBMasterPortTimersT35Enable( );
+ 557              		.loc 1 276 0
+ 558 0094 FFF7FEFF 		bl	vMBMasterPortTimersT35Enable
+ 277:../FreeModbus/rtu/mbrtu_m.c ****         break;
+ 559              		.loc 1 277 0
+ 560 0098 25E0     		b	.L21
+ 561              	.L25:
+ 278:../FreeModbus/rtu/mbrtu_m.c **** 
+ 279:../FreeModbus/rtu/mbrtu_m.c ****         /* We are currently receiving a frame. Reset the timer after
+ 280:../FreeModbus/rtu/mbrtu_m.c ****          * every character received. If more than the maximum possible
+ 281:../FreeModbus/rtu/mbrtu_m.c ****          * number of bytes in a modbus frame is received the frame is
+ 282:../FreeModbus/rtu/mbrtu_m.c ****          * ignored.
+ 283:../FreeModbus/rtu/mbrtu_m.c ****          */
+ 284:../FreeModbus/rtu/mbrtu_m.c ****     case STATE_M_RX_RCV:
+ 285:../FreeModbus/rtu/mbrtu_m.c ****         if( usMasterRcvBufferPos < MB_SER_PDU_SIZE_MAX )
+ 562              		.loc 1 285 0
+ 563 009a 40F20003 		movw	r3, #:lower16:usMasterRcvBufferPos
+ 564 009e C0F20003 		movt	r3, #:upper16:usMasterRcvBufferPos
+ 565 00a2 1B88     		ldrh	r3, [r3]	@ movhi
+ 566 00a4 9BB2     		uxth	r3, r3
+ 567 00a6 FF2B     		cmp	r3, #255
+ 568 00a8 14D8     		bhi	.L27
+ 286:../FreeModbus/rtu/mbrtu_m.c ****         {
+ 287:../FreeModbus/rtu/mbrtu_m.c ****             ucMasterRTURcvBuf[usMasterRcvBufferPos++] = ucByte;
+ 569              		.loc 1 287 0
+ 570 00aa 40F20003 		movw	r3, #:lower16:usMasterRcvBufferPos
+ 571 00ae C0F20003 		movt	r3, #:upper16:usMasterRcvBufferPos
+ 572 00b2 1B88     		ldrh	r3, [r3]	@ movhi
+ 573 00b4 9BB2     		uxth	r3, r3
+ 574 00b6 1A46     		mov	r2, r3
+ 575 00b8 531C     		adds	r3, r2, #1
+ 576 00ba 99B2     		uxth	r1, r3
+ 577 00bc 40F20003 		movw	r3, #:lower16:usMasterRcvBufferPos
+ 578 00c0 C0F20003 		movt	r3, #:upper16:usMasterRcvBufferPos
+ 579 00c4 1980     		strh	r1, [r3]	@ movhi
+ 580 00c6 B979     		ldrb	r1, [r7, #6]	@ zero_extendqisi2
+ 581 00c8 40F20003 		movw	r3, #:lower16:ucMasterRTURcvBuf
+ 582 00cc C0F20003 		movt	r3, #:upper16:ucMasterRTURcvBuf
+ 583 00d0 9954     		strb	r1, [r3, r2]
+ 584 00d2 05E0     		b	.L28
+ 585              	.L27:
+ 288:../FreeModbus/rtu/mbrtu_m.c ****         }
+ 289:../FreeModbus/rtu/mbrtu_m.c ****         else
+ 290:../FreeModbus/rtu/mbrtu_m.c ****         {
+ 291:../FreeModbus/rtu/mbrtu_m.c ****             eRcvState = STATE_M_RX_ERROR;
+ 586              		.loc 1 291 0
+ 587 00d4 40F20003 		movw	r3, #:lower16:eRcvState
+ 588 00d8 C0F20003 		movt	r3, #:upper16:eRcvState
+ 589 00dc 0322     		movs	r2, #3
+ 590 00de 1A70     		strb	r2, [r3]
+ 591              	.L28:
+ 292:../FreeModbus/rtu/mbrtu_m.c ****         }
+ 293:../FreeModbus/rtu/mbrtu_m.c ****         vMBMasterPortTimersT35Enable();
+ 592              		.loc 1 293 0
+ 593 00e0 FFF7FEFF 		bl	vMBMasterPortTimersT35Enable
+ 294:../FreeModbus/rtu/mbrtu_m.c ****         break;
+ 594              		.loc 1 294 0
+ 595 00e4 00BF     		nop
+ 596              	.L21:
+ 295:../FreeModbus/rtu/mbrtu_m.c ****     }
+ 296:../FreeModbus/rtu/mbrtu_m.c ****     return xTaskNeedSwitch;
+ 597              		.loc 1 296 0
+ 598 00e6 FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 297:../FreeModbus/rtu/mbrtu_m.c **** }
+ 599              		.loc 1 297 0
+ 600 00e8 1846     		mov	r0, r3
+ 601 00ea 0837     		adds	r7, r7, #8
+ 602 00ec BD46     		mov	sp, r7
+ 603              		@ sp needed
+ 604 00ee 80BD     		pop	{r7, pc}
+ 605              		.cfi_endproc
+ 606              	.LFE34:
+ 608              		.section	.text.xMBMasterRTUTransmitFSM,"ax",%progbits
+ 609              		.align	2
+ 610              		.global	xMBMasterRTUTransmitFSM
+ 611              		.thumb
+ 612              		.thumb_func
+ 614              	xMBMasterRTUTransmitFSM:
+ 615              	.LFB35:
+ 298:../FreeModbus/rtu/mbrtu_m.c **** 
+ 299:../FreeModbus/rtu/mbrtu_m.c **** BOOL
+ 300:../FreeModbus/rtu/mbrtu_m.c **** xMBMasterRTUTransmitFSM( void )
+ 301:../FreeModbus/rtu/mbrtu_m.c **** {
+ 616              		.loc 1 301 0
+ 617              		.cfi_startproc
+ 618              		@ args = 0, pretend = 0, frame = 8
+ 619              		@ frame_needed = 1, uses_anonymous_args = 0
+ 620 0000 80B5     		push	{r7, lr}
+ 621              		.cfi_def_cfa_offset 8
+ 622              		.cfi_offset 7, -8
+ 623              		.cfi_offset 14, -4
+ 624 0002 82B0     		sub	sp, sp, #8
+ 625              		.cfi_def_cfa_offset 16
+ 626 0004 00AF     		add	r7, sp, #0
+ 627              		.cfi_def_cfa_register 7
+ 302:../FreeModbus/rtu/mbrtu_m.c ****     BOOL            xNeedPoll = FALSE;
+ 628              		.loc 1 302 0
+ 629 0006 0023     		movs	r3, #0
+ 630 0008 FB71     		strb	r3, [r7, #7]
+ 303:../FreeModbus/rtu/mbrtu_m.c **** 
+ 304:../FreeModbus/rtu/mbrtu_m.c ****     assert_param( eRcvState == STATE_M_RX_IDLE );
+ 305:../FreeModbus/rtu/mbrtu_m.c **** 
+ 306:../FreeModbus/rtu/mbrtu_m.c ****     switch ( eSndState )
+ 631              		.loc 1 306 0
+ 632 000a 40F20003 		movw	r3, #:lower16:eSndState
+ 633 000e C0F20003 		movt	r3, #:upper16:eSndState
+ 634 0012 1B78     		ldrb	r3, [r3]
+ 635 0014 DBB2     		uxtb	r3, r3
+ 636 0016 002B     		cmp	r3, #0
+ 637 0018 02D0     		beq	.L32
+ 638 001a 012B     		cmp	r3, #1
+ 639 001c 05D0     		beq	.L33
+ 640 001e 59E0     		b	.L31
+ 641              	.L32:
+ 307:../FreeModbus/rtu/mbrtu_m.c ****     {
+ 308:../FreeModbus/rtu/mbrtu_m.c ****         /* We should not get a transmitter event if the transmitter is in
+ 309:../FreeModbus/rtu/mbrtu_m.c ****          * idle state.  */
+ 310:../FreeModbus/rtu/mbrtu_m.c ****     case STATE_M_TX_IDLE:
+ 311:../FreeModbus/rtu/mbrtu_m.c ****         /* enable receiver/disable transmitter. */
+ 312:../FreeModbus/rtu/mbrtu_m.c ****         vMBMasterPortSerialEnable( TRUE, FALSE );
+ 642              		.loc 1 312 0
+ 643 0020 0120     		movs	r0, #1
+ 644 0022 0021     		movs	r1, #0
+ 645 0024 FFF7FEFF 		bl	vMBMasterPortSerialEnable
+ 313:../FreeModbus/rtu/mbrtu_m.c ****         break;
+ 646              		.loc 1 313 0
+ 647 0028 54E0     		b	.L31
+ 648              	.L33:
+ 314:../FreeModbus/rtu/mbrtu_m.c **** 
+ 315:../FreeModbus/rtu/mbrtu_m.c ****     case STATE_M_TX_XMIT:
+ 316:../FreeModbus/rtu/mbrtu_m.c ****         /* check if we are finished. */
+ 317:../FreeModbus/rtu/mbrtu_m.c ****         if( usMasterSndBufferCount != 0 )
+ 649              		.loc 1 317 0
+ 650 002a 40F20003 		movw	r3, #:lower16:usMasterSndBufferCount
+ 651 002e C0F20003 		movt	r3, #:upper16:usMasterSndBufferCount
+ 652 0032 1B88     		ldrh	r3, [r3]	@ movhi
+ 653 0034 9BB2     		uxth	r3, r3
+ 654 0036 002B     		cmp	r3, #0
+ 655 0038 22D0     		beq	.L34
+ 318:../FreeModbus/rtu/mbrtu_m.c ****         {
+ 319:../FreeModbus/rtu/mbrtu_m.c ****             xMBMasterPortSerialPutByte( ( CHAR )*pucMasterSndBufferCur );
+ 656              		.loc 1 319 0
+ 657 003a 40F20003 		movw	r3, #:lower16:pucMasterSndBufferCur
+ 658 003e C0F20003 		movt	r3, #:upper16:pucMasterSndBufferCur
+ 659 0042 1B68     		ldr	r3, [r3]
+ 660 0044 1B78     		ldrb	r3, [r3]
+ 661 0046 DBB2     		uxtb	r3, r3
+ 662 0048 1846     		mov	r0, r3
+ 663 004a FFF7FEFF 		bl	xMBMasterPortSerialPutByte
+ 320:../FreeModbus/rtu/mbrtu_m.c ****             pucMasterSndBufferCur++;  /* next byte in sendbuffer. */
+ 664              		.loc 1 320 0
+ 665 004e 40F20003 		movw	r3, #:lower16:pucMasterSndBufferCur
+ 666 0052 C0F20003 		movt	r3, #:upper16:pucMasterSndBufferCur
+ 667 0056 1B68     		ldr	r3, [r3]
+ 668 0058 5A1C     		adds	r2, r3, #1
+ 669 005a 40F20003 		movw	r3, #:lower16:pucMasterSndBufferCur
+ 670 005e C0F20003 		movt	r3, #:upper16:pucMasterSndBufferCur
+ 671 0062 1A60     		str	r2, [r3]
+ 321:../FreeModbus/rtu/mbrtu_m.c ****             usMasterSndBufferCount--;
+ 672              		.loc 1 321 0
+ 673 0064 40F20003 		movw	r3, #:lower16:usMasterSndBufferCount
+ 674 0068 C0F20003 		movt	r3, #:upper16:usMasterSndBufferCount
+ 675 006c 1B88     		ldrh	r3, [r3]	@ movhi
+ 676 006e 9BB2     		uxth	r3, r3
+ 677 0070 013B     		subs	r3, r3, #1
+ 678 0072 9AB2     		uxth	r2, r3
+ 679 0074 40F20003 		movw	r3, #:lower16:usMasterSndBufferCount
+ 680 0078 C0F20003 		movt	r3, #:upper16:usMasterSndBufferCount
+ 681 007c 1A80     		strh	r2, [r3]	@ movhi
+ 682 007e 28E0     		b	.L35
+ 683              	.L34:
+ 322:../FreeModbus/rtu/mbrtu_m.c ****         }
+ 323:../FreeModbus/rtu/mbrtu_m.c ****         else
+ 324:../FreeModbus/rtu/mbrtu_m.c ****         {
+ 325:../FreeModbus/rtu/mbrtu_m.c ****             xFrameIsBroadcast = ( ucMasterRTUSndBuf[MB_SER_PDU_ADDR_OFF] == MB_ADDRESS_BROADCAST ) 
+ 684              		.loc 1 325 0
+ 685 0080 40F20003 		movw	r3, #:lower16:ucMasterRTUSndBuf
+ 686 0084 C0F20003 		movt	r3, #:upper16:ucMasterRTUSndBuf
+ 687 0088 1B78     		ldrb	r3, [r3]
+ 688 008a DBB2     		uxtb	r3, r3
+ 689 008c 002B     		cmp	r3, #0
+ 690 008e 14BF     		ite	ne
+ 691 0090 0023     		movne	r3, #0
+ 692 0092 0123     		moveq	r3, #1
+ 693 0094 DBB2     		uxtb	r3, r3
+ 694 0096 1A46     		mov	r2, r3
+ 695 0098 40F20003 		movw	r3, #:lower16:xFrameIsBroadcast
+ 696 009c C0F20003 		movt	r3, #:upper16:xFrameIsBroadcast
+ 697 00a0 1A70     		strb	r2, [r3]
+ 326:../FreeModbus/rtu/mbrtu_m.c ****             /* Disable transmitter. This prevents another transmit buffer
+ 327:../FreeModbus/rtu/mbrtu_m.c ****              * empty interrupt. */
+ 328:../FreeModbus/rtu/mbrtu_m.c ****             vMBMasterPortSerialEnable( TRUE, FALSE );
+ 698              		.loc 1 328 0
+ 699 00a2 0120     		movs	r0, #1
+ 700 00a4 0021     		movs	r1, #0
+ 701 00a6 FFF7FEFF 		bl	vMBMasterPortSerialEnable
+ 329:../FreeModbus/rtu/mbrtu_m.c ****             eSndState = STATE_M_TX_XFWR;
+ 702              		.loc 1 329 0
+ 703 00aa 40F20003 		movw	r3, #:lower16:eSndState
+ 704 00ae C0F20003 		movt	r3, #:upper16:eSndState
+ 705 00b2 0222     		movs	r2, #2
+ 706 00b4 1A70     		strb	r2, [r3]
+ 330:../FreeModbus/rtu/mbrtu_m.c ****             /* If the frame is broadcast ,master will enable timer of convert delay,
+ 331:../FreeModbus/rtu/mbrtu_m.c ****              * else master will enable timer of respond timeout. */
+ 332:../FreeModbus/rtu/mbrtu_m.c ****             if ( xFrameIsBroadcast == TRUE )
+ 707              		.loc 1 332 0
+ 708 00b6 40F20003 		movw	r3, #:lower16:xFrameIsBroadcast
+ 709 00ba C0F20003 		movt	r3, #:upper16:xFrameIsBroadcast
+ 710 00be 1B78     		ldrb	r3, [r3]
+ 711 00c0 DBB2     		uxtb	r3, r3
+ 712 00c2 012B     		cmp	r3, #1
+ 713 00c4 02D1     		bne	.L36
+ 333:../FreeModbus/rtu/mbrtu_m.c ****             {
+ 334:../FreeModbus/rtu/mbrtu_m.c ****             	vMBMasterPortTimersConvertDelayEnable( );
+ 714              		.loc 1 334 0
+ 715 00c6 FFF7FEFF 		bl	vMBMasterPortTimersConvertDelayEnable
+ 716 00ca 02E0     		b	.L35
+ 717              	.L36:
+ 335:../FreeModbus/rtu/mbrtu_m.c ****             }
+ 336:../FreeModbus/rtu/mbrtu_m.c ****             else
+ 337:../FreeModbus/rtu/mbrtu_m.c ****             {
+ 338:../FreeModbus/rtu/mbrtu_m.c ****             	vMBMasterPortTimersRespondTimeoutEnable( );
+ 718              		.loc 1 338 0
+ 719 00cc FFF7FEFF 		bl	vMBMasterPortTimersRespondTimeoutEnable
+ 339:../FreeModbus/rtu/mbrtu_m.c ****             }
+ 340:../FreeModbus/rtu/mbrtu_m.c ****         }
+ 341:../FreeModbus/rtu/mbrtu_m.c ****         break;
+ 720              		.loc 1 341 0
+ 721 00d0 FFE7     		b	.L38
+ 722              	.L35:
+ 723              	.L38:
+ 724 00d2 00BF     		nop
+ 725              	.L31:
+ 342:../FreeModbus/rtu/mbrtu_m.c ****     }
+ 343:../FreeModbus/rtu/mbrtu_m.c **** 
+ 344:../FreeModbus/rtu/mbrtu_m.c ****     return xNeedPoll;
+ 726              		.loc 1 344 0
+ 727 00d4 FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 345:../FreeModbus/rtu/mbrtu_m.c **** }
+ 728              		.loc 1 345 0
+ 729 00d6 1846     		mov	r0, r3
+ 730 00d8 0837     		adds	r7, r7, #8
+ 731 00da BD46     		mov	sp, r7
+ 732              		@ sp needed
+ 733 00dc 80BD     		pop	{r7, pc}
+ 734              		.cfi_endproc
+ 735              	.LFE35:
+ 737 00de 00BF     		.section	.text.xMBMasterRTUTimerExpired,"ax",%progbits
+ 738              		.align	2
+ 739              		.global	xMBMasterRTUTimerExpired
+ 740              		.thumb
+ 741              		.thumb_func
+ 743              	xMBMasterRTUTimerExpired:
+ 744              	.LFB36:
+ 346:../FreeModbus/rtu/mbrtu_m.c **** 
+ 347:../FreeModbus/rtu/mbrtu_m.c **** BOOL
+ 348:../FreeModbus/rtu/mbrtu_m.c **** xMBMasterRTUTimerExpired(void)
+ 349:../FreeModbus/rtu/mbrtu_m.c **** {
+ 745              		.loc 1 349 0
+ 746              		.cfi_startproc
+ 747              		@ args = 0, pretend = 0, frame = 8
+ 748              		@ frame_needed = 1, uses_anonymous_args = 0
+ 749 0000 80B5     		push	{r7, lr}
+ 750              		.cfi_def_cfa_offset 8
+ 751              		.cfi_offset 7, -8
+ 752              		.cfi_offset 14, -4
+ 753 0002 82B0     		sub	sp, sp, #8
+ 754              		.cfi_def_cfa_offset 16
+ 755 0004 00AF     		add	r7, sp, #0
+ 756              		.cfi_def_cfa_register 7
+ 350:../FreeModbus/rtu/mbrtu_m.c **** 	BOOL xNeedPoll = FALSE;
+ 757              		.loc 1 350 0
+ 758 0006 0023     		movs	r3, #0
+ 759 0008 FB71     		strb	r3, [r7, #7]
+ 351:../FreeModbus/rtu/mbrtu_m.c **** 
+ 352:../FreeModbus/rtu/mbrtu_m.c **** 	switch (eRcvState)
+ 760              		.loc 1 352 0
+ 761 000a 40F20003 		movw	r3, #:lower16:eRcvState
+ 762 000e C0F20003 		movt	r3, #:upper16:eRcvState
+ 763 0012 1B78     		ldrb	r3, [r3]
+ 764 0014 DBB2     		uxtb	r3, r3
+ 765 0016 022B     		cmp	r3, #2
+ 766 0018 0AD0     		beq	.L41
+ 767 001a 032B     		cmp	r3, #3
+ 768 001c 0ED0     		beq	.L51
+ 769 001e 002B     		cmp	r3, #0
+ 770 0020 00D0     		beq	.L43
+ 353:../FreeModbus/rtu/mbrtu_m.c **** 	{
+ 354:../FreeModbus/rtu/mbrtu_m.c **** 		/* Timer t35 expired. Startup phase is finished. */
+ 355:../FreeModbus/rtu/mbrtu_m.c **** 	case STATE_M_RX_INIT:
+ 356:../FreeModbus/rtu/mbrtu_m.c **** 		xNeedPoll = xMBMasterPortEventPost(EV_MASTER_READY);
+ 357:../FreeModbus/rtu/mbrtu_m.c **** 		break;
+ 358:../FreeModbus/rtu/mbrtu_m.c **** 
+ 359:../FreeModbus/rtu/mbrtu_m.c **** 		/* A frame was received and t35 expired. Notify the listener that
+ 360:../FreeModbus/rtu/mbrtu_m.c **** 		 * a new frame was received. */
+ 361:../FreeModbus/rtu/mbrtu_m.c **** 	case STATE_M_RX_RCV:
+ 362:../FreeModbus/rtu/mbrtu_m.c **** 		xNeedPoll = xMBMasterPortEventPost(EV_MASTER_FRAME_RECEIVED);
+ 363:../FreeModbus/rtu/mbrtu_m.c **** 		break;
+ 364:../FreeModbus/rtu/mbrtu_m.c **** 
+ 365:../FreeModbus/rtu/mbrtu_m.c **** 		/* An error occured while receiving the frame. */
+ 366:../FreeModbus/rtu/mbrtu_m.c **** 	case STATE_M_RX_ERROR:
+ 367:../FreeModbus/rtu/mbrtu_m.c **** 		break;
+ 368:../FreeModbus/rtu/mbrtu_m.c **** 
+ 369:../FreeModbus/rtu/mbrtu_m.c **** 		/* Function called in an illegal state. */
+ 370:../FreeModbus/rtu/mbrtu_m.c **** 	default:
+ 371:../FreeModbus/rtu/mbrtu_m.c **** 		assert_param(
+ 372:../FreeModbus/rtu/mbrtu_m.c **** 				( eRcvState == STATE_M_RX_INIT ) || ( eRcvState == STATE_M_RX_RCV ) ||
+ 373:../FreeModbus/rtu/mbrtu_m.c **** 				( eRcvState == STATE_M_RX_ERROR ) || ( eRcvState == STATE_M_RX_IDLE ));
+ 374:../FreeModbus/rtu/mbrtu_m.c **** 		break;
+ 771              		.loc 1 374 0
+ 772 0022 0CE0     		b	.L44
+ 773              	.L43:
+ 356:../FreeModbus/rtu/mbrtu_m.c **** 		break;
+ 774              		.loc 1 356 0
+ 775 0024 0020     		movs	r0, #0
+ 776 0026 FFF7FEFF 		bl	xMBMasterPortEventPost
+ 777 002a 0346     		mov	r3, r0
+ 778 002c FB71     		strb	r3, [r7, #7]
+ 357:../FreeModbus/rtu/mbrtu_m.c **** 
+ 779              		.loc 1 357 0
+ 780 002e 06E0     		b	.L44
+ 781              	.L41:
+ 362:../FreeModbus/rtu/mbrtu_m.c **** 		break;
+ 782              		.loc 1 362 0
+ 783 0030 0120     		movs	r0, #1
+ 784 0032 FFF7FEFF 		bl	xMBMasterPortEventPost
+ 785 0036 0346     		mov	r3, r0
+ 786 0038 FB71     		strb	r3, [r7, #7]
+ 363:../FreeModbus/rtu/mbrtu_m.c **** 
+ 787              		.loc 1 363 0
+ 788 003a 00E0     		b	.L44
+ 789              	.L51:
+ 367:../FreeModbus/rtu/mbrtu_m.c **** 
+ 790              		.loc 1 367 0
+ 791 003c 00BF     		nop
+ 792              	.L44:
+ 375:../FreeModbus/rtu/mbrtu_m.c **** 	}
+ 376:../FreeModbus/rtu/mbrtu_m.c **** 	eRcvState = STATE_M_RX_IDLE;
+ 793              		.loc 1 376 0
+ 794 003e 40F20003 		movw	r3, #:lower16:eRcvState
+ 795 0042 C0F20003 		movt	r3, #:upper16:eRcvState
+ 796 0046 0122     		movs	r2, #1
+ 797 0048 1A70     		strb	r2, [r3]
+ 377:../FreeModbus/rtu/mbrtu_m.c **** 
+ 378:../FreeModbus/rtu/mbrtu_m.c **** 	switch (eSndState)
+ 798              		.loc 1 378 0
+ 799 004a 40F20003 		movw	r3, #:lower16:eSndState
+ 800 004e C0F20003 		movt	r3, #:upper16:eSndState
+ 801 0052 1B78     		ldrb	r3, [r3]
+ 802 0054 DBB2     		uxtb	r3, r3
+ 803 0056 022B     		cmp	r3, #2
+ 804 0058 00D0     		beq	.L46
+ 379:../FreeModbus/rtu/mbrtu_m.c **** 	{
+ 380:../FreeModbus/rtu/mbrtu_m.c **** 		/* A frame was send finish and convert delay or respond timeout expired.
+ 381:../FreeModbus/rtu/mbrtu_m.c **** 		 * If the frame is broadcast,The master will idle,and if the frame is not
+ 382:../FreeModbus/rtu/mbrtu_m.c **** 		 * broadcast.Notify the listener process error.*/
+ 383:../FreeModbus/rtu/mbrtu_m.c **** 	case STATE_M_TX_XFWR:
+ 384:../FreeModbus/rtu/mbrtu_m.c **** 		if ( xFrameIsBroadcast == FALSE ) {
+ 385:../FreeModbus/rtu/mbrtu_m.c **** 			vMBMasterSetErrorType(EV_ERROR_RESPOND_TIMEOUT);
+ 386:../FreeModbus/rtu/mbrtu_m.c **** 			xNeedPoll = xMBMasterPortEventPost(EV_MASTER_ERROR_PROCESS);
+ 387:../FreeModbus/rtu/mbrtu_m.c **** 		}
+ 388:../FreeModbus/rtu/mbrtu_m.c **** 		break;
+ 389:../FreeModbus/rtu/mbrtu_m.c **** 		/* Function called in an illegal state. */
+ 390:../FreeModbus/rtu/mbrtu_m.c **** 	default:
+ 391:../FreeModbus/rtu/mbrtu_m.c **** 		assert_param(
+ 392:../FreeModbus/rtu/mbrtu_m.c **** 				( eSndState == STATE_M_TX_XFWR ) || ( eSndState == STATE_M_TX_IDLE ));
+ 393:../FreeModbus/rtu/mbrtu_m.c **** 		break;
+ 805              		.loc 1 393 0
+ 806 005a 11E0     		b	.L48
+ 807              	.L46:
+ 384:../FreeModbus/rtu/mbrtu_m.c **** 			vMBMasterSetErrorType(EV_ERROR_RESPOND_TIMEOUT);
+ 808              		.loc 1 384 0
+ 809 005c 40F20003 		movw	r3, #:lower16:xFrameIsBroadcast
+ 810 0060 C0F20003 		movt	r3, #:upper16:xFrameIsBroadcast
+ 811 0064 1B78     		ldrb	r3, [r3]
+ 812 0066 DBB2     		uxtb	r3, r3
+ 813 0068 002B     		cmp	r3, #0
+ 814 006a 08D1     		bne	.L47
+ 385:../FreeModbus/rtu/mbrtu_m.c **** 			xNeedPoll = xMBMasterPortEventPost(EV_MASTER_ERROR_PROCESS);
+ 815              		.loc 1 385 0
+ 816 006c 0020     		movs	r0, #0
+ 817 006e FFF7FEFF 		bl	vMBMasterSetErrorType
+ 386:../FreeModbus/rtu/mbrtu_m.c **** 		}
+ 818              		.loc 1 386 0
+ 819 0072 0420     		movs	r0, #4
+ 820 0074 FFF7FEFF 		bl	xMBMasterPortEventPost
+ 821 0078 0346     		mov	r3, r0
+ 822 007a FB71     		strb	r3, [r7, #7]
+ 388:../FreeModbus/rtu/mbrtu_m.c **** 		/* Function called in an illegal state. */
+ 823              		.loc 1 388 0
+ 824 007c FFE7     		b	.L52
+ 825              	.L47:
+ 826              	.L52:
+ 827 007e 00BF     		nop
+ 828              	.L48:
+ 394:../FreeModbus/rtu/mbrtu_m.c **** 	}
+ 395:../FreeModbus/rtu/mbrtu_m.c **** 	eSndState = STATE_M_TX_IDLE;
+ 829              		.loc 1 395 0
+ 830 0080 40F20003 		movw	r3, #:lower16:eSndState
+ 831 0084 C0F20003 		movt	r3, #:upper16:eSndState
+ 832 0088 0022     		movs	r2, #0
+ 833 008a 1A70     		strb	r2, [r3]
+ 396:../FreeModbus/rtu/mbrtu_m.c **** 
+ 397:../FreeModbus/rtu/mbrtu_m.c **** 	vMBMasterPortTimersDisable( );
+ 834              		.loc 1 397 0
+ 835 008c FFF7FEFF 		bl	vMBMasterPortTimersDisable
+ 398:../FreeModbus/rtu/mbrtu_m.c **** 	/* If timer mode is convert delay, the master event then turns EV_MASTER_EXECUTE status. */
+ 399:../FreeModbus/rtu/mbrtu_m.c **** 	if (eMasterCurTimerMode == MB_TMODE_CONVERT_DELAY) {
+ 836              		.loc 1 399 0
+ 837 0090 40F20003 		movw	r3, #:lower16:eMasterCurTimerMode
+ 838 0094 C0F20003 		movt	r3, #:upper16:eMasterCurTimerMode
+ 839 0098 1B78     		ldrb	r3, [r3]
+ 840 009a DBB2     		uxtb	r3, r3
+ 841 009c 022B     		cmp	r3, #2
+ 842 009e 04D1     		bne	.L49
+ 400:../FreeModbus/rtu/mbrtu_m.c **** 		xNeedPoll = xMBMasterPortEventPost( EV_MASTER_EXECUTE );
+ 843              		.loc 1 400 0
+ 844 00a0 0220     		movs	r0, #2
+ 845 00a2 FFF7FEFF 		bl	xMBMasterPortEventPost
+ 846 00a6 0346     		mov	r3, r0
+ 847 00a8 FB71     		strb	r3, [r7, #7]
+ 848              	.L49:
+ 401:../FreeModbus/rtu/mbrtu_m.c **** 	}
+ 402:../FreeModbus/rtu/mbrtu_m.c **** 
+ 403:../FreeModbus/rtu/mbrtu_m.c **** 	return xNeedPoll;
+ 849              		.loc 1 403 0
+ 850 00aa FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 404:../FreeModbus/rtu/mbrtu_m.c **** }
+ 851              		.loc 1 404 0
+ 852 00ac 1846     		mov	r0, r3
+ 853 00ae 0837     		adds	r7, r7, #8
+ 854 00b0 BD46     		mov	sp, r7
+ 855              		@ sp needed
+ 856 00b2 80BD     		pop	{r7, pc}
+ 857              		.cfi_endproc
+ 858              	.LFE36:
+ 860              		.section	.text.vMBMasterGetRTUSndBuf,"ax",%progbits
+ 861              		.align	2
+ 862              		.global	vMBMasterGetRTUSndBuf
+ 863              		.thumb
+ 864              		.thumb_func
+ 866              	vMBMasterGetRTUSndBuf:
+ 867              	.LFB37:
+ 405:../FreeModbus/rtu/mbrtu_m.c **** 
+ 406:../FreeModbus/rtu/mbrtu_m.c **** /* Get Modbus Master send RTU's buffer address pointer.*/
+ 407:../FreeModbus/rtu/mbrtu_m.c **** void vMBMasterGetRTUSndBuf( UCHAR ** pucFrame )
+ 408:../FreeModbus/rtu/mbrtu_m.c **** {
+ 868              		.loc 1 408 0
+ 869              		.cfi_startproc
+ 870              		@ args = 0, pretend = 0, frame = 8
+ 871              		@ frame_needed = 1, uses_anonymous_args = 0
+ 872              		@ link register save eliminated.
+ 873 0000 80B4     		push	{r7}
+ 874              		.cfi_def_cfa_offset 4
+ 875              		.cfi_offset 7, -4
+ 876 0002 83B0     		sub	sp, sp, #12
+ 877              		.cfi_def_cfa_offset 16
+ 878 0004 00AF     		add	r7, sp, #0
+ 879              		.cfi_def_cfa_register 7
+ 880 0006 7860     		str	r0, [r7, #4]
+ 409:../FreeModbus/rtu/mbrtu_m.c **** 	*pucFrame = ( UCHAR * ) ucMasterRTUSndBuf;
+ 881              		.loc 1 409 0
+ 882 0008 7A68     		ldr	r2, [r7, #4]
+ 883 000a 40F20003 		movw	r3, #:lower16:ucMasterRTUSndBuf
+ 884 000e C0F20003 		movt	r3, #:upper16:ucMasterRTUSndBuf
+ 885 0012 1360     		str	r3, [r2]
+ 410:../FreeModbus/rtu/mbrtu_m.c **** }
+ 886              		.loc 1 410 0
+ 887 0014 0C37     		adds	r7, r7, #12
+ 888 0016 BD46     		mov	sp, r7
+ 889              		@ sp needed
+ 890 0018 5DF8047B 		ldr	r7, [sp], #4
+ 891 001c 7047     		bx	lr
+ 892              		.cfi_endproc
+ 893              	.LFE37:
+ 895 001e 00BF     		.section	.text.vMBMasterGetPDUSndBuf,"ax",%progbits
+ 896              		.align	2
+ 897              		.global	vMBMasterGetPDUSndBuf
+ 898              		.thumb
+ 899              		.thumb_func
+ 901              	vMBMasterGetPDUSndBuf:
+ 902              	.LFB38:
+ 411:../FreeModbus/rtu/mbrtu_m.c **** 
+ 412:../FreeModbus/rtu/mbrtu_m.c **** /* Get Modbus Master send PDU's buffer address pointer.*/
+ 413:../FreeModbus/rtu/mbrtu_m.c **** void vMBMasterGetPDUSndBuf( UCHAR ** pucFrame )
+ 414:../FreeModbus/rtu/mbrtu_m.c **** {
+ 903              		.loc 1 414 0
+ 904              		.cfi_startproc
+ 905              		@ args = 0, pretend = 0, frame = 8
+ 906              		@ frame_needed = 1, uses_anonymous_args = 0
+ 907              		@ link register save eliminated.
+ 908 0000 80B4     		push	{r7}
+ 909              		.cfi_def_cfa_offset 4
+ 910              		.cfi_offset 7, -4
+ 911 0002 83B0     		sub	sp, sp, #12
+ 912              		.cfi_def_cfa_offset 16
+ 913 0004 00AF     		add	r7, sp, #0
+ 914              		.cfi_def_cfa_register 7
+ 915 0006 7860     		str	r0, [r7, #4]
+ 415:../FreeModbus/rtu/mbrtu_m.c **** 	*pucFrame = ( UCHAR * ) &ucMasterRTUSndBuf[MB_SER_PDU_PDU_OFF];
+ 916              		.loc 1 415 0
+ 917 0008 7B68     		ldr	r3, [r7, #4]
+ 918 000a 034A     		ldr	r2, .L55
+ 919 000c 1A60     		str	r2, [r3]
+ 416:../FreeModbus/rtu/mbrtu_m.c **** }
+ 920              		.loc 1 416 0
+ 921 000e 0C37     		adds	r7, r7, #12
+ 922 0010 BD46     		mov	sp, r7
+ 923              		@ sp needed
+ 924 0012 5DF8047B 		ldr	r7, [sp], #4
+ 925 0016 7047     		bx	lr
+ 926              	.L56:
+ 927              		.align	2
+ 928              	.L55:
+ 929 0018 01000000 		.word	ucMasterRTUSndBuf+1
+ 930              		.cfi_endproc
+ 931              	.LFE38:
+ 933              		.section	.text.vMBMasterSetPDUSndLength,"ax",%progbits
+ 934              		.align	2
+ 935              		.global	vMBMasterSetPDUSndLength
+ 936              		.thumb
+ 937              		.thumb_func
+ 939              	vMBMasterSetPDUSndLength:
+ 940              	.LFB39:
+ 417:../FreeModbus/rtu/mbrtu_m.c **** 
+ 418:../FreeModbus/rtu/mbrtu_m.c **** /* Set Modbus Master send PDU's buffer length.*/
+ 419:../FreeModbus/rtu/mbrtu_m.c **** void vMBMasterSetPDUSndLength( USHORT SendPDULength )
+ 420:../FreeModbus/rtu/mbrtu_m.c **** {
+ 941              		.loc 1 420 0
+ 942              		.cfi_startproc
+ 943              		@ args = 0, pretend = 0, frame = 8
+ 944              		@ frame_needed = 1, uses_anonymous_args = 0
+ 945              		@ link register save eliminated.
+ 946 0000 80B4     		push	{r7}
+ 947              		.cfi_def_cfa_offset 4
+ 948              		.cfi_offset 7, -4
+ 949 0002 83B0     		sub	sp, sp, #12
+ 950              		.cfi_def_cfa_offset 16
+ 951 0004 00AF     		add	r7, sp, #0
+ 952              		.cfi_def_cfa_register 7
+ 953 0006 0346     		mov	r3, r0
+ 954 0008 FB80     		strh	r3, [r7, #6]	@ movhi
+ 421:../FreeModbus/rtu/mbrtu_m.c **** 	usMasterSendPDULength = SendPDULength;
+ 955              		.loc 1 421 0
+ 956 000a 40F20003 		movw	r3, #:lower16:usMasterSendPDULength
+ 957 000e C0F20003 		movt	r3, #:upper16:usMasterSendPDULength
+ 958 0012 FA88     		ldrh	r2, [r7, #6]	@ movhi
+ 959 0014 1A80     		strh	r2, [r3]	@ movhi
+ 422:../FreeModbus/rtu/mbrtu_m.c **** }
+ 960              		.loc 1 422 0
+ 961 0016 0C37     		adds	r7, r7, #12
+ 962 0018 BD46     		mov	sp, r7
+ 963              		@ sp needed
+ 964 001a 5DF8047B 		ldr	r7, [sp], #4
+ 965 001e 7047     		bx	lr
+ 966              		.cfi_endproc
+ 967              	.LFE39:
+ 969              		.section	.text.usMBMasterGetPDUSndLength,"ax",%progbits
+ 970              		.align	2
+ 971              		.global	usMBMasterGetPDUSndLength
+ 972              		.thumb
+ 973              		.thumb_func
+ 975              	usMBMasterGetPDUSndLength:
+ 976              	.LFB40:
+ 423:../FreeModbus/rtu/mbrtu_m.c **** 
+ 424:../FreeModbus/rtu/mbrtu_m.c **** /* Get Modbus Master send PDU's buffer length.*/
+ 425:../FreeModbus/rtu/mbrtu_m.c **** USHORT usMBMasterGetPDUSndLength( void )
+ 426:../FreeModbus/rtu/mbrtu_m.c **** {
+ 977              		.loc 1 426 0
+ 978              		.cfi_startproc
+ 979              		@ args = 0, pretend = 0, frame = 0
+ 980              		@ frame_needed = 1, uses_anonymous_args = 0
+ 981              		@ link register save eliminated.
+ 982 0000 80B4     		push	{r7}
+ 983              		.cfi_def_cfa_offset 4
+ 984              		.cfi_offset 7, -4
+ 985 0002 00AF     		add	r7, sp, #0
+ 986              		.cfi_def_cfa_register 7
+ 427:../FreeModbus/rtu/mbrtu_m.c **** 	return usMasterSendPDULength;
+ 987              		.loc 1 427 0
+ 988 0004 40F20003 		movw	r3, #:lower16:usMasterSendPDULength
+ 989 0008 C0F20003 		movt	r3, #:upper16:usMasterSendPDULength
+ 990 000c 1B88     		ldrh	r3, [r3]	@ movhi
+ 991 000e 9BB2     		uxth	r3, r3
+ 428:../FreeModbus/rtu/mbrtu_m.c **** }
+ 992              		.loc 1 428 0
+ 993 0010 1846     		mov	r0, r3
+ 994 0012 BD46     		mov	sp, r7
+ 995              		@ sp needed
+ 996 0014 5DF8047B 		ldr	r7, [sp], #4
+ 997 0018 7047     		bx	lr
+ 998              		.cfi_endproc
+ 999              	.LFE40:
+ 1001 001a 00BF     		.section	.text.vMBMasterSetCurTimerMode,"ax",%progbits
+ 1002              		.align	2
+ 1003              		.global	vMBMasterSetCurTimerMode
+ 1004              		.thumb
+ 1005              		.thumb_func
+ 1007              	vMBMasterSetCurTimerMode:
+ 1008              	.LFB41:
+ 429:../FreeModbus/rtu/mbrtu_m.c **** 
+ 430:../FreeModbus/rtu/mbrtu_m.c **** /* Set Modbus Master current timer mode.*/
+ 431:../FreeModbus/rtu/mbrtu_m.c **** void vMBMasterSetCurTimerMode( eMBMasterTimerMode eMBTimerMode )
+ 432:../FreeModbus/rtu/mbrtu_m.c **** {
+ 1009              		.loc 1 432 0
+ 1010              		.cfi_startproc
+ 1011              		@ args = 0, pretend = 0, frame = 8
+ 1012              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1013              		@ link register save eliminated.
+ 1014 0000 80B4     		push	{r7}
+ 1015              		.cfi_def_cfa_offset 4
+ 1016              		.cfi_offset 7, -4
+ 1017 0002 83B0     		sub	sp, sp, #12
+ 1018              		.cfi_def_cfa_offset 16
+ 1019 0004 00AF     		add	r7, sp, #0
+ 1020              		.cfi_def_cfa_register 7
+ 1021 0006 0346     		mov	r3, r0
+ 1022 0008 FB71     		strb	r3, [r7, #7]
+ 433:../FreeModbus/rtu/mbrtu_m.c **** 	eMasterCurTimerMode = eMBTimerMode;
+ 1023              		.loc 1 433 0
+ 1024 000a 40F20003 		movw	r3, #:lower16:eMasterCurTimerMode
+ 1025 000e C0F20003 		movt	r3, #:upper16:eMasterCurTimerMode
+ 1026 0012 FA79     		ldrb	r2, [r7, #7]
+ 1027 0014 1A70     		strb	r2, [r3]
+ 434:../FreeModbus/rtu/mbrtu_m.c **** }
+ 1028              		.loc 1 434 0
+ 1029 0016 0C37     		adds	r7, r7, #12
+ 1030 0018 BD46     		mov	sp, r7
+ 1031              		@ sp needed
+ 1032 001a 5DF8047B 		ldr	r7, [sp], #4
+ 1033 001e 7047     		bx	lr
+ 1034              		.cfi_endproc
+ 1035              	.LFE41:
+ 1037              		.section	.text.xMBMasterRequestIsBroadcast,"ax",%progbits
+ 1038              		.align	2
+ 1039              		.global	xMBMasterRequestIsBroadcast
+ 1040              		.thumb
+ 1041              		.thumb_func
+ 1043              	xMBMasterRequestIsBroadcast:
+ 1044              	.LFB42:
+ 435:../FreeModbus/rtu/mbrtu_m.c **** 
+ 436:../FreeModbus/rtu/mbrtu_m.c **** /* The master request is broadcast? */
+ 437:../FreeModbus/rtu/mbrtu_m.c **** BOOL xMBMasterRequestIsBroadcast( void ){
+ 1045              		.loc 1 437 0
+ 1046              		.cfi_startproc
+ 1047              		@ args = 0, pretend = 0, frame = 0
+ 1048              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1049              		@ link register save eliminated.
+ 1050 0000 80B4     		push	{r7}
+ 1051              		.cfi_def_cfa_offset 4
+ 1052              		.cfi_offset 7, -4
+ 1053 0002 00AF     		add	r7, sp, #0
+ 1054              		.cfi_def_cfa_register 7
+ 438:../FreeModbus/rtu/mbrtu_m.c **** 	return xFrameIsBroadcast;
+ 1055              		.loc 1 438 0
+ 1056 0004 40F20003 		movw	r3, #:lower16:xFrameIsBroadcast
+ 1057 0008 C0F20003 		movt	r3, #:upper16:xFrameIsBroadcast
+ 1058 000c 1B78     		ldrb	r3, [r3]
+ 1059 000e DBB2     		uxtb	r3, r3
+ 439:../FreeModbus/rtu/mbrtu_m.c **** }
+ 1060              		.loc 1 439 0
+ 1061 0010 1846     		mov	r0, r3
+ 1062 0012 BD46     		mov	sp, r7
+ 1063              		@ sp needed
+ 1064 0014 5DF8047B 		ldr	r7, [sp], #4
+ 1065 0018 7047     		bx	lr
+ 1066              		.cfi_endproc
+ 1067              	.LFE42:
+ 1069 001a 00BF     		.text
+ 1070              	.Letext0:
+ 1071              		.file 2 "c:\\tools\\arm-none-eabi\\include\\stdint.h"
+ 1072              		.file 3 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\stm32/port.h"
+ 1073              		.file 4 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\include/mbport.h"
+ 1074              		.file 5 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\include/mb.h"
+ 1075              		.file 6 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\include/mb_m.h"
+ 1076              		.file 7 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/core_cm3.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 mbrtu_m.c
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:21     .bss.eSndState:00000000 eSndState
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:22     .bss.eSndState:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:26     .bss.eRcvState:00000000 eRcvState
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:27     .bss.eRcvState:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:29     .bss.ucMasterRTUSndBuf:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:32     .bss.ucMasterRTUSndBuf:00000000 ucMasterRTUSndBuf
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:35     .bss.ucMasterRTURcvBuf:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:38     .bss.ucMasterRTURcvBuf:00000000 ucMasterRTURcvBuf
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:41     .bss.usMasterSendPDULength:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:44     .bss.usMasterSendPDULength:00000000 usMasterSendPDULength
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:47     .bss.pucMasterSndBufferCur:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:50     .bss.pucMasterSndBufferCur:00000000 pucMasterSndBufferCur
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:53     .bss.usMasterSndBufferCount:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:56     .bss.usMasterSndBufferCount:00000000 usMasterSndBufferCount
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:59     .bss.usMasterRcvBufferPos:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:62     .bss.usMasterRcvBufferPos:00000000 usMasterRcvBufferPos
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:67     .bss.xFrameIsBroadcast:00000000 xFrameIsBroadcast
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:68     .bss.xFrameIsBroadcast:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:72     .bss.eMasterCurTimerMode:00000000 eMasterCurTimerMode
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:73     .bss.eMasterCurTimerMode:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:75     .text.eMBMasterRTUInit:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:80     .text.eMBMasterRTUInit:00000000 eMBMasterRTUInit
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:163    .text.eMBMasterRTUStart:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:168    .text.eMBMasterRTUStart:00000000 eMBMasterRTUStart
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:201    .text.eMBMasterRTUStop:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:206    .text.eMBMasterRTUStop:00000000 eMBMasterRTUStop
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:234    .text.eMBMasterRTUReceive:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:239    .text.eMBMasterRTUReceive:00000000 eMBMasterRTUReceive
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:319    .text.eMBMasterRTUReceive:00000084 $d
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:324    .text.eMBMasterRTUSend:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:329    .text.eMBMasterRTUSend:00000000 eMBMasterRTUSend
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:473    .text.xMBMasterRTUReceiveFSM:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:478    .text.xMBMasterRTUReceiveFSM:00000000 xMBMasterRTUReceiveFSM
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:510    .text.xMBMasterRTUReceiveFSM:00000028 $d
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:516    .text.xMBMasterRTUReceiveFSM:00000038 $t
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:609    .text.xMBMasterRTUTransmitFSM:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:614    .text.xMBMasterRTUTransmitFSM:00000000 xMBMasterRTUTransmitFSM
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:738    .text.xMBMasterRTUTimerExpired:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:743    .text.xMBMasterRTUTimerExpired:00000000 xMBMasterRTUTimerExpired
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:861    .text.vMBMasterGetRTUSndBuf:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:866    .text.vMBMasterGetRTUSndBuf:00000000 vMBMasterGetRTUSndBuf
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:896    .text.vMBMasterGetPDUSndBuf:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:901    .text.vMBMasterGetPDUSndBuf:00000000 vMBMasterGetPDUSndBuf
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:929    .text.vMBMasterGetPDUSndBuf:00000018 $d
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:934    .text.vMBMasterSetPDUSndLength:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:939    .text.vMBMasterSetPDUSndLength:00000000 vMBMasterSetPDUSndLength
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:970    .text.usMBMasterGetPDUSndLength:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:975    .text.usMBMasterGetPDUSndLength:00000000 usMBMasterGetPDUSndLength
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:1002   .text.vMBMasterSetCurTimerMode:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:1007   .text.vMBMasterSetCurTimerMode:00000000 vMBMasterSetCurTimerMode
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:1038   .text.xMBMasterRequestIsBroadcast:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:1043   .text.xMBMasterRequestIsBroadcast:00000000 xMBMasterRequestIsBroadcast
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.1.98ffea2db242cfdb58f411f7407f2b59
+                           .group:00000000 wm4.newlib.h.8.384a112feabb3bef7b573ae48cde2e3b
+                           .group:00000000 wm4.features.h.22.6a4ca7cd053637cc1d0db6c16f39b2d7
+                           .group:00000000 wm4.config.h.183.aa62afef667fb61d15fa64c48beb2f14
+                           .group:00000000 wm4._ansi.h.23.5644b60c990a4800b02a6e654e88f93a
+                           .group:00000000 wm4.stdlib.h.18.8bab2fb43ac4e90235390733c30a4530
+                           .group:00000000 wm4.stddef.h.184.aa65fb7281d578229bbad41b91862635
+                           .group:00000000 wm4._default_types.h.6.5e12cd604db8ce00b62bb2f02708eaf3
+                           .group:00000000 wm4.lock.h.2.9bc98482741e5e2a9450b12934a684ea
+                           .group:00000000 wm4._types.h.59.db8450f33c1f6150c0372fa1091a887a
+                           .group:00000000 wm4.stddef.h.348.9a99de77b6ba3b4278b57e9cc6d6e349
+                           .group:00000000 wm4.reent.h.16.567d760e6ae9ad7f917851a308bd7a57
+                           .group:00000000 wm4.alloca.h.8.dfc0c703c47ec3e69746825b17d9e66d
+                           .group:00000000 wm4.stdlib.h.55.7091a050e07f1c4abd225630fe3d62f1
+                           .group:00000000 wm4.stddef.h.39.d0197034aa5fd947cae140b9289e6734
+                           .group:00000000 wm4.stdint.h.10.90b695f550ca6cc3fb08fa83baf01e05
+                           .group:00000000 wm4.cdefs.h.56.efab90f4d89fbc41d6b3a5c5fb0d3d0f
+                           .group:00000000 wm4.string.h.15.dab3980bf35408a4c507182805e2de3a
+                           .group:00000000 wm4.stddef.h.158.a7efb00f6cbc6f43213b50e183c9830c
+                           .group:00000000 wm4.string.h.126.6ff3aa59129e7f66b2c273baf353e066
+                           .group:00000000 wm4.stm32f10x_conf.h.2.f1a8c33f0a763aeef696fee38b2b2dbc
+                           .group:00000000 wm4.mbconfig.h.33.2e295d4ff98bc723e2405a40490b5ddb
+                           .group:00000000 wm4.assert.h.11.060c3dc511517628fd4f958fa9448dce
+                           .group:00000000 wm4.inttypes.h.14.48280a9a5aa6f2f2d5302e2988897736
+                           .group:00000000 wm4.inttypes.h.24.8137491c6995c2cb5d25f9bab92d7f64
+                           .group:00000000 wm4.stm32f10x.h.51.b859cb68ed44ee02c916b41cb8c68f1c
+                           .group:00000000 wm4.core_cm3.h.25.119fe996be41b62fbd915b59177e39d1
+                           .group:00000000 wm4.stm32f10x.h.522.a925aafc848b1f088438cf0e9b167b78
+                           .group:00000000 wm4.stm32f10x.h.8304.f7d8ad90959e99679b3257267c3aadfe
+                           .group:00000000 wm4.stm32f10x_rcc.h.25.fe8897e7491f2eb0cff54551d08eb765
+                           .group:00000000 wm4.portmacro.h.56.a47bdd86bc36d334ca6056492e2d709f
+                           .group:00000000 wm4.port.h.38.e5d12e3086604499e6922efe9c85cac5
+                           .group:00000000 wm4.mbproto.h.32.da85c2bdd9bdb84e975a92c999a4b490
+                           .group:00000000 wm4.mb_m.h.32.f0c90bdd8de56a09521e2eefafb4f11f
+                           .group:00000000 wm4.mbframe.h.32.cb3fc2a5a44fcaf8fe721dce49a4ba3c
+
+UNDEFINED SYMBOLS
+vPortEnterCritical
+xMBMasterPortSerialInit
+xMBMasterPortTimersInit
+vPortExitCritical
+vMBMasterPortSerialEnable
+vMBMasterPortTimersT35Enable
+vMBMasterPortTimersDisable
+usMBCRC16
+xMBMasterPortSerialGetByte
+xMBMasterPortSerialPutByte
+vMBMasterPortTimersConvertDelayEnable
+vMBMasterPortTimersRespondTimeoutEnable
+xMBMasterPortEventPost
+vMBMasterSetErrorType

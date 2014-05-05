@@ -1,0 +1,385 @@
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.file	"fifo_buffer.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.comm	RxBuf,50,4
+  19              		.global	RxBuf_tail
+  20              		.section	.bss.RxBuf_tail,"aw",%nobits
+  23              	RxBuf_tail:
+  24 0000 00       		.space	1
+  25              		.global	RxBuf_head
+  26              		.section	.bss.RxBuf_head,"aw",%nobits
+  29              	RxBuf_head:
+  30 0000 00       		.space	1
+  31              		.global	RxBuf_count
+  32              		.section	.bss.RxBuf_count,"aw",%nobits
+  35              	RxBuf_count:
+  36 0000 00       		.space	1
+  37              		.section	.text.FIFO_RxBuf_Count_Get,"ax",%progbits
+  38              		.align	2
+  39              		.global	FIFO_RxBuf_Count_Get
+  40              		.thumb
+  41              		.thumb_func
+  43              	FIFO_RxBuf_Count_Get:
+  44              	.LFB29:
+  45              		.file 1 "../fifo_buffer.c"
+   1:../fifo_buffer.c **** #include "fifo_buffer.h"
+   2:../fifo_buffer.c **** #include "portmacro.h"
+   3:../fifo_buffer.c **** 
+   4:../fifo_buffer.c **** 
+   5:../fifo_buffer.c **** 
+   6:../fifo_buffer.c **** //unsigned char GSM_TxBuf[GSM_SIZE_TX_BUF];
+   7:../fifo_buffer.c **** //unsigned char GSM_TxBuf_tail  = 0;
+   8:../fifo_buffer.c **** //unsigned char GSM_TxBuf_head  = 0;
+   9:../fifo_buffer.c **** //unsigned char GSM_TxBuf_count = 0;
+  10:../fifo_buffer.c **** 
+  11:../fifo_buffer.c **** volatile unsigned char RxBuf[FIFO_BUF_SIZE];
+  12:../fifo_buffer.c **** volatile unsigned char RxBuf_tail  = 0;
+  13:../fifo_buffer.c **** volatile unsigned char RxBuf_head  = 0;
+  14:../fifo_buffer.c **** volatile unsigned char RxBuf_count = 0;
+  15:../fifo_buffer.c **** 
+  16:../fifo_buffer.c **** //возвращает колличество символов находящихся в приемном буфере
+  17:../fifo_buffer.c **** unsigned char FIFO_RxBuf_Count_Get (void) {
+  46              		.loc 1 17 0
+  47              		.cfi_startproc
+  48              		@ args = 0, pretend = 0, frame = 0
+  49              		@ frame_needed = 1, uses_anonymous_args = 0
+  50              		@ link register save eliminated.
+  51 0000 80B4     		push	{r7}
+  52              		.cfi_def_cfa_offset 4
+  53              		.cfi_offset 7, -4
+  54 0002 00AF     		add	r7, sp, #0
+  55              		.cfi_def_cfa_register 7
+  18:../fifo_buffer.c **** 
+  19:../fifo_buffer.c ****     return RxBuf_count;
+  56              		.loc 1 19 0
+  57 0004 40F20003 		movw	r3, #:lower16:RxBuf_count
+  58 0008 C0F20003 		movt	r3, #:upper16:RxBuf_count
+  59 000c 1B78     		ldrb	r3, [r3]
+  60 000e DBB2     		uxtb	r3, r3
+  20:../fifo_buffer.c **** }
+  61              		.loc 1 20 0
+  62 0010 1846     		mov	r0, r3
+  63 0012 BD46     		mov	sp, r7
+  64              		@ sp needed
+  65 0014 5DF8047B 		ldr	r7, [sp], #4
+  66 0018 7047     		bx	lr
+  67              		.cfi_endproc
+  68              	.LFE29:
+  70 001a 00BF     		.section	.text.FIFO_RxBuf_Flush,"ax",%progbits
+  71              		.align	2
+  72              		.global	FIFO_RxBuf_Flush
+  73              		.thumb
+  74              		.thumb_func
+  76              	FIFO_RxBuf_Flush:
+  77              	.LFB30:
+  21:../fifo_buffer.c **** 
+  22:../fifo_buffer.c **** //"очищает" приемный буфер
+  23:../fifo_buffer.c **** void FIFO_RxBuf_Flush (void) {
+  78              		.loc 1 23 0
+  79              		.cfi_startproc
+  80              		@ args = 0, pretend = 0, frame = 0
+  81              		@ frame_needed = 1, uses_anonymous_args = 0
+  82              		@ link register save eliminated.
+  83 0000 80B4     		push	{r7}
+  84              		.cfi_def_cfa_offset 4
+  85              		.cfi_offset 7, -4
+  86 0002 00AF     		add	r7, sp, #0
+  87              		.cfi_def_cfa_register 7
+  24:../fifo_buffer.c **** 
+  25:../fifo_buffer.c **** //    portENTER_CRITICAL();
+  26:../fifo_buffer.c ****     RxBuf_tail = 0;
+  88              		.loc 1 26 0
+  89 0004 40F20003 		movw	r3, #:lower16:RxBuf_tail
+  90 0008 C0F20003 		movt	r3, #:upper16:RxBuf_tail
+  91 000c 0022     		movs	r2, #0
+  92 000e 1A70     		strb	r2, [r3]
+  27:../fifo_buffer.c ****     RxBuf_head = 0;
+  93              		.loc 1 27 0
+  94 0010 40F20003 		movw	r3, #:lower16:RxBuf_head
+  95 0014 C0F20003 		movt	r3, #:upper16:RxBuf_head
+  96 0018 0022     		movs	r2, #0
+  97 001a 1A70     		strb	r2, [r3]
+  28:../fifo_buffer.c ****     RxBuf_count = 0;
+  98              		.loc 1 28 0
+  99 001c 40F20003 		movw	r3, #:lower16:RxBuf_count
+ 100 0020 C0F20003 		movt	r3, #:upper16:RxBuf_count
+ 101 0024 0022     		movs	r2, #0
+ 102 0026 1A70     		strb	r2, [r3]
+  29:../fifo_buffer.c **** //	portEXIT_CRITICAL();
+  30:../fifo_buffer.c **** }
+ 103              		.loc 1 30 0
+ 104 0028 BD46     		mov	sp, r7
+ 105              		@ sp needed
+ 106 002a 5DF8047B 		ldr	r7, [sp], #4
+ 107 002e 7047     		bx	lr
+ 108              		.cfi_endproc
+ 109              	.LFE30:
+ 111              		.section	.text.FIFO_RxBuf_Char_Get,"ax",%progbits
+ 112              		.align	2
+ 113              		.global	FIFO_RxBuf_Char_Get
+ 114              		.thumb
+ 115              		.thumb_func
+ 117              	FIFO_RxBuf_Char_Get:
+ 118              	.LFB31:
+  31:../fifo_buffer.c **** 
+  32:../fifo_buffer.c **** //чтение буфера
+  33:../fifo_buffer.c **** unsigned char FIFO_RxBuf_Char_Get (void) {
+ 119              		.loc 1 33 0
+ 120              		.cfi_startproc
+ 121              		@ args = 0, pretend = 0, frame = 8
+ 122              		@ frame_needed = 1, uses_anonymous_args = 0
+ 123 0000 80B5     		push	{r7, lr}
+ 124              		.cfi_def_cfa_offset 8
+ 125              		.cfi_offset 7, -8
+ 126              		.cfi_offset 14, -4
+ 127 0002 82B0     		sub	sp, sp, #8
+ 128              		.cfi_def_cfa_offset 16
+ 129 0004 00AF     		add	r7, sp, #0
+ 130              		.cfi_def_cfa_register 7
+  34:../fifo_buffer.c **** 
+  35:../fifo_buffer.c ****     unsigned char sym;
+  36:../fifo_buffer.c **** 	portENTER_CRITICAL();
+ 131              		.loc 1 36 0
+ 132 0006 FFF7FEFF 		bl	vPortEnterCritical
+  37:../fifo_buffer.c ****     if (RxBuf_count > 0) {                                          //если приемный буфер не пустой
+ 133              		.loc 1 37 0
+ 134 000a 40F20003 		movw	r3, #:lower16:RxBuf_count
+ 135 000e C0F20003 		movt	r3, #:upper16:RxBuf_count
+ 136 0012 1B78     		ldrb	r3, [r3]
+ 137 0014 DBB2     		uxtb	r3, r3
+ 138 0016 002B     		cmp	r3, #0
+ 139 0018 38D0     		beq	.L5
+  38:../fifo_buffer.c ****         sym = RxBuf[RxBuf_head];                                 //прочитать из него символ
+ 140              		.loc 1 38 0
+ 141 001a 40F20003 		movw	r3, #:lower16:RxBuf_head
+ 142 001e C0F20003 		movt	r3, #:upper16:RxBuf_head
+ 143 0022 1B78     		ldrb	r3, [r3]
+ 144 0024 DBB2     		uxtb	r3, r3
+ 145 0026 1A46     		mov	r2, r3
+ 146 0028 40F20003 		movw	r3, #:lower16:RxBuf
+ 147 002c C0F20003 		movt	r3, #:upper16:RxBuf
+ 148 0030 9B5C     		ldrb	r3, [r3, r2]
+ 149 0032 FB71     		strb	r3, [r7, #7]
+  39:../fifo_buffer.c ****         RxBuf_count--;                                               //уменьшить счетчик символов
+ 150              		.loc 1 39 0
+ 151 0034 40F20003 		movw	r3, #:lower16:RxBuf_count
+ 152 0038 C0F20003 		movt	r3, #:upper16:RxBuf_count
+ 153 003c 1B78     		ldrb	r3, [r3]
+ 154 003e DBB2     		uxtb	r3, r3
+ 155 0040 013B     		subs	r3, r3, #1
+ 156 0042 DAB2     		uxtb	r2, r3
+ 157 0044 40F20003 		movw	r3, #:lower16:RxBuf_count
+ 158 0048 C0F20003 		movt	r3, #:upper16:RxBuf_count
+ 159 004c 1A70     		strb	r2, [r3]
+  40:../fifo_buffer.c ****         RxBuf_head++;                                                //инкрементировать индекс голо
+ 160              		.loc 1 40 0
+ 161 004e 40F20003 		movw	r3, #:lower16:RxBuf_head
+ 162 0052 C0F20003 		movt	r3, #:upper16:RxBuf_head
+ 163 0056 1B78     		ldrb	r3, [r3]
+ 164 0058 DBB2     		uxtb	r3, r3
+ 165 005a 0133     		adds	r3, r3, #1
+ 166 005c DAB2     		uxtb	r2, r3
+ 167 005e 40F20003 		movw	r3, #:lower16:RxBuf_head
+ 168 0062 C0F20003 		movt	r3, #:upper16:RxBuf_head
+ 169 0066 1A70     		strb	r2, [r3]
+  41:../fifo_buffer.c **** 
+  42:../fifo_buffer.c ****         if (RxBuf_head == FIFO_BUF_SIZE) {
+ 170              		.loc 1 42 0
+ 171 0068 40F20003 		movw	r3, #:lower16:RxBuf_head
+ 172 006c C0F20003 		movt	r3, #:upper16:RxBuf_head
+ 173 0070 1B78     		ldrb	r3, [r3]
+ 174 0072 DBB2     		uxtb	r3, r3
+ 175 0074 322B     		cmp	r3, #50
+ 176 0076 05D1     		bne	.L6
+  43:../fifo_buffer.c **** 		    RxBuf_head = 0;
+ 177              		.loc 1 43 0
+ 178 0078 40F20003 		movw	r3, #:lower16:RxBuf_head
+ 179 007c C0F20003 		movt	r3, #:upper16:RxBuf_head
+ 180 0080 0022     		movs	r2, #0
+ 181 0082 1A70     		strb	r2, [r3]
+ 182              	.L6:
+  44:../fifo_buffer.c ****         }
+  45:../fifo_buffer.c ****     portEXIT_CRITICAL();
+ 183              		.loc 1 45 0
+ 184 0084 FFF7FEFF 		bl	vPortExitCritical
+  46:../fifo_buffer.c ****     return sym;                                                      //вернуть прочитанный символ
+ 185              		.loc 1 46 0
+ 186 0088 FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 187 008a 00E0     		b	.L7
+ 188              	.L5:
+  47:../fifo_buffer.c ****     }
+  48:../fifo_buffer.c **** 
+  49:../fifo_buffer.c **** return (-1);
+ 189              		.loc 1 49 0
+ 190 008c FF23     		movs	r3, #255
+ 191              	.L7:
+  50:../fifo_buffer.c **** }
+ 192              		.loc 1 50 0
+ 193 008e 1846     		mov	r0, r3
+ 194 0090 0837     		adds	r7, r7, #8
+ 195 0092 BD46     		mov	sp, r7
+ 196              		@ sp needed
+ 197 0094 80BD     		pop	{r7, pc}
+ 198              		.cfi_endproc
+ 199              	.LFE31:
+ 201 0096 00BF     		.section	.text.FIFO_RxBuf_Char_Put,"ax",%progbits
+ 202              		.align	2
+ 203              		.global	FIFO_RxBuf_Char_Put
+ 204              		.thumb
+ 205              		.thumb_func
+ 207              	FIFO_RxBuf_Char_Put:
+ 208              	.LFB32:
+  51:../fifo_buffer.c **** 
+  52:../fifo_buffer.c **** 
+  53:../fifo_buffer.c **** //Запись в буфер
+  54:../fifo_buffer.c **** unsigned char FIFO_RxBuf_Char_Put (unsigned char c) {
+ 209              		.loc 1 54 0
+ 210              		.cfi_startproc
+ 211              		@ args = 0, pretend = 0, frame = 8
+ 212              		@ frame_needed = 1, uses_anonymous_args = 0
+ 213              		@ link register save eliminated.
+ 214 0000 80B4     		push	{r7}
+ 215              		.cfi_def_cfa_offset 4
+ 216              		.cfi_offset 7, -4
+ 217 0002 83B0     		sub	sp, sp, #12
+ 218              		.cfi_def_cfa_offset 16
+ 219 0004 00AF     		add	r7, sp, #0
+ 220              		.cfi_def_cfa_register 7
+ 221 0006 0346     		mov	r3, r0
+ 222 0008 FB71     		strb	r3, [r7, #7]
+  55:../fifo_buffer.c ****     
+  56:../fifo_buffer.c **** 	if (RxBuf_count < FIFO_BUF_SIZE) {                          //если в буфере еще есть место
+ 223              		.loc 1 56 0
+ 224 000a 40F20003 		movw	r3, #:lower16:RxBuf_count
+ 225 000e C0F20003 		movt	r3, #:upper16:RxBuf_count
+ 226 0012 1B78     		ldrb	r3, [r3]
+ 227 0014 DBB2     		uxtb	r3, r3
+ 228 0016 312B     		cmp	r3, #49
+ 229 0018 36D8     		bhi	.L9
+  57:../fifo_buffer.c **** 	    
+  58:../fifo_buffer.c **** //		portENTER_CRITICAL();
+  59:../fifo_buffer.c ****         RxBuf[RxBuf_tail] = c;                               //считать символ из UDR в буфер
+ 230              		.loc 1 59 0
+ 231 001a 40F20003 		movw	r3, #:lower16:RxBuf_tail
+ 232 001e C0F20003 		movt	r3, #:upper16:RxBuf_tail
+ 233 0022 1B78     		ldrb	r3, [r3]
+ 234 0024 DBB2     		uxtb	r3, r3
+ 235 0026 1A46     		mov	r2, r3
+ 236 0028 40F20003 		movw	r3, #:lower16:RxBuf
+ 237 002c C0F20003 		movt	r3, #:upper16:RxBuf
+ 238 0030 F979     		ldrb	r1, [r7, #7]
+ 239 0032 9954     		strb	r1, [r3, r2]
+  60:../fifo_buffer.c ****         RxBuf_tail++;                                            //увеличить индекс хвоста приемног
+ 240              		.loc 1 60 0
+ 241 0034 40F20003 		movw	r3, #:lower16:RxBuf_tail
+ 242 0038 C0F20003 		movt	r3, #:upper16:RxBuf_tail
+ 243 003c 1B78     		ldrb	r3, [r3]
+ 244 003e DBB2     		uxtb	r3, r3
+ 245 0040 0133     		adds	r3, r3, #1
+ 246 0042 DAB2     		uxtb	r2, r3
+ 247 0044 40F20003 		movw	r3, #:lower16:RxBuf_tail
+ 248 0048 C0F20003 		movt	r3, #:upper16:RxBuf_tail
+ 249 004c 1A70     		strb	r2, [r3]
+  61:../fifo_buffer.c **** 
+  62:../fifo_buffer.c ****         if (RxBuf_tail == FIFO_BUF_SIZE) {
+ 250              		.loc 1 62 0
+ 251 004e 40F20003 		movw	r3, #:lower16:RxBuf_tail
+ 252 0052 C0F20003 		movt	r3, #:upper16:RxBuf_tail
+ 253 0056 1B78     		ldrb	r3, [r3]
+ 254 0058 DBB2     		uxtb	r3, r3
+ 255 005a 322B     		cmp	r3, #50
+ 256 005c 05D1     		bne	.L10
+  63:../fifo_buffer.c **** 	        RxBuf_tail = 0;
+ 257              		.loc 1 63 0
+ 258 005e 40F20003 		movw	r3, #:lower16:RxBuf_tail
+ 259 0062 C0F20003 		movt	r3, #:upper16:RxBuf_tail
+ 260 0066 0022     		movs	r2, #0
+ 261 0068 1A70     		strb	r2, [r3]
+ 262              	.L10:
+  64:../fifo_buffer.c ****         }
+  65:../fifo_buffer.c **** 
+  66:../fifo_buffer.c ****     	RxBuf_count++;                                               //увеличить счетчик принятых симв
+ 263              		.loc 1 66 0
+ 264 006a 40F20003 		movw	r3, #:lower16:RxBuf_count
+ 265 006e C0F20003 		movt	r3, #:upper16:RxBuf_count
+ 266 0072 1B78     		ldrb	r3, [r3]
+ 267 0074 DBB2     		uxtb	r3, r3
+ 268 0076 0133     		adds	r3, r3, #1
+ 269 0078 DAB2     		uxtb	r2, r3
+ 270 007a 40F20003 		movw	r3, #:lower16:RxBuf_count
+ 271 007e C0F20003 		movt	r3, #:upper16:RxBuf_count
+ 272 0082 1A70     		strb	r2, [r3]
+  67:../fifo_buffer.c **** //	    portEXIT_CRITICAL();
+  68:../fifo_buffer.c ****     return (0); 
+ 273              		.loc 1 68 0
+ 274 0084 0023     		movs	r3, #0
+ 275 0086 00E0     		b	.L11
+ 276              	.L9:
+  69:../fifo_buffer.c **** 	}
+  70:../fifo_buffer.c **** 
+  71:../fifo_buffer.c **** return (-1);
+ 277              		.loc 1 71 0
+ 278 0088 FF23     		movs	r3, #255
+ 279              	.L11:
+  72:../fifo_buffer.c **** } 
+ 280              		.loc 1 72 0
+ 281 008a 1846     		mov	r0, r3
+ 282 008c 0C37     		adds	r7, r7, #12
+ 283 008e BD46     		mov	sp, r7
+ 284              		@ sp needed
+ 285 0090 5DF8047B 		ldr	r7, [sp], #4
+ 286 0094 7047     		bx	lr
+ 287              		.cfi_endproc
+ 288              	.LFE32:
+ 290 0096 00BF     		.text
+ 291              	.Letext0:
+ 292              		.file 2 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/core_cm3.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 fifo_buffer.c
+                            *COM*:00000032 RxBuf
+C:\Users\Alex\AppData\Local\Temp\ccHBIzmK.s:23     .bss.RxBuf_tail:00000000 RxBuf_tail
+C:\Users\Alex\AppData\Local\Temp\ccHBIzmK.s:24     .bss.RxBuf_tail:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccHBIzmK.s:29     .bss.RxBuf_head:00000000 RxBuf_head
+C:\Users\Alex\AppData\Local\Temp\ccHBIzmK.s:30     .bss.RxBuf_head:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccHBIzmK.s:35     .bss.RxBuf_count:00000000 RxBuf_count
+C:\Users\Alex\AppData\Local\Temp\ccHBIzmK.s:36     .bss.RxBuf_count:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccHBIzmK.s:38     .text.FIFO_RxBuf_Count_Get:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccHBIzmK.s:43     .text.FIFO_RxBuf_Count_Get:00000000 FIFO_RxBuf_Count_Get
+C:\Users\Alex\AppData\Local\Temp\ccHBIzmK.s:71     .text.FIFO_RxBuf_Flush:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccHBIzmK.s:76     .text.FIFO_RxBuf_Flush:00000000 FIFO_RxBuf_Flush
+C:\Users\Alex\AppData\Local\Temp\ccHBIzmK.s:112    .text.FIFO_RxBuf_Char_Get:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccHBIzmK.s:117    .text.FIFO_RxBuf_Char_Get:00000000 FIFO_RxBuf_Char_Get
+C:\Users\Alex\AppData\Local\Temp\ccHBIzmK.s:202    .text.FIFO_RxBuf_Char_Put:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccHBIzmK.s:207    .text.FIFO_RxBuf_Char_Put:00000000 FIFO_RxBuf_Char_Put
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.1.98ffea2db242cfdb58f411f7407f2b59
+                           .group:00000000 wm4.stm32f10x.h.51.b859cb68ed44ee02c916b41cb8c68f1c
+                           .group:00000000 wm4.core_cm3.h.25.d35e9a9b04ec4aaebae9bf79fff061f9
+                           .group:00000000 wm4.newlib.h.8.384a112feabb3bef7b573ae48cde2e3b
+                           .group:00000000 wm4.features.h.22.6a4ca7cd053637cc1d0db6c16f39b2d7
+                           .group:00000000 wm4.config.h.183.aa62afef667fb61d15fa64c48beb2f14
+                           .group:00000000 wm4._ansi.h.23.5644b60c990a4800b02a6e654e88f93a
+                           .group:00000000 wm4.stdint.h.20.54ad762faa59e3c05491630641c8d8bf
+                           .group:00000000 wm4.core_cm3.h.113.b286929a54d33b4c8909a7132437b244
+                           .group:00000000 wm4.stm32f10x.h.522.a925aafc848b1f088438cf0e9b167b78
+                           .group:00000000 wm4.stm32f10x_conf.h.2.f1a8c33f0a763aeef696fee38b2b2dbc
+                           .group:00000000 wm4.stm32f10x.h.8304.f7d8ad90959e99679b3257267c3aadfe
+                           .group:00000000 wm4.portmacro.h.56.a47bdd86bc36d334ca6056492e2d709f
+
+UNDEFINED SYMBOLS
+vPortEnterCritical
+vPortExitCritical

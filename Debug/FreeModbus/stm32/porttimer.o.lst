@@ -1,0 +1,458 @@
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.file	"porttimer.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.section	.text.xMBPortTimersInit,"ax",%progbits
+  19              		.align	2
+  20              		.global	xMBPortTimersInit
+  21              		.thumb
+  22              		.thumb_func
+  24              	xMBPortTimersInit:
+  25              	.LFB29:
+  26              		.file 1 "../FreeModbus/stm32/porttimer.c"
+   1:../FreeModbus/stm32/porttimer.c **** /*
+   2:../FreeModbus/stm32/porttimer.c ****  * FreeModbus Libary: STM32 Port
+   3:../FreeModbus/stm32/porttimer.c ****  * Copyright (C) 2013 Armink <armink.ztl@gmail.com>
+   4:../FreeModbus/stm32/porttimer.c ****  *
+   5:../FreeModbus/stm32/porttimer.c ****  * This library is free software; you can redistribute it and/or
+   6:../FreeModbus/stm32/porttimer.c ****  * modify it under the terms of the GNU Lesser General Public
+   7:../FreeModbus/stm32/porttimer.c ****  * License as published by the Free Software Foundation; either
+   8:../FreeModbus/stm32/porttimer.c ****  * version 2.1 of the License, or (at your option) any later version.
+   9:../FreeModbus/stm32/porttimer.c ****  *
+  10:../FreeModbus/stm32/porttimer.c ****  * This library is distributed in the hope that it will be useful,
+  11:../FreeModbus/stm32/porttimer.c ****  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  12:../FreeModbus/stm32/porttimer.c ****  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  13:../FreeModbus/stm32/porttimer.c ****  * Lesser General Public License for more details.
+  14:../FreeModbus/stm32/porttimer.c ****  *
+  15:../FreeModbus/stm32/porttimer.c ****  * You should have received a copy of the GNU Lesser General Public
+  16:../FreeModbus/stm32/porttimer.c ****  * License along with this library; if not, write to the Free Software
+  17:../FreeModbus/stm32/porttimer.c ****  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+  18:../FreeModbus/stm32/porttimer.c ****  *
+  19:../FreeModbus/stm32/porttimer.c ****  * File: $Id: porttimer.c,v 1.60 2013/08/13 15:07:05 Armink $
+  20:../FreeModbus/stm32/porttimer.c ****  */
+  21:../FreeModbus/stm32/porttimer.c **** 
+  22:../FreeModbus/stm32/porttimer.c **** /* ----------------------- Platform includes --------------------------------*/
+  23:../FreeModbus/stm32/porttimer.c **** #include "port.h"
+  24:../FreeModbus/stm32/porttimer.c **** 
+  25:../FreeModbus/stm32/porttimer.c **** /* ----------------------- Modbus includes ----------------------------------*/
+  26:../FreeModbus/stm32/porttimer.c **** #include "mb.h"
+  27:../FreeModbus/stm32/porttimer.c **** #include "mbport.h"
+  28:../FreeModbus/stm32/porttimer.c **** 
+  29:../FreeModbus/stm32/porttimer.c **** #include "stm32f10x_tim.h"
+  30:../FreeModbus/stm32/porttimer.c **** #include "misc.h"
+  31:../FreeModbus/stm32/porttimer.c **** 
+  32:../FreeModbus/stm32/porttimer.c **** #include "led.h"
+  33:../FreeModbus/stm32/porttimer.c **** 
+  34:../FreeModbus/stm32/porttimer.c **** /* ----------------------- static functions ---------------------------------*/
+  35:../FreeModbus/stm32/porttimer.c **** static void prvvTIMERExpiredISR(void);
+  36:../FreeModbus/stm32/porttimer.c **** 
+  37:../FreeModbus/stm32/porttimer.c **** /* ----------------------- Start implementation -----------------------------*/
+  38:../FreeModbus/stm32/porttimer.c **** BOOL xMBPortTimersInit(USHORT usTim1Timerout50us)
+  39:../FreeModbus/stm32/porttimer.c **** {
+  27              		.loc 1 39 0
+  28              		.cfi_startproc
+  29              		@ args = 0, pretend = 0, frame = 24
+  30              		@ frame_needed = 1, uses_anonymous_args = 0
+  31 0000 80B5     		push	{r7, lr}
+  32              		.cfi_def_cfa_offset 8
+  33              		.cfi_offset 7, -8
+  34              		.cfi_offset 14, -4
+  35 0002 86B0     		sub	sp, sp, #24
+  36              		.cfi_def_cfa_offset 32
+  37 0004 00AF     		add	r7, sp, #0
+  38              		.cfi_def_cfa_register 7
+  39 0006 0346     		mov	r3, r0
+  40 0008 FB80     		strh	r3, [r7, #6]	@ movhi
+  40:../FreeModbus/stm32/porttimer.c **** 
+  41:../FreeModbus/stm32/porttimer.c **** 	uint16_t PrescalerValue = 0;
+  41              		.loc 1 41 0
+  42 000a 0023     		movs	r3, #0
+  43 000c FB82     		strh	r3, [r7, #22]	@ movhi
+  42:../FreeModbus/stm32/porttimer.c **** 	TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
+  43:../FreeModbus/stm32/porttimer.c **** 	NVIC_InitTypeDef NVIC_InitStructure;
+  44:../FreeModbus/stm32/porttimer.c **** 	//====================================时钟初始化===========================
+  45:../FreeModbus/stm32/porttimer.c **** 	//使能定时器3时钟
+  46:../FreeModbus/stm32/porttimer.c **** 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
+  44              		.loc 1 46 0
+  45 000e 0220     		movs	r0, #2
+  46 0010 0121     		movs	r1, #1
+  47 0012 FFF7FEFF 		bl	RCC_APB1PeriphClockCmd
+  47:../FreeModbus/stm32/porttimer.c **** 	//====================================定时器初始化===========================
+  48:../FreeModbus/stm32/porttimer.c **** 	//定时器时间基配置说明
+  49:../FreeModbus/stm32/porttimer.c **** 	//HCLK为72MHz，APB1经过2分频为36MHz
+  50:../FreeModbus/stm32/porttimer.c **** 	//TIM3的时钟倍频后为72MHz（硬件自动倍频,达到最大）
+  51:../FreeModbus/stm32/porttimer.c **** 	//TIM3的分频系数为3599，时间基频率为72 / (1 + Prescaler) = 20KHz,基准为50us
+  52:../FreeModbus/stm32/porttimer.c **** 	//TIM最大计数值为usTim1Timerout50u
+  53:../FreeModbus/stm32/porttimer.c **** 	
+  54:../FreeModbus/stm32/porttimer.c **** 	PrescalerValue = (uint16_t) (SystemCoreClock / 20000) - 1;
+  48              		.loc 1 54 0
+  49 0016 40F20003 		movw	r3, #:lower16:SystemCoreClock
+  50 001a C0F20003 		movt	r3, #:upper16:SystemCoreClock
+  51 001e 1A68     		ldr	r2, [r3]
+  52 0020 41F25973 		movw	r3, #5977
+  53 0024 CDF2B713 		movt	r3, 53687
+  54 0028 A3FB0213 		umull	r1, r3, r3, r2
+  55 002c 9B0B     		lsrs	r3, r3, #14
+  56 002e 9BB2     		uxth	r3, r3
+  57 0030 013B     		subs	r3, r3, #1
+  58 0032 FB82     		strh	r3, [r7, #22]	@ movhi
+  55:../FreeModbus/stm32/porttimer.c **** 	//定时器1初始化
+  56:../FreeModbus/stm32/porttimer.c **** 	TIM_TimeBaseStructure.TIM_Period = (uint16_t) usTim1Timerout50us;
+  59              		.loc 1 56 0
+  60 0034 FB88     		ldrh	r3, [r7, #6]	@ movhi
+  61 0036 3B82     		strh	r3, [r7, #16]	@ movhi
+  57:../FreeModbus/stm32/porttimer.c **** 	TIM_TimeBaseStructure.TIM_Prescaler = PrescalerValue;
+  62              		.loc 1 57 0
+  63 0038 FB8A     		ldrh	r3, [r7, #22]	@ movhi
+  64 003a BB81     		strh	r3, [r7, #12]	@ movhi
+  58:../FreeModbus/stm32/porttimer.c **** 	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
+  65              		.loc 1 58 0
+  66 003c 0023     		movs	r3, #0
+  67 003e 7B82     		strh	r3, [r7, #18]	@ movhi
+  59:../FreeModbus/stm32/porttimer.c **** 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
+  68              		.loc 1 59 0
+  69 0040 0023     		movs	r3, #0
+  70 0042 FB81     		strh	r3, [r7, #14]	@ movhi
+  60:../FreeModbus/stm32/porttimer.c **** 	TIM_TimeBaseInit(TIM3, &TIM_TimeBaseStructure);
+  71              		.loc 1 60 0
+  72 0044 07F10C03 		add	r3, r7, #12
+  73 0048 4FF48060 		mov	r0, #1024
+  74 004c C4F20000 		movt	r0, 16384
+  75 0050 1946     		mov	r1, r3
+  76 0052 FFF7FEFF 		bl	TIM_TimeBaseInit
+  61:../FreeModbus/stm32/porttimer.c **** 	//预装载使能
+  62:../FreeModbus/stm32/porttimer.c **** 	TIM_ARRPreloadConfig(TIM3, ENABLE);
+  77              		.loc 1 62 0
+  78 0056 4FF48060 		mov	r0, #1024
+  79 005a C4F20000 		movt	r0, 16384
+  80 005e 0121     		movs	r1, #1
+  81 0060 FFF7FEFF 		bl	TIM_ARRPreloadConfig
+  63:../FreeModbus/stm32/porttimer.c **** 	//====================================中断初始化===========================
+  64:../FreeModbus/stm32/porttimer.c **** 	//设置NVIC优先级分组为Group2：0-3抢占式优先级，0-3的响应式优先级
+  65:../FreeModbus/stm32/porttimer.c **** 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
+  82              		.loc 1 65 0
+  83 0064 4FF4A060 		mov	r0, #1280
+  84 0068 FFF7FEFF 		bl	NVIC_PriorityGroupConfig
+  66:../FreeModbus/stm32/porttimer.c **** 	NVIC_InitStructure.NVIC_IRQChannel = TIM3_IRQn;
+  85              		.loc 1 66 0
+  86 006c 1D23     		movs	r3, #29
+  87 006e 3B72     		strb	r3, [r7, #8]
+  67:../FreeModbus/stm32/porttimer.c **** 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
+  88              		.loc 1 67 0
+  89 0070 0123     		movs	r3, #1
+  90 0072 7B72     		strb	r3, [r7, #9]
+  68:../FreeModbus/stm32/porttimer.c **** 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
+  91              		.loc 1 68 0
+  92 0074 0123     		movs	r3, #1
+  93 0076 BB72     		strb	r3, [r7, #10]
+  69:../FreeModbus/stm32/porttimer.c **** 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+  94              		.loc 1 69 0
+  95 0078 0123     		movs	r3, #1
+  96 007a FB72     		strb	r3, [r7, #11]
+  70:../FreeModbus/stm32/porttimer.c **** 	NVIC_Init(&NVIC_InitStructure);
+  97              		.loc 1 70 0
+  98 007c 07F10803 		add	r3, r7, #8
+  99 0080 1846     		mov	r0, r3
+ 100 0082 FFF7FEFF 		bl	NVIC_Init
+  71:../FreeModbus/stm32/porttimer.c **** 	//清除溢出中断标志位
+  72:../FreeModbus/stm32/porttimer.c **** 	TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
+ 101              		.loc 1 72 0
+ 102 0086 4FF48060 		mov	r0, #1024
+ 103 008a C4F20000 		movt	r0, 16384
+ 104 008e 0121     		movs	r1, #1
+ 105 0090 FFF7FEFF 		bl	TIM_ClearITPendingBit
+  73:../FreeModbus/stm32/porttimer.c **** 	//定时器3溢出中断关闭
+  74:../FreeModbus/stm32/porttimer.c **** 	TIM_ITConfig(TIM3, TIM_IT_Update, DISABLE);
+ 106              		.loc 1 74 0
+ 107 0094 4FF48060 		mov	r0, #1024
+ 108 0098 C4F20000 		movt	r0, 16384
+ 109 009c 0121     		movs	r1, #1
+ 110 009e 0022     		movs	r2, #0
+ 111 00a0 FFF7FEFF 		bl	TIM_ITConfig
+  75:../FreeModbus/stm32/porttimer.c **** 	//定时器3禁能
+  76:../FreeModbus/stm32/porttimer.c **** 	TIM_Cmd(TIM3, DISABLE);
+ 112              		.loc 1 76 0
+ 113 00a4 4FF48060 		mov	r0, #1024
+ 114 00a8 C4F20000 		movt	r0, 16384
+ 115 00ac 0021     		movs	r1, #0
+ 116 00ae FFF7FEFF 		bl	TIM_Cmd
+  77:../FreeModbus/stm32/porttimer.c **** 	return TRUE;
+ 117              		.loc 1 77 0
+ 118 00b2 0123     		movs	r3, #1
+  78:../FreeModbus/stm32/porttimer.c **** }
+ 119              		.loc 1 78 0
+ 120 00b4 1846     		mov	r0, r3
+ 121 00b6 1837     		adds	r7, r7, #24
+ 122 00b8 BD46     		mov	sp, r7
+ 123              		@ sp needed
+ 124 00ba 80BD     		pop	{r7, pc}
+ 125              		.cfi_endproc
+ 126              	.LFE29:
+ 128              		.section	.text.vMBPortTimersEnable,"ax",%progbits
+ 129              		.align	2
+ 130              		.global	vMBPortTimersEnable
+ 131              		.thumb
+ 132              		.thumb_func
+ 134              	vMBPortTimersEnable:
+ 135              	.LFB30:
+  79:../FreeModbus/stm32/porttimer.c **** 
+  80:../FreeModbus/stm32/porttimer.c **** void vMBPortTimersEnable()
+  81:../FreeModbus/stm32/porttimer.c **** {
+ 136              		.loc 1 81 0
+ 137              		.cfi_startproc
+ 138              		@ args = 0, pretend = 0, frame = 0
+ 139              		@ frame_needed = 1, uses_anonymous_args = 0
+ 140 0000 80B5     		push	{r7, lr}
+ 141              		.cfi_def_cfa_offset 8
+ 142              		.cfi_offset 7, -8
+ 143              		.cfi_offset 14, -4
+ 144 0002 00AF     		add	r7, sp, #0
+ 145              		.cfi_def_cfa_register 7
+  82:../FreeModbus/stm32/porttimer.c **** 	TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
+ 146              		.loc 1 82 0
+ 147 0004 4FF48060 		mov	r0, #1024
+ 148 0008 C4F20000 		movt	r0, 16384
+ 149 000c 0121     		movs	r1, #1
+ 150 000e FFF7FEFF 		bl	TIM_ClearITPendingBit
+  83:../FreeModbus/stm32/porttimer.c **** 	TIM_ITConfig(TIM3, TIM_IT_Update, ENABLE);
+ 151              		.loc 1 83 0
+ 152 0012 4FF48060 		mov	r0, #1024
+ 153 0016 C4F20000 		movt	r0, 16384
+ 154 001a 0121     		movs	r1, #1
+ 155 001c 0122     		movs	r2, #1
+ 156 001e FFF7FEFF 		bl	TIM_ITConfig
+  84:../FreeModbus/stm32/porttimer.c **** 	TIM_SetCounter(TIM3, 0);
+ 157              		.loc 1 84 0
+ 158 0022 4FF48060 		mov	r0, #1024
+ 159 0026 C4F20000 		movt	r0, 16384
+ 160 002a 0021     		movs	r1, #0
+ 161 002c FFF7FEFF 		bl	TIM_SetCounter
+  85:../FreeModbus/stm32/porttimer.c **** 	TIM_Cmd(TIM3, ENABLE);
+ 162              		.loc 1 85 0
+ 163 0030 4FF48060 		mov	r0, #1024
+ 164 0034 C4F20000 		movt	r0, 16384
+ 165 0038 0121     		movs	r1, #1
+ 166 003a FFF7FEFF 		bl	TIM_Cmd
+  86:../FreeModbus/stm32/porttimer.c **** }
+ 167              		.loc 1 86 0
+ 168 003e 80BD     		pop	{r7, pc}
+ 169              		.cfi_endproc
+ 170              	.LFE30:
+ 172              		.section	.text.vMBPortTimersDisable,"ax",%progbits
+ 173              		.align	2
+ 174              		.global	vMBPortTimersDisable
+ 175              		.thumb
+ 176              		.thumb_func
+ 178              	vMBPortTimersDisable:
+ 179              	.LFB31:
+  87:../FreeModbus/stm32/porttimer.c **** 
+  88:../FreeModbus/stm32/porttimer.c **** void vMBPortTimersDisable()
+  89:../FreeModbus/stm32/porttimer.c **** {
+ 180              		.loc 1 89 0
+ 181              		.cfi_startproc
+ 182              		@ args = 0, pretend = 0, frame = 0
+ 183              		@ frame_needed = 1, uses_anonymous_args = 0
+ 184 0000 80B5     		push	{r7, lr}
+ 185              		.cfi_def_cfa_offset 8
+ 186              		.cfi_offset 7, -8
+ 187              		.cfi_offset 14, -4
+ 188 0002 00AF     		add	r7, sp, #0
+ 189              		.cfi_def_cfa_register 7
+  90:../FreeModbus/stm32/porttimer.c **** 	TIM_ClearITPendingBit(TIM3, TIM_IT_Update);
+ 190              		.loc 1 90 0
+ 191 0004 4FF48060 		mov	r0, #1024
+ 192 0008 C4F20000 		movt	r0, 16384
+ 193 000c 0121     		movs	r1, #1
+ 194 000e FFF7FEFF 		bl	TIM_ClearITPendingBit
+  91:../FreeModbus/stm32/porttimer.c **** 	TIM_ITConfig(TIM3, TIM_IT_Update, DISABLE);
+ 195              		.loc 1 91 0
+ 196 0012 4FF48060 		mov	r0, #1024
+ 197 0016 C4F20000 		movt	r0, 16384
+ 198 001a 0121     		movs	r1, #1
+ 199 001c 0022     		movs	r2, #0
+ 200 001e FFF7FEFF 		bl	TIM_ITConfig
+  92:../FreeModbus/stm32/porttimer.c **** 	TIM_SetCounter(TIM3, 0);
+ 201              		.loc 1 92 0
+ 202 0022 4FF48060 		mov	r0, #1024
+ 203 0026 C4F20000 		movt	r0, 16384
+ 204 002a 0021     		movs	r1, #0
+ 205 002c FFF7FEFF 		bl	TIM_SetCounter
+  93:../FreeModbus/stm32/porttimer.c **** 	TIM_Cmd(TIM3, DISABLE);
+ 206              		.loc 1 93 0
+ 207 0030 4FF48060 		mov	r0, #1024
+ 208 0034 C4F20000 		movt	r0, 16384
+ 209 0038 0021     		movs	r1, #0
+ 210 003a FFF7FEFF 		bl	TIM_Cmd
+  94:../FreeModbus/stm32/porttimer.c **** }
+ 211              		.loc 1 94 0
+ 212 003e 80BD     		pop	{r7, pc}
+ 213              		.cfi_endproc
+ 214              	.LFE31:
+ 216              		.section	.text.prvvTIMERExpiredISR,"ax",%progbits
+ 217              		.align	2
+ 218              		.thumb
+ 219              		.thumb_func
+ 221              	prvvTIMERExpiredISR:
+ 222              	.LFB32:
+  95:../FreeModbus/stm32/porttimer.c **** 
+  96:../FreeModbus/stm32/porttimer.c **** void prvvTIMERExpiredISR(void)
+  97:../FreeModbus/stm32/porttimer.c **** {
+ 223              		.loc 1 97 0
+ 224              		.cfi_startproc
+ 225              		@ args = 0, pretend = 0, frame = 0
+ 226              		@ frame_needed = 1, uses_anonymous_args = 0
+ 227 0000 80B5     		push	{r7, lr}
+ 228              		.cfi_def_cfa_offset 8
+ 229              		.cfi_offset 7, -8
+ 230              		.cfi_offset 14, -4
+ 231 0002 00AF     		add	r7, sp, #0
+ 232              		.cfi_def_cfa_register 7
+  98:../FreeModbus/stm32/porttimer.c **** 	(void) pxMBPortCBTimerExpired();
+ 233              		.loc 1 98 0
+ 234 0004 40F20003 		movw	r3, #:lower16:pxMBPortCBTimerExpired
+ 235 0008 C0F20003 		movt	r3, #:upper16:pxMBPortCBTimerExpired
+ 236 000c 1B68     		ldr	r3, [r3]
+ 237 000e 9847     		blx	r3
+  99:../FreeModbus/stm32/porttimer.c **** }
+ 238              		.loc 1 99 0
+ 239 0010 80BD     		pop	{r7, pc}
+ 240              		.cfi_endproc
+ 241              	.LFE32:
+ 243 0012 00BF     		.section	.text.TIM3_IRQHandler,"ax",%progbits
+ 244              		.align	2
+ 245              		.global	TIM3_IRQHandler
+ 246              		.thumb
+ 247              		.thumb_func
+ 249              	TIM3_IRQHandler:
+ 250              	.LFB33:
+ 100:../FreeModbus/stm32/porttimer.c **** 
+ 101:../FreeModbus/stm32/porttimer.c **** void TIM3_IRQHandler(void)
+ 102:../FreeModbus/stm32/porttimer.c **** {
+ 251              		.loc 1 102 0
+ 252              		.cfi_startproc
+ 253              		@ args = 0, pretend = 0, frame = 0
+ 254              		@ frame_needed = 1, uses_anonymous_args = 0
+ 255 0000 80B5     		push	{r7, lr}
+ 256              		.cfi_def_cfa_offset 8
+ 257              		.cfi_offset 7, -8
+ 258              		.cfi_offset 14, -4
+ 259 0002 00AF     		add	r7, sp, #0
+ 260              		.cfi_def_cfa_register 7
+ 103:../FreeModbus/stm32/porttimer.c **** 	LedToggle(LED_BUTTON1);
+ 261              		.loc 1 103 0
+ 262 0004 4FF48050 		mov	r0, #4096
+ 263 0008 C4F20100 		movt	r0, 16385
+ 264 000c 4FF48071 		mov	r1, #256
+ 265 0010 FFF7FEFF 		bl	LedToggle
+ 104:../FreeModbus/stm32/porttimer.c **** 
+ 105:../FreeModbus/stm32/porttimer.c **** //	rt_interrupt_enter();
+ 106:../FreeModbus/stm32/porttimer.c **** 	if (TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET)
+ 266              		.loc 1 106 0
+ 267 0014 4FF48060 		mov	r0, #1024
+ 268 0018 C4F20000 		movt	r0, 16384
+ 269 001c 0121     		movs	r1, #1
+ 270 001e FFF7FEFF 		bl	TIM_GetITStatus
+ 271 0022 0346     		mov	r3, r0
+ 272 0024 002B     		cmp	r3, #0
+ 273 0026 0FD0     		beq	.L6
+ 107:../FreeModbus/stm32/porttimer.c **** 	{
+ 108:../FreeModbus/stm32/porttimer.c **** 		
+ 109:../FreeModbus/stm32/porttimer.c **** 		TIM_ClearFlag(TIM3, TIM_FLAG_Update);	     //清中断标记
+ 274              		.loc 1 109 0
+ 275 0028 4FF48060 		mov	r0, #1024
+ 276 002c C4F20000 		movt	r0, 16384
+ 277 0030 0121     		movs	r1, #1
+ 278 0032 FFF7FEFF 		bl	TIM_ClearFlag
+ 110:../FreeModbus/stm32/porttimer.c **** 		TIM_ClearITPendingBit(TIM3, TIM_IT_Update);	 //清除定时器T3溢出中断标志位
+ 279              		.loc 1 110 0
+ 280 0036 4FF48060 		mov	r0, #1024
+ 281 003a C4F20000 		movt	r0, 16384
+ 282 003e 0121     		movs	r1, #1
+ 283 0040 FFF7FEFF 		bl	TIM_ClearITPendingBit
+ 111:../FreeModbus/stm32/porttimer.c **** 		prvvTIMERExpiredISR();
+ 284              		.loc 1 111 0
+ 285 0044 FFF7FEFF 		bl	prvvTIMERExpiredISR
+ 286              	.L6:
+ 112:../FreeModbus/stm32/porttimer.c **** 	}
+ 113:../FreeModbus/stm32/porttimer.c **** //	rt_interrupt_leave();
+ 114:../FreeModbus/stm32/porttimer.c **** }
+ 287              		.loc 1 114 0
+ 288 0048 80BD     		pop	{r7, pc}
+ 289              		.cfi_endproc
+ 290              	.LFE33:
+ 292 004a 00BF     		.text
+ 293              	.Letext0:
+ 294              		.file 2 "c:\\tools\\arm-none-eabi\\include\\stdint.h"
+ 295              		.file 3 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/stm32f10x.h"
+ 296              		.file 4 "../FreeModbus/stm32/port.h"
+ 297              		.file 5 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\StdPeripheralDriver\\inc/stm32f10
+ 298              		.file 6 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\StdPeripheralDriver\\inc/misc.h"
+ 299              		.file 7 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/core_cm3.h"
+ 300              		.file 8 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/system_stm32f10x.h"
+ 301              		.file 9 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\include/mbport.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 porttimer.c
+C:\Users\Alex\AppData\Local\Temp\cc3d57XG.s:19     .text.xMBPortTimersInit:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cc3d57XG.s:24     .text.xMBPortTimersInit:00000000 xMBPortTimersInit
+C:\Users\Alex\AppData\Local\Temp\cc3d57XG.s:129    .text.vMBPortTimersEnable:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cc3d57XG.s:134    .text.vMBPortTimersEnable:00000000 vMBPortTimersEnable
+C:\Users\Alex\AppData\Local\Temp\cc3d57XG.s:173    .text.vMBPortTimersDisable:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cc3d57XG.s:178    .text.vMBPortTimersDisable:00000000 vMBPortTimersDisable
+C:\Users\Alex\AppData\Local\Temp\cc3d57XG.s:217    .text.prvvTIMERExpiredISR:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cc3d57XG.s:221    .text.prvvTIMERExpiredISR:00000000 prvvTIMERExpiredISR
+C:\Users\Alex\AppData\Local\Temp\cc3d57XG.s:244    .text.TIM3_IRQHandler:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cc3d57XG.s:249    .text.TIM3_IRQHandler:00000000 TIM3_IRQHandler
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.1.98ffea2db242cfdb58f411f7407f2b59
+                           .group:00000000 wm4.stm32f10x_conf.h.2.f1a8c33f0a763aeef696fee38b2b2dbc
+                           .group:00000000 wm4.mbconfig.h.33.2e295d4ff98bc723e2405a40490b5ddb
+                           .group:00000000 wm4.newlib.h.8.384a112feabb3bef7b573ae48cde2e3b
+                           .group:00000000 wm4.features.h.22.6a4ca7cd053637cc1d0db6c16f39b2d7
+                           .group:00000000 wm4.config.h.183.aa62afef667fb61d15fa64c48beb2f14
+                           .group:00000000 wm4._ansi.h.23.5644b60c990a4800b02a6e654e88f93a
+                           .group:00000000 wm4.assert.h.11.060c3dc511517628fd4f958fa9448dce
+                           .group:00000000 wm4.stdint.h.20.54ad762faa59e3c05491630641c8d8bf
+                           .group:00000000 wm4.stddef.h.263.49e44f5ee9cdd8820580fc4aa239e32a
+                           .group:00000000 wm4.inttypes.h.24.8137491c6995c2cb5d25f9bab92d7f64
+                           .group:00000000 wm4.stm32f10x.h.51.b859cb68ed44ee02c916b41cb8c68f1c
+                           .group:00000000 wm4.core_cm3.h.25.119fe996be41b62fbd915b59177e39d1
+                           .group:00000000 wm4.stm32f10x.h.522.a925aafc848b1f088438cf0e9b167b78
+                           .group:00000000 wm4.stm32f10x.h.8304.f7d8ad90959e99679b3257267c3aadfe
+                           .group:00000000 wm4.stm32f10x_rcc.h.25.fe8897e7491f2eb0cff54551d08eb765
+                           .group:00000000 wm4.portmacro.h.56.a47bdd86bc36d334ca6056492e2d709f
+                           .group:00000000 wm4.port.h.38.e5d12e3086604499e6922efe9c85cac5
+                           .group:00000000 wm4.mbproto.h.32.da85c2bdd9bdb84e975a92c999a4b490
+                           .group:00000000 wm4.stm32f10x_tim.h.25.21c6ec062f1e74898cb96a57da276fec
+                           .group:00000000 wm4.misc.h.25.068e106f368fa5369a681ef57c106f4b
+                           .group:00000000 wm4.stm32f10x_gpio.h.25.80c981af0e637567395034c576cfb3ce
+                           .group:00000000 wm4.gpio_init.h.2.a6dd96fdaf98737019b1d0402db0d0ee
+                           .group:00000000 wm4.led.h.28.2becc48c20363ad4690378d5dc88818c
+
+UNDEFINED SYMBOLS
+RCC_APB1PeriphClockCmd
+SystemCoreClock
+TIM_TimeBaseInit
+TIM_ARRPreloadConfig
+NVIC_PriorityGroupConfig
+NVIC_Init
+TIM_ClearITPendingBit
+TIM_ITConfig
+TIM_Cmd
+TIM_SetCounter
+pxMBPortCBTimerExpired
+LedToggle
+TIM_GetITStatus
+TIM_ClearFlag

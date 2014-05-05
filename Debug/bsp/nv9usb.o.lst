@@ -1,0 +1,614 @@
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.file	"nv9usb.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.comm	ValidatorNV9,20,4
+  19              		.section	.text.validator_hw_init,"ax",%progbits
+  20              		.align	2
+  21              		.thumb
+  22              		.thumb_func
+  24              	validator_hw_init:
+  25              	.LFB29:
+  26              		.file 1 "../bsp/nv9usb.c"
+   1:../bsp/nv9usb.c **** /*
+   2:../bsp/nv9usb.c **** ***************************************************************************************************
+   3:../bsp/nv9usb.c **** *
+   4:../bsp/nv9usb.c **** *                                            VALIDATOR INTERFACE
+   5:../bsp/nv9usb.c **** *
+   6:../bsp/nv9usb.c **** * Filename      : nv9usb.c
+   7:../bsp/nv9usb.c **** * Version       : V1.00
+   8:../bsp/nv9usb.c **** * Programmer(s) : Palladin
+   9:../bsp/nv9usb.c **** ***************************************************************************************************
+  10:../bsp/nv9usb.c **** */
+  11:../bsp/nv9usb.c **** 
+  12:../bsp/nv9usb.c **** 
+  13:../bsp/nv9usb.c **** /*
+  14:../bsp/nv9usb.c **** ***************************************************************************************************
+  15:../bsp/nv9usb.c **** *                                             INCLUDE FILES
+  16:../bsp/nv9usb.c **** ***************************************************************************************************
+  17:../bsp/nv9usb.c **** */
+  18:../bsp/nv9usb.c **** #include "nv9usb.h"
+  19:../bsp/nv9usb.c **** 
+  20:../bsp/nv9usb.c **** #include "stm32f10x.h"
+  21:../bsp/nv9usb.c **** 
+  22:../bsp/nv9usb.c **** #include "stm32f10x_gpio.h"
+  23:../bsp/nv9usb.c **** #include "stm32f10x_rcc.h"
+  24:../bsp/nv9usb.c **** 
+  25:../bsp/nv9usb.c **** #include "gpio_init.h"
+  26:../bsp/nv9usb.c **** 
+  27:../bsp/nv9usb.c **** #include "portmacro.h"
+  28:../bsp/nv9usb.c **** 
+  29:../bsp/nv9usb.c **** /*
+  30:../bsp/nv9usb.c **** ***************************************************************************************************
+  31:../bsp/nv9usb.c **** *                                            LOCAL DEFINES
+  32:../bsp/nv9usb.c **** ***************************************************************************************************
+  33:../bsp/nv9usb.c **** */
+  34:../bsp/nv9usb.c **** 
+  35:../bsp/nv9usb.c **** 
+  36:../bsp/nv9usb.c **** /*
+  37:../bsp/nv9usb.c **** ***************************************************************************************************
+  38:../bsp/nv9usb.c **** *                                           LOCAL CONSTANTS
+  39:../bsp/nv9usb.c **** ***************************************************************************************************
+  40:../bsp/nv9usb.c **** */
+  41:../bsp/nv9usb.c **** 
+  42:../bsp/nv9usb.c **** 
+  43:../bsp/nv9usb.c **** /*
+  44:../bsp/nv9usb.c **** ***************************************************************************************************
+  45:../bsp/nv9usb.c **** *                                          LOCAL DATA TYPES
+  46:../bsp/nv9usb.c **** ***************************************************************************************************
+  47:../bsp/nv9usb.c **** */
+  48:../bsp/nv9usb.c **** 
+  49:../bsp/nv9usb.c **** 
+  50:../bsp/nv9usb.c **** /*
+  51:../bsp/nv9usb.c **** ***************************************************************************************************
+  52:../bsp/nv9usb.c **** *                                            LOCAL TABLES
+  53:../bsp/nv9usb.c **** ***************************************************************************************************
+  54:../bsp/nv9usb.c **** */
+  55:../bsp/nv9usb.c **** 
+  56:../bsp/nv9usb.c **** 
+  57:../bsp/nv9usb.c **** /*
+  58:../bsp/nv9usb.c **** ***************************************************************************************************
+  59:../bsp/nv9usb.c **** *                                       LOCAL GLOBAL VARIABLES
+  60:../bsp/nv9usb.c **** ***************************************************************************************************
+  61:../bsp/nv9usb.c **** */
+  62:../bsp/nv9usb.c **** validator_t    ValidatorNV9;
+  63:../bsp/nv9usb.c **** 
+  64:../bsp/nv9usb.c **** 
+  65:../bsp/nv9usb.c **** /*
+  66:../bsp/nv9usb.c **** ***************************************************************************************************
+  67:../bsp/nv9usb.c **** *                                      LOCAL FUNCTION PROTOTYPES
+  68:../bsp/nv9usb.c **** ***************************************************************************************************
+  69:../bsp/nv9usb.c **** */
+  70:../bsp/nv9usb.c **** static void validator_hw_init(void);
+  71:../bsp/nv9usb.c **** //static void  uart2_init(u32 baud_rate);
+  72:../bsp/nv9usb.c **** 
+  73:../bsp/nv9usb.c **** /*
+  74:../bsp/nv9usb.c **** ***************************************************************************************************
+  75:../bsp/nv9usb.c **** *                                     LOCAL CONFIGURATION ERRORS
+  76:../bsp/nv9usb.c **** ***************************************************************************************************
+  77:../bsp/nv9usb.c **** */
+  78:../bsp/nv9usb.c **** 
+  79:../bsp/nv9usb.c **** /*
+  80:../bsp/nv9usb.c **** ***************************************************************************************************
+  81:../bsp/nv9usb.c **** *                                           LOCAL FUNCTIONS
+  82:../bsp/nv9usb.c **** ***************************************************************************************************
+  83:../bsp/nv9usb.c **** */
+  84:../bsp/nv9usb.c **** 
+  85:../bsp/nv9usb.c **** /*
+  86:../bsp/nv9usb.c **** ***************************************************************************************************
+  87:../bsp/nv9usb.c **** *                                          validator_hw_init()
+  88:../bsp/nv9usb.c **** *
+  89:../bsp/nv9usb.c **** * Description : Initialize a PINS for work with validator.
+  90:../bsp/nv9usb.c **** *
+  91:../bsp/nv9usb.c **** * Argument(s) : none.
+  92:../bsp/nv9usb.c **** *
+  93:../bsp/nv9usb.c **** * Return(s)   : none.
+  94:../bsp/nv9usb.c **** *
+  95:../bsp/nv9usb.c **** * Caller(s)   : Application.
+  96:../bsp/nv9usb.c **** *
+  97:../bsp/nv9usb.c **** * Note(s)     : none.
+  98:../bsp/nv9usb.c **** ***************************************************************************************************
+  99:../bsp/nv9usb.c **** */
+ 100:../bsp/nv9usb.c **** static void validator_hw_init(void)
+ 101:../bsp/nv9usb.c **** {
+  27              		.loc 1 101 0
+  28              		.cfi_startproc
+  29              		@ args = 0, pretend = 0, frame = 0
+  30              		@ frame_needed = 1, uses_anonymous_args = 0
+  31 0000 80B5     		push	{r7, lr}
+  32              		.cfi_def_cfa_offset 8
+  33              		.cfi_offset 7, -8
+  34              		.cfi_offset 14, -4
+  35 0002 00AF     		add	r7, sp, #0
+  36              		.cfi_def_cfa_register 7
+ 102:../bsp/nv9usb.c **** 
+ 103:../bsp/nv9usb.c **** 	//Enable GPIO Clock
+ 104:../bsp/nv9usb.c **** 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
+  37              		.loc 1 104 0
+  38 0004 1020     		movs	r0, #16
+  39 0006 0121     		movs	r1, #1
+  40 0008 FFF7FEFF 		bl	RCC_APB2PeriphClockCmd
+ 105:../bsp/nv9usb.c **** 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+  41              		.loc 1 105 0
+  42 000c 0420     		movs	r0, #4
+  43 000e 0121     		movs	r1, #1
+  44 0010 FFF7FEFF 		bl	RCC_APB2PeriphClockCmd
+ 106:../bsp/nv9usb.c **** 
+ 107:../bsp/nv9usb.c **** 	//Initialize the pins
+ 108:../bsp/nv9usb.c **** 	GPIO_MULTI_INIT(VALIDATOR_STATUS,  GPIO_MODE_INPUT_PULL_UP);
+  45              		.loc 1 108 0
+  46 0014 4FF48053 		mov	r3, #4096
+  47 0018 C4F20103 		movt	r3, 16385
+  48 001c 0222     		movs	r2, #2
+  49 001e 1A61     		str	r2, [r3, #16]
+  50 0020 4FF48053 		mov	r3, #4096
+  51 0024 C4F20103 		movt	r3, 16385
+  52 0028 4FF48052 		mov	r2, #4096
+  53 002c C4F20102 		movt	r2, 16385
+  54 0030 1268     		ldr	r2, [r2]
+  55 0032 22F0F002 		bic	r2, r2, #240
+  56 0036 42F08002 		orr	r2, r2, #128
+  57 003a 1A60     		str	r2, [r3]
+ 109:../bsp/nv9usb.c **** 	GPIO_MULTI_INIT(VALIDATOR_PULS_IN, GPIO_MODE_INPUT_PULL_UP);
+  58              		.loc 1 109 0
+  59 003c 4FF48053 		mov	r3, #4096
+  60 0040 C4F20103 		movt	r3, 16385
+  61 0044 0422     		movs	r2, #4
+  62 0046 1A61     		str	r2, [r3, #16]
+  63 0048 4FF48053 		mov	r3, #4096
+  64 004c C4F20103 		movt	r3, 16385
+  65 0050 4FF48052 		mov	r2, #4096
+  66 0054 C4F20102 		movt	r2, 16385
+  67 0058 1268     		ldr	r2, [r2]
+  68 005a 22F47062 		bic	r2, r2, #3840
+  69 005e 42F40062 		orr	r2, r2, #2048
+  70 0062 1A60     		str	r2, [r3]
+ 110:../bsp/nv9usb.c **** 
+ 111:../bsp/nv9usb.c **** 	//GPIO_MULTI_INIT(VALIDATOR_INHIBIT, GPIO_MODE_OUTPUT2_PUSH_PULL_UP);
+ 112:../bsp/nv9usb.c **** 	GPIO_MULTI_INIT(VALIDATOR_INHIBIT, GPIO_MODE_OUTPUT2_PUSH_PULL_DOWN);
+  71              		.loc 1 112 0
+  72 0064 4FF48053 		mov	r3, #4096
+  73 0068 C4F20103 		movt	r3, 16385
+  74 006c 0122     		movs	r2, #1
+  75 006e 5A61     		str	r2, [r3, #20]
+  76 0070 4FF48053 		mov	r3, #4096
+  77 0074 C4F20103 		movt	r3, 16385
+  78 0078 4FF48052 		mov	r2, #4096
+  79 007c C4F20102 		movt	r2, 16385
+  80 0080 1268     		ldr	r2, [r2]
+  81 0082 22F00F02 		bic	r2, r2, #15
+  82 0086 42F00202 		orr	r2, r2, #2
+  83 008a 1A60     		str	r2, [r3]
+ 113:../bsp/nv9usb.c **** 
+ 114:../bsp/nv9usb.c **** 	GPIO_MULTI_INIT(VALIDATOR_ESCROW,  GPIO_MODE_OUTPUT2_PUSH_PULL_UP);
+  84              		.loc 1 114 0
+  85 008c 4FF48053 		mov	r3, #4096
+  86 0090 C4F20103 		movt	r3, 16385
+  87 0094 0822     		movs	r2, #8
+  88 0096 1A61     		str	r2, [r3, #16]
+  89 0098 4FF48053 		mov	r3, #4096
+  90 009c C4F20103 		movt	r3, 16385
+  91 00a0 4FF48052 		mov	r2, #4096
+  92 00a4 C4F20102 		movt	r2, 16385
+  93 00a8 1268     		ldr	r2, [r2]
+  94 00aa 22F47042 		bic	r2, r2, #61440
+  95 00ae 42F40052 		orr	r2, r2, #8192
+  96 00b2 1A60     		str	r2, [r3]
+ 115:../bsp/nv9usb.c **** 	GPIO_MULTI_INIT(VALIDATOR_PWR_PIN, GPIO_MODE_OUTPUT2_PUSH_PULL_UP);
+  97              		.loc 1 115 0
+  98 00b4 4FF40063 		mov	r3, #2048
+  99 00b8 C4F20103 		movt	r3, 16385
+ 100 00bc 0122     		movs	r2, #1
+ 101 00be 1A61     		str	r2, [r3, #16]
+ 102 00c0 4FF40063 		mov	r3, #2048
+ 103 00c4 C4F20103 		movt	r3, 16385
+ 104 00c8 4FF40062 		mov	r2, #2048
+ 105 00cc C4F20102 		movt	r2, 16385
+ 106 00d0 1268     		ldr	r2, [r2]
+ 107 00d2 22F00F02 		bic	r2, r2, #15
+ 108 00d6 42F00202 		orr	r2, r2, #2
+ 109 00da 1A60     		str	r2, [r3]
+ 116:../bsp/nv9usb.c **** }
+ 110              		.loc 1 116 0
+ 111 00dc 80BD     		pop	{r7, pc}
+ 112              		.cfi_endproc
+ 113              	.LFE29:
+ 115 00de 00BF     		.section	.text.ValidatorInit,"ax",%progbits
+ 116              		.align	2
+ 117              		.global	ValidatorInit
+ 118              		.thumb
+ 119              		.thumb_func
+ 121              	ValidatorInit:
+ 122              	.LFB30:
+ 117:../bsp/nv9usb.c **** 
+ 118:../bsp/nv9usb.c **** 
+ 119:../bsp/nv9usb.c **** /*
+ 120:../bsp/nv9usb.c **** ***************************************************************************************************
+ 121:../bsp/nv9usb.c **** ***************************************************************************************************
+ 122:../bsp/nv9usb.c **** **                                         GLOBAL FUNCTIONS
+ 123:../bsp/nv9usb.c **** ***************************************************************************************************
+ 124:../bsp/nv9usb.c **** ***************************************************************************************************
+ 125:../bsp/nv9usb.c **** */
+ 126:../bsp/nv9usb.c **** 
+ 127:../bsp/nv9usb.c **** 
+ 128:../bsp/nv9usb.c **** 
+ 129:../bsp/nv9usb.c **** /*
+ 130:../bsp/nv9usb.c **** ***************************************************************************************************
+ 131:../bsp/nv9usb.c **** *                                          ValidatorInit()
+ 132:../bsp/nv9usb.c **** *
+ 133:../bsp/nv9usb.c **** * Description : Initialize a bill count - NV9USB.
+ 134:../bsp/nv9usb.c **** *
+ 135:../bsp/nv9usb.c **** * Argument(s) : min and max for pulse range.
+ 136:../bsp/nv9usb.c **** *
+ 137:../bsp/nv9usb.c **** * Return(s)   : none.
+ 138:../bsp/nv9usb.c **** *
+ 139:../bsp/nv9usb.c **** * Caller(s)   : Application.
+ 140:../bsp/nv9usb.c **** *
+ 141:../bsp/nv9usb.c **** * Note(s)     : none.
+ 142:../bsp/nv9usb.c **** ***************************************************************************************************
+ 143:../bsp/nv9usb.c **** */
+ 144:../bsp/nv9usb.c **** void ValidatorInit (u32 period_cnt_min, u32 period_cnt_max) {
+ 123              		.loc 1 144 0
+ 124              		.cfi_startproc
+ 125              		@ args = 0, pretend = 0, frame = 8
+ 126              		@ frame_needed = 1, uses_anonymous_args = 0
+ 127 0000 80B5     		push	{r7, lr}
+ 128              		.cfi_def_cfa_offset 8
+ 129              		.cfi_offset 7, -8
+ 130              		.cfi_offset 14, -4
+ 131 0002 82B0     		sub	sp, sp, #8
+ 132              		.cfi_def_cfa_offset 16
+ 133 0004 00AF     		add	r7, sp, #0
+ 134              		.cfi_def_cfa_register 7
+ 135 0006 7860     		str	r0, [r7, #4]
+ 136 0008 3960     		str	r1, [r7]
+ 145:../bsp/nv9usb.c **** 
+ 146:../bsp/nv9usb.c **** 	validator_hw_init();
+ 137              		.loc 1 146 0
+ 138 000a FFF7FEFF 		bl	validator_hw_init
+ 147:../bsp/nv9usb.c **** 
+ 148:../bsp/nv9usb.c **** 	ValidatorNV9.PeriodCntMin  = RESET;
+ 139              		.loc 1 148 0
+ 140 000e 40F20003 		movw	r3, #:lower16:ValidatorNV9
+ 141 0012 C0F20003 		movt	r3, #:upper16:ValidatorNV9
+ 142 0016 0022     		movs	r2, #0
+ 143 0018 1A60     		str	r2, [r3]
+ 149:../bsp/nv9usb.c **** 	ValidatorNV9.PeriodCntMax  = RESET;
+ 144              		.loc 1 149 0
+ 145 001a 40F20003 		movw	r3, #:lower16:ValidatorNV9
+ 146 001e C0F20003 		movt	r3, #:upper16:ValidatorNV9
+ 147 0022 0022     		movs	r2, #0
+ 148 0024 5A60     		str	r2, [r3, #4]
+ 150:../bsp/nv9usb.c **** 	ValidatorNV9.PeriodCntCar  = RESET;
+ 149              		.loc 1 150 0
+ 150 0026 40F20003 		movw	r3, #:lower16:ValidatorNV9
+ 151 002a C0F20003 		movt	r3, #:upper16:ValidatorNV9
+ 152 002e 0022     		movs	r2, #0
+ 153 0030 9A60     		str	r2, [r3, #8]
+ 151:../bsp/nv9usb.c **** 	ValidatorNV9.MoneyQuantity = RESET;
+ 154              		.loc 1 151 0
+ 155 0032 40F20003 		movw	r3, #:lower16:ValidatorNV9
+ 156 0036 C0F20003 		movt	r3, #:upper16:ValidatorNV9
+ 157 003a 0022     		movs	r2, #0
+ 158 003c DA60     		str	r2, [r3, #12]
+ 152:../bsp/nv9usb.c **** 	ValidatorNV9.SynchroFlag   = RESET;
+ 159              		.loc 1 152 0
+ 160 003e 40F20003 		movw	r3, #:lower16:ValidatorNV9
+ 161 0042 C0F20003 		movt	r3, #:upper16:ValidatorNV9
+ 162 0046 0022     		movs	r2, #0
+ 163 0048 1A61     		str	r2, [r3, #16]
+ 153:../bsp/nv9usb.c **** 
+ 154:../bsp/nv9usb.c **** 	ValidatorNV9.PeriodCntMin  = period_cnt_min;
+ 164              		.loc 1 154 0
+ 165 004a 40F20003 		movw	r3, #:lower16:ValidatorNV9
+ 166 004e C0F20003 		movt	r3, #:upper16:ValidatorNV9
+ 167 0052 7A68     		ldr	r2, [r7, #4]
+ 168 0054 1A60     		str	r2, [r3]
+ 155:../bsp/nv9usb.c **** 	ValidatorNV9.PeriodCntMax  = period_cnt_max;
+ 169              		.loc 1 155 0
+ 170 0056 40F20003 		movw	r3, #:lower16:ValidatorNV9
+ 171 005a C0F20003 		movt	r3, #:upper16:ValidatorNV9
+ 172 005e 3A68     		ldr	r2, [r7]
+ 173 0060 5A60     		str	r2, [r3, #4]
+ 156:../bsp/nv9usb.c **** 
+ 157:../bsp/nv9usb.c **** 	if ((ValidatorNV9.PeriodCntMax - ValidatorNV9.PeriodCntMin) > 0) {
+ 174              		.loc 1 157 0
+ 175 0062 40F20003 		movw	r3, #:lower16:ValidatorNV9
+ 176 0066 C0F20003 		movt	r3, #:upper16:ValidatorNV9
+ 177 006a 5A68     		ldr	r2, [r3, #4]
+ 178 006c 40F20003 		movw	r3, #:lower16:ValidatorNV9
+ 179 0070 C0F20003 		movt	r3, #:upper16:ValidatorNV9
+ 180 0074 1B68     		ldr	r3, [r3]
+ 181 0076 9A42     		cmp	r2, r3
+ 182 0078 0DD0     		beq	.L2
+ 158:../bsp/nv9usb.c **** 		GPIO_SetBits(VALIDATOR_PWR_PIN);
+ 183              		.loc 1 158 0
+ 184 007a 4FF40060 		mov	r0, #2048
+ 185 007e C4F20100 		movt	r0, 16385
+ 186 0082 0121     		movs	r1, #1
+ 187 0084 FFF7FEFF 		bl	GPIO_SetBits
+ 159:../bsp/nv9usb.c **** 		//GPIO_SetBits(VALIDATOR_INHIBIT);
+ 160:../bsp/nv9usb.c **** 		GPIO_ResetBits(VALIDATOR_ESCROW);
+ 188              		.loc 1 160 0
+ 189 0088 4FF48050 		mov	r0, #4096
+ 190 008c C4F20100 		movt	r0, 16385
+ 191 0090 0821     		movs	r1, #8
+ 192 0092 FFF7FEFF 		bl	GPIO_ResetBits
+ 193              	.L2:
+ 161:../bsp/nv9usb.c **** 
+ 162:../bsp/nv9usb.c **** //		VALIDATOR_INHIBIT_DISABLE();
+ 163:../bsp/nv9usb.c **** 	}
+ 164:../bsp/nv9usb.c **** }
+ 194              		.loc 1 164 0
+ 195 0096 0837     		adds	r7, r7, #8
+ 196 0098 BD46     		mov	sp, r7
+ 197              		@ sp needed
+ 198 009a 80BD     		pop	{r7, pc}
+ 199              		.cfi_endproc
+ 200              	.LFE30:
+ 202              		.section	.text.ValidatorPulseProcessing,"ax",%progbits
+ 203              		.align	2
+ 204              		.global	ValidatorPulseProcessing
+ 205              		.thumb
+ 206              		.thumb_func
+ 208              	ValidatorPulseProcessing:
+ 209              	.LFB31:
+ 165:../bsp/nv9usb.c **** 
+ 166:../bsp/nv9usb.c **** /*
+ 167:../bsp/nv9usb.c **** ***************************************************************************************************
+ 168:../bsp/nv9usb.c **** *                                                UartReadByte()
+ 169:../bsp/nv9usb.c **** *
+ 170:../bsp/nv9usb.c **** * Description : Receive a single byte.
+ 171:../bsp/nv9usb.c **** *
+ 172:../bsp/nv9usb.c **** * Argument(s) : number of UART.
+ 173:../bsp/nv9usb.c **** *
+ 174:../bsp/nv9usb.c **** * Return(s)   : The received byte.
+ 175:../bsp/nv9usb.c **** *
+ 176:../bsp/nv9usb.c **** * Caller(s)   : Application.
+ 177:../bsp/nv9usb.c **** *
+ 178:../bsp/nv9usb.c **** * Note(s)     : 
+ 179:../bsp/nv9usb.c **** ***************************************************************************************************
+ 180:../bsp/nv9usb.c **** */
+ 181:../bsp/nv9usb.c **** void ValidatorPulseProcessing (u32 call_period) {
+ 210              		.loc 1 181 0
+ 211              		.cfi_startproc
+ 212              		@ args = 0, pretend = 0, frame = 8
+ 213              		@ frame_needed = 1, uses_anonymous_args = 0
+ 214 0000 80B5     		push	{r7, lr}
+ 215              		.cfi_def_cfa_offset 8
+ 216              		.cfi_offset 7, -8
+ 217              		.cfi_offset 14, -4
+ 218 0002 82B0     		sub	sp, sp, #8
+ 219              		.cfi_def_cfa_offset 16
+ 220 0004 00AF     		add	r7, sp, #0
+ 221              		.cfi_def_cfa_register 7
+ 222 0006 7860     		str	r0, [r7, #4]
+ 182:../bsp/nv9usb.c **** 
+ 183:../bsp/nv9usb.c **** 	static u32 puls_with_cnt = 0;
+ 184:../bsp/nv9usb.c **** 
+ 185:../bsp/nv9usb.c ****     if (!GPIO_ReadInputDataBit(VALIDATOR_PULS_IN)) {
+ 223              		.loc 1 185 0
+ 224 0008 4FF48050 		mov	r0, #4096
+ 225 000c C4F20100 		movt	r0, 16385
+ 226 0010 0421     		movs	r1, #4
+ 227 0012 FFF7FEFF 		bl	GPIO_ReadInputDataBit
+ 228 0016 0346     		mov	r3, r0
+ 229 0018 002B     		cmp	r3, #0
+ 230 001a 0CD1     		bne	.L5
+ 186:../bsp/nv9usb.c **** 
+ 187:../bsp/nv9usb.c ****     	puls_with_cnt += call_period;
+ 231              		.loc 1 187 0
+ 232 001c 40F20003 		movw	r3, #:lower16:puls_with_cnt.5102
+ 233 0020 C0F20003 		movt	r3, #:upper16:puls_with_cnt.5102
+ 234 0024 1A68     		ldr	r2, [r3]
+ 235 0026 7B68     		ldr	r3, [r7, #4]
+ 236 0028 1A44     		add	r2, r2, r3
+ 237 002a 40F20003 		movw	r3, #:lower16:puls_with_cnt.5102
+ 238 002e C0F20003 		movt	r3, #:upper16:puls_with_cnt.5102
+ 239 0032 1A60     		str	r2, [r3]
+ 240 0034 33E0     		b	.L4
+ 241              	.L5:
+ 188:../bsp/nv9usb.c ****     }
+ 189:../bsp/nv9usb.c **** 
+ 190:../bsp/nv9usb.c ****     else if (puls_with_cnt > 0) {
+ 242              		.loc 1 190 0
+ 243 0036 40F20003 		movw	r3, #:lower16:puls_with_cnt.5102
+ 244 003a C0F20003 		movt	r3, #:upper16:puls_with_cnt.5102
+ 245 003e 1B68     		ldr	r3, [r3]
+ 246 0040 002B     		cmp	r3, #0
+ 247 0042 2CD0     		beq	.L4
+ 191:../bsp/nv9usb.c **** 
+ 192:../bsp/nv9usb.c ****     	if ((puls_with_cnt > ValidatorNV9.PeriodCntMin) && (puls_with_cnt < ValidatorNV9.PeriodCntMax)
+ 248              		.loc 1 192 0
+ 249 0044 40F20003 		movw	r3, #:lower16:ValidatorNV9
+ 250 0048 C0F20003 		movt	r3, #:upper16:ValidatorNV9
+ 251 004c 1A68     		ldr	r2, [r3]
+ 252 004e 40F20003 		movw	r3, #:lower16:puls_with_cnt.5102
+ 253 0052 C0F20003 		movt	r3, #:upper16:puls_with_cnt.5102
+ 254 0056 1B68     		ldr	r3, [r3]
+ 255 0058 9A42     		cmp	r2, r3
+ 256 005a 1AD2     		bcs	.L7
+ 257              		.loc 1 192 0 is_stmt 0 discriminator 1
+ 258 005c 40F20003 		movw	r3, #:lower16:ValidatorNV9
+ 259 0060 C0F20003 		movt	r3, #:upper16:ValidatorNV9
+ 260 0064 5A68     		ldr	r2, [r3, #4]
+ 261 0066 40F20003 		movw	r3, #:lower16:puls_with_cnt.5102
+ 262 006a C0F20003 		movt	r3, #:upper16:puls_with_cnt.5102
+ 263 006e 1B68     		ldr	r3, [r3]
+ 264 0070 9A42     		cmp	r2, r3
+ 265 0072 0ED9     		bls	.L7
+ 193:../bsp/nv9usb.c **** 
+ 194:../bsp/nv9usb.c **** //    		ValidatorNV9.SynchroFlag   = SET;
+ 195:../bsp/nv9usb.c ****     		portENTER_CRITICAL();
+ 266              		.loc 1 195 0 is_stmt 1
+ 267 0074 FFF7FEFF 		bl	vPortEnterCritical
+ 196:../bsp/nv9usb.c ****     		ValidatorNV9.MoneyQuantity++;
+ 268              		.loc 1 196 0
+ 269 0078 40F20003 		movw	r3, #:lower16:ValidatorNV9
+ 270 007c C0F20003 		movt	r3, #:upper16:ValidatorNV9
+ 271 0080 DB68     		ldr	r3, [r3, #12]
+ 272 0082 5A1C     		adds	r2, r3, #1
+ 273 0084 40F20003 		movw	r3, #:lower16:ValidatorNV9
+ 274 0088 C0F20003 		movt	r3, #:upper16:ValidatorNV9
+ 275 008c DA60     		str	r2, [r3, #12]
+ 197:../bsp/nv9usb.c ****     		portEXIT_CRITICAL();
+ 276              		.loc 1 197 0
+ 277 008e FFF7FEFF 		bl	vPortExitCritical
+ 278              	.L7:
+ 198:../bsp/nv9usb.c **** //    		ValidatorNV9.SynchroFlag   = RESET;
+ 199:../bsp/nv9usb.c ****     	}
+ 200:../bsp/nv9usb.c **** 
+ 201:../bsp/nv9usb.c ****     	puls_with_cnt = 0;
+ 279              		.loc 1 201 0
+ 280 0092 40F20003 		movw	r3, #:lower16:puls_with_cnt.5102
+ 281 0096 C0F20003 		movt	r3, #:upper16:puls_with_cnt.5102
+ 282 009a 0022     		movs	r2, #0
+ 283 009c 1A60     		str	r2, [r3]
+ 284              	.L4:
+ 202:../bsp/nv9usb.c ****     }
+ 203:../bsp/nv9usb.c **** }
+ 285              		.loc 1 203 0
+ 286 009e 0837     		adds	r7, r7, #8
+ 287 00a0 BD46     		mov	sp, r7
+ 288              		@ sp needed
+ 289 00a2 80BD     		pop	{r7, pc}
+ 290              		.cfi_endproc
+ 291              	.LFE31:
+ 293              		.section	.text.ValidatorMoneyQuantity,"ax",%progbits
+ 294              		.align	2
+ 295              		.global	ValidatorMoneyQuantity
+ 296              		.thumb
+ 297              		.thumb_func
+ 299              	ValidatorMoneyQuantity:
+ 300              	.LFB32:
+ 204:../bsp/nv9usb.c **** 
+ 205:../bsp/nv9usb.c **** /*
+ 206:../bsp/nv9usb.c **** ***************************************************************************************************
+ 207:../bsp/nv9usb.c **** *                                                ValidatorMoneyQuantity()
+ 208:../bsp/nv9usb.c **** *
+ 209:../bsp/nv9usb.c **** * Description : Get the quantity of token money .
+ 210:../bsp/nv9usb.c **** *
+ 211:../bsp/nv9usb.c **** * Argument(s) : none.
+ 212:../bsp/nv9usb.c **** *
+ 213:../bsp/nv9usb.c **** * Return(s)   : quantity money.
+ 214:../bsp/nv9usb.c **** *
+ 215:../bsp/nv9usb.c **** * Caller(s)   : Application.
+ 216:../bsp/nv9usb.c **** *
+ 217:../bsp/nv9usb.c **** * Note(s)     : none.
+ 218:../bsp/nv9usb.c **** ***************************************************************************************************
+ 219:../bsp/nv9usb.c **** */
+ 220:../bsp/nv9usb.c **** u32  ValidatorMoneyQuantity (void) {
+ 301              		.loc 1 220 0
+ 302              		.cfi_startproc
+ 303              		@ args = 0, pretend = 0, frame = 8
+ 304              		@ frame_needed = 1, uses_anonymous_args = 0
+ 305 0000 80B5     		push	{r7, lr}
+ 306              		.cfi_def_cfa_offset 8
+ 307              		.cfi_offset 7, -8
+ 308              		.cfi_offset 14, -4
+ 309 0002 82B0     		sub	sp, sp, #8
+ 310              		.cfi_def_cfa_offset 16
+ 311 0004 00AF     		add	r7, sp, #0
+ 312              		.cfi_def_cfa_register 7
+ 221:../bsp/nv9usb.c **** 
+ 222:../bsp/nv9usb.c **** 	u32 ret = 0;
+ 313              		.loc 1 222 0
+ 314 0006 0023     		movs	r3, #0
+ 315 0008 7B60     		str	r3, [r7, #4]
+ 223:../bsp/nv9usb.c **** 
+ 224:../bsp/nv9usb.c **** 	portENTER_CRITICAL();
+ 316              		.loc 1 224 0
+ 317 000a FFF7FEFF 		bl	vPortEnterCritical
+ 225:../bsp/nv9usb.c **** 	ret = ValidatorNV9.MoneyQuantity;
+ 318              		.loc 1 225 0
+ 319 000e 40F20003 		movw	r3, #:lower16:ValidatorNV9
+ 320 0012 C0F20003 		movt	r3, #:upper16:ValidatorNV9
+ 321 0016 DB68     		ldr	r3, [r3, #12]
+ 322 0018 7B60     		str	r3, [r7, #4]
+ 226:../bsp/nv9usb.c **** 
+ 227:../bsp/nv9usb.c **** //	while (ValidatorNV9.SynchroFlag == SET) ;
+ 228:../bsp/nv9usb.c **** 
+ 229:../bsp/nv9usb.c **** 	ValidatorNV9.MoneyQuantity = 0;
+ 323              		.loc 1 229 0
+ 324 001a 40F20003 		movw	r3, #:lower16:ValidatorNV9
+ 325 001e C0F20003 		movt	r3, #:upper16:ValidatorNV9
+ 326 0022 0022     		movs	r2, #0
+ 327 0024 DA60     		str	r2, [r3, #12]
+ 230:../bsp/nv9usb.c **** 	portEXIT_CRITICAL();
+ 328              		.loc 1 230 0
+ 329 0026 FFF7FEFF 		bl	vPortExitCritical
+ 231:../bsp/nv9usb.c **** 
+ 232:../bsp/nv9usb.c **** return ret;
+ 330              		.loc 1 232 0
+ 331 002a 7B68     		ldr	r3, [r7, #4]
+ 233:../bsp/nv9usb.c **** }
+ 332              		.loc 1 233 0
+ 333 002c 1846     		mov	r0, r3
+ 334 002e 0837     		adds	r7, r7, #8
+ 335 0030 BD46     		mov	sp, r7
+ 336              		@ sp needed
+ 337 0032 80BD     		pop	{r7, pc}
+ 338              		.cfi_endproc
+ 339              	.LFE32:
+ 341              		.section	.bss.puls_with_cnt.5102,"aw",%nobits
+ 342              		.align	2
+ 345              	puls_with_cnt.5102:
+ 346 0000 00000000 		.space	4
+ 347              		.text
+ 348              	.Letext0:
+ 349              		.file 2 "c:\\tools\\arm-none-eabi\\include\\stdint.h"
+ 350              		.file 3 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/stm32f10x.h"
+ 351              		.file 4 "../bsp/nv9usb.h"
+ 352              		.file 5 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/core_cm3.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 nv9usb.c
+                            *COM*:00000014 ValidatorNV9
+C:\Users\Alex\AppData\Local\Temp\cceyNmii.s:20     .text.validator_hw_init:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cceyNmii.s:24     .text.validator_hw_init:00000000 validator_hw_init
+C:\Users\Alex\AppData\Local\Temp\cceyNmii.s:116    .text.ValidatorInit:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cceyNmii.s:121    .text.ValidatorInit:00000000 ValidatorInit
+C:\Users\Alex\AppData\Local\Temp\cceyNmii.s:203    .text.ValidatorPulseProcessing:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cceyNmii.s:208    .text.ValidatorPulseProcessing:00000000 ValidatorPulseProcessing
+C:\Users\Alex\AppData\Local\Temp\cceyNmii.s:345    .bss.puls_with_cnt.5102:00000000 puls_with_cnt.5102
+C:\Users\Alex\AppData\Local\Temp\cceyNmii.s:294    .text.ValidatorMoneyQuantity:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cceyNmii.s:299    .text.ValidatorMoneyQuantity:00000000 ValidatorMoneyQuantity
+C:\Users\Alex\AppData\Local\Temp\cceyNmii.s:342    .bss.puls_with_cnt.5102:00000000 $d
+                     .debug_frame:00000010 $d
+                           .group:00000000 wm4.1.98ffea2db242cfdb58f411f7407f2b59
+                           .group:00000000 wm4.stm32f10x.h.51.b859cb68ed44ee02c916b41cb8c68f1c
+                           .group:00000000 wm4.core_cm3.h.25.d35e9a9b04ec4aaebae9bf79fff061f9
+                           .group:00000000 wm4.newlib.h.8.384a112feabb3bef7b573ae48cde2e3b
+                           .group:00000000 wm4.features.h.22.6a4ca7cd053637cc1d0db6c16f39b2d7
+                           .group:00000000 wm4.config.h.183.aa62afef667fb61d15fa64c48beb2f14
+                           .group:00000000 wm4._ansi.h.23.5644b60c990a4800b02a6e654e88f93a
+                           .group:00000000 wm4.stdint.h.20.54ad762faa59e3c05491630641c8d8bf
+                           .group:00000000 wm4.core_cm3.h.113.b286929a54d33b4c8909a7132437b244
+                           .group:00000000 wm4.stm32f10x.h.522.a925aafc848b1f088438cf0e9b167b78
+                           .group:00000000 wm4.stm32f10x_conf.h.2.f1a8c33f0a763aeef696fee38b2b2dbc
+                           .group:00000000 wm4.stm32f10x.h.8304.f7d8ad90959e99679b3257267c3aadfe
+                           .group:00000000 wm4.nv9usb.h.40.8d91a30a77cd31aba1cdf2a3eaa76200
+                           .group:00000000 wm4.stm32f10x_gpio.h.25.80c981af0e637567395034c576cfb3ce
+                           .group:00000000 wm4.stm32f10x_rcc.h.25.fe8897e7491f2eb0cff54551d08eb765
+                           .group:00000000 wm4.gpio_init.h.2.a6dd96fdaf98737019b1d0402db0d0ee
+                           .group:00000000 wm4.portmacro.h.56.a47bdd86bc36d334ca6056492e2d709f
+
+UNDEFINED SYMBOLS
+RCC_APB2PeriphClockCmd
+GPIO_SetBits
+GPIO_ResetBits
+GPIO_ReadInputDataBit
+vPortEnterCritical
+vPortExitCritical
