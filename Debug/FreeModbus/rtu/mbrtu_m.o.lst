@@ -764,7 +764,7 @@
  263:../FreeModbus/rtu/mbrtu_m.c ****          */
  264:../FreeModbus/rtu/mbrtu_m.c ****     case STATE_M_RX_IDLE:
  265:../FreeModbus/rtu/mbrtu_m.c ****     	/* In time of respond timeout,the receiver receive a frame.
- 266:../FreeModbus/rtu/mbrtu_m.c ****     	 * Disable timer of respond timeout and change the transmiter state to idle.
+ 266:../FreeModbus/rtu/mbrtu_m.c ****     	 * Disable timer of respond timeout and change the transmitter state to idle.
  267:../FreeModbus/rtu/mbrtu_m.c ****     	 */
  268:../FreeModbus/rtu/mbrtu_m.c ****     	vMBMasterPortTimersDisable( );
  525              		.loc 1 268 0
@@ -1120,7 +1120,7 @@
  773              	.L43:
  356:../FreeModbus/rtu/mbrtu_m.c **** 		break;
  774              		.loc 1 356 0
- 775 0024 0020     		movs	r0, #0
+ 775 0024 0120     		movs	r0, #1
  776 0026 FFF7FEFF 		bl	xMBMasterPortEventPost
  777 002a 0346     		mov	r3, r0
  778 002c FB71     		strb	r3, [r7, #7]
@@ -1130,7 +1130,7 @@
  781              	.L41:
  362:../FreeModbus/rtu/mbrtu_m.c **** 		break;
  782              		.loc 1 362 0
- 783 0030 0120     		movs	r0, #1
+ 783 0030 0220     		movs	r0, #2
  784 0032 FFF7FEFF 		bl	xMBMasterPortEventPost
  785 0036 0346     		mov	r3, r0
  786 0038 FB71     		strb	r3, [r7, #7]
@@ -1190,7 +1190,7 @@
  817 006e FFF7FEFF 		bl	vMBMasterSetErrorType
  386:../FreeModbus/rtu/mbrtu_m.c **** 		}
  818              		.loc 1 386 0
- 819 0072 0420     		movs	r0, #4
+ 819 0072 1020     		movs	r0, #16
  820 0074 FFF7FEFF 		bl	xMBMasterPortEventPost
  821 0078 0346     		mov	r3, r0
  822 007a FB71     		strb	r3, [r7, #7]
@@ -1223,7 +1223,7 @@
  842 009e 04D1     		bne	.L49
  400:../FreeModbus/rtu/mbrtu_m.c **** 		xNeedPoll = xMBMasterPortEventPost( EV_MASTER_EXECUTE );
  843              		.loc 1 400 0
- 844 00a0 0220     		movs	r0, #2
+ 844 00a0 0420     		movs	r0, #4
  845 00a2 FFF7FEFF 		bl	xMBMasterPortEventPost
  846 00a6 0346     		mov	r3, r0
  847 00a8 FB71     		strb	r3, [r7, #7]
@@ -1484,58 +1484,58 @@
  1076              		.file 7 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/core_cm3.h"
 DEFINED SYMBOLS
                             *ABS*:00000000 mbrtu_m.c
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:21     .bss.eSndState:00000000 eSndState
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:22     .bss.eSndState:00000000 $d
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:26     .bss.eRcvState:00000000 eRcvState
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:27     .bss.eRcvState:00000000 $d
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:29     .bss.ucMasterRTUSndBuf:00000000 $d
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:32     .bss.ucMasterRTUSndBuf:00000000 ucMasterRTUSndBuf
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:35     .bss.ucMasterRTURcvBuf:00000000 $d
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:38     .bss.ucMasterRTURcvBuf:00000000 ucMasterRTURcvBuf
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:41     .bss.usMasterSendPDULength:00000000 $d
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:44     .bss.usMasterSendPDULength:00000000 usMasterSendPDULength
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:47     .bss.pucMasterSndBufferCur:00000000 $d
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:50     .bss.pucMasterSndBufferCur:00000000 pucMasterSndBufferCur
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:53     .bss.usMasterSndBufferCount:00000000 $d
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:56     .bss.usMasterSndBufferCount:00000000 usMasterSndBufferCount
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:59     .bss.usMasterRcvBufferPos:00000000 $d
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:62     .bss.usMasterRcvBufferPos:00000000 usMasterRcvBufferPos
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:67     .bss.xFrameIsBroadcast:00000000 xFrameIsBroadcast
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:68     .bss.xFrameIsBroadcast:00000000 $d
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:72     .bss.eMasterCurTimerMode:00000000 eMasterCurTimerMode
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:73     .bss.eMasterCurTimerMode:00000000 $d
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:75     .text.eMBMasterRTUInit:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:80     .text.eMBMasterRTUInit:00000000 eMBMasterRTUInit
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:163    .text.eMBMasterRTUStart:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:168    .text.eMBMasterRTUStart:00000000 eMBMasterRTUStart
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:201    .text.eMBMasterRTUStop:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:206    .text.eMBMasterRTUStop:00000000 eMBMasterRTUStop
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:234    .text.eMBMasterRTUReceive:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:239    .text.eMBMasterRTUReceive:00000000 eMBMasterRTUReceive
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:319    .text.eMBMasterRTUReceive:00000084 $d
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:324    .text.eMBMasterRTUSend:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:329    .text.eMBMasterRTUSend:00000000 eMBMasterRTUSend
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:473    .text.xMBMasterRTUReceiveFSM:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:478    .text.xMBMasterRTUReceiveFSM:00000000 xMBMasterRTUReceiveFSM
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:510    .text.xMBMasterRTUReceiveFSM:00000028 $d
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:516    .text.xMBMasterRTUReceiveFSM:00000038 $t
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:609    .text.xMBMasterRTUTransmitFSM:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:614    .text.xMBMasterRTUTransmitFSM:00000000 xMBMasterRTUTransmitFSM
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:738    .text.xMBMasterRTUTimerExpired:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:743    .text.xMBMasterRTUTimerExpired:00000000 xMBMasterRTUTimerExpired
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:861    .text.vMBMasterGetRTUSndBuf:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:866    .text.vMBMasterGetRTUSndBuf:00000000 vMBMasterGetRTUSndBuf
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:896    .text.vMBMasterGetPDUSndBuf:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:901    .text.vMBMasterGetPDUSndBuf:00000000 vMBMasterGetPDUSndBuf
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:929    .text.vMBMasterGetPDUSndBuf:00000018 $d
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:934    .text.vMBMasterSetPDUSndLength:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:939    .text.vMBMasterSetPDUSndLength:00000000 vMBMasterSetPDUSndLength
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:970    .text.usMBMasterGetPDUSndLength:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:975    .text.usMBMasterGetPDUSndLength:00000000 usMBMasterGetPDUSndLength
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:1002   .text.vMBMasterSetCurTimerMode:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:1007   .text.vMBMasterSetCurTimerMode:00000000 vMBMasterSetCurTimerMode
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:1038   .text.xMBMasterRequestIsBroadcast:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:1043   .text.xMBMasterRequestIsBroadcast:00000000 xMBMasterRequestIsBroadcast
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:21     .bss.eSndState:00000000 eSndState
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:22     .bss.eSndState:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:26     .bss.eRcvState:00000000 eRcvState
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:27     .bss.eRcvState:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:29     .bss.ucMasterRTUSndBuf:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:32     .bss.ucMasterRTUSndBuf:00000000 ucMasterRTUSndBuf
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:35     .bss.ucMasterRTURcvBuf:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:38     .bss.ucMasterRTURcvBuf:00000000 ucMasterRTURcvBuf
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:41     .bss.usMasterSendPDULength:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:44     .bss.usMasterSendPDULength:00000000 usMasterSendPDULength
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:47     .bss.pucMasterSndBufferCur:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:50     .bss.pucMasterSndBufferCur:00000000 pucMasterSndBufferCur
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:53     .bss.usMasterSndBufferCount:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:56     .bss.usMasterSndBufferCount:00000000 usMasterSndBufferCount
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:59     .bss.usMasterRcvBufferPos:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:62     .bss.usMasterRcvBufferPos:00000000 usMasterRcvBufferPos
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:67     .bss.xFrameIsBroadcast:00000000 xFrameIsBroadcast
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:68     .bss.xFrameIsBroadcast:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:72     .bss.eMasterCurTimerMode:00000000 eMasterCurTimerMode
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:73     .bss.eMasterCurTimerMode:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:75     .text.eMBMasterRTUInit:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:80     .text.eMBMasterRTUInit:00000000 eMBMasterRTUInit
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:163    .text.eMBMasterRTUStart:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:168    .text.eMBMasterRTUStart:00000000 eMBMasterRTUStart
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:201    .text.eMBMasterRTUStop:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:206    .text.eMBMasterRTUStop:00000000 eMBMasterRTUStop
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:234    .text.eMBMasterRTUReceive:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:239    .text.eMBMasterRTUReceive:00000000 eMBMasterRTUReceive
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:319    .text.eMBMasterRTUReceive:00000084 $d
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:324    .text.eMBMasterRTUSend:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:329    .text.eMBMasterRTUSend:00000000 eMBMasterRTUSend
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:473    .text.xMBMasterRTUReceiveFSM:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:478    .text.xMBMasterRTUReceiveFSM:00000000 xMBMasterRTUReceiveFSM
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:510    .text.xMBMasterRTUReceiveFSM:00000028 $d
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:516    .text.xMBMasterRTUReceiveFSM:00000038 $t
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:609    .text.xMBMasterRTUTransmitFSM:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:614    .text.xMBMasterRTUTransmitFSM:00000000 xMBMasterRTUTransmitFSM
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:738    .text.xMBMasterRTUTimerExpired:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:743    .text.xMBMasterRTUTimerExpired:00000000 xMBMasterRTUTimerExpired
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:861    .text.vMBMasterGetRTUSndBuf:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:866    .text.vMBMasterGetRTUSndBuf:00000000 vMBMasterGetRTUSndBuf
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:896    .text.vMBMasterGetPDUSndBuf:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:901    .text.vMBMasterGetPDUSndBuf:00000000 vMBMasterGetPDUSndBuf
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:929    .text.vMBMasterGetPDUSndBuf:00000018 $d
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:934    .text.vMBMasterSetPDUSndLength:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:939    .text.vMBMasterSetPDUSndLength:00000000 vMBMasterSetPDUSndLength
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:970    .text.usMBMasterGetPDUSndLength:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:975    .text.usMBMasterGetPDUSndLength:00000000 usMBMasterGetPDUSndLength
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:1002   .text.vMBMasterSetCurTimerMode:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:1007   .text.vMBMasterSetCurTimerMode:00000000 vMBMasterSetCurTimerMode
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:1038   .text.xMBMasterRequestIsBroadcast:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccZpsS7X.s:1043   .text.xMBMasterRequestIsBroadcast:00000000 xMBMasterRequestIsBroadcast
                      .debug_frame:00000010 $d
                            .group:00000000 wm4.1.98ffea2db242cfdb58f411f7407f2b59
                            .group:00000000 wm4.newlib.h.8.384a112feabb3bef7b573ae48cde2e3b
@@ -1568,7 +1568,7 @@ C:\Users\Alex\AppData\Local\Temp\ccXhEN7B.s:1043   .text.xMBMasterRequestIsBroad
                            .group:00000000 wm4.stm32f10x.h.8304.f7d8ad90959e99679b3257267c3aadfe
                            .group:00000000 wm4.stm32f10x_rcc.h.25.fe8897e7491f2eb0cff54551d08eb765
                            .group:00000000 wm4.portmacro.h.56.a47bdd86bc36d334ca6056492e2d709f
-                           .group:00000000 wm4.port.h.38.e5d12e3086604499e6922efe9c85cac5
+                           .group:00000000 wm4.port.h.38.a8cf679bb58c5ad1b387e726c220530e
                            .group:00000000 wm4.mbproto.h.32.da85c2bdd9bdb84e975a92c999a4b490
                            .group:00000000 wm4.mb_m.h.32.f0c90bdd8de56a09521e2eefafb4f11f
                            .group:00000000 wm4.mbframe.h.32.cb3fc2a5a44fcaf8fe721dce49a4ba3c

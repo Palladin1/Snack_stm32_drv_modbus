@@ -32,6 +32,9 @@
 //static struct rt_event     xMasterOsEvent;
 static eMBEventType eQueuedEvent;
 static BOOL     xEventInQueue;
+
+static BOOL xMasterRunRes;
+
 /* ----------------------- Start implementation -----------------------------*/
 BOOL
 xMBMasterPortEventInit( void )
@@ -105,6 +108,9 @@ xMBMasterPortEventGet( eMBMasterEventType * eEvent )
 void vMBMasterOsResInit( void )
 {
 //	rt_sem_init(&xMasterRunRes, "master res", 0x01 , RT_IPC_FLAG_PRIO);
+	ENTER_CRITICAL_SECTION( );
+	xMasterRunRes = 1;
+	EXIT_CRITICAL_SECTION( );
 }
 
 /**
@@ -119,7 +125,36 @@ BOOL xMBMasterRunResTake( LONG lTimeOut )
 {
 	/*If waiting time is -1 .It will wait forever */
 //	return rt_sem_take(&xMasterRunRes, lTimeOut) ? FALSE : TRUE ;
+	ENTER_CRITICAL_SECTION( );
+    if ( xMasterRunRes >0 ) {
+    	xMasterRunRes--;
+    	EXIT_CRITICAL_SECTION( );
+    }
+    else {
+      	EXIT_CRITICAL_SECTION( );
+
+      	if ( lTimeOut == -1 ) {
+		    while ( !xMasterRunRes ) ;
+		        return  TRUE;
+	    }
+	    else {
+		    while ( 1 ) {
+
+			if ( lTimeOut == 0 )
+				break;
+
+			if ( xMasterRunRes )
+				return  TRUE;
+
+			lTimeOut--;
+		    }
+	    }
+
+        return FALSE;
+    }
+
 	return  TRUE;
+    //return  FALSE;
 }
 
 /**
@@ -131,6 +166,9 @@ void vMBMasterRunResRelease( void )
 {
 	/* release resource */
 //	rt_sem_release(&xMasterRunRes);
+	ENTER_CRITICAL_SECTION( );
+	xMasterRunRes += 1;
+	EXIT_CRITICAL_SECTION( );
 }
 
 /**
@@ -206,7 +244,7 @@ void vMBMasterErrorCBExecuteFunction(UCHAR ucDestAddress, const UCHAR* pucPDUDat
  * So,for real-time of system.Do not execute too much waiting process.
  *
  */
-void vMBMasterCBRequestScuuess( void ) {
+void vMBMasterCBRequestSuccess( void ) {
 	/**
 	 * @note This code is use OS's event mechanism for modbus master protocol stack.
 	 * If you don't use OS, you can change it.
@@ -230,6 +268,9 @@ eMBMasterReqErrCode eMBMasterWaitRequestFinish( void ) {
 
 	eMBMasterReqErrCode    eErrStatus = MB_MRE_NO_ERR;
     uint32_t recvedEvent;
+
+    //u32 i;
+    //for (i=0;i<2400000;i++);
     /* waiting for OS event */
 //	rt_event_recv(&xMasterOsEvent,
 //			EV_MASTER_PROCESS_SUCESS | EV_MASTER_ERROR_RESPOND_TIMEOUT
@@ -240,11 +281,11 @@ eMBMasterReqErrCode eMBMasterWaitRequestFinish( void ) {
    // BOOL            xEventHappened = FALSE;
 
     	    if( xEventInQueue )
-    	    {
-    	    	recvedEvent = eQueuedEvent;
-    	        xEventInQueue = FALSE;
- //   	        xEventHappened = TRUE;
-    	    }
+   	    {
+   	    	recvedEvent = eQueuedEvent;
+//   	        xEventInQueue = FALSE;
+//   	        xEventHappened = TRUE;
+   	    }
  //   	    return xEventHappened;
 
 	switch (recvedEvent)

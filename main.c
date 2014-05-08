@@ -113,8 +113,10 @@ return (0);
 */
 void vTask1( void *pvParameters )
 {
-	  static u32 cnt = 10;
+	  static u32 cnt = 50;
+	  u32 fl = 0;
 
+	  u8 er = 0;
 	    for( ;; )
 	    {
 	        cnt--;
@@ -122,12 +124,27 @@ void vTask1( void *pvParameters )
 	    		LedToggle(LED_STATUS);
 	    		cnt = gLedCnt;
 	    		//USART_SendData(USART1, 'A');
-	    	}
+	    	    if ( fl == 0 ) {
+	    		    er = eMBMasterReqWriteCoil( 1, 1, 0xFF00, (-1) );
+	    			if ( er == 0)
+	    				vTaskDelay(100 / portTICK_RATE_MS);
+	    				er = eMBMasterReqWriteCoil( 1, 4, 0xFF00, (-1) );
+	    			if ( er != 0)
+	    				    			    	    			    	gLedCnt = 2;
+	    			    er = eMBMasterReqWriteCoil( 1, 3, 0xFF00, (-1) );
+	    			    if ( er != 0)
+	    			    	    			    	gLedCnt = 2;
+	    			    er = eMBMasterReqWriteCoil( 1, 2, 0xFF00, (-1) );
+	    			    	    			    if ( er != 0)
+	    			    	    			    	    			    	gLedCnt = 2;
+	    			    fl = 1;
+	    			}
+	        }
 
     	//ValidatorPulseProcessing(5 / portTICK_RATE_MS);
     	//ButtonSkan(5 / portTICK_RATE_MS);
-	    	 eMBMasterReqWriteCoil( 10, 101, 0xFF00, (1) );
-        vTaskDelay(50 / portTICK_RATE_MS);
+
+        vTaskDelay(100 / portTICK_RATE_MS);
     }
 
     vTaskDelete (NULL);
@@ -150,7 +167,7 @@ void vTask2( void *pvParameters )
 	uint16_t errorCount = 0;
 
 	//eStatus = eMBInit( MB_RTU, 10, UART1, 19200, 0 );
-	vMBMasterSetDestAddress( 10 );
+	//vMBMasterSetDestAddress( 1 );
 	eStatus = eMBMasterInit(MB_RTU, UART1, 19200,  MB_PAR_NONE);
 
 	/* Enable the Modbus Protocol Stack. */
@@ -166,7 +183,7 @@ void vTask2( void *pvParameters )
 	USHORT  usModbusUserData[253];
 	usModbusUserData[1] = 10;
 
-
+	//eMBMasterReqWriteCoil( 1, 1, 0xFF00, (-1) );
 
     for( ;; )
     {
@@ -186,7 +203,7 @@ void vTask2( void *pvParameters )
     	//usSRegInBuf[2] = 44;
 
     	//errorCode = eMBMasterReqReadInputRegister(10,100,4, (-1));
-    	//errorCode = eMBMasterReqWriteCoil( 10, 100, 0xFF00, (1) );
+
     	if (errorCode != MB_MRE_NO_ERR) {
     	    errorCount++;
     	}

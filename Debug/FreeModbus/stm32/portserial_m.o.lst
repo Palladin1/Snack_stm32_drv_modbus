@@ -391,9 +391,9 @@
  263              		.loc 1 133 0
  264 00ea 0023     		movs	r3, #0
  265 00ec 7B72     		strb	r3, [r7, #9]
- 134:../FreeModbus/stm32/portserial_m.c **** 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
+ 134:../FreeModbus/stm32/portserial_m.c **** 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
  266              		.loc 1 134 0
- 267 00ee 0123     		movs	r3, #1
+ 267 00ee 0023     		movs	r3, #0
  268 00f0 BB72     		strb	r3, [r7, #10]
  135:../FreeModbus/stm32/portserial_m.c **** 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
  269              		.loc 1 135 0
@@ -680,22 +680,22 @@
  494              		.file 9 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/core_cm3.h"
 DEFINED SYMBOLS
                             *ABS*:00000000 portserial_m.c
-C:\Users\Alex\AppData\Local\Temp\ccZCubLP.s:19     .text.vMBMasterPortSerialEnable:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\ccZCubLP.s:24     .text.vMBMasterPortSerialEnable:00000000 vMBMasterPortSerialEnable
-C:\Users\Alex\AppData\Local\Temp\ccZCubLP.s:90     .text.vMBMasterPortClose:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\ccZCubLP.s:95     .text.vMBMasterPortClose:00000000 vMBMasterPortClose
-C:\Users\Alex\AppData\Local\Temp\ccZCubLP.s:124    .text.xMBMasterPortSerialInit:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\ccZCubLP.s:129    .text.xMBMasterPortSerialInit:00000000 xMBMasterPortSerialInit
-C:\Users\Alex\AppData\Local\Temp\ccZCubLP.s:291    .text.xMBMasterPortSerialPutByte:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\ccZCubLP.s:296    .text.xMBMasterPortSerialPutByte:00000000 xMBMasterPortSerialPutByte
-C:\Users\Alex\AppData\Local\Temp\ccZCubLP.s:331    .text.xMBMasterPortSerialGetByte:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\ccZCubLP.s:336    .text.xMBMasterPortSerialGetByte:00000000 xMBMasterPortSerialGetByte
-C:\Users\Alex\AppData\Local\Temp\ccZCubLP.s:371    .text.prvvUARTTxReadyISR:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\ccZCubLP.s:375    .text.prvvUARTTxReadyISR:00000000 prvvUARTTxReadyISR
-C:\Users\Alex\AppData\Local\Temp\ccZCubLP.s:398    .text.prvvUARTRxISR:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\ccZCubLP.s:402    .text.prvvUARTRxISR:00000000 prvvUARTRxISR
-C:\Users\Alex\AppData\Local\Temp\ccZCubLP.s:425    .text.USART1_IRQHandler:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\ccZCubLP.s:430    .text.USART1_IRQHandler:00000000 USART1_IRQHandler
+C:\Users\Alex\AppData\Local\Temp\ccTLXs6d.s:19     .text.vMBMasterPortSerialEnable:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccTLXs6d.s:24     .text.vMBMasterPortSerialEnable:00000000 vMBMasterPortSerialEnable
+C:\Users\Alex\AppData\Local\Temp\ccTLXs6d.s:90     .text.vMBMasterPortClose:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccTLXs6d.s:95     .text.vMBMasterPortClose:00000000 vMBMasterPortClose
+C:\Users\Alex\AppData\Local\Temp\ccTLXs6d.s:124    .text.xMBMasterPortSerialInit:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccTLXs6d.s:129    .text.xMBMasterPortSerialInit:00000000 xMBMasterPortSerialInit
+C:\Users\Alex\AppData\Local\Temp\ccTLXs6d.s:291    .text.xMBMasterPortSerialPutByte:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccTLXs6d.s:296    .text.xMBMasterPortSerialPutByte:00000000 xMBMasterPortSerialPutByte
+C:\Users\Alex\AppData\Local\Temp\ccTLXs6d.s:331    .text.xMBMasterPortSerialGetByte:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccTLXs6d.s:336    .text.xMBMasterPortSerialGetByte:00000000 xMBMasterPortSerialGetByte
+C:\Users\Alex\AppData\Local\Temp\ccTLXs6d.s:371    .text.prvvUARTTxReadyISR:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccTLXs6d.s:375    .text.prvvUARTTxReadyISR:00000000 prvvUARTTxReadyISR
+C:\Users\Alex\AppData\Local\Temp\ccTLXs6d.s:398    .text.prvvUARTRxISR:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccTLXs6d.s:402    .text.prvvUARTRxISR:00000000 prvvUARTRxISR
+C:\Users\Alex\AppData\Local\Temp\ccTLXs6d.s:425    .text.USART1_IRQHandler:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccTLXs6d.s:430    .text.USART1_IRQHandler:00000000 USART1_IRQHandler
                      .debug_frame:00000010 $d
                            .group:00000000 wm4.1.98ffea2db242cfdb58f411f7407f2b59
                            .group:00000000 wm4.stm32f10x_conf.h.2.f1a8c33f0a763aeef696fee38b2b2dbc
@@ -714,7 +714,7 @@ C:\Users\Alex\AppData\Local\Temp\ccZCubLP.s:430    .text.USART1_IRQHandler:00000
                            .group:00000000 wm4.stm32f10x.h.8304.f7d8ad90959e99679b3257267c3aadfe
                            .group:00000000 wm4.stm32f10x_rcc.h.25.fe8897e7491f2eb0cff54551d08eb765
                            .group:00000000 wm4.portmacro.h.56.a47bdd86bc36d334ca6056492e2d709f
-                           .group:00000000 wm4.port.h.38.e5d12e3086604499e6922efe9c85cac5
+                           .group:00000000 wm4.port.h.38.a8cf679bb58c5ad1b387e726c220530e
                            .group:00000000 wm4.mbproto.h.32.da85c2bdd9bdb84e975a92c999a4b490
                            .group:00000000 wm4.stm32f10x_usart.h.25.29629c699b65db3f3efd3561f66b0bf6
                            .group:00000000 wm4.stm32f10x_gpio.h.25.80c981af0e637567395034c576cfb3ce

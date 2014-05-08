@@ -36,7 +36,7 @@ DEFINED SYMBOLS
                            .group:00000000 wm4.stm32f10x.h.8304.f7d8ad90959e99679b3257267c3aadfe
                            .group:00000000 wm4.stm32f10x_rcc.h.25.fe8897e7491f2eb0cff54551d08eb765
                            .group:00000000 wm4.portmacro.h.56.a47bdd86bc36d334ca6056492e2d709f
-                           .group:00000000 wm4.port.h.38.e5d12e3086604499e6922efe9c85cac5
+                           .group:00000000 wm4.port.h.38.a8cf679bb58c5ad1b387e726c220530e
                            .group:00000000 wm4.mbproto.h.32.da85c2bdd9bdb84e975a92c999a4b490
                            .group:00000000 wm4.stm32f10x_usart.h.25.29629c699b65db3f3efd3561f66b0bf6
                            .group:00000000 wm4.stm32f10x_gpio.h.25.80c981af0e637567395034c576cfb3ce

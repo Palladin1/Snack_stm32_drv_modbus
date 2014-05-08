@@ -327,8 +327,8 @@
  204              		.file 6 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/core_cm3.h"
 DEFINED SYMBOLS
                             *ABS*:00000000 mbfuncdisc.c
-C:\Users\Alex\AppData\Local\Temp\ccb9KrJc.s:19     .text.eMBFuncReadDiscreteInputs:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\ccb9KrJc.s:24     .text.eMBFuncReadDiscreteInputs:00000000 eMBFuncReadDiscreteInputs
+C:\Users\Alex\AppData\Local\Temp\ccqSoO6o.s:19     .text.eMBFuncReadDiscreteInputs:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccqSoO6o.s:24     .text.eMBFuncReadDiscreteInputs:00000000 eMBFuncReadDiscreteInputs
                      .debug_frame:00000010 $d
                            .group:00000000 wm4.1.98ffea2db242cfdb58f411f7407f2b59
                            .group:00000000 wm4.newlib.h.8.384a112feabb3bef7b573ae48cde2e3b
@@ -361,7 +361,7 @@ C:\Users\Alex\AppData\Local\Temp\ccb9KrJc.s:24     .text.eMBFuncReadDiscreteInpu
                            .group:00000000 wm4.stm32f10x.h.8304.f7d8ad90959e99679b3257267c3aadfe
                            .group:00000000 wm4.stm32f10x_rcc.h.25.fe8897e7491f2eb0cff54551d08eb765
                            .group:00000000 wm4.portmacro.h.56.a47bdd86bc36d334ca6056492e2d709f
-                           .group:00000000 wm4.port.h.38.e5d12e3086604499e6922efe9c85cac5
+                           .group:00000000 wm4.port.h.38.a8cf679bb58c5ad1b387e726c220530e
                            .group:00000000 wm4.mbproto.h.32.da85c2bdd9bdb84e975a92c999a4b490
                            .group:00000000 wm4.mbframe.h.32.cb3fc2a5a44fcaf8fe721dce49a4ba3c
 

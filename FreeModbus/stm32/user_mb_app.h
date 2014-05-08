@@ -34,9 +34,9 @@
 
 #define M_DISCRETE_INPUT_START        0//0
 #define M_DISCRETE_INPUT_NDISCRETES   0//16
-#define M_COIL_START                  100//0
+#define M_COIL_START                  0//0
 #define M_COIL_NCOILS                 4//64
-#define M_REG_INPUT_START             100//0
+#define M_REG_INPUT_START             0//0
 #define M_REG_INPUT_NREGS             4//100
 #define M_REG_HOLDING_START           0//0
 #define M_REG_HOLDING_NREGS           0//100

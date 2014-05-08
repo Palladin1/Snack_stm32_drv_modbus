@@ -92,19 +92,19 @@
   51 0006 0346     		mov	r3, r0
   52 0008 FB80     		strh	r3, [r7, #6]	@ movhi
   47:../FreeModbus/stm32/porttimer_m.c **** 	NVIC_InitTypeDef NVIC_InitStructure;
-  48:../FreeModbus/stm32/porttimer_m.c **** 	//====================================ʱ�ӳ�ʼ��===========================
-  49:../FreeModbus/stm32/porttimer_m.c **** 	//ʹ�ܶ�ʱ��2ʱ��
+  48:../FreeModbus/stm32/porttimer_m.c **** 	//====================================К±ЦУіхКј»Ї===========================
+  49:../FreeModbus/stm32/porttimer_m.c **** 	//К№ДЬ¶ЁК±Жч2К±ЦУ
   50:../FreeModbus/stm32/porttimer_m.c **** 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
   53              		.loc 1 50 0
   54 000a 0120     		movs	r0, #1
   55 000c 0121     		movs	r1, #1
   56 000e FFF7FEFF 		bl	RCC_APB1PeriphClockCmd
-  51:../FreeModbus/stm32/porttimer_m.c **** 	//====================================��ʱ����ʼ��===========================
-  52:../FreeModbus/stm32/porttimer_m.c **** 	//��ʱ��ʱ�������˵��
-  53:../FreeModbus/stm32/porttimer_m.c **** 	//HCLKΪ72MHz��APB1����2��ƵΪ36MHz
-  54:../FreeModbus/stm32/porttimer_m.c **** 	//TIM2��ʱ�ӱ�Ƶ��Ϊ72MHz��Ӳ���Զ���Ƶ,�ﵽ���
-  55:../FreeModbus/stm32/porttimer_m.c **** 	//TIM2�ķ�Ƶϵ��Ϊ3599��ʱ���Ƶ��Ϊ72 / (1 + Prescaler) = 20KHz,��׼Ϊ50us
-  56:../FreeModbus/stm32/porttimer_m.c **** 	//TIM������ֵΪusTim1Timerout50u	
+  51:../FreeModbus/stm32/porttimer_m.c **** 	//====================================¶ЁК±ЖчіхКј»Ї===========================
+  52:../FreeModbus/stm32/porttimer_m.c **** 	//¶ЁК±ЖчК±јд»щЕдЦГЛµГч
+  53:../FreeModbus/stm32/porttimer_m.c **** 	//HCLKОЄ72MHzЈ¬APB1ѕ­№э2·ЦЖµОЄ36MHz
+  54:../FreeModbus/stm32/porttimer_m.c **** 	//TIM2µДК±ЦУ±¶ЖµєуОЄ72MHzЈЁУІјюЧФ¶Ї±¶Жµ,ґпµЅЧоґуЈ©
+  55:../FreeModbus/stm32/porttimer_m.c **** 	//TIM2µД·ЦЖµПµКэОЄ3599Ј¬К±јд»щЖµВКОЄ72 / (1 + Prescaler) = 20KHz,»щЧ�
+  56:../FreeModbus/stm32/porttimer_m.c **** 	//TIMЧоґујЖКэЦµОЄusTim1Timerout50u	
   57:../FreeModbus/stm32/porttimer_m.c **** 	usPrescalerValue = (uint16_t) (SystemCoreClock / 20000) - 1;
   57              		.loc 1 57 0
   58 0012 40F20003 		movw	r3, #:lower16:SystemCoreClock
@@ -120,22 +120,22 @@
   68 0030 40F20003 		movw	r3, #:lower16:usPrescalerValue
   69 0034 C0F20003 		movt	r3, #:upper16:usPrescalerValue
   70 0038 1A80     		strh	r2, [r3]	@ movhi
-  58:../FreeModbus/stm32/porttimer_m.c **** 	//����T35��ʱ������ֵ
-  59:../FreeModbus/stm32/porttimer_m.c **** 	usT35TimeOut50us = usTimeOut50us; 
+  58:../FreeModbus/stm32/porttimer_m.c **** 	//±ЈґжT35¶ЁК±ЖчјЖКэЦµ
+  59:../FreeModbus/stm32/porttimer_m.c **** 	usT35TimeOut50us = usTimeOut50us;
   71              		.loc 1 59 0
   72 003a 40F20003 		movw	r3, #:lower16:usT35TimeOut50us
   73 003e C0F20003 		movt	r3, #:upper16:usT35TimeOut50us
   74 0042 FA88     		ldrh	r2, [r7, #6]	@ movhi
   75 0044 1A80     		strh	r2, [r3]	@ movhi
   60:../FreeModbus/stm32/porttimer_m.c **** 
-  61:../FreeModbus/stm32/porttimer_m.c **** 	//Ԥװ��ʹ��
+  61:../FreeModbus/stm32/porttimer_m.c **** 	//Ф¤Ч°ФШК№ДЬ
   62:../FreeModbus/stm32/porttimer_m.c **** 	TIM_ARRPreloadConfig(TIM2, ENABLE);
   76              		.loc 1 62 0
   77 0046 4FF08040 		mov	r0, #1073741824
   78 004a 0121     		movs	r1, #1
   79 004c FFF7FEFF 		bl	TIM_ARRPreloadConfig
-  63:../FreeModbus/stm32/porttimer_m.c **** 	//====================================�жϳ�ʼ��===========================
-  64:../FreeModbus/stm32/porttimer_m.c **** 	//����NVIC���ȼ�����ΪGroup2��0-3��ռʽ���ȼ���0-3����Ӧʽ���ȼ�
+  63:../FreeModbus/stm32/porttimer_m.c **** 	//====================================ЦР¶ПіхКј»Ї===========================
+  64:../FreeModbus/stm32/porttimer_m.c **** 	//ЙиЦГNVICУЕПИј¶·ЦЧйОЄGroup2Јє0-3ЗАХјКЅУЕПИј¶Ј¬0-3µДПмУ¦КЅ
   65:../FreeModbus/stm32/porttimer_m.c **** 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
   80              		.loc 1 65 0
   81 0050 4FF4A060 		mov	r0, #1280
@@ -148,9 +148,9 @@
   86              		.loc 1 67 0
   87 005c 0123     		movs	r3, #1
   88 005e 7B73     		strb	r3, [r7, #13]
-  68:../FreeModbus/stm32/porttimer_m.c **** 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
+  68:../FreeModbus/stm32/porttimer_m.c **** 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
   89              		.loc 1 68 0
-  90 0060 0123     		movs	r3, #1
+  90 0060 0023     		movs	r3, #0
   91 0062 BB73     		strb	r3, [r7, #14]
   69:../FreeModbus/stm32/porttimer_m.c **** 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
   92              		.loc 1 69 0
@@ -161,20 +161,20 @@
   96 0068 07F10C03 		add	r3, r7, #12
   97 006c 1846     		mov	r0, r3
   98 006e FFF7FEFF 		bl	NVIC_Init
-  71:../FreeModbus/stm32/porttimer_m.c **** 	//�������жϱ�־λ
+  71:../FreeModbus/stm32/porttimer_m.c **** 	//ЗеіэТзіцЦР¶П±кЦѕО»
   72:../FreeModbus/stm32/porttimer_m.c **** 	TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
   99              		.loc 1 72 0
  100 0072 4FF08040 		mov	r0, #1073741824
  101 0076 0121     		movs	r1, #1
  102 0078 FFF7FEFF 		bl	TIM_ClearITPendingBit
-  73:../FreeModbus/stm32/porttimer_m.c **** 	//��ʱ��3����жϹر�
+  73:../FreeModbus/stm32/porttimer_m.c **** 	//¶ЁК±Жч3ТзіцЦР¶П№Ш±Х
   74:../FreeModbus/stm32/porttimer_m.c **** 	TIM_ITConfig(TIM2, TIM_IT_Update, DISABLE);
  103              		.loc 1 74 0
  104 007c 4FF08040 		mov	r0, #1073741824
  105 0080 0121     		movs	r1, #1
  106 0082 0022     		movs	r2, #0
  107 0084 FFF7FEFF 		bl	TIM_ITConfig
-  75:../FreeModbus/stm32/porttimer_m.c **** 	//��ʱ��3����
+  75:../FreeModbus/stm32/porttimer_m.c **** 	//¶ЁК±Жч3ЅыДЬ
   76:../FreeModbus/stm32/porttimer_m.c **** 	TIM_Cmd(TIM2, DISABLE);
  108              		.loc 1 76 0
  109 0088 4FF08040 		mov	r0, #1073741824
@@ -558,13 +558,13 @@
  421 0020 002B     		cmp	r3, #0
  422 0022 0BD0     		beq	.L8
  155:../FreeModbus/stm32/porttimer_m.c **** 	{
- 156:../FreeModbus/stm32/porttimer_m.c **** 		
- 157:../FreeModbus/stm32/porttimer_m.c **** 		TIM_ClearFlag(TIM2, TIM_FLAG_Update);	     //���жϱ��
+ 156:../FreeModbus/stm32/porttimer_m.c **** 
+ 157:../FreeModbus/stm32/porttimer_m.c **** 		TIM_ClearFlag(TIM2, TIM_FLAG_Update);	     //���жϱ���
  423              		.loc 1 157 0
  424 0024 4FF08040 		mov	r0, #1073741824
  425 0028 0121     		movs	r1, #1
  426 002a FFF7FEFF 		bl	TIM_ClearFlag
- 158:../FreeModbus/stm32/porttimer_m.c **** 		TIM_ClearITPendingBit(TIM2, TIM_IT_Update);	 //�����ʱ��TIM2����жϱ�־λ
+ 158:../FreeModbus/stm32/porttimer_m.c **** 		TIM_ClearITPendingBit(TIM2, TIM_IT_Update);	 //������ʱ��TIM2�����жϱ�
  427              		.loc 1 158 0
  428 002e 4FF08040 		mov	r0, #1073741824
  429 0032 0121     		movs	r1, #1
@@ -592,24 +592,24 @@
  449              		.file 10 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\include/mbport.h"
 DEFINED SYMBOLS
                             *ABS*:00000000 porttimer_m.c
-C:\Users\Alex\AppData\Local\Temp\cc4l4gEB.s:19     .bss.usT35TimeOut50us:00000000 $d
-C:\Users\Alex\AppData\Local\Temp\cc4l4gEB.s:22     .bss.usT35TimeOut50us:00000000 usT35TimeOut50us
-C:\Users\Alex\AppData\Local\Temp\cc4l4gEB.s:25     .bss.usPrescalerValue:00000000 $d
-C:\Users\Alex\AppData\Local\Temp\cc4l4gEB.s:28     .bss.usPrescalerValue:00000000 usPrescalerValue
-C:\Users\Alex\AppData\Local\Temp\cc4l4gEB.s:31     .text.xMBMasterPortTimersInit:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cc4l4gEB.s:36     .text.xMBMasterPortTimersInit:00000000 xMBMasterPortTimersInit
-C:\Users\Alex\AppData\Local\Temp\cc4l4gEB.s:124    .text.vMBMasterPortTimersT35Enable:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cc4l4gEB.s:129    .text.vMBMasterPortTimersT35Enable:00000000 vMBMasterPortTimersT35Enable
-C:\Users\Alex\AppData\Local\Temp\cc4l4gEB.s:193    .text.vMBMasterPortTimersConvertDelayEnable:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cc4l4gEB.s:198    .text.vMBMasterPortTimersConvertDelayEnable:00000000 vMBMasterPortTimersConvertDelayEnable
-C:\Users\Alex\AppData\Local\Temp\cc4l4gEB.s:260    .text.vMBMasterPortTimersRespondTimeoutEnable:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cc4l4gEB.s:265    .text.vMBMasterPortTimersRespondTimeoutEnable:00000000 vMBMasterPortTimersRespondTimeoutEnable
-C:\Users\Alex\AppData\Local\Temp\cc4l4gEB.s:327    .text.vMBMasterPortTimersDisable:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cc4l4gEB.s:332    .text.vMBMasterPortTimersDisable:00000000 vMBMasterPortTimersDisable
-C:\Users\Alex\AppData\Local\Temp\cc4l4gEB.s:367    .text.prvvTIMERExpiredISR:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cc4l4gEB.s:371    .text.prvvTIMERExpiredISR:00000000 prvvTIMERExpiredISR
-C:\Users\Alex\AppData\Local\Temp\cc4l4gEB.s:394    .text.TIM2_IRQHandler:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cc4l4gEB.s:399    .text.TIM2_IRQHandler:00000000 TIM2_IRQHandler
+C:\Users\Alex\AppData\Local\Temp\ccGU8sdo.s:19     .bss.usT35TimeOut50us:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccGU8sdo.s:22     .bss.usT35TimeOut50us:00000000 usT35TimeOut50us
+C:\Users\Alex\AppData\Local\Temp\ccGU8sdo.s:25     .bss.usPrescalerValue:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccGU8sdo.s:28     .bss.usPrescalerValue:00000000 usPrescalerValue
+C:\Users\Alex\AppData\Local\Temp\ccGU8sdo.s:31     .text.xMBMasterPortTimersInit:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccGU8sdo.s:36     .text.xMBMasterPortTimersInit:00000000 xMBMasterPortTimersInit
+C:\Users\Alex\AppData\Local\Temp\ccGU8sdo.s:124    .text.vMBMasterPortTimersT35Enable:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccGU8sdo.s:129    .text.vMBMasterPortTimersT35Enable:00000000 vMBMasterPortTimersT35Enable
+C:\Users\Alex\AppData\Local\Temp\ccGU8sdo.s:193    .text.vMBMasterPortTimersConvertDelayEnable:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccGU8sdo.s:198    .text.vMBMasterPortTimersConvertDelayEnable:00000000 vMBMasterPortTimersConvertDelayEnable
+C:\Users\Alex\AppData\Local\Temp\ccGU8sdo.s:260    .text.vMBMasterPortTimersRespondTimeoutEnable:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccGU8sdo.s:265    .text.vMBMasterPortTimersRespondTimeoutEnable:00000000 vMBMasterPortTimersRespondTimeoutEnable
+C:\Users\Alex\AppData\Local\Temp\ccGU8sdo.s:327    .text.vMBMasterPortTimersDisable:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccGU8sdo.s:332    .text.vMBMasterPortTimersDisable:00000000 vMBMasterPortTimersDisable
+C:\Users\Alex\AppData\Local\Temp\ccGU8sdo.s:367    .text.prvvTIMERExpiredISR:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccGU8sdo.s:371    .text.prvvTIMERExpiredISR:00000000 prvvTIMERExpiredISR
+C:\Users\Alex\AppData\Local\Temp\ccGU8sdo.s:394    .text.TIM2_IRQHandler:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccGU8sdo.s:399    .text.TIM2_IRQHandler:00000000 TIM2_IRQHandler
                      .debug_frame:00000010 $d
                            .group:00000000 wm4.1.98ffea2db242cfdb58f411f7407f2b59
                            .group:00000000 wm4.stm32f10x_conf.h.2.f1a8c33f0a763aeef696fee38b2b2dbc
@@ -628,7 +628,7 @@ C:\Users\Alex\AppData\Local\Temp\cc4l4gEB.s:399    .text.TIM2_IRQHandler:0000000
                            .group:00000000 wm4.stm32f10x.h.8304.f7d8ad90959e99679b3257267c3aadfe
                            .group:00000000 wm4.stm32f10x_rcc.h.25.fe8897e7491f2eb0cff54551d08eb765
                            .group:00000000 wm4.portmacro.h.56.a47bdd86bc36d334ca6056492e2d709f
-                           .group:00000000 wm4.port.h.38.e5d12e3086604499e6922efe9c85cac5
+                           .group:00000000 wm4.port.h.38.a8cf679bb58c5ad1b387e726c220530e
                            .group:00000000 wm4.mbproto.h.32.da85c2bdd9bdb84e975a92c999a4b490
                            .group:00000000 wm4.mb_m.h.32.f0c90bdd8de56a09521e2eefafb4f11f
                            .group:00000000 wm4.stm32f10x_tim.h.25.21c6ec062f1e74898cb96a57da276fec

@@ -226,7 +226,7 @@
  111 0080 FFF7FEFF 		bl	vMBMasterSetPDUSndLength
  117:../FreeModbus/functions/mbfuncholding_m.c **** 		( void ) xMBMasterPortEventPost( EV_MASTER_FRAME_SENT );
  112              		.loc 1 117 0
- 113 0084 0320     		movs	r0, #3
+ 113 0084 0820     		movs	r0, #8
  114 0086 FFF7FEFF 		bl	xMBMasterPortEventPost
  118:../FreeModbus/functions/mbfuncholding_m.c **** 		eErrStatus = eMBMasterWaitRequestFinish( );
  115              		.loc 1 118 0
@@ -554,7 +554,7 @@
  364 00dc FFF7FEFF 		bl	vMBMasterSetPDUSndLength
  195:../FreeModbus/functions/mbfuncholding_m.c **** 		( void ) xMBMasterPortEventPost( EV_MASTER_FRAME_SENT );
  365              		.loc 1 195 0
- 366 00e0 0320     		movs	r0, #3
+ 366 00e0 0820     		movs	r0, #8
  367 00e2 FFF7FEFF 		bl	xMBMasterPortEventPost
  196:../FreeModbus/functions/mbfuncholding_m.c **** 		eErrStatus = eMBMasterWaitRequestFinish( );
  368              		.loc 1 196 0
@@ -883,7 +883,7 @@
  607 0080 FFF7FEFF 		bl	vMBMasterSetPDUSndLength
  282:../FreeModbus/functions/mbfuncholding_m.c **** 		( void ) xMBMasterPortEventPost( EV_MASTER_FRAME_SENT );
  608              		.loc 1 282 0
- 609 0084 0320     		movs	r0, #3
+ 609 0084 0820     		movs	r0, #8
  610 0086 FFF7FEFF 		bl	xMBMasterPortEventPost
  283:../FreeModbus/functions/mbfuncholding_m.c **** 		eErrStatus = eMBMasterWaitRequestFinish( );
  611              		.loc 1 283 0
@@ -1318,7 +1318,7 @@
  937 010c FFF7FEFF 		bl	vMBMasterSetPDUSndLength
  388:../FreeModbus/functions/mbfuncholding_m.c **** 		( void ) xMBMasterPortEventPost( EV_MASTER_FRAME_SENT );
  938              		.loc 1 388 0
- 939 0110 0320     		movs	r0, #3
+ 939 0110 0820     		movs	r0, #8
  940 0112 FFF7FEFF 		bl	xMBMasterPortEventPost
  389:../FreeModbus/functions/mbfuncholding_m.c **** 		eErrStatus = eMBMasterWaitRequestFinish( );
  941              		.loc 1 389 0
@@ -1579,22 +1579,22 @@
  1137              		.file 8 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/core_cm3.h"
 DEFINED SYMBOLS
                             *ABS*:00000000 mbfuncholding_m.c
-C:\Users\Alex\AppData\Local\Temp\cc32Nree.s:19     .text.eMBMasterReqWriteHoldingRegister:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cc32Nree.s:24     .text.eMBMasterReqWriteHoldingRegister:00000000 eMBMasterReqWriteHoldingRegister
-C:\Users\Alex\AppData\Local\Temp\cc32Nree.s:132    .text.eMBMasterFuncWriteHoldingRegister:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cc32Nree.s:137    .text.eMBMasterFuncWriteHoldingRegister:00000000 eMBMasterFuncWriteHoldingRegister
-C:\Users\Alex\AppData\Local\Temp\cc32Nree.s:218    .text.eMBMasterReqWriteMultipleHoldingRegister:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cc32Nree.s:223    .text.eMBMasterReqWriteMultipleHoldingRegister:00000000 eMBMasterReqWriteMultipleHoldingRegister
-C:\Users\Alex\AppData\Local\Temp\cc32Nree.s:385    .text.eMBMasterFuncWriteMultipleHoldingRegister:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cc32Nree.s:390    .text.eMBMasterFuncWriteMultipleHoldingRegister:00000000 eMBMasterFuncWriteMultipleHoldingRegister
-C:\Users\Alex\AppData\Local\Temp\cc32Nree.s:516    .text.eMBMasterReqReadHoldingRegister:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cc32Nree.s:521    .text.eMBMasterReqReadHoldingRegister:00000000 eMBMasterReqReadHoldingRegister
-C:\Users\Alex\AppData\Local\Temp\cc32Nree.s:628    .text.eMBMasterFuncReadHoldingRegister:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cc32Nree.s:633    .text.eMBMasterFuncReadHoldingRegister:00000000 eMBMasterFuncReadHoldingRegister
-C:\Users\Alex\AppData\Local\Temp\cc32Nree.s:763    .text.eMBMasterReqReadWriteMultipleHoldingRegister:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cc32Nree.s:768    .text.eMBMasterReqReadWriteMultipleHoldingRegister:00000000 eMBMasterReqReadWriteMultipleHoldingRegister
-C:\Users\Alex\AppData\Local\Temp\cc32Nree.s:958    .text.eMBMasterFuncReadWriteMultipleHoldingRegister:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cc32Nree.s:963    .text.eMBMasterFuncReadWriteMultipleHoldingRegister:00000000 eMBMasterFuncReadWriteMultipleHoldingRegister
+C:\Users\Alex\AppData\Local\Temp\ccdBRZpU.s:19     .text.eMBMasterReqWriteHoldingRegister:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccdBRZpU.s:24     .text.eMBMasterReqWriteHoldingRegister:00000000 eMBMasterReqWriteHoldingRegister
+C:\Users\Alex\AppData\Local\Temp\ccdBRZpU.s:132    .text.eMBMasterFuncWriteHoldingRegister:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccdBRZpU.s:137    .text.eMBMasterFuncWriteHoldingRegister:00000000 eMBMasterFuncWriteHoldingRegister
+C:\Users\Alex\AppData\Local\Temp\ccdBRZpU.s:218    .text.eMBMasterReqWriteMultipleHoldingRegister:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccdBRZpU.s:223    .text.eMBMasterReqWriteMultipleHoldingRegister:00000000 eMBMasterReqWriteMultipleHoldingRegister
+C:\Users\Alex\AppData\Local\Temp\ccdBRZpU.s:385    .text.eMBMasterFuncWriteMultipleHoldingRegister:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccdBRZpU.s:390    .text.eMBMasterFuncWriteMultipleHoldingRegister:00000000 eMBMasterFuncWriteMultipleHoldingRegister
+C:\Users\Alex\AppData\Local\Temp\ccdBRZpU.s:516    .text.eMBMasterReqReadHoldingRegister:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccdBRZpU.s:521    .text.eMBMasterReqReadHoldingRegister:00000000 eMBMasterReqReadHoldingRegister
+C:\Users\Alex\AppData\Local\Temp\ccdBRZpU.s:628    .text.eMBMasterFuncReadHoldingRegister:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccdBRZpU.s:633    .text.eMBMasterFuncReadHoldingRegister:00000000 eMBMasterFuncReadHoldingRegister
+C:\Users\Alex\AppData\Local\Temp\ccdBRZpU.s:763    .text.eMBMasterReqReadWriteMultipleHoldingRegister:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccdBRZpU.s:768    .text.eMBMasterReqReadWriteMultipleHoldingRegister:00000000 eMBMasterReqReadWriteMultipleHoldingRegister
+C:\Users\Alex\AppData\Local\Temp\ccdBRZpU.s:958    .text.eMBMasterFuncReadWriteMultipleHoldingRegister:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccdBRZpU.s:963    .text.eMBMasterFuncReadWriteMultipleHoldingRegister:00000000 eMBMasterFuncReadWriteMultipleHoldingRegister
                      .debug_frame:00000010 $d
                            .group:00000000 wm4.1.98ffea2db242cfdb58f411f7407f2b59
                            .group:00000000 wm4.newlib.h.8.384a112feabb3bef7b573ae48cde2e3b
@@ -1627,7 +1627,7 @@ C:\Users\Alex\AppData\Local\Temp\cc32Nree.s:963    .text.eMBMasterFuncReadWriteM
                            .group:00000000 wm4.stm32f10x.h.8304.f7d8ad90959e99679b3257267c3aadfe
                            .group:00000000 wm4.stm32f10x_rcc.h.25.fe8897e7491f2eb0cff54551d08eb765
                            .group:00000000 wm4.portmacro.h.56.a47bdd86bc36d334ca6056492e2d709f
-                           .group:00000000 wm4.port.h.38.e5d12e3086604499e6922efe9c85cac5
+                           .group:00000000 wm4.port.h.38.a8cf679bb58c5ad1b387e726c220530e
                            .group:00000000 wm4.mbproto.h.32.da85c2bdd9bdb84e975a92c999a4b490
                            .group:00000000 wm4.mb_m.h.32.f0c90bdd8de56a09521e2eefafb4f11f
                            .group:00000000 wm4.mbframe.h.32.cb3fc2a5a44fcaf8fe721dce49a4ba3c

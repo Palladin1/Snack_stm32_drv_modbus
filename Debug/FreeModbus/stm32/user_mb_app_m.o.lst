@@ -22,16 +22,16 @@
   24 0000 0000     		.space	2
   25              		.comm	ucMDiscInBuf,0,4
   26              		.global	usMCoilStart
-  27              		.section	.data.usMCoilStart,"aw",%progbits
+  27              		.section	.bss.usMCoilStart,"aw",%nobits
   28              		.align	1
   31              	usMCoilStart:
-  32 0000 6400     		.short	100
+  32 0000 0000     		.space	2
   33              		.comm	ucMCoilBuf,16,4
   34              		.global	usMRegInStart
-  35              		.section	.data.usMRegInStart,"aw",%progbits
+  35              		.section	.bss.usMRegInStart,"aw",%nobits
   36              		.align	1
   39              	usMRegInStart:
-  40 0000 6400     		.short	100
+  40 0000 0000     		.space	2
   41              		.comm	usMRegInBuf,128,4
   42              		.global	usMRegHoldStart
   43              		.section	.bss.usMRegHoldStart,"aw",%nobits
@@ -143,7 +143,7 @@
   87 0028 3B61     		str	r3, [r7, #16]
   66:../FreeModbus/stm32/user_mb_app_m.c **** 	REG_INPUT_START = M_REG_INPUT_START;
   88              		.loc 1 66 0
-  89 002a 6423     		movs	r3, #100
+  89 002a 0023     		movs	r3, #0
   90 002c FB73     		strb	r3, [r7, #15]
   67:../FreeModbus/stm32/user_mb_app_m.c **** 	REG_INPUT_NREGS = M_REG_INPUT_NREGS;
   91              		.loc 1 67 0
@@ -593,7 +593,7 @@
  412 0030 FB61     		str	r3, [r7, #28]
  180:../FreeModbus/stm32/user_mb_app_m.c **** 	COIL_START = M_COIL_START;
  413              		.loc 1 180 0
- 414 0032 6423     		movs	r3, #100
+ 414 0032 0023     		movs	r3, #0
  415 0034 FB76     		strb	r3, [r7, #27]
  181:../FreeModbus/stm32/user_mb_app_m.c **** 	COIL_NCOILS = M_COIL_NCOILS;
  416              		.loc 1 181 0
@@ -1078,26 +1078,26 @@
  772              		.file 5 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/core_cm3.h"
 DEFINED SYMBOLS
                             *ABS*:00000000 user_mb_app_m.c
-C:\Users\Alex\AppData\Local\Temp\cc3K1cbf.s:23     .bss.usMDiscInStart:00000000 usMDiscInStart
-C:\Users\Alex\AppData\Local\Temp\cc3K1cbf.s:20     .bss.usMDiscInStart:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\cczjqHl6.s:23     .bss.usMDiscInStart:00000000 usMDiscInStart
+C:\Users\Alex\AppData\Local\Temp\cczjqHl6.s:20     .bss.usMDiscInStart:00000000 $d
                             *COM*:00000000 ucMDiscInBuf
-C:\Users\Alex\AppData\Local\Temp\cc3K1cbf.s:31     .data.usMCoilStart:00000000 usMCoilStart
-C:\Users\Alex\AppData\Local\Temp\cc3K1cbf.s:28     .data.usMCoilStart:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\cczjqHl6.s:31     .bss.usMCoilStart:00000000 usMCoilStart
+C:\Users\Alex\AppData\Local\Temp\cczjqHl6.s:28     .bss.usMCoilStart:00000000 $d
                             *COM*:00000010 ucMCoilBuf
-C:\Users\Alex\AppData\Local\Temp\cc3K1cbf.s:39     .data.usMRegInStart:00000000 usMRegInStart
-C:\Users\Alex\AppData\Local\Temp\cc3K1cbf.s:36     .data.usMRegInStart:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\cczjqHl6.s:39     .bss.usMRegInStart:00000000 usMRegInStart
+C:\Users\Alex\AppData\Local\Temp\cczjqHl6.s:36     .bss.usMRegInStart:00000000 $d
                             *COM*:00000080 usMRegInBuf
-C:\Users\Alex\AppData\Local\Temp\cc3K1cbf.s:47     .bss.usMRegHoldStart:00000000 usMRegHoldStart
-C:\Users\Alex\AppData\Local\Temp\cc3K1cbf.s:44     .bss.usMRegHoldStart:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\cczjqHl6.s:47     .bss.usMRegHoldStart:00000000 usMRegHoldStart
+C:\Users\Alex\AppData\Local\Temp\cczjqHl6.s:44     .bss.usMRegHoldStart:00000000 $d
                             *COM*:00000000 usMRegHoldBuf
-C:\Users\Alex\AppData\Local\Temp\cc3K1cbf.s:51     .text.eMBMasterRegInputCB:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cc3K1cbf.s:56     .text.eMBMasterRegInputCB:00000000 eMBMasterRegInputCB
-C:\Users\Alex\AppData\Local\Temp\cc3K1cbf.s:188    .text.eMBMasterRegHoldingCB:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cc3K1cbf.s:193    .text.eMBMasterRegHoldingCB:00000000 eMBMasterRegHoldingCB
-C:\Users\Alex\AppData\Local\Temp\cc3K1cbf.s:372    .text.eMBMasterRegCoilsCB:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cc3K1cbf.s:377    .text.eMBMasterRegCoilsCB:00000000 eMBMasterRegCoilsCB
-C:\Users\Alex\AppData\Local\Temp\cc3K1cbf.s:605    .text.eMBMasterRegDiscreteCB:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cc3K1cbf.s:610    .text.eMBMasterRegDiscreteCB:00000000 eMBMasterRegDiscreteCB
+C:\Users\Alex\AppData\Local\Temp\cczjqHl6.s:51     .text.eMBMasterRegInputCB:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cczjqHl6.s:56     .text.eMBMasterRegInputCB:00000000 eMBMasterRegInputCB
+C:\Users\Alex\AppData\Local\Temp\cczjqHl6.s:188    .text.eMBMasterRegHoldingCB:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cczjqHl6.s:193    .text.eMBMasterRegHoldingCB:00000000 eMBMasterRegHoldingCB
+C:\Users\Alex\AppData\Local\Temp\cczjqHl6.s:372    .text.eMBMasterRegCoilsCB:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cczjqHl6.s:377    .text.eMBMasterRegCoilsCB:00000000 eMBMasterRegCoilsCB
+C:\Users\Alex\AppData\Local\Temp\cczjqHl6.s:605    .text.eMBMasterRegDiscreteCB:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cczjqHl6.s:610    .text.eMBMasterRegDiscreteCB:00000000 eMBMasterRegDiscreteCB
                      .debug_frame:00000010 $d
                            .group:00000000 wm4.1.98ffea2db242cfdb58f411f7407f2b59
                            .group:00000000 wm4.stm32f10x_conf.h.2.f1a8c33f0a763aeef696fee38b2b2dbc
@@ -1116,11 +1116,11 @@ C:\Users\Alex\AppData\Local\Temp\cc3K1cbf.s:610    .text.eMBMasterRegDiscreteCB:
                            .group:00000000 wm4.stm32f10x.h.8304.f7d8ad90959e99679b3257267c3aadfe
                            .group:00000000 wm4.stm32f10x_rcc.h.25.fe8897e7491f2eb0cff54551d08eb765
                            .group:00000000 wm4.portmacro.h.56.a47bdd86bc36d334ca6056492e2d709f
-                           .group:00000000 wm4.port.h.38.e5d12e3086604499e6922efe9c85cac5
+                           .group:00000000 wm4.port.h.38.a8cf679bb58c5ad1b387e726c220530e
                            .group:00000000 wm4.mbproto.h.32.da85c2bdd9bdb84e975a92c999a4b490
                            .group:00000000 wm4.mb_m.h.32.f0c90bdd8de56a09521e2eefafb4f11f
                            .group:00000000 wm4.mbframe.h.32.cb3fc2a5a44fcaf8fe721dce49a4ba3c
-                           .group:00000000 wm4.user_mb_app.h.11.cae72fa3d3ec9569736e008ed9cb240c
+                           .group:00000000 wm4.user_mb_app.h.11.96b8d37bcfd7b0faa6253a624dac5430
 
 UNDEFINED SYMBOLS
 ucMBMasterGetDestAddress

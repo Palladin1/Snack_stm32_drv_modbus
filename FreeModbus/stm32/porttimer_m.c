@@ -45,34 +45,34 @@ static void prvvTIMERExpiredISR(void);
 BOOL xMBMasterPortTimersInit(USHORT usTimeOut50us)
 {
 	NVIC_InitTypeDef NVIC_InitStructure;
-	//====================================ʱ�ӳ�ʼ��===========================
-	//ʹ�ܶ�ʱ��2ʱ��
+	//====================================К±ЦУіхКј»Ї===========================
+	//К№ДЬ¶ЁК±Жч2К±ЦУ
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
-	//====================================��ʱ����ʼ��===========================
-	//��ʱ��ʱ�������˵��
-	//HCLKΪ72MHz��APB1����2��ƵΪ36MHz
-	//TIM2��ʱ�ӱ�Ƶ��Ϊ72MHz��Ӳ���Զ���Ƶ,�ﵽ���
-	//TIM2�ķ�Ƶϵ��Ϊ3599��ʱ���Ƶ��Ϊ72 / (1 + Prescaler) = 20KHz,��׼Ϊ50us
-	//TIM������ֵΪusTim1Timerout50u	
+	//====================================¶ЁК±ЖчіхКј»Ї===========================
+	//¶ЁК±ЖчК±јд»щЕдЦГЛµГч
+	//HCLKОЄ72MHzЈ¬APB1ѕ­№э2·ЦЖµОЄ36MHz
+	//TIM2µДК±ЦУ±¶ЖµєуОЄ72MHzЈЁУІјюЧФ¶Ї±¶Жµ,ґпµЅЧоґуЈ©
+	//TIM2µД·ЦЖµПµКэОЄ3599Ј¬К±јд»щЖµВКОЄ72 / (1 + Prescaler) = 20KHz,»щЧјОЄ50us
+	//TIMЧоґујЖКэЦµОЄusTim1Timerout50u	
 	usPrescalerValue = (uint16_t) (SystemCoreClock / 20000) - 1;
-	//����T35��ʱ������ֵ
-	usT35TimeOut50us = usTimeOut50us; 
+	//±ЈґжT35¶ЁК±ЖчјЖКэЦµ
+	usT35TimeOut50us = usTimeOut50us;
 
-	//Ԥװ��ʹ��
+	//Ф¤Ч°ФШК№ДЬ
 	TIM_ARRPreloadConfig(TIM2, ENABLE);
-	//====================================�жϳ�ʼ��===========================
-	//����NVIC���ȼ�����ΪGroup2��0-3��ռʽ���ȼ���0-3����Ӧʽ���ȼ�
+	//====================================ЦР¶ПіхКј»Ї===========================
+	//ЙиЦГNVICУЕПИј¶·ЦЧйОЄGroup2Јє0-3ЗАХјКЅУЕПИј¶Ј¬0-3µДПмУ¦КЅУЕПИј¶
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 	NVIC_InitStructure.NVIC_IRQChannel = TIM2_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
-	//�������жϱ�־λ
+	//ЗеіэТзіцЦР¶П±кЦѕО»
 	TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
-	//��ʱ��3����жϹر�
+	//¶ЁК±Жч3ТзіцЦР¶П№Ш±Х
 	TIM_ITConfig(TIM2, TIM_IT_Update, DISABLE);
-	//��ʱ��3����
+	//¶ЁК±Жч3ЅыДЬ
 	TIM_Cmd(TIM2, DISABLE);
 	return TRUE;
 }
@@ -153,9 +153,9 @@ void TIM2_IRQHandler(void)
 
 	if (TIM_GetITStatus(TIM2, TIM_IT_Update) != RESET)
 	{
-		
-		TIM_ClearFlag(TIM2, TIM_FLAG_Update);	     //���жϱ��
-		TIM_ClearITPendingBit(TIM2, TIM_IT_Update);	 //�����ʱ��TIM2����жϱ�־λ
+
+		TIM_ClearFlag(TIM2, TIM_FLAG_Update);	     //���жϱ���
+		TIM_ClearITPendingBit(TIM2, TIM_IT_Update);	 //������ʱ��TIM2�����жϱ�־λ
 		prvvTIMERExpiredISR();
 	}
 }

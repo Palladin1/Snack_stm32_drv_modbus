@@ -263,7 +263,7 @@ xMBMasterRTUReceiveFSM( void )
          */
     case STATE_M_RX_IDLE:
     	/* In time of respond timeout,the receiver receive a frame.
-    	 * Disable timer of respond timeout and change the transmiter state to idle.
+    	 * Disable timer of respond timeout and change the transmitter state to idle.
     	 */
     	vMBMasterPortTimersDisable( );
     	eSndState = STATE_M_TX_IDLE;

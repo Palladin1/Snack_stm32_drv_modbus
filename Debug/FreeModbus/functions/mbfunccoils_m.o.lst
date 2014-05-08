@@ -214,7 +214,7 @@
  111 0080 FFF7FEFF 		bl	vMBMasterSetPDUSndLength
  105:../FreeModbus/functions/mbfunccoils_m.c **** 		( void ) xMBMasterPortEventPost( EV_MASTER_FRAME_SENT );
  112              		.loc 1 105 0
- 113 0084 0320     		movs	r0, #3
+ 113 0084 0820     		movs	r0, #8
  114 0086 FFF7FEFF 		bl	xMBMasterPortEventPost
  106:../FreeModbus/functions/mbfunccoils_m.c **** 		eErrStatus = eMBMasterWaitRequestFinish( );
  115              		.loc 1 106 0
@@ -602,7 +602,7 @@
  393 0094 FFF7FEFF 		bl	vMBMasterSetPDUSndLength
  212:../FreeModbus/functions/mbfunccoils_m.c **** 		( void ) xMBMasterPortEventPost( EV_MASTER_FRAME_SENT );
  394              		.loc 1 212 0
- 395 0098 0320     		movs	r0, #3
+ 395 0098 0820     		movs	r0, #8
  396 009a FFF7FEFF 		bl	xMBMasterPortEventPost
  213:../FreeModbus/functions/mbfunccoils_m.c **** 		eErrStatus = eMBMasterWaitRequestFinish( );
  397              		.loc 1 213 0
@@ -1026,7 +1026,7 @@
  706 00e8 FFF7FEFF 		bl	vMBMasterSetPDUSndLength
  322:../FreeModbus/functions/mbfunccoils_m.c **** 		( void ) xMBMasterPortEventPost( EV_MASTER_FRAME_SENT );
  707              		.loc 1 322 0
- 708 00ec 0320     		movs	r0, #3
+ 708 00ec 0820     		movs	r0, #8
  709 00ee FFF7FEFF 		bl	xMBMasterPortEventPost
  323:../FreeModbus/functions/mbfunccoils_m.c **** 		eErrStatus = eMBMasterWaitRequestFinish( );
  710              		.loc 1 323 0
@@ -1278,18 +1278,18 @@
  891              		.file 8 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/core_cm3.h"
 DEFINED SYMBOLS
                             *ABS*:00000000 mbfunccoils_m.c
-C:\Users\Alex\AppData\Local\Temp\cclY1Krr.s:19     .text.eMBMasterReqReadCoils:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cclY1Krr.s:24     .text.eMBMasterReqReadCoils:00000000 eMBMasterReqReadCoils
-C:\Users\Alex\AppData\Local\Temp\cclY1Krr.s:132    .text.eMBMasterFuncReadCoils:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cclY1Krr.s:137    .text.eMBMasterFuncReadCoils:00000000 eMBMasterFuncReadCoils
-C:\Users\Alex\AppData\Local\Temp\cclY1Krr.s:290    .text.eMBMasterReqWriteCoil:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cclY1Krr.s:295    .text.eMBMasterReqWriteCoil:00000000 eMBMasterReqWriteCoil
-C:\Users\Alex\AppData\Local\Temp\cclY1Krr.s:414    .text.eMBMasterFuncWriteCoil:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cclY1Krr.s:419    .text.eMBMasterFuncWriteCoil:00000000 eMBMasterFuncWriteCoil
-C:\Users\Alex\AppData\Local\Temp\cclY1Krr.s:549    .text.eMBMasterReqWriteMultipleCoils:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cclY1Krr.s:554    .text.eMBMasterReqWriteMultipleCoils:00000000 eMBMasterReqWriteMultipleCoils
-C:\Users\Alex\AppData\Local\Temp\cclY1Krr.s:727    .text.eMBMasterFuncWriteMultipleCoils:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cclY1Krr.s:732    .text.eMBMasterFuncWriteMultipleCoils:00000000 eMBMasterFuncWriteMultipleCoils
+C:\Users\Alex\AppData\Local\Temp\ccJTNHF9.s:19     .text.eMBMasterReqReadCoils:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccJTNHF9.s:24     .text.eMBMasterReqReadCoils:00000000 eMBMasterReqReadCoils
+C:\Users\Alex\AppData\Local\Temp\ccJTNHF9.s:132    .text.eMBMasterFuncReadCoils:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccJTNHF9.s:137    .text.eMBMasterFuncReadCoils:00000000 eMBMasterFuncReadCoils
+C:\Users\Alex\AppData\Local\Temp\ccJTNHF9.s:290    .text.eMBMasterReqWriteCoil:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccJTNHF9.s:295    .text.eMBMasterReqWriteCoil:00000000 eMBMasterReqWriteCoil
+C:\Users\Alex\AppData\Local\Temp\ccJTNHF9.s:414    .text.eMBMasterFuncWriteCoil:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccJTNHF9.s:419    .text.eMBMasterFuncWriteCoil:00000000 eMBMasterFuncWriteCoil
+C:\Users\Alex\AppData\Local\Temp\ccJTNHF9.s:549    .text.eMBMasterReqWriteMultipleCoils:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccJTNHF9.s:554    .text.eMBMasterReqWriteMultipleCoils:00000000 eMBMasterReqWriteMultipleCoils
+C:\Users\Alex\AppData\Local\Temp\ccJTNHF9.s:727    .text.eMBMasterFuncWriteMultipleCoils:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccJTNHF9.s:732    .text.eMBMasterFuncWriteMultipleCoils:00000000 eMBMasterFuncWriteMultipleCoils
                      .debug_frame:00000010 $d
                            .group:00000000 wm4.1.98ffea2db242cfdb58f411f7407f2b59
                            .group:00000000 wm4.newlib.h.8.384a112feabb3bef7b573ae48cde2e3b
@@ -1322,7 +1322,7 @@ C:\Users\Alex\AppData\Local\Temp\cclY1Krr.s:732    .text.eMBMasterFuncWriteMulti
                            .group:00000000 wm4.stm32f10x.h.8304.f7d8ad90959e99679b3257267c3aadfe
                            .group:00000000 wm4.stm32f10x_rcc.h.25.fe8897e7491f2eb0cff54551d08eb765
                            .group:00000000 wm4.portmacro.h.56.a47bdd86bc36d334ca6056492e2d709f
-                           .group:00000000 wm4.port.h.38.e5d12e3086604499e6922efe9c85cac5
+                           .group:00000000 wm4.port.h.38.a8cf679bb58c5ad1b387e726c220530e
                            .group:00000000 wm4.mbproto.h.32.da85c2bdd9bdb84e975a92c999a4b490
                            .group:00000000 wm4.mb_m.h.32.f0c90bdd8de56a09521e2eefafb4f11f
                            .group:00000000 wm4.mbframe.h.32.cb3fc2a5a44fcaf8fe721dce49a4ba3c
