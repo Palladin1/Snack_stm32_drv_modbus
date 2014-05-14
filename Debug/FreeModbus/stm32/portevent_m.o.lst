@@ -15,23 +15,24 @@
   15              		.text
   16              	.Ltext0:
   17              		.cfi_sections	.debug_frame
-  18              		.section	.bss.eQueuedEvent,"aw",%nobits
-  21              	eQueuedEvent:
-  22 0000 00       		.space	1
-  23              		.section	.bss.xEventInQueue,"aw",%nobits
-  26              	xEventInQueue:
-  27 0000 00       		.space	1
-  28              		.section	.bss.xMasterRunRes,"aw",%nobits
-  31              	xMasterRunRes:
-  32 0000 00       		.space	1
-  33              		.section	.text.xMBMasterPortEventInit,"ax",%progbits
-  34              		.align	2
-  35              		.global	xMBMasterPortEventInit
-  36              		.thumb
-  37              		.thumb_func
-  39              	xMBMasterPortEventInit:
-  40              	.LFB29:
-  41              		.file 1 "../FreeModbus/stm32/portevent_m.c"
+  18              		.comm	xMasterOsEvent,4,4
+  19              		.section	.bss.eQueuedEvent,"aw",%nobits
+  22              	eQueuedEvent:
+  23 0000 00       		.space	1
+  24              		.section	.bss.xEventInQueue,"aw",%nobits
+  27              	xEventInQueue:
+  28 0000 00       		.space	1
+  29              		.section	.bss.xMasterRunRes,"aw",%nobits
+  32              	xMasterRunRes:
+  33 0000 00       		.space	1
+  34              		.section	.text.xMBMasterPortEventInit,"ax",%progbits
+  35              		.align	2
+  36              		.global	xMBMasterPortEventInit
+  37              		.thumb
+  38              		.thumb_func
+  40              	xMBMasterPortEventInit:
+  41              	.LFB29:
+  42              		.file 1 "../FreeModbus/stm32/portevent_m.c"
    1:../FreeModbus/stm32/portevent_m.c **** /*
    2:../FreeModbus/stm32/portevent_m.c ****  * FreeModbus Libary: STM32 Port
    3:../FreeModbus/stm32/portevent_m.c ****  * Copyright (C) 2013 Armink <armink.ztl@gmail.com>
@@ -64,827 +65,854 @@
   30:../FreeModbus/stm32/portevent_m.c **** /* ----------------------- Variables ----------------------------------------*/
   31:../FreeModbus/stm32/portevent_m.c **** //static struct rt_semaphore xMasterRunRes;
   32:../FreeModbus/stm32/portevent_m.c **** //static struct rt_event     xMasterOsEvent;
-  33:../FreeModbus/stm32/portevent_m.c **** static eMBEventType eQueuedEvent;
-  34:../FreeModbus/stm32/portevent_m.c **** static BOOL     xEventInQueue;
+  33:../FreeModbus/stm32/portevent_m.c **** 
+  34:../FreeModbus/stm32/portevent_m.c **** u32 xMasterOsEvent;
   35:../FreeModbus/stm32/portevent_m.c **** 
-  36:../FreeModbus/stm32/portevent_m.c **** static BOOL xMasterRunRes;
-  37:../FreeModbus/stm32/portevent_m.c **** 
-  38:../FreeModbus/stm32/portevent_m.c **** /* ----------------------- Start implementation -----------------------------*/
-  39:../FreeModbus/stm32/portevent_m.c **** BOOL
-  40:../FreeModbus/stm32/portevent_m.c **** xMBMasterPortEventInit( void )
-  41:../FreeModbus/stm32/portevent_m.c **** {
-  42              		.loc 1 41 0
-  43              		.cfi_startproc
-  44              		@ args = 0, pretend = 0, frame = 0
-  45              		@ frame_needed = 1, uses_anonymous_args = 0
-  46              		@ link register save eliminated.
-  47 0000 80B4     		push	{r7}
-  48              		.cfi_def_cfa_offset 4
-  49              		.cfi_offset 7, -4
-  50 0002 00AF     		add	r7, sp, #0
-  51              		.cfi_def_cfa_register 7
-  42:../FreeModbus/stm32/portevent_m.c **** 	//rt_event_init(&xMasterOsEvent,"master event",RT_IPC_FLAG_PRIO);
-  43:../FreeModbus/stm32/portevent_m.c **** 	xEventInQueue = FALSE;
-  52              		.loc 1 43 0
-  53 0004 40F20003 		movw	r3, #:lower16:xEventInQueue
-  54 0008 C0F20003 		movt	r3, #:upper16:xEventInQueue
-  55 000c 0022     		movs	r2, #0
-  56 000e 1A70     		strb	r2, [r3]
-  44:../FreeModbus/stm32/portevent_m.c ****     return TRUE;
-  57              		.loc 1 44 0
-  58 0010 0123     		movs	r3, #1
-  45:../FreeModbus/stm32/portevent_m.c **** }
-  59              		.loc 1 45 0
-  60 0012 1846     		mov	r0, r3
-  61 0014 BD46     		mov	sp, r7
-  62              		@ sp needed
-  63 0016 5DF8047B 		ldr	r7, [sp], #4
-  64 001a 7047     		bx	lr
-  65              		.cfi_endproc
-  66              	.LFE29:
-  68              		.section	.text.xMBMasterPortEventPost,"ax",%progbits
-  69              		.align	2
-  70              		.global	xMBMasterPortEventPost
-  71              		.thumb
-  72              		.thumb_func
-  74              	xMBMasterPortEventPost:
-  75              	.LFB30:
-  46:../FreeModbus/stm32/portevent_m.c **** 
-  47:../FreeModbus/stm32/portevent_m.c **** BOOL
-  48:../FreeModbus/stm32/portevent_m.c **** xMBMasterPortEventPost( eMBMasterEventType eEvent )
-  49:../FreeModbus/stm32/portevent_m.c **** {
-  76              		.loc 1 49 0
-  77              		.cfi_startproc
-  78              		@ args = 0, pretend = 0, frame = 8
-  79              		@ frame_needed = 1, uses_anonymous_args = 0
-  80              		@ link register save eliminated.
-  81 0000 80B4     		push	{r7}
-  82              		.cfi_def_cfa_offset 4
-  83              		.cfi_offset 7, -4
-  84 0002 83B0     		sub	sp, sp, #12
-  85              		.cfi_def_cfa_offset 16
-  86 0004 00AF     		add	r7, sp, #0
-  87              		.cfi_def_cfa_register 7
-  88 0006 0346     		mov	r3, r0
-  89 0008 FB80     		strh	r3, [r7, #6]	@ movhi
-  50:../FreeModbus/stm32/portevent_m.c **** 	//rt_event_send(&xMasterOsEvent, eEvent);
-  51:../FreeModbus/stm32/portevent_m.c ****     xEventInQueue = TRUE;
-  90              		.loc 1 51 0
-  91 000a 40F20003 		movw	r3, #:lower16:xEventInQueue
-  92 000e C0F20003 		movt	r3, #:upper16:xEventInQueue
-  93 0012 0122     		movs	r2, #1
-  94 0014 1A70     		strb	r2, [r3]
-  52:../FreeModbus/stm32/portevent_m.c ****     eQueuedEvent = eEvent;
-  95              		.loc 1 52 0
-  96 0016 FB88     		ldrh	r3, [r7, #6]	@ movhi
-  97 0018 DAB2     		uxtb	r2, r3
-  98 001a 40F20003 		movw	r3, #:lower16:eQueuedEvent
-  99 001e C0F20003 		movt	r3, #:upper16:eQueuedEvent
- 100 0022 1A70     		strb	r2, [r3]
-  53:../FreeModbus/stm32/portevent_m.c ****     return TRUE;
- 101              		.loc 1 53 0
- 102 0024 0123     		movs	r3, #1
-  54:../FreeModbus/stm32/portevent_m.c **** }
- 103              		.loc 1 54 0
- 104 0026 1846     		mov	r0, r3
- 105 0028 0C37     		adds	r7, r7, #12
- 106 002a BD46     		mov	sp, r7
- 107              		@ sp needed
- 108 002c 5DF8047B 		ldr	r7, [sp], #4
- 109 0030 7047     		bx	lr
- 110              		.cfi_endproc
- 111              	.LFE30:
- 113 0032 00BF     		.section	.text.xMBMasterPortEventGet,"ax",%progbits
- 114              		.align	2
- 115              		.global	xMBMasterPortEventGet
- 116              		.thumb
- 117              		.thumb_func
- 119              	xMBMasterPortEventGet:
- 120              	.LFB31:
-  55:../FreeModbus/stm32/portevent_m.c **** 
-  56:../FreeModbus/stm32/portevent_m.c **** BOOL
-  57:../FreeModbus/stm32/portevent_m.c **** xMBMasterPortEventGet( eMBMasterEventType * eEvent )
-  58:../FreeModbus/stm32/portevent_m.c **** {
- 121              		.loc 1 58 0
- 122              		.cfi_startproc
- 123              		@ args = 0, pretend = 0, frame = 16
- 124              		@ frame_needed = 1, uses_anonymous_args = 0
- 125              		@ link register save eliminated.
- 126 0000 80B4     		push	{r7}
- 127              		.cfi_def_cfa_offset 4
- 128              		.cfi_offset 7, -4
- 129 0002 85B0     		sub	sp, sp, #20
- 130              		.cfi_def_cfa_offset 24
- 131 0004 00AF     		add	r7, sp, #0
- 132              		.cfi_def_cfa_register 7
- 133 0006 7860     		str	r0, [r7, #4]
-  59:../FreeModbus/stm32/portevent_m.c **** 
-  60:../FreeModbus/stm32/portevent_m.c **** 	 BOOL            xEventHappened = FALSE;
- 134              		.loc 1 60 0
- 135 0008 0023     		movs	r3, #0
- 136 000a FB73     		strb	r3, [r7, #15]
-  61:../FreeModbus/stm32/portevent_m.c **** 
-  62:../FreeModbus/stm32/portevent_m.c **** 	    if( xEventInQueue )
- 137              		.loc 1 62 0
- 138 000c 40F20003 		movw	r3, #:lower16:xEventInQueue
- 139 0010 C0F20003 		movt	r3, #:upper16:xEventInQueue
- 140 0014 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
- 141 0016 002B     		cmp	r3, #0
- 142 0018 0FD0     		beq	.L6
-  63:../FreeModbus/stm32/portevent_m.c **** 	    {
-  64:../FreeModbus/stm32/portevent_m.c **** 	        *eEvent = eQueuedEvent;
- 143              		.loc 1 64 0
- 144 001a 40F20003 		movw	r3, #:lower16:eQueuedEvent
- 145 001e C0F20003 		movt	r3, #:upper16:eQueuedEvent
- 146 0022 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
- 147 0024 1A46     		mov	r2, r3
- 148 0026 7B68     		ldr	r3, [r7, #4]
- 149 0028 1A80     		strh	r2, [r3]	@ movhi
-  65:../FreeModbus/stm32/portevent_m.c **** 	        xEventInQueue = FALSE;
- 150              		.loc 1 65 0
- 151 002a 40F20003 		movw	r3, #:lower16:xEventInQueue
- 152 002e C0F20003 		movt	r3, #:upper16:xEventInQueue
- 153 0032 0022     		movs	r2, #0
- 154 0034 1A70     		strb	r2, [r3]
-  66:../FreeModbus/stm32/portevent_m.c **** 	        xEventHappened = TRUE;
- 155              		.loc 1 66 0
- 156 0036 0123     		movs	r3, #1
- 157 0038 FB73     		strb	r3, [r7, #15]
- 158              	.L6:
-  67:../FreeModbus/stm32/portevent_m.c **** 	    }
-  68:../FreeModbus/stm32/portevent_m.c **** 	    return xEventHappened;
- 159              		.loc 1 68 0
- 160 003a FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
-  69:../FreeModbus/stm32/portevent_m.c **** 
-  70:../FreeModbus/stm32/portevent_m.c **** 	//rt_uint32_t recvedEvent;
-  71:../FreeModbus/stm32/portevent_m.c ****     /* waiting forever OS event */
-  72:../FreeModbus/stm32/portevent_m.c **** 	/*
-  73:../FreeModbus/stm32/portevent_m.c **** 	rt_event_recv(&xMasterOsEvent,
-  74:../FreeModbus/stm32/portevent_m.c **** 			EV_MASTER_READY | EV_MASTER_FRAME_RECEIVED | EV_MASTER_EXECUTE |
-  75:../FreeModbus/stm32/portevent_m.c **** 			EV_MASTER_FRAME_SENT | EV_MASTER_ERROR_PROCESS,
-  76:../FreeModbus/stm32/portevent_m.c **** 			RT_EVENT_FLAG_OR | RT_EVENT_FLAG_CLEAR, RT_WAITING_FOREVER,
-  77:../FreeModbus/stm32/portevent_m.c **** 			&recvedEvent);
-  78:../FreeModbus/stm32/portevent_m.c **** 	*/
-  79:../FreeModbus/stm32/portevent_m.c **** 	/* the enum type couldn't convert to int type */
-  80:../FreeModbus/stm32/portevent_m.c **** 	/*
-  81:../FreeModbus/stm32/portevent_m.c **** 	switch (recvedEvent)
-  82:../FreeModbus/stm32/portevent_m.c **** 	{
-  83:../FreeModbus/stm32/portevent_m.c **** 	case EV_MASTER_READY:
-  84:../FreeModbus/stm32/portevent_m.c **** 		*eEvent = EV_MASTER_READY;
-  85:../FreeModbus/stm32/portevent_m.c **** 		break;
-  86:../FreeModbus/stm32/portevent_m.c **** 	case EV_MASTER_FRAME_RECEIVED:
-  87:../FreeModbus/stm32/portevent_m.c **** 		*eEvent = EV_MASTER_FRAME_RECEIVED;
+  36:../FreeModbus/stm32/portevent_m.c **** static eMBEventType eQueuedEvent;
+  37:../FreeModbus/stm32/portevent_m.c **** static BOOL     xEventInQueue;
+  38:../FreeModbus/stm32/portevent_m.c **** 
+  39:../FreeModbus/stm32/portevent_m.c **** static BOOL xMasterRunRes;
+  40:../FreeModbus/stm32/portevent_m.c **** 
+  41:../FreeModbus/stm32/portevent_m.c **** /* ----------------------- Start implementation -----------------------------*/
+  42:../FreeModbus/stm32/portevent_m.c **** BOOL
+  43:../FreeModbus/stm32/portevent_m.c **** xMBMasterPortEventInit( void )
+  44:../FreeModbus/stm32/portevent_m.c **** {
+  43              		.loc 1 44 0
+  44              		.cfi_startproc
+  45              		@ args = 0, pretend = 0, frame = 0
+  46              		@ frame_needed = 1, uses_anonymous_args = 0
+  47              		@ link register save eliminated.
+  48 0000 80B4     		push	{r7}
+  49              		.cfi_def_cfa_offset 4
+  50              		.cfi_offset 7, -4
+  51 0002 00AF     		add	r7, sp, #0
+  52              		.cfi_def_cfa_register 7
+  45:../FreeModbus/stm32/portevent_m.c **** 	//rt_event_init(&xMasterOsEvent,"master event",RT_IPC_FLAG_PRIO);
+  46:../FreeModbus/stm32/portevent_m.c **** 	xEventInQueue = FALSE;
+  53              		.loc 1 46 0
+  54 0004 40F20003 		movw	r3, #:lower16:xEventInQueue
+  55 0008 C0F20003 		movt	r3, #:upper16:xEventInQueue
+  56 000c 0022     		movs	r2, #0
+  57 000e 1A70     		strb	r2, [r3]
+  47:../FreeModbus/stm32/portevent_m.c ****     return TRUE;
+  58              		.loc 1 47 0
+  59 0010 0123     		movs	r3, #1
+  48:../FreeModbus/stm32/portevent_m.c **** }
+  60              		.loc 1 48 0
+  61 0012 1846     		mov	r0, r3
+  62 0014 BD46     		mov	sp, r7
+  63              		@ sp needed
+  64 0016 5DF8047B 		ldr	r7, [sp], #4
+  65 001a 7047     		bx	lr
+  66              		.cfi_endproc
+  67              	.LFE29:
+  69              		.section	.text.xMBMasterPortEventPost,"ax",%progbits
+  70              		.align	2
+  71              		.global	xMBMasterPortEventPost
+  72              		.thumb
+  73              		.thumb_func
+  75              	xMBMasterPortEventPost:
+  76              	.LFB30:
+  49:../FreeModbus/stm32/portevent_m.c **** 
+  50:../FreeModbus/stm32/portevent_m.c **** BOOL
+  51:../FreeModbus/stm32/portevent_m.c **** xMBMasterPortEventPost( eMBMasterEventType eEvent )
+  52:../FreeModbus/stm32/portevent_m.c **** {
+  77              		.loc 1 52 0
+  78              		.cfi_startproc
+  79              		@ args = 0, pretend = 0, frame = 8
+  80              		@ frame_needed = 1, uses_anonymous_args = 0
+  81              		@ link register save eliminated.
+  82 0000 80B4     		push	{r7}
+  83              		.cfi_def_cfa_offset 4
+  84              		.cfi_offset 7, -4
+  85 0002 83B0     		sub	sp, sp, #12
+  86              		.cfi_def_cfa_offset 16
+  87 0004 00AF     		add	r7, sp, #0
+  88              		.cfi_def_cfa_register 7
+  89 0006 0346     		mov	r3, r0
+  90 0008 FB80     		strh	r3, [r7, #6]	@ movhi
+  53:../FreeModbus/stm32/portevent_m.c **** 	//rt_event_send(&xMasterOsEvent, eEvent);
+  54:../FreeModbus/stm32/portevent_m.c ****     xEventInQueue = TRUE;
+  91              		.loc 1 54 0
+  92 000a 40F20003 		movw	r3, #:lower16:xEventInQueue
+  93 000e C0F20003 		movt	r3, #:upper16:xEventInQueue
+  94 0012 0122     		movs	r2, #1
+  95 0014 1A70     		strb	r2, [r3]
+  55:../FreeModbus/stm32/portevent_m.c ****     eQueuedEvent = eEvent;
+  96              		.loc 1 55 0
+  97 0016 FB88     		ldrh	r3, [r7, #6]	@ movhi
+  98 0018 DAB2     		uxtb	r2, r3
+  99 001a 40F20003 		movw	r3, #:lower16:eQueuedEvent
+ 100 001e C0F20003 		movt	r3, #:upper16:eQueuedEvent
+ 101 0022 1A70     		strb	r2, [r3]
+  56:../FreeModbus/stm32/portevent_m.c ****     return TRUE;
+ 102              		.loc 1 56 0
+ 103 0024 0123     		movs	r3, #1
+  57:../FreeModbus/stm32/portevent_m.c **** }
+ 104              		.loc 1 57 0
+ 105 0026 1846     		mov	r0, r3
+ 106 0028 0C37     		adds	r7, r7, #12
+ 107 002a BD46     		mov	sp, r7
+ 108              		@ sp needed
+ 109 002c 5DF8047B 		ldr	r7, [sp], #4
+ 110 0030 7047     		bx	lr
+ 111              		.cfi_endproc
+ 112              	.LFE30:
+ 114 0032 00BF     		.section	.text.xMBMasterPortEventGet,"ax",%progbits
+ 115              		.align	2
+ 116              		.global	xMBMasterPortEventGet
+ 117              		.thumb
+ 118              		.thumb_func
+ 120              	xMBMasterPortEventGet:
+ 121              	.LFB31:
+  58:../FreeModbus/stm32/portevent_m.c **** 
+  59:../FreeModbus/stm32/portevent_m.c **** BOOL
+  60:../FreeModbus/stm32/portevent_m.c **** xMBMasterPortEventGet( eMBMasterEventType * eEvent )
+  61:../FreeModbus/stm32/portevent_m.c **** {
+ 122              		.loc 1 61 0
+ 123              		.cfi_startproc
+ 124              		@ args = 0, pretend = 0, frame = 16
+ 125              		@ frame_needed = 1, uses_anonymous_args = 0
+ 126              		@ link register save eliminated.
+ 127 0000 80B4     		push	{r7}
+ 128              		.cfi_def_cfa_offset 4
+ 129              		.cfi_offset 7, -4
+ 130 0002 85B0     		sub	sp, sp, #20
+ 131              		.cfi_def_cfa_offset 24
+ 132 0004 00AF     		add	r7, sp, #0
+ 133              		.cfi_def_cfa_register 7
+ 134 0006 7860     		str	r0, [r7, #4]
+  62:../FreeModbus/stm32/portevent_m.c **** 
+  63:../FreeModbus/stm32/portevent_m.c **** 	 BOOL            xEventHappened = FALSE;
+ 135              		.loc 1 63 0
+ 136 0008 0023     		movs	r3, #0
+ 137 000a FB73     		strb	r3, [r7, #15]
+  64:../FreeModbus/stm32/portevent_m.c **** 
+  65:../FreeModbus/stm32/portevent_m.c **** 	    if( xEventInQueue )
+ 138              		.loc 1 65 0
+ 139 000c 40F20003 		movw	r3, #:lower16:xEventInQueue
+ 140 0010 C0F20003 		movt	r3, #:upper16:xEventInQueue
+ 141 0014 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 142 0016 002B     		cmp	r3, #0
+ 143 0018 0FD0     		beq	.L6
+  66:../FreeModbus/stm32/portevent_m.c **** 	    {
+  67:../FreeModbus/stm32/portevent_m.c **** 	        *eEvent = eQueuedEvent;
+ 144              		.loc 1 67 0
+ 145 001a 40F20003 		movw	r3, #:lower16:eQueuedEvent
+ 146 001e C0F20003 		movt	r3, #:upper16:eQueuedEvent
+ 147 0022 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 148 0024 1A46     		mov	r2, r3
+ 149 0026 7B68     		ldr	r3, [r7, #4]
+ 150 0028 1A80     		strh	r2, [r3]	@ movhi
+  68:../FreeModbus/stm32/portevent_m.c **** 	        xEventInQueue = FALSE;
+ 151              		.loc 1 68 0
+ 152 002a 40F20003 		movw	r3, #:lower16:xEventInQueue
+ 153 002e C0F20003 		movt	r3, #:upper16:xEventInQueue
+ 154 0032 0022     		movs	r2, #0
+ 155 0034 1A70     		strb	r2, [r3]
+  69:../FreeModbus/stm32/portevent_m.c **** 	        xEventHappened = TRUE;
+ 156              		.loc 1 69 0
+ 157 0036 0123     		movs	r3, #1
+ 158 0038 FB73     		strb	r3, [r7, #15]
+ 159              	.L6:
+  70:../FreeModbus/stm32/portevent_m.c **** 	    }
+  71:../FreeModbus/stm32/portevent_m.c **** 	    return xEventHappened;
+ 160              		.loc 1 71 0
+ 161 003a FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+  72:../FreeModbus/stm32/portevent_m.c **** 
+  73:../FreeModbus/stm32/portevent_m.c **** 	//rt_uint32_t recvedEvent;
+  74:../FreeModbus/stm32/portevent_m.c ****     /* waiting forever OS event */
+  75:../FreeModbus/stm32/portevent_m.c **** 	/*
+  76:../FreeModbus/stm32/portevent_m.c **** 	rt_event_recv(&xMasterOsEvent,
+  77:../FreeModbus/stm32/portevent_m.c **** 			EV_MASTER_READY | EV_MASTER_FRAME_RECEIVED | EV_MASTER_EXECUTE |
+  78:../FreeModbus/stm32/portevent_m.c **** 			EV_MASTER_FRAME_SENT | EV_MASTER_ERROR_PROCESS,
+  79:../FreeModbus/stm32/portevent_m.c **** 			RT_EVENT_FLAG_OR | RT_EVENT_FLAG_CLEAR, RT_WAITING_FOREVER,
+  80:../FreeModbus/stm32/portevent_m.c **** 			&recvedEvent);
+  81:../FreeModbus/stm32/portevent_m.c **** 	*/
+  82:../FreeModbus/stm32/portevent_m.c **** 	/* the enum type couldn't convert to int type */
+  83:../FreeModbus/stm32/portevent_m.c **** 	/*
+  84:../FreeModbus/stm32/portevent_m.c **** 	switch (recvedEvent)
+  85:../FreeModbus/stm32/portevent_m.c **** 	{
+  86:../FreeModbus/stm32/portevent_m.c **** 	case EV_MASTER_READY:
+  87:../FreeModbus/stm32/portevent_m.c **** 		*eEvent = EV_MASTER_READY;
   88:../FreeModbus/stm32/portevent_m.c **** 		break;
-  89:../FreeModbus/stm32/portevent_m.c **** 	case EV_MASTER_EXECUTE:
-  90:../FreeModbus/stm32/portevent_m.c **** 		*eEvent = EV_MASTER_EXECUTE;
+  89:../FreeModbus/stm32/portevent_m.c **** 	case EV_MASTER_FRAME_RECEIVED:
+  90:../FreeModbus/stm32/portevent_m.c **** 		*eEvent = EV_MASTER_FRAME_RECEIVED;
   91:../FreeModbus/stm32/portevent_m.c **** 		break;
-  92:../FreeModbus/stm32/portevent_m.c **** 	case EV_MASTER_FRAME_SENT:
-  93:../FreeModbus/stm32/portevent_m.c **** 		*eEvent = EV_MASTER_FRAME_SENT;
+  92:../FreeModbus/stm32/portevent_m.c **** 	case EV_MASTER_EXECUTE:
+  93:../FreeModbus/stm32/portevent_m.c **** 		*eEvent = EV_MASTER_EXECUTE;
   94:../FreeModbus/stm32/portevent_m.c **** 		break;
-  95:../FreeModbus/stm32/portevent_m.c **** 	case EV_MASTER_ERROR_PROCESS:
-  96:../FreeModbus/stm32/portevent_m.c **** 		*eEvent = EV_MASTER_ERROR_PROCESS;
+  95:../FreeModbus/stm32/portevent_m.c **** 	case EV_MASTER_FRAME_SENT:
+  96:../FreeModbus/stm32/portevent_m.c **** 		*eEvent = EV_MASTER_FRAME_SENT;
   97:../FreeModbus/stm32/portevent_m.c **** 		break;
-  98:../FreeModbus/stm32/portevent_m.c **** 	}
-  99:../FreeModbus/stm32/portevent_m.c ****     return TRUE;
- 100:../FreeModbus/stm32/portevent_m.c ****     */
- 101:../FreeModbus/stm32/portevent_m.c **** 
- 102:../FreeModbus/stm32/portevent_m.c **** }
- 161              		.loc 1 102 0
- 162 003c 1846     		mov	r0, r3
- 163 003e 1437     		adds	r7, r7, #20
- 164 0040 BD46     		mov	sp, r7
- 165              		@ sp needed
- 166 0042 5DF8047B 		ldr	r7, [sp], #4
- 167 0046 7047     		bx	lr
- 168              		.cfi_endproc
- 169              	.LFE31:
- 171              		.section	.text.vMBMasterOsResInit,"ax",%progbits
- 172              		.align	2
- 173              		.global	vMBMasterOsResInit
- 174              		.thumb
- 175              		.thumb_func
- 177              	vMBMasterOsResInit:
- 178              	.LFB32:
- 103:../FreeModbus/stm32/portevent_m.c **** /**
- 104:../FreeModbus/stm32/portevent_m.c ****  * This function is initialize the OS resource for modbus master.
- 105:../FreeModbus/stm32/portevent_m.c ****  * Note:The resource is define by OS.If you not use OS this function can be empty.
- 106:../FreeModbus/stm32/portevent_m.c ****  *
- 107:../FreeModbus/stm32/portevent_m.c ****  */
- 108:../FreeModbus/stm32/portevent_m.c **** void vMBMasterOsResInit( void )
- 109:../FreeModbus/stm32/portevent_m.c **** {
- 179              		.loc 1 109 0
- 180              		.cfi_startproc
- 181              		@ args = 0, pretend = 0, frame = 0
- 182              		@ frame_needed = 1, uses_anonymous_args = 0
- 183 0000 80B5     		push	{r7, lr}
- 184              		.cfi_def_cfa_offset 8
- 185              		.cfi_offset 7, -8
- 186              		.cfi_offset 14, -4
- 187 0002 00AF     		add	r7, sp, #0
- 188              		.cfi_def_cfa_register 7
- 110:../FreeModbus/stm32/portevent_m.c **** //	rt_sem_init(&xMasterRunRes, "master res", 0x01 , RT_IPC_FLAG_PRIO);
- 111:../FreeModbus/stm32/portevent_m.c **** 	ENTER_CRITICAL_SECTION( );
- 189              		.loc 1 111 0
- 190 0004 FFF7FEFF 		bl	vPortEnterCritical
- 112:../FreeModbus/stm32/portevent_m.c **** 	xMasterRunRes = 1;
- 191              		.loc 1 112 0
- 192 0008 40F20003 		movw	r3, #:lower16:xMasterRunRes
- 193 000c C0F20003 		movt	r3, #:upper16:xMasterRunRes
- 194 0010 0122     		movs	r2, #1
- 195 0012 1A70     		strb	r2, [r3]
- 113:../FreeModbus/stm32/portevent_m.c **** 	EXIT_CRITICAL_SECTION( );
- 196              		.loc 1 113 0
- 197 0014 FFF7FEFF 		bl	vPortExitCritical
- 114:../FreeModbus/stm32/portevent_m.c **** }
- 198              		.loc 1 114 0
- 199 0018 80BD     		pop	{r7, pc}
- 200              		.cfi_endproc
- 201              	.LFE32:
- 203 001a 00BF     		.section	.text.xMBMasterRunResTake,"ax",%progbits
- 204              		.align	2
- 205              		.global	xMBMasterRunResTake
- 206              		.thumb
- 207              		.thumb_func
- 209              	xMBMasterRunResTake:
- 210              	.LFB33:
- 115:../FreeModbus/stm32/portevent_m.c **** 
- 116:../FreeModbus/stm32/portevent_m.c **** /**
- 117:../FreeModbus/stm32/portevent_m.c ****  * This function is take Mobus Master running resource.
- 118:../FreeModbus/stm32/portevent_m.c ****  * Note:The resource is define by Operating System.If you not use OS this function can be just retu
- 119:../FreeModbus/stm32/portevent_m.c ****  *
- 120:../FreeModbus/stm32/portevent_m.c ****  * @param lTimeOut the waiting time.
- 121:../FreeModbus/stm32/portevent_m.c ****  *
- 122:../FreeModbus/stm32/portevent_m.c ****  * @return resource taked result
- 123:../FreeModbus/stm32/portevent_m.c ****  */
- 124:../FreeModbus/stm32/portevent_m.c **** BOOL xMBMasterRunResTake( LONG lTimeOut )
- 125:../FreeModbus/stm32/portevent_m.c **** {
- 211              		.loc 1 125 0
- 212              		.cfi_startproc
- 213              		@ args = 0, pretend = 0, frame = 8
- 214              		@ frame_needed = 1, uses_anonymous_args = 0
- 215 0000 80B5     		push	{r7, lr}
- 216              		.cfi_def_cfa_offset 8
- 217              		.cfi_offset 7, -8
- 218              		.cfi_offset 14, -4
- 219 0002 82B0     		sub	sp, sp, #8
- 220              		.cfi_def_cfa_offset 16
- 221 0004 00AF     		add	r7, sp, #0
- 222              		.cfi_def_cfa_register 7
- 223 0006 7860     		str	r0, [r7, #4]
- 126:../FreeModbus/stm32/portevent_m.c **** 	/*If waiting time is -1 .It will wait forever */
- 127:../FreeModbus/stm32/portevent_m.c **** //	return rt_sem_take(&xMasterRunRes, lTimeOut) ? FALSE : TRUE ;
- 128:../FreeModbus/stm32/portevent_m.c **** 	ENTER_CRITICAL_SECTION( );
- 224              		.loc 1 128 0
- 225 0008 FFF7FEFF 		bl	vPortEnterCritical
- 129:../FreeModbus/stm32/portevent_m.c ****     if ( xMasterRunRes >0 ) {
- 226              		.loc 1 129 0
- 227 000c 40F20003 		movw	r3, #:lower16:xMasterRunRes
- 228 0010 C0F20003 		movt	r3, #:upper16:xMasterRunRes
- 229 0014 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
- 230 0016 002B     		cmp	r3, #0
- 231 0018 0FD0     		beq	.L10
- 130:../FreeModbus/stm32/portevent_m.c ****     	xMasterRunRes--;
- 232              		.loc 1 130 0
- 233 001a 40F20003 		movw	r3, #:lower16:xMasterRunRes
- 234 001e C0F20003 		movt	r3, #:upper16:xMasterRunRes
- 235 0022 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
- 236 0024 013B     		subs	r3, r3, #1
- 237 0026 DAB2     		uxtb	r2, r3
- 238 0028 40F20003 		movw	r3, #:lower16:xMasterRunRes
- 239 002c C0F20003 		movt	r3, #:upper16:xMasterRunRes
- 240 0030 1A70     		strb	r2, [r3]
- 131:../FreeModbus/stm32/portevent_m.c ****     	EXIT_CRITICAL_SECTION( );
- 241              		.loc 1 131 0
- 242 0032 FFF7FEFF 		bl	vPortExitCritical
- 132:../FreeModbus/stm32/portevent_m.c ****     }
- 133:../FreeModbus/stm32/portevent_m.c ****     else {
- 134:../FreeModbus/stm32/portevent_m.c ****       	EXIT_CRITICAL_SECTION( );
- 135:../FreeModbus/stm32/portevent_m.c **** 
- 136:../FreeModbus/stm32/portevent_m.c ****       	if ( lTimeOut == -1 ) {
- 137:../FreeModbus/stm32/portevent_m.c **** 		    while ( !xMasterRunRes ) ;
- 138:../FreeModbus/stm32/portevent_m.c **** 		        return  TRUE;
- 139:../FreeModbus/stm32/portevent_m.c **** 	    }
- 140:../FreeModbus/stm32/portevent_m.c **** 	    else {
- 141:../FreeModbus/stm32/portevent_m.c **** 		    while ( 1 ) {
- 142:../FreeModbus/stm32/portevent_m.c **** 
- 143:../FreeModbus/stm32/portevent_m.c **** 			if ( lTimeOut == 0 )
- 144:../FreeModbus/stm32/portevent_m.c **** 				break;
+  98:../FreeModbus/stm32/portevent_m.c **** 	case EV_MASTER_ERROR_PROCESS:
+  99:../FreeModbus/stm32/portevent_m.c **** 		*eEvent = EV_MASTER_ERROR_PROCESS;
+ 100:../FreeModbus/stm32/portevent_m.c **** 		break;
+ 101:../FreeModbus/stm32/portevent_m.c **** 	}
+ 102:../FreeModbus/stm32/portevent_m.c ****     return TRUE;
+ 103:../FreeModbus/stm32/portevent_m.c ****     */
+ 104:../FreeModbus/stm32/portevent_m.c **** 
+ 105:../FreeModbus/stm32/portevent_m.c **** }
+ 162              		.loc 1 105 0
+ 163 003c 1846     		mov	r0, r3
+ 164 003e 1437     		adds	r7, r7, #20
+ 165 0040 BD46     		mov	sp, r7
+ 166              		@ sp needed
+ 167 0042 5DF8047B 		ldr	r7, [sp], #4
+ 168 0046 7047     		bx	lr
+ 169              		.cfi_endproc
+ 170              	.LFE31:
+ 172              		.section	.text.vMBMasterOsResInit,"ax",%progbits
+ 173              		.align	2
+ 174              		.global	vMBMasterOsResInit
+ 175              		.thumb
+ 176              		.thumb_func
+ 178              	vMBMasterOsResInit:
+ 179              	.LFB32:
+ 106:../FreeModbus/stm32/portevent_m.c **** /**
+ 107:../FreeModbus/stm32/portevent_m.c ****  * This function is initialize the OS resource for modbus master.
+ 108:../FreeModbus/stm32/portevent_m.c ****  * Note:The resource is define by OS.If you not use OS this function can be empty.
+ 109:../FreeModbus/stm32/portevent_m.c ****  *
+ 110:../FreeModbus/stm32/portevent_m.c ****  */
+ 111:../FreeModbus/stm32/portevent_m.c **** void vMBMasterOsResInit( void )
+ 112:../FreeModbus/stm32/portevent_m.c **** {
+ 180              		.loc 1 112 0
+ 181              		.cfi_startproc
+ 182              		@ args = 0, pretend = 0, frame = 0
+ 183              		@ frame_needed = 1, uses_anonymous_args = 0
+ 184 0000 80B5     		push	{r7, lr}
+ 185              		.cfi_def_cfa_offset 8
+ 186              		.cfi_offset 7, -8
+ 187              		.cfi_offset 14, -4
+ 188 0002 00AF     		add	r7, sp, #0
+ 189              		.cfi_def_cfa_register 7
+ 113:../FreeModbus/stm32/portevent_m.c **** //	rt_sem_init(&xMasterRunRes, "master res", 0x01 , RT_IPC_FLAG_PRIO);
+ 114:../FreeModbus/stm32/portevent_m.c **** 	ENTER_CRITICAL_SECTION( );
+ 190              		.loc 1 114 0
+ 191 0004 FFF7FEFF 		bl	vPortEnterCritical
+ 115:../FreeModbus/stm32/portevent_m.c **** 	xMasterRunRes = 1;
+ 192              		.loc 1 115 0
+ 193 0008 40F20003 		movw	r3, #:lower16:xMasterRunRes
+ 194 000c C0F20003 		movt	r3, #:upper16:xMasterRunRes
+ 195 0010 0122     		movs	r2, #1
+ 196 0012 1A70     		strb	r2, [r3]
+ 116:../FreeModbus/stm32/portevent_m.c **** 	EXIT_CRITICAL_SECTION( );
+ 197              		.loc 1 116 0
+ 198 0014 FFF7FEFF 		bl	vPortExitCritical
+ 117:../FreeModbus/stm32/portevent_m.c **** }
+ 199              		.loc 1 117 0
+ 200 0018 80BD     		pop	{r7, pc}
+ 201              		.cfi_endproc
+ 202              	.LFE32:
+ 204 001a 00BF     		.section	.text.xMBMasterRunResTake,"ax",%progbits
+ 205              		.align	2
+ 206              		.global	xMBMasterRunResTake
+ 207              		.thumb
+ 208              		.thumb_func
+ 210              	xMBMasterRunResTake:
+ 211              	.LFB33:
+ 118:../FreeModbus/stm32/portevent_m.c **** 
+ 119:../FreeModbus/stm32/portevent_m.c **** /**
+ 120:../FreeModbus/stm32/portevent_m.c ****  * This function is take Mobus Master running resource.
+ 121:../FreeModbus/stm32/portevent_m.c ****  * Note:The resource is define by Operating System.If you not use OS this function can be just retu
+ 122:../FreeModbus/stm32/portevent_m.c ****  *
+ 123:../FreeModbus/stm32/portevent_m.c ****  * @param lTimeOut the waiting time.
+ 124:../FreeModbus/stm32/portevent_m.c ****  *
+ 125:../FreeModbus/stm32/portevent_m.c ****  * @return resource taked result
+ 126:../FreeModbus/stm32/portevent_m.c ****  */
+ 127:../FreeModbus/stm32/portevent_m.c **** BOOL xMBMasterRunResTake( LONG lTimeOut )
+ 128:../FreeModbus/stm32/portevent_m.c **** {
+ 212              		.loc 1 128 0
+ 213              		.cfi_startproc
+ 214              		@ args = 0, pretend = 0, frame = 8
+ 215              		@ frame_needed = 1, uses_anonymous_args = 0
+ 216 0000 80B5     		push	{r7, lr}
+ 217              		.cfi_def_cfa_offset 8
+ 218              		.cfi_offset 7, -8
+ 219              		.cfi_offset 14, -4
+ 220 0002 82B0     		sub	sp, sp, #8
+ 221              		.cfi_def_cfa_offset 16
+ 222 0004 00AF     		add	r7, sp, #0
+ 223              		.cfi_def_cfa_register 7
+ 224 0006 7860     		str	r0, [r7, #4]
+ 129:../FreeModbus/stm32/portevent_m.c **** 	/*If waiting time is -1 .It will wait forever */
+ 130:../FreeModbus/stm32/portevent_m.c **** //	return rt_sem_take(&xMasterRunRes, lTimeOut) ? FALSE : TRUE ;
+ 131:../FreeModbus/stm32/portevent_m.c **** 	ENTER_CRITICAL_SECTION( );
+ 225              		.loc 1 131 0
+ 226 0008 FFF7FEFF 		bl	vPortEnterCritical
+ 132:../FreeModbus/stm32/portevent_m.c ****     if ( xMasterRunRes >0 ) {
+ 227              		.loc 1 132 0
+ 228 000c 40F20003 		movw	r3, #:lower16:xMasterRunRes
+ 229 0010 C0F20003 		movt	r3, #:upper16:xMasterRunRes
+ 230 0014 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 231 0016 002B     		cmp	r3, #0
+ 232 0018 0FD0     		beq	.L10
+ 133:../FreeModbus/stm32/portevent_m.c ****     	xMasterRunRes--;
+ 233              		.loc 1 133 0
+ 234 001a 40F20003 		movw	r3, #:lower16:xMasterRunRes
+ 235 001e C0F20003 		movt	r3, #:upper16:xMasterRunRes
+ 236 0022 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 237 0024 013B     		subs	r3, r3, #1
+ 238 0026 DAB2     		uxtb	r2, r3
+ 239 0028 40F20003 		movw	r3, #:lower16:xMasterRunRes
+ 240 002c C0F20003 		movt	r3, #:upper16:xMasterRunRes
+ 241 0030 1A70     		strb	r2, [r3]
+ 134:../FreeModbus/stm32/portevent_m.c ****     	EXIT_CRITICAL_SECTION( );
+ 242              		.loc 1 134 0
+ 243 0032 FFF7FEFF 		bl	vPortExitCritical
+ 135:../FreeModbus/stm32/portevent_m.c ****     }
+ 136:../FreeModbus/stm32/portevent_m.c ****     else {
+ 137:../FreeModbus/stm32/portevent_m.c ****       	EXIT_CRITICAL_SECTION( );
+ 138:../FreeModbus/stm32/portevent_m.c **** 
+ 139:../FreeModbus/stm32/portevent_m.c ****       	if ( lTimeOut == -1 ) {
+ 140:../FreeModbus/stm32/portevent_m.c **** 		    while ( !xMasterRunRes ) ;
+ 141:../FreeModbus/stm32/portevent_m.c **** 		        return  TRUE;
+ 142:../FreeModbus/stm32/portevent_m.c **** 	    }
+ 143:../FreeModbus/stm32/portevent_m.c **** 	    else {
+ 144:../FreeModbus/stm32/portevent_m.c **** 		    while ( 1 ) {
  145:../FreeModbus/stm32/portevent_m.c **** 
- 146:../FreeModbus/stm32/portevent_m.c **** 			if ( xMasterRunRes )
- 147:../FreeModbus/stm32/portevent_m.c **** 				return  TRUE;
+ 146:../FreeModbus/stm32/portevent_m.c **** 			if ( lTimeOut == 0 )
+ 147:../FreeModbus/stm32/portevent_m.c **** 				break;
  148:../FreeModbus/stm32/portevent_m.c **** 
- 149:../FreeModbus/stm32/portevent_m.c **** 			lTimeOut--;
- 150:../FreeModbus/stm32/portevent_m.c **** 		    }
- 151:../FreeModbus/stm32/portevent_m.c **** 	    }
- 152:../FreeModbus/stm32/portevent_m.c **** 
- 153:../FreeModbus/stm32/portevent_m.c ****         return FALSE;
- 154:../FreeModbus/stm32/portevent_m.c ****     }
+ 149:../FreeModbus/stm32/portevent_m.c **** 			if ( xMasterRunRes )
+ 150:../FreeModbus/stm32/portevent_m.c **** 				return  TRUE;
+ 151:../FreeModbus/stm32/portevent_m.c **** 
+ 152:../FreeModbus/stm32/portevent_m.c **** 			lTimeOut--;
+ 153:../FreeModbus/stm32/portevent_m.c **** 		    }
+ 154:../FreeModbus/stm32/portevent_m.c **** 	    }
  155:../FreeModbus/stm32/portevent_m.c **** 
- 156:../FreeModbus/stm32/portevent_m.c **** 	return  TRUE;
- 243              		.loc 1 156 0
- 244 0036 0123     		movs	r3, #1
- 245 0038 22E0     		b	.L14
- 246              	.L10:
- 134:../FreeModbus/stm32/portevent_m.c **** 
- 247              		.loc 1 134 0
- 248 003a FFF7FEFF 		bl	vPortExitCritical
- 136:../FreeModbus/stm32/portevent_m.c **** 		    while ( !xMasterRunRes ) ;
- 249              		.loc 1 136 0
- 250 003e 7B68     		ldr	r3, [r7, #4]
- 251 0040 B3F1FF3F 		cmp	r3, #-1
- 252 0044 09D1     		bne	.L12
- 137:../FreeModbus/stm32/portevent_m.c **** 		        return  TRUE;
- 253              		.loc 1 137 0
- 254 0046 00BF     		nop
- 255              	.L13:
- 137:../FreeModbus/stm32/portevent_m.c **** 		        return  TRUE;
- 256              		.loc 1 137 0 is_stmt 0 discriminator 1
- 257 0048 40F20003 		movw	r3, #:lower16:xMasterRunRes
- 258 004c C0F20003 		movt	r3, #:upper16:xMasterRunRes
- 259 0050 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
- 260 0052 002B     		cmp	r3, #0
- 261 0054 F8D0     		beq	.L13
- 138:../FreeModbus/stm32/portevent_m.c **** 	    }
- 262              		.loc 1 138 0 is_stmt 1
- 263 0056 0123     		movs	r3, #1
- 264 0058 12E0     		b	.L14
- 265              	.L12:
- 143:../FreeModbus/stm32/portevent_m.c **** 				break;
- 266              		.loc 1 143 0
- 267 005a 7B68     		ldr	r3, [r7, #4]
- 268 005c 002B     		cmp	r3, #0
- 269 005e 02D1     		bne	.L15
- 144:../FreeModbus/stm32/portevent_m.c **** 
- 270              		.loc 1 144 0
- 271 0060 00BF     		nop
- 153:../FreeModbus/stm32/portevent_m.c ****     }
- 272              		.loc 1 153 0
- 273 0062 0023     		movs	r3, #0
- 274 0064 0CE0     		b	.L14
- 275              	.L15:
- 146:../FreeModbus/stm32/portevent_m.c **** 				return  TRUE;
- 276              		.loc 1 146 0
- 277 0066 40F20003 		movw	r3, #:lower16:xMasterRunRes
- 278 006a C0F20003 		movt	r3, #:upper16:xMasterRunRes
- 279 006e 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
- 280 0070 002B     		cmp	r3, #0
- 281 0072 01D0     		beq	.L17
+ 156:../FreeModbus/stm32/portevent_m.c ****         return FALSE;
+ 157:../FreeModbus/stm32/portevent_m.c ****     }
+ 158:../FreeModbus/stm32/portevent_m.c **** 
+ 159:../FreeModbus/stm32/portevent_m.c **** 	return  TRUE;
+ 244              		.loc 1 159 0
+ 245 0036 0123     		movs	r3, #1
+ 246 0038 22E0     		b	.L14
+ 247              	.L10:
+ 137:../FreeModbus/stm32/portevent_m.c **** 
+ 248              		.loc 1 137 0
+ 249 003a FFF7FEFF 		bl	vPortExitCritical
+ 139:../FreeModbus/stm32/portevent_m.c **** 		    while ( !xMasterRunRes ) ;
+ 250              		.loc 1 139 0
+ 251 003e 7B68     		ldr	r3, [r7, #4]
+ 252 0040 B3F1FF3F 		cmp	r3, #-1
+ 253 0044 09D1     		bne	.L12
+ 140:../FreeModbus/stm32/portevent_m.c **** 		        return  TRUE;
+ 254              		.loc 1 140 0
+ 255 0046 00BF     		nop
+ 256              	.L13:
+ 140:../FreeModbus/stm32/portevent_m.c **** 		        return  TRUE;
+ 257              		.loc 1 140 0 is_stmt 0 discriminator 1
+ 258 0048 40F20003 		movw	r3, #:lower16:xMasterRunRes
+ 259 004c C0F20003 		movt	r3, #:upper16:xMasterRunRes
+ 260 0050 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 261 0052 002B     		cmp	r3, #0
+ 262 0054 F8D0     		beq	.L13
+ 141:../FreeModbus/stm32/portevent_m.c **** 	    }
+ 263              		.loc 1 141 0 is_stmt 1
+ 264 0056 0123     		movs	r3, #1
+ 265 0058 12E0     		b	.L14
+ 266              	.L12:
+ 146:../FreeModbus/stm32/portevent_m.c **** 				break;
+ 267              		.loc 1 146 0
+ 268 005a 7B68     		ldr	r3, [r7, #4]
+ 269 005c 002B     		cmp	r3, #0
+ 270 005e 02D1     		bne	.L15
  147:../FreeModbus/stm32/portevent_m.c **** 
- 282              		.loc 1 147 0
- 283 0074 0123     		movs	r3, #1
- 284 0076 03E0     		b	.L14
- 285              	.L17:
- 149:../FreeModbus/stm32/portevent_m.c **** 		    }
- 286              		.loc 1 149 0
- 287 0078 7B68     		ldr	r3, [r7, #4]
- 288 007a 013B     		subs	r3, r3, #1
- 289 007c 7B60     		str	r3, [r7, #4]
- 150:../FreeModbus/stm32/portevent_m.c **** 	    }
- 290              		.loc 1 150 0
- 291 007e ECE7     		b	.L12
- 292              	.L14:
- 157:../FreeModbus/stm32/portevent_m.c ****     //return  FALSE;
- 158:../FreeModbus/stm32/portevent_m.c **** }
- 293              		.loc 1 158 0
- 294 0080 1846     		mov	r0, r3
- 295 0082 0837     		adds	r7, r7, #8
- 296 0084 BD46     		mov	sp, r7
- 297              		@ sp needed
- 298 0086 80BD     		pop	{r7, pc}
- 299              		.cfi_endproc
- 300              	.LFE33:
- 302              		.section	.text.vMBMasterRunResRelease,"ax",%progbits
- 303              		.align	2
- 304              		.global	vMBMasterRunResRelease
- 305              		.thumb
- 306              		.thumb_func
- 308              	vMBMasterRunResRelease:
- 309              	.LFB34:
- 159:../FreeModbus/stm32/portevent_m.c **** 
- 160:../FreeModbus/stm32/portevent_m.c **** /**
- 161:../FreeModbus/stm32/portevent_m.c ****  * This function is release Mobus Master running resource.
- 162:../FreeModbus/stm32/portevent_m.c ****  * Note:The resource is define by Operating System.If you not use OS this function can be empty.
- 163:../FreeModbus/stm32/portevent_m.c ****  *
- 164:../FreeModbus/stm32/portevent_m.c ****  */
- 165:../FreeModbus/stm32/portevent_m.c **** void vMBMasterRunResRelease( void )
- 166:../FreeModbus/stm32/portevent_m.c **** {
- 310              		.loc 1 166 0
- 311              		.cfi_startproc
- 312              		@ args = 0, pretend = 0, frame = 0
- 313              		@ frame_needed = 1, uses_anonymous_args = 0
- 314 0000 80B5     		push	{r7, lr}
- 315              		.cfi_def_cfa_offset 8
- 316              		.cfi_offset 7, -8
- 317              		.cfi_offset 14, -4
- 318 0002 00AF     		add	r7, sp, #0
- 319              		.cfi_def_cfa_register 7
- 167:../FreeModbus/stm32/portevent_m.c **** 	/* release resource */
- 168:../FreeModbus/stm32/portevent_m.c **** //	rt_sem_release(&xMasterRunRes);
- 169:../FreeModbus/stm32/portevent_m.c **** 	ENTER_CRITICAL_SECTION( );
- 320              		.loc 1 169 0
- 321 0004 FFF7FEFF 		bl	vPortEnterCritical
- 170:../FreeModbus/stm32/portevent_m.c **** 	xMasterRunRes += 1;
- 322              		.loc 1 170 0
- 323 0008 40F20003 		movw	r3, #:lower16:xMasterRunRes
- 324 000c C0F20003 		movt	r3, #:upper16:xMasterRunRes
- 325 0010 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
- 326 0012 0133     		adds	r3, r3, #1
- 327 0014 DAB2     		uxtb	r2, r3
- 328 0016 40F20003 		movw	r3, #:lower16:xMasterRunRes
- 329 001a C0F20003 		movt	r3, #:upper16:xMasterRunRes
- 330 001e 1A70     		strb	r2, [r3]
- 171:../FreeModbus/stm32/portevent_m.c **** 	EXIT_CRITICAL_SECTION( );
- 331              		.loc 1 171 0
- 332 0020 FFF7FEFF 		bl	vPortExitCritical
- 172:../FreeModbus/stm32/portevent_m.c **** }
- 333              		.loc 1 172 0
- 334 0024 80BD     		pop	{r7, pc}
- 335              		.cfi_endproc
- 336              	.LFE34:
- 338 0026 00BF     		.section	.text.vMBMasterErrorCBRespondTimeout,"ax",%progbits
- 339              		.align	2
- 340              		.global	vMBMasterErrorCBRespondTimeout
- 341              		.thumb
- 342              		.thumb_func
- 344              	vMBMasterErrorCBRespondTimeout:
- 345              	.LFB35:
- 173:../FreeModbus/stm32/portevent_m.c **** 
- 174:../FreeModbus/stm32/portevent_m.c **** /**
- 175:../FreeModbus/stm32/portevent_m.c ****  * This is modbus master respond timeout error process callback function.
- 176:../FreeModbus/stm32/portevent_m.c ****  * @note There functions will block modbus master poll while execute OS waiting.
- 177:../FreeModbus/stm32/portevent_m.c ****  * So,for real-time of system.Do not execute too much waiting process.
- 178:../FreeModbus/stm32/portevent_m.c ****  *
- 179:../FreeModbus/stm32/portevent_m.c ****  * @param ucDestAddress destination salve address
- 180:../FreeModbus/stm32/portevent_m.c ****  * @param pucPDUData PDU buffer data
- 181:../FreeModbus/stm32/portevent_m.c ****  * @param ucPDULength PDU buffer length
- 182:../FreeModbus/stm32/portevent_m.c ****  *
- 183:../FreeModbus/stm32/portevent_m.c ****  */
- 184:../FreeModbus/stm32/portevent_m.c **** void vMBMasterErrorCBRespondTimeout(UCHAR ucDestAddress, const UCHAR* pucPDUData,
- 185:../FreeModbus/stm32/portevent_m.c **** 		USHORT ucPDULength) {
- 346              		.loc 1 185 0
- 347              		.cfi_startproc
- 348              		@ args = 0, pretend = 0, frame = 8
- 349              		@ frame_needed = 1, uses_anonymous_args = 0
- 350 0000 80B5     		push	{r7, lr}
- 351              		.cfi_def_cfa_offset 8
- 352              		.cfi_offset 7, -8
- 353              		.cfi_offset 14, -4
- 354 0002 82B0     		sub	sp, sp, #8
- 355              		.cfi_def_cfa_offset 16
- 356 0004 00AF     		add	r7, sp, #0
- 357              		.cfi_def_cfa_register 7
- 358 0006 3960     		str	r1, [r7]
- 359 0008 1346     		mov	r3, r2
- 360 000a 0246     		mov	r2, r0
- 361 000c FA71     		strb	r2, [r7, #7]
- 362 000e BB80     		strh	r3, [r7, #4]	@ movhi
- 186:../FreeModbus/stm32/portevent_m.c **** 	/**
- 187:../FreeModbus/stm32/portevent_m.c **** 	 * @note This code is use OS's event mechanism for modbus master protocol stack.
- 188:../FreeModbus/stm32/portevent_m.c **** 	 * If you don't use OS, you can change it.
- 189:../FreeModbus/stm32/portevent_m.c **** 	 */
- 190:../FreeModbus/stm32/portevent_m.c **** //	rt_event_send(&xMasterOsEvent, EV_MASTER_ERROR_RESPOND_TIMEOUT);
- 191:../FreeModbus/stm32/portevent_m.c **** 	xMBMasterPortEventPost( EV_MASTER_ERROR_RESPOND_TIMEOUT );
- 363              		.loc 1 191 0
- 364 0010 4020     		movs	r0, #64
- 365 0012 FFF7FEFF 		bl	xMBMasterPortEventPost
- 192:../FreeModbus/stm32/portevent_m.c **** 
- 193:../FreeModbus/stm32/portevent_m.c **** 	/* You can add your code under here. */
- 194:../FreeModbus/stm32/portevent_m.c **** 
- 195:../FreeModbus/stm32/portevent_m.c **** }
- 366              		.loc 1 195 0
- 367 0016 0837     		adds	r7, r7, #8
- 368 0018 BD46     		mov	sp, r7
- 369              		@ sp needed
- 370 001a 80BD     		pop	{r7, pc}
- 371              		.cfi_endproc
- 372              	.LFE35:
- 374              		.section	.text.vMBMasterErrorCBReceiveData,"ax",%progbits
- 375              		.align	2
- 376              		.global	vMBMasterErrorCBReceiveData
- 377              		.thumb
- 378              		.thumb_func
- 380              	vMBMasterErrorCBReceiveData:
- 381              	.LFB36:
+ 271              		.loc 1 147 0
+ 272 0060 00BF     		nop
+ 156:../FreeModbus/stm32/portevent_m.c ****     }
+ 273              		.loc 1 156 0
+ 274 0062 0023     		movs	r3, #0
+ 275 0064 0CE0     		b	.L14
+ 276              	.L15:
+ 149:../FreeModbus/stm32/portevent_m.c **** 				return  TRUE;
+ 277              		.loc 1 149 0
+ 278 0066 40F20003 		movw	r3, #:lower16:xMasterRunRes
+ 279 006a C0F20003 		movt	r3, #:upper16:xMasterRunRes
+ 280 006e 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 281 0070 002B     		cmp	r3, #0
+ 282 0072 01D0     		beq	.L17
+ 150:../FreeModbus/stm32/portevent_m.c **** 
+ 283              		.loc 1 150 0
+ 284 0074 0123     		movs	r3, #1
+ 285 0076 03E0     		b	.L14
+ 286              	.L17:
+ 152:../FreeModbus/stm32/portevent_m.c **** 		    }
+ 287              		.loc 1 152 0
+ 288 0078 7B68     		ldr	r3, [r7, #4]
+ 289 007a 013B     		subs	r3, r3, #1
+ 290 007c 7B60     		str	r3, [r7, #4]
+ 153:../FreeModbus/stm32/portevent_m.c **** 	    }
+ 291              		.loc 1 153 0
+ 292 007e ECE7     		b	.L12
+ 293              	.L14:
+ 160:../FreeModbus/stm32/portevent_m.c ****     //return  FALSE;
+ 161:../FreeModbus/stm32/portevent_m.c **** }
+ 294              		.loc 1 161 0
+ 295 0080 1846     		mov	r0, r3
+ 296 0082 0837     		adds	r7, r7, #8
+ 297 0084 BD46     		mov	sp, r7
+ 298              		@ sp needed
+ 299 0086 80BD     		pop	{r7, pc}
+ 300              		.cfi_endproc
+ 301              	.LFE33:
+ 303              		.section	.text.vMBMasterRunResRelease,"ax",%progbits
+ 304              		.align	2
+ 305              		.global	vMBMasterRunResRelease
+ 306              		.thumb
+ 307              		.thumb_func
+ 309              	vMBMasterRunResRelease:
+ 310              	.LFB34:
+ 162:../FreeModbus/stm32/portevent_m.c **** 
+ 163:../FreeModbus/stm32/portevent_m.c **** /**
+ 164:../FreeModbus/stm32/portevent_m.c ****  * This function is release Mobus Master running resource.
+ 165:../FreeModbus/stm32/portevent_m.c ****  * Note:The resource is define by Operating System.If you not use OS this function can be empty.
+ 166:../FreeModbus/stm32/portevent_m.c ****  *
+ 167:../FreeModbus/stm32/portevent_m.c ****  */
+ 168:../FreeModbus/stm32/portevent_m.c **** void vMBMasterRunResRelease( void )
+ 169:../FreeModbus/stm32/portevent_m.c **** {
+ 311              		.loc 1 169 0
+ 312              		.cfi_startproc
+ 313              		@ args = 0, pretend = 0, frame = 0
+ 314              		@ frame_needed = 1, uses_anonymous_args = 0
+ 315 0000 80B5     		push	{r7, lr}
+ 316              		.cfi_def_cfa_offset 8
+ 317              		.cfi_offset 7, -8
+ 318              		.cfi_offset 14, -4
+ 319 0002 00AF     		add	r7, sp, #0
+ 320              		.cfi_def_cfa_register 7
+ 170:../FreeModbus/stm32/portevent_m.c **** 	/* release resource */
+ 171:../FreeModbus/stm32/portevent_m.c **** //	rt_sem_release(&xMasterRunRes);
+ 172:../FreeModbus/stm32/portevent_m.c **** 	ENTER_CRITICAL_SECTION( );
+ 321              		.loc 1 172 0
+ 322 0004 FFF7FEFF 		bl	vPortEnterCritical
+ 173:../FreeModbus/stm32/portevent_m.c **** 	xMasterRunRes += 1;
+ 323              		.loc 1 173 0
+ 324 0008 40F20003 		movw	r3, #:lower16:xMasterRunRes
+ 325 000c C0F20003 		movt	r3, #:upper16:xMasterRunRes
+ 326 0010 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 327 0012 0133     		adds	r3, r3, #1
+ 328 0014 DAB2     		uxtb	r2, r3
+ 329 0016 40F20003 		movw	r3, #:lower16:xMasterRunRes
+ 330 001a C0F20003 		movt	r3, #:upper16:xMasterRunRes
+ 331 001e 1A70     		strb	r2, [r3]
+ 174:../FreeModbus/stm32/portevent_m.c **** 	EXIT_CRITICAL_SECTION( );
+ 332              		.loc 1 174 0
+ 333 0020 FFF7FEFF 		bl	vPortExitCritical
+ 175:../FreeModbus/stm32/portevent_m.c **** }
+ 334              		.loc 1 175 0
+ 335 0024 80BD     		pop	{r7, pc}
+ 336              		.cfi_endproc
+ 337              	.LFE34:
+ 339 0026 00BF     		.section	.text.vMBMasterErrorCBRespondTimeout,"ax",%progbits
+ 340              		.align	2
+ 341              		.global	vMBMasterErrorCBRespondTimeout
+ 342              		.thumb
+ 343              		.thumb_func
+ 345              	vMBMasterErrorCBRespondTimeout:
+ 346              	.LFB35:
+ 176:../FreeModbus/stm32/portevent_m.c **** 
+ 177:../FreeModbus/stm32/portevent_m.c **** /**
+ 178:../FreeModbus/stm32/portevent_m.c ****  * This is modbus master respond timeout error process callback function.
+ 179:../FreeModbus/stm32/portevent_m.c ****  * @note There functions will block modbus master poll while execute OS waiting.
+ 180:../FreeModbus/stm32/portevent_m.c ****  * So,for real-time of system.Do not execute too much waiting process.
+ 181:../FreeModbus/stm32/portevent_m.c ****  *
+ 182:../FreeModbus/stm32/portevent_m.c ****  * @param ucDestAddress destination salve address
+ 183:../FreeModbus/stm32/portevent_m.c ****  * @param pucPDUData PDU buffer data
+ 184:../FreeModbus/stm32/portevent_m.c ****  * @param ucPDULength PDU buffer length
+ 185:../FreeModbus/stm32/portevent_m.c ****  *
+ 186:../FreeModbus/stm32/portevent_m.c ****  */
+ 187:../FreeModbus/stm32/portevent_m.c **** void vMBMasterErrorCBRespondTimeout(UCHAR ucDestAddress, const UCHAR* pucPDUData,
+ 188:../FreeModbus/stm32/portevent_m.c **** 		USHORT ucPDULength) {
+ 347              		.loc 1 188 0
+ 348              		.cfi_startproc
+ 349              		@ args = 0, pretend = 0, frame = 8
+ 350              		@ frame_needed = 1, uses_anonymous_args = 0
+ 351              		@ link register save eliminated.
+ 352 0000 80B4     		push	{r7}
+ 353              		.cfi_def_cfa_offset 4
+ 354              		.cfi_offset 7, -4
+ 355 0002 83B0     		sub	sp, sp, #12
+ 356              		.cfi_def_cfa_offset 16
+ 357 0004 00AF     		add	r7, sp, #0
+ 358              		.cfi_def_cfa_register 7
+ 359 0006 3960     		str	r1, [r7]
+ 360 0008 1346     		mov	r3, r2
+ 361 000a 0246     		mov	r2, r0
+ 362 000c FA71     		strb	r2, [r7, #7]
+ 363 000e BB80     		strh	r3, [r7, #4]	@ movhi
+ 189:../FreeModbus/stm32/portevent_m.c **** 	/**
+ 190:../FreeModbus/stm32/portevent_m.c **** 	 * @note This code is use OS's event mechanism for modbus master protocol stack.
+ 191:../FreeModbus/stm32/portevent_m.c **** 	 * If you don't use OS, you can change it.
+ 192:../FreeModbus/stm32/portevent_m.c **** 	 */
+ 193:../FreeModbus/stm32/portevent_m.c **** //	rt_event_send(&xMasterOsEvent, EV_MASTER_ERROR_RESPOND_TIMEOUT);
+ 194:../FreeModbus/stm32/portevent_m.c **** 	//xMBMasterPortEventPost( EV_MASTER_ERROR_RESPOND_TIMEOUT );
+ 195:../FreeModbus/stm32/portevent_m.c **** 	xMasterOsEvent = EV_MASTER_ERROR_RESPOND_TIMEOUT;
+ 364              		.loc 1 195 0
+ 365 0010 40F20003 		movw	r3, #:lower16:xMasterOsEvent
+ 366 0014 C0F20003 		movt	r3, #:upper16:xMasterOsEvent
+ 367 0018 4022     		movs	r2, #64
+ 368 001a 1A60     		str	r2, [r3]
  196:../FreeModbus/stm32/portevent_m.c **** 
- 197:../FreeModbus/stm32/portevent_m.c **** /**
- 198:../FreeModbus/stm32/portevent_m.c ****  * This is modbus master receive data error process callback function.
- 199:../FreeModbus/stm32/portevent_m.c ****  * @note There functions will block modbus master poll while execute OS waiting.
- 200:../FreeModbus/stm32/portevent_m.c ****  * So,for real-time of system.Do not execute too much waiting process.
- 201:../FreeModbus/stm32/portevent_m.c ****  *
- 202:../FreeModbus/stm32/portevent_m.c ****  * @param ucDestAddress destination salve address
- 203:../FreeModbus/stm32/portevent_m.c ****  * @param pucPDUData PDU buffer data
- 204:../FreeModbus/stm32/portevent_m.c ****  * @param ucPDULength PDU buffer length
+ 197:../FreeModbus/stm32/portevent_m.c **** 	/* You can add your code under here. */
+ 198:../FreeModbus/stm32/portevent_m.c **** 
+ 199:../FreeModbus/stm32/portevent_m.c **** }
+ 369              		.loc 1 199 0
+ 370 001c 0C37     		adds	r7, r7, #12
+ 371 001e BD46     		mov	sp, r7
+ 372              		@ sp needed
+ 373 0020 5DF8047B 		ldr	r7, [sp], #4
+ 374 0024 7047     		bx	lr
+ 375              		.cfi_endproc
+ 376              	.LFE35:
+ 378 0026 00BF     		.section	.text.vMBMasterErrorCBReceiveData,"ax",%progbits
+ 379              		.align	2
+ 380              		.global	vMBMasterErrorCBReceiveData
+ 381              		.thumb
+ 382              		.thumb_func
+ 384              	vMBMasterErrorCBReceiveData:
+ 385              	.LFB36:
+ 200:../FreeModbus/stm32/portevent_m.c **** 
+ 201:../FreeModbus/stm32/portevent_m.c **** /**
+ 202:../FreeModbus/stm32/portevent_m.c ****  * This is modbus master receive data error process callback function.
+ 203:../FreeModbus/stm32/portevent_m.c ****  * @note There functions will block modbus master poll while execute OS waiting.
+ 204:../FreeModbus/stm32/portevent_m.c ****  * So,for real-time of system.Do not execute too much waiting process.
  205:../FreeModbus/stm32/portevent_m.c ****  *
- 206:../FreeModbus/stm32/portevent_m.c ****  */
- 207:../FreeModbus/stm32/portevent_m.c **** void vMBMasterErrorCBReceiveData(UCHAR ucDestAddress, const UCHAR* pucPDUData,
- 208:../FreeModbus/stm32/portevent_m.c **** 		USHORT ucPDULength) {
- 382              		.loc 1 208 0
- 383              		.cfi_startproc
- 384              		@ args = 0, pretend = 0, frame = 8
- 385              		@ frame_needed = 1, uses_anonymous_args = 0
- 386 0000 80B5     		push	{r7, lr}
- 387              		.cfi_def_cfa_offset 8
- 388              		.cfi_offset 7, -8
- 389              		.cfi_offset 14, -4
- 390 0002 82B0     		sub	sp, sp, #8
- 391              		.cfi_def_cfa_offset 16
- 392 0004 00AF     		add	r7, sp, #0
- 393              		.cfi_def_cfa_register 7
- 394 0006 3960     		str	r1, [r7]
- 395 0008 1346     		mov	r3, r2
- 396 000a 0246     		mov	r2, r0
- 397 000c FA71     		strb	r2, [r7, #7]
- 398 000e BB80     		strh	r3, [r7, #4]	@ movhi
- 209:../FreeModbus/stm32/portevent_m.c **** 	/**
- 210:../FreeModbus/stm32/portevent_m.c **** 	 * @note This code is use OS's event mechanism for modbus master protocol stack.
- 211:../FreeModbus/stm32/portevent_m.c **** 	 * If you don't use OS, you can change it.
- 212:../FreeModbus/stm32/portevent_m.c **** 	 */
- 213:../FreeModbus/stm32/portevent_m.c **** //	rt_event_send(&xMasterOsEvent, EV_MASTER_ERROR_RECEIVE_DATA);
- 214:../FreeModbus/stm32/portevent_m.c **** 	xMBMasterPortEventPost( EV_MASTER_ERROR_RECEIVE_DATA);
- 399              		.loc 1 214 0
- 400 0010 8020     		movs	r0, #128
- 401 0012 FFF7FEFF 		bl	xMBMasterPortEventPost
- 215:../FreeModbus/stm32/portevent_m.c **** 	/* You can add your code under here. */
- 216:../FreeModbus/stm32/portevent_m.c **** 
- 217:../FreeModbus/stm32/portevent_m.c **** }
- 402              		.loc 1 217 0
- 403 0016 0837     		adds	r7, r7, #8
- 404 0018 BD46     		mov	sp, r7
- 405              		@ sp needed
- 406 001a 80BD     		pop	{r7, pc}
- 407              		.cfi_endproc
- 408              	.LFE36:
- 410              		.section	.text.vMBMasterErrorCBExecuteFunction,"ax",%progbits
- 411              		.align	2
- 412              		.global	vMBMasterErrorCBExecuteFunction
- 413              		.thumb
- 414              		.thumb_func
- 416              	vMBMasterErrorCBExecuteFunction:
- 417              	.LFB37:
- 218:../FreeModbus/stm32/portevent_m.c **** 
- 219:../FreeModbus/stm32/portevent_m.c **** /**
- 220:../FreeModbus/stm32/portevent_m.c ****  * This is modbus master execute function error process callback function.
- 221:../FreeModbus/stm32/portevent_m.c ****  * @note There functions will block modbus master poll while execute OS waiting.
- 222:../FreeModbus/stm32/portevent_m.c ****  * So,for real-time of system.Do not execute too much waiting process.
- 223:../FreeModbus/stm32/portevent_m.c ****  *
- 224:../FreeModbus/stm32/portevent_m.c ****  * @param ucDestAddress destination salve address
- 225:../FreeModbus/stm32/portevent_m.c ****  * @param pucPDUData PDU buffer data
- 226:../FreeModbus/stm32/portevent_m.c ****  * @param ucPDULength PDU buffer length
- 227:../FreeModbus/stm32/portevent_m.c ****  *
- 228:../FreeModbus/stm32/portevent_m.c ****  */
- 229:../FreeModbus/stm32/portevent_m.c **** void vMBMasterErrorCBExecuteFunction(UCHAR ucDestAddress, const UCHAR* pucPDUData,
- 230:../FreeModbus/stm32/portevent_m.c **** 		USHORT ucPDULength) {
- 418              		.loc 1 230 0
- 419              		.cfi_startproc
- 420              		@ args = 0, pretend = 0, frame = 8
- 421              		@ frame_needed = 1, uses_anonymous_args = 0
- 422 0000 80B5     		push	{r7, lr}
- 423              		.cfi_def_cfa_offset 8
- 424              		.cfi_offset 7, -8
- 425              		.cfi_offset 14, -4
- 426 0002 82B0     		sub	sp, sp, #8
- 427              		.cfi_def_cfa_offset 16
- 428 0004 00AF     		add	r7, sp, #0
- 429              		.cfi_def_cfa_register 7
- 430 0006 3960     		str	r1, [r7]
- 431 0008 1346     		mov	r3, r2
- 432 000a 0246     		mov	r2, r0
- 433 000c FA71     		strb	r2, [r7, #7]
- 434 000e BB80     		strh	r3, [r7, #4]	@ movhi
- 231:../FreeModbus/stm32/portevent_m.c **** 	/**
- 232:../FreeModbus/stm32/portevent_m.c **** 	 * @note This code is use OS's event mechanism for modbus master protocol stack.
- 233:../FreeModbus/stm32/portevent_m.c **** 	 * If you don't use OS, you can change it.
- 234:../FreeModbus/stm32/portevent_m.c **** 	 */
- 235:../FreeModbus/stm32/portevent_m.c **** 	//rt_event_send(&xMasterOsEvent, EV_MASTER_ERROR_EXECUTE_FUNCTION);
- 236:../FreeModbus/stm32/portevent_m.c **** 	xMBMasterPortEventPost( EV_MASTER_ERROR_EXECUTE_FUNCTION);
- 435              		.loc 1 236 0
- 436 0010 4FF48070 		mov	r0, #256
- 437 0014 FFF7FEFF 		bl	xMBMasterPortEventPost
- 237:../FreeModbus/stm32/portevent_m.c **** 	/* You can add your code under here. */
- 238:../FreeModbus/stm32/portevent_m.c **** 
- 239:../FreeModbus/stm32/portevent_m.c **** }
- 438              		.loc 1 239 0
- 439 0018 0837     		adds	r7, r7, #8
- 440 001a BD46     		mov	sp, r7
- 441              		@ sp needed
- 442 001c 80BD     		pop	{r7, pc}
- 443              		.cfi_endproc
- 444              	.LFE37:
- 446 001e 00BF     		.section	.text.vMBMasterCBRequestSuccess,"ax",%progbits
- 447              		.align	2
- 448              		.global	vMBMasterCBRequestSuccess
- 449              		.thumb
- 450              		.thumb_func
- 452              	vMBMasterCBRequestSuccess:
- 453              	.LFB38:
- 240:../FreeModbus/stm32/portevent_m.c **** 
- 241:../FreeModbus/stm32/portevent_m.c **** /**
- 242:../FreeModbus/stm32/portevent_m.c ****  * This is modbus master request process success callback function.
- 243:../FreeModbus/stm32/portevent_m.c ****  * @note There functions will block modbus master poll while execute OS waiting.
- 244:../FreeModbus/stm32/portevent_m.c ****  * So,for real-time of system.Do not execute too much waiting process.
- 245:../FreeModbus/stm32/portevent_m.c ****  *
- 246:../FreeModbus/stm32/portevent_m.c ****  */
- 247:../FreeModbus/stm32/portevent_m.c **** void vMBMasterCBRequestSuccess( void ) {
- 454              		.loc 1 247 0
- 455              		.cfi_startproc
- 456              		@ args = 0, pretend = 0, frame = 0
- 457              		@ frame_needed = 1, uses_anonymous_args = 0
- 458 0000 80B5     		push	{r7, lr}
- 459              		.cfi_def_cfa_offset 8
- 460              		.cfi_offset 7, -8
- 461              		.cfi_offset 14, -4
- 462 0002 00AF     		add	r7, sp, #0
- 463              		.cfi_def_cfa_register 7
- 248:../FreeModbus/stm32/portevent_m.c **** 	/**
- 249:../FreeModbus/stm32/portevent_m.c **** 	 * @note This code is use OS's event mechanism for modbus master protocol stack.
- 250:../FreeModbus/stm32/portevent_m.c **** 	 * If you don't use OS, you can change it.
- 251:../FreeModbus/stm32/portevent_m.c **** 	 */
- 252:../FreeModbus/stm32/portevent_m.c **** //	rt_event_send(&xMasterOsEvent, EV_MASTER_PROCESS_SUCESS);
- 253:../FreeModbus/stm32/portevent_m.c **** 	xMBMasterPortEventPost( EV_MASTER_PROCESS_SUCESS);
+ 206:../FreeModbus/stm32/portevent_m.c ****  * @param ucDestAddress destination salve address
+ 207:../FreeModbus/stm32/portevent_m.c ****  * @param pucPDUData PDU buffer data
+ 208:../FreeModbus/stm32/portevent_m.c ****  * @param ucPDULength PDU buffer length
+ 209:../FreeModbus/stm32/portevent_m.c ****  *
+ 210:../FreeModbus/stm32/portevent_m.c ****  */
+ 211:../FreeModbus/stm32/portevent_m.c **** void vMBMasterErrorCBReceiveData(UCHAR ucDestAddress, const UCHAR* pucPDUData,
+ 212:../FreeModbus/stm32/portevent_m.c **** 		USHORT ucPDULength) {
+ 386              		.loc 1 212 0
+ 387              		.cfi_startproc
+ 388              		@ args = 0, pretend = 0, frame = 8
+ 389              		@ frame_needed = 1, uses_anonymous_args = 0
+ 390              		@ link register save eliminated.
+ 391 0000 80B4     		push	{r7}
+ 392              		.cfi_def_cfa_offset 4
+ 393              		.cfi_offset 7, -4
+ 394 0002 83B0     		sub	sp, sp, #12
+ 395              		.cfi_def_cfa_offset 16
+ 396 0004 00AF     		add	r7, sp, #0
+ 397              		.cfi_def_cfa_register 7
+ 398 0006 3960     		str	r1, [r7]
+ 399 0008 1346     		mov	r3, r2
+ 400 000a 0246     		mov	r2, r0
+ 401 000c FA71     		strb	r2, [r7, #7]
+ 402 000e BB80     		strh	r3, [r7, #4]	@ movhi
+ 213:../FreeModbus/stm32/portevent_m.c **** 	/**
+ 214:../FreeModbus/stm32/portevent_m.c **** 	 * @note This code is use OS's event mechanism for modbus master protocol stack.
+ 215:../FreeModbus/stm32/portevent_m.c **** 	 * If you don't use OS, you can change it.
+ 216:../FreeModbus/stm32/portevent_m.c **** 	 */
+ 217:../FreeModbus/stm32/portevent_m.c **** //	rt_event_send(&xMasterOsEvent, EV_MASTER_ERROR_RECEIVE_DATA);
+ 218:../FreeModbus/stm32/portevent_m.c **** 	//xMBMasterPortEventPost( EV_MASTER_ERROR_RECEIVE_DATA);
+ 219:../FreeModbus/stm32/portevent_m.c **** 	xMasterOsEvent = EV_MASTER_ERROR_RECEIVE_DATA;
+ 403              		.loc 1 219 0
+ 404 0010 40F20003 		movw	r3, #:lower16:xMasterOsEvent
+ 405 0014 C0F20003 		movt	r3, #:upper16:xMasterOsEvent
+ 406 0018 8022     		movs	r2, #128
+ 407 001a 1A60     		str	r2, [r3]
+ 220:../FreeModbus/stm32/portevent_m.c **** 	/* You can add your code under here. */
+ 221:../FreeModbus/stm32/portevent_m.c **** 
+ 222:../FreeModbus/stm32/portevent_m.c **** }
+ 408              		.loc 1 222 0
+ 409 001c 0C37     		adds	r7, r7, #12
+ 410 001e BD46     		mov	sp, r7
+ 411              		@ sp needed
+ 412 0020 5DF8047B 		ldr	r7, [sp], #4
+ 413 0024 7047     		bx	lr
+ 414              		.cfi_endproc
+ 415              	.LFE36:
+ 417 0026 00BF     		.section	.text.vMBMasterErrorCBExecuteFunction,"ax",%progbits
+ 418              		.align	2
+ 419              		.global	vMBMasterErrorCBExecuteFunction
+ 420              		.thumb
+ 421              		.thumb_func
+ 423              	vMBMasterErrorCBExecuteFunction:
+ 424              	.LFB37:
+ 223:../FreeModbus/stm32/portevent_m.c **** 
+ 224:../FreeModbus/stm32/portevent_m.c **** /**
+ 225:../FreeModbus/stm32/portevent_m.c ****  * This is modbus master execute function error process callback function.
+ 226:../FreeModbus/stm32/portevent_m.c ****  * @note There functions will block modbus master poll while execute OS waiting.
+ 227:../FreeModbus/stm32/portevent_m.c ****  * So,for real-time of system.Do not execute too much waiting process.
+ 228:../FreeModbus/stm32/portevent_m.c ****  *
+ 229:../FreeModbus/stm32/portevent_m.c ****  * @param ucDestAddress destination salve address
+ 230:../FreeModbus/stm32/portevent_m.c ****  * @param pucPDUData PDU buffer data
+ 231:../FreeModbus/stm32/portevent_m.c ****  * @param ucPDULength PDU buffer length
+ 232:../FreeModbus/stm32/portevent_m.c ****  *
+ 233:../FreeModbus/stm32/portevent_m.c ****  */
+ 234:../FreeModbus/stm32/portevent_m.c **** void vMBMasterErrorCBExecuteFunction(UCHAR ucDestAddress, const UCHAR* pucPDUData,
+ 235:../FreeModbus/stm32/portevent_m.c **** 		USHORT ucPDULength) {
+ 425              		.loc 1 235 0
+ 426              		.cfi_startproc
+ 427              		@ args = 0, pretend = 0, frame = 8
+ 428              		@ frame_needed = 1, uses_anonymous_args = 0
+ 429              		@ link register save eliminated.
+ 430 0000 80B4     		push	{r7}
+ 431              		.cfi_def_cfa_offset 4
+ 432              		.cfi_offset 7, -4
+ 433 0002 83B0     		sub	sp, sp, #12
+ 434              		.cfi_def_cfa_offset 16
+ 435 0004 00AF     		add	r7, sp, #0
+ 436              		.cfi_def_cfa_register 7
+ 437 0006 3960     		str	r1, [r7]
+ 438 0008 1346     		mov	r3, r2
+ 439 000a 0246     		mov	r2, r0
+ 440 000c FA71     		strb	r2, [r7, #7]
+ 441 000e BB80     		strh	r3, [r7, #4]	@ movhi
+ 236:../FreeModbus/stm32/portevent_m.c **** 	/**
+ 237:../FreeModbus/stm32/portevent_m.c **** 	 * @note This code is use OS's event mechanism for modbus master protocol stack.
+ 238:../FreeModbus/stm32/portevent_m.c **** 	 * If you don't use OS, you can change it.
+ 239:../FreeModbus/stm32/portevent_m.c **** 	 */
+ 240:../FreeModbus/stm32/portevent_m.c **** 	//rt_event_send(&xMasterOsEvent, EV_MASTER_ERROR_EXECUTE_FUNCTION);
+ 241:../FreeModbus/stm32/portevent_m.c **** 	//xMBMasterPortEventPost( EV_MASTER_ERROR_EXECUTE_FUNCTION);
+ 242:../FreeModbus/stm32/portevent_m.c **** 	xMasterOsEvent = EV_MASTER_ERROR_EXECUTE_FUNCTION;
+ 442              		.loc 1 242 0
+ 443 0010 40F20003 		movw	r3, #:lower16:xMasterOsEvent
+ 444 0014 C0F20003 		movt	r3, #:upper16:xMasterOsEvent
+ 445 0018 4FF48072 		mov	r2, #256
+ 446 001c 1A60     		str	r2, [r3]
+ 243:../FreeModbus/stm32/portevent_m.c **** 	/* You can add your code under here. */
+ 244:../FreeModbus/stm32/portevent_m.c **** 
+ 245:../FreeModbus/stm32/portevent_m.c **** }
+ 447              		.loc 1 245 0
+ 448 001e 0C37     		adds	r7, r7, #12
+ 449 0020 BD46     		mov	sp, r7
+ 450              		@ sp needed
+ 451 0022 5DF8047B 		ldr	r7, [sp], #4
+ 452 0026 7047     		bx	lr
+ 453              		.cfi_endproc
+ 454              	.LFE37:
+ 456              		.section	.text.vMBMasterCBRequestSuccess,"ax",%progbits
+ 457              		.align	2
+ 458              		.global	vMBMasterCBRequestSuccess
+ 459              		.thumb
+ 460              		.thumb_func
+ 462              	vMBMasterCBRequestSuccess:
+ 463              	.LFB38:
+ 246:../FreeModbus/stm32/portevent_m.c **** 
+ 247:../FreeModbus/stm32/portevent_m.c **** /**
+ 248:../FreeModbus/stm32/portevent_m.c ****  * This is modbus master request process success callback function.
+ 249:../FreeModbus/stm32/portevent_m.c ****  * @note There functions will block modbus master poll while execute OS waiting.
+ 250:../FreeModbus/stm32/portevent_m.c ****  * So,for real-time of system.Do not execute too much waiting process.
+ 251:../FreeModbus/stm32/portevent_m.c ****  *
+ 252:../FreeModbus/stm32/portevent_m.c ****  */
+ 253:../FreeModbus/stm32/portevent_m.c **** void vMBMasterCBRequestSuccess( void ) {
  464              		.loc 1 253 0
- 465 0004 2020     		movs	r0, #32
- 466 0006 FFF7FEFF 		bl	xMBMasterPortEventPost
- 254:../FreeModbus/stm32/portevent_m.c **** 	/* You can add your code under here. */
- 255:../FreeModbus/stm32/portevent_m.c **** 
- 256:../FreeModbus/stm32/portevent_m.c **** }
- 467              		.loc 1 256 0
- 468 000a 80BD     		pop	{r7, pc}
- 469              		.cfi_endproc
- 470              	.LFE38:
- 472              		.section	.text.eMBMasterWaitRequestFinish,"ax",%progbits
- 473              		.align	2
- 474              		.global	eMBMasterWaitRequestFinish
- 475              		.thumb
- 476              		.thumb_func
- 478              	eMBMasterWaitRequestFinish:
- 479              	.LFB39:
- 257:../FreeModbus/stm32/portevent_m.c **** 
- 258:../FreeModbus/stm32/portevent_m.c **** /**
- 259:../FreeModbus/stm32/portevent_m.c ****  * This function is wait for modbus master request finish and return result.
- 260:../FreeModbus/stm32/portevent_m.c ****  * Waiting result include request process success, request respond timeout,
- 261:../FreeModbus/stm32/portevent_m.c ****  * receive data error and execute function error.You can use the above callback function.
- 262:../FreeModbus/stm32/portevent_m.c ****  * @note If you are use OS, you can use OS's event mechanism. Otherwise you have to run
- 263:../FreeModbus/stm32/portevent_m.c ****  * much user custom delay for waiting.
- 264:../FreeModbus/stm32/portevent_m.c ****  *
- 265:../FreeModbus/stm32/portevent_m.c ****  * @return request error code
- 266:../FreeModbus/stm32/portevent_m.c ****  */
- 267:../FreeModbus/stm32/portevent_m.c **** eMBMasterReqErrCode eMBMasterWaitRequestFinish( void ) {
- 480              		.loc 1 267 0
- 481              		.cfi_startproc
- 482              		@ args = 0, pretend = 0, frame = 8
- 483              		@ frame_needed = 1, uses_anonymous_args = 0
- 484              		@ link register save eliminated.
- 485 0000 80B4     		push	{r7}
- 486              		.cfi_def_cfa_offset 4
- 487              		.cfi_offset 7, -4
- 488 0002 83B0     		sub	sp, sp, #12
- 489              		.cfi_def_cfa_offset 16
- 490 0004 00AF     		add	r7, sp, #0
- 491              		.cfi_def_cfa_register 7
- 268:../FreeModbus/stm32/portevent_m.c **** 
- 269:../FreeModbus/stm32/portevent_m.c **** 	eMBMasterReqErrCode    eErrStatus = MB_MRE_NO_ERR;
- 492              		.loc 1 269 0
- 493 0006 0023     		movs	r3, #0
- 494 0008 FB71     		strb	r3, [r7, #7]
- 270:../FreeModbus/stm32/portevent_m.c ****     uint32_t recvedEvent;
- 271:../FreeModbus/stm32/portevent_m.c **** 
- 272:../FreeModbus/stm32/portevent_m.c ****     //u32 i;
- 273:../FreeModbus/stm32/portevent_m.c ****     //for (i=0;i<2400000;i++);
- 274:../FreeModbus/stm32/portevent_m.c ****     /* waiting for OS event */
- 275:../FreeModbus/stm32/portevent_m.c **** //	rt_event_recv(&xMasterOsEvent,
- 276:../FreeModbus/stm32/portevent_m.c **** //			EV_MASTER_PROCESS_SUCESS | EV_MASTER_ERROR_RESPOND_TIMEOUT
- 277:../FreeModbus/stm32/portevent_m.c **** //					| EV_MASTER_ERROR_RECEIVE_DATA
- 278:../FreeModbus/stm32/portevent_m.c **** //					| EV_MASTER_ERROR_EXECUTE_FUNCTION,
- 279:../FreeModbus/stm32/portevent_m.c **** //			         &recvedEvent);
- 280:../FreeModbus/stm32/portevent_m.c **** 
- 281:../FreeModbus/stm32/portevent_m.c ****    // BOOL            xEventHappened = FALSE;
- 282:../FreeModbus/stm32/portevent_m.c **** 
- 283:../FreeModbus/stm32/portevent_m.c ****     	    if( xEventInQueue )
- 495              		.loc 1 283 0
- 496 000a 40F20003 		movw	r3, #:lower16:xEventInQueue
- 497 000e C0F20003 		movt	r3, #:upper16:xEventInQueue
- 498 0012 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
- 499 0014 002B     		cmp	r3, #0
- 500 0016 05D0     		beq	.L24
- 284:../FreeModbus/stm32/portevent_m.c ****    	    {
- 285:../FreeModbus/stm32/portevent_m.c ****    	    	recvedEvent = eQueuedEvent;
- 501              		.loc 1 285 0
- 502 0018 40F20003 		movw	r3, #:lower16:eQueuedEvent
- 503 001c C0F20003 		movt	r3, #:upper16:eQueuedEvent
- 504 0020 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
- 505 0022 3B60     		str	r3, [r7]
- 506              	.L24:
- 286:../FreeModbus/stm32/portevent_m.c **** //   	        xEventInQueue = FALSE;
- 287:../FreeModbus/stm32/portevent_m.c **** //   	        xEventHappened = TRUE;
- 288:../FreeModbus/stm32/portevent_m.c ****    	    }
- 289:../FreeModbus/stm32/portevent_m.c ****  //   	    return xEventHappened;
- 290:../FreeModbus/stm32/portevent_m.c **** 
- 291:../FreeModbus/stm32/portevent_m.c **** 	switch (recvedEvent)
- 507              		.loc 1 291 0
- 508 0024 3B68     		ldr	r3, [r7]
- 509 0026 402B     		cmp	r3, #64
- 510 0028 09D0     		beq	.L26
- 511 002a 402B     		cmp	r3, #64
- 512 002c 01D8     		bhi	.L27
- 513 002e 202B     		cmp	r3, #32
- 292:../FreeModbus/stm32/portevent_m.c **** 	{
- 293:../FreeModbus/stm32/portevent_m.c **** 	case EV_MASTER_PROCESS_SUCESS:
- 294:../FreeModbus/stm32/portevent_m.c **** 		break;
- 514              		.loc 1 294 0
- 515 0030 0EE0     		b	.L25
- 516              	.L27:
- 291:../FreeModbus/stm32/portevent_m.c **** 	{
- 517              		.loc 1 291 0
- 518 0032 802B     		cmp	r3, #128
- 519 0034 06D0     		beq	.L29
- 520 0036 B3F5807F 		cmp	r3, #256
- 521 003a 06D0     		beq	.L30
- 522 003c 08E0     		b	.L25
- 523              	.L26:
- 295:../FreeModbus/stm32/portevent_m.c **** 	case EV_MASTER_ERROR_RESPOND_TIMEOUT:
- 296:../FreeModbus/stm32/portevent_m.c **** 	{
- 297:../FreeModbus/stm32/portevent_m.c **** 		eErrStatus = MB_MRE_TIMEDOUT;
- 524              		.loc 1 297 0
- 525 003e 0423     		movs	r3, #4
- 526 0040 FB71     		strb	r3, [r7, #7]
- 298:../FreeModbus/stm32/portevent_m.c **** 		break;
- 527              		.loc 1 298 0
- 528 0042 05E0     		b	.L25
- 529              	.L29:
- 299:../FreeModbus/stm32/portevent_m.c **** 	}
- 300:../FreeModbus/stm32/portevent_m.c **** 	case EV_MASTER_ERROR_RECEIVE_DATA:
- 301:../FreeModbus/stm32/portevent_m.c **** 	{
- 302:../FreeModbus/stm32/portevent_m.c **** 		eErrStatus = MB_MRE_REV_DATA;
- 530              		.loc 1 302 0
- 531 0044 0323     		movs	r3, #3
- 532 0046 FB71     		strb	r3, [r7, #7]
- 303:../FreeModbus/stm32/portevent_m.c **** 		break;
- 533              		.loc 1 303 0
- 534 0048 02E0     		b	.L25
- 535              	.L30:
- 304:../FreeModbus/stm32/portevent_m.c **** 	}
- 305:../FreeModbus/stm32/portevent_m.c **** 	case EV_MASTER_ERROR_EXECUTE_FUNCTION:
- 306:../FreeModbus/stm32/portevent_m.c **** 	{
- 307:../FreeModbus/stm32/portevent_m.c **** 		eErrStatus = MB_MRE_EXE_FUN;
- 536              		.loc 1 307 0
- 537 004a 0623     		movs	r3, #6
- 538 004c FB71     		strb	r3, [r7, #7]
- 308:../FreeModbus/stm32/portevent_m.c **** 		break;
- 539              		.loc 1 308 0
- 540 004e 00BF     		nop
- 541              	.L25:
- 309:../FreeModbus/stm32/portevent_m.c **** 	}
- 310:../FreeModbus/stm32/portevent_m.c **** 	}
- 311:../FreeModbus/stm32/portevent_m.c ****     return eErrStatus;
- 542              		.loc 1 311 0
- 543 0050 FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
- 312:../FreeModbus/stm32/portevent_m.c **** }
- 544              		.loc 1 312 0
- 545 0052 1846     		mov	r0, r3
- 546 0054 0C37     		adds	r7, r7, #12
- 547 0056 BD46     		mov	sp, r7
- 548              		@ sp needed
- 549 0058 5DF8047B 		ldr	r7, [sp], #4
- 550 005c 7047     		bx	lr
- 551              		.cfi_endproc
- 552              	.LFE39:
- 554 005e 00BF     		.text
- 555              	.Letext0:
- 556              		.file 2 "c:\\tools\\arm-none-eabi\\include\\stdint.h"
- 557              		.file 3 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\stm32/port.h"
- 558              		.file 4 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\include/mbport.h"
- 559              		.file 5 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\include/mb_m.h"
- 560              		.file 6 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/core_cm3.h"
+ 465              		.cfi_startproc
+ 466              		@ args = 0, pretend = 0, frame = 0
+ 467              		@ frame_needed = 1, uses_anonymous_args = 0
+ 468              		@ link register save eliminated.
+ 469 0000 80B4     		push	{r7}
+ 470              		.cfi_def_cfa_offset 4
+ 471              		.cfi_offset 7, -4
+ 472 0002 00AF     		add	r7, sp, #0
+ 473              		.cfi_def_cfa_register 7
+ 254:../FreeModbus/stm32/portevent_m.c **** 	/**
+ 255:../FreeModbus/stm32/portevent_m.c **** 	 * @note This code is use OS's event mechanism for modbus master protocol stack.
+ 256:../FreeModbus/stm32/portevent_m.c **** 	 * If you don't use OS, you can change it.
+ 257:../FreeModbus/stm32/portevent_m.c **** 	 */
+ 258:../FreeModbus/stm32/portevent_m.c **** //	rt_event_send(&xMasterOsEvent, EV_MASTER_PROCESS_SUCESS);
+ 259:../FreeModbus/stm32/portevent_m.c **** 	//xMBMasterPortEventPost( EV_MASTER_PROCESS_SUCESS);
+ 260:../FreeModbus/stm32/portevent_m.c **** 	xMasterOsEvent = EV_MASTER_PROCESS_SUCESS;
+ 474              		.loc 1 260 0
+ 475 0004 40F20003 		movw	r3, #:lower16:xMasterOsEvent
+ 476 0008 C0F20003 		movt	r3, #:upper16:xMasterOsEvent
+ 477 000c 2022     		movs	r2, #32
+ 478 000e 1A60     		str	r2, [r3]
+ 261:../FreeModbus/stm32/portevent_m.c **** 	/* You can add your code under here. */
+ 262:../FreeModbus/stm32/portevent_m.c **** 
+ 263:../FreeModbus/stm32/portevent_m.c **** }
+ 479              		.loc 1 263 0
+ 480 0010 BD46     		mov	sp, r7
+ 481              		@ sp needed
+ 482 0012 5DF8047B 		ldr	r7, [sp], #4
+ 483 0016 7047     		bx	lr
+ 484              		.cfi_endproc
+ 485              	.LFE38:
+ 487              		.section	.text.eMBMasterWaitRequestFinish,"ax",%progbits
+ 488              		.align	2
+ 489              		.global	eMBMasterWaitRequestFinish
+ 490              		.thumb
+ 491              		.thumb_func
+ 493              	eMBMasterWaitRequestFinish:
+ 494              	.LFB39:
+ 264:../FreeModbus/stm32/portevent_m.c **** 
+ 265:../FreeModbus/stm32/portevent_m.c **** /**
+ 266:../FreeModbus/stm32/portevent_m.c ****  * This function is wait for modbus master request finish and return result.
+ 267:../FreeModbus/stm32/portevent_m.c ****  * Waiting result include request process success, request respond timeout,
+ 268:../FreeModbus/stm32/portevent_m.c ****  * receive data error and execute function error.You can use the above callback function.
+ 269:../FreeModbus/stm32/portevent_m.c ****  * @note If you are use OS, you can use OS's event mechanism. Otherwise you have to run
+ 270:../FreeModbus/stm32/portevent_m.c ****  * much user custom delay for waiting.
+ 271:../FreeModbus/stm32/portevent_m.c ****  *
+ 272:../FreeModbus/stm32/portevent_m.c ****  * @return request error code
+ 273:../FreeModbus/stm32/portevent_m.c ****  */
+ 274:../FreeModbus/stm32/portevent_m.c **** eMBMasterReqErrCode eMBMasterWaitRequestFinish( void ) {
+ 495              		.loc 1 274 0
+ 496              		.cfi_startproc
+ 497              		@ args = 0, pretend = 0, frame = 16
+ 498              		@ frame_needed = 1, uses_anonymous_args = 0
+ 499              		@ link register save eliminated.
+ 500 0000 80B4     		push	{r7}
+ 501              		.cfi_def_cfa_offset 4
+ 502              		.cfi_offset 7, -4
+ 503 0002 85B0     		sub	sp, sp, #20
+ 504              		.cfi_def_cfa_offset 24
+ 505 0004 00AF     		add	r7, sp, #0
+ 506              		.cfi_def_cfa_register 7
+ 275:../FreeModbus/stm32/portevent_m.c **** 
+ 276:../FreeModbus/stm32/portevent_m.c **** 	eMBMasterReqErrCode    eErrStatus = MB_MRE_NO_ERR;
+ 507              		.loc 1 276 0
+ 508 0006 0023     		movs	r3, #0
+ 509 0008 FB73     		strb	r3, [r7, #15]
+ 277:../FreeModbus/stm32/portevent_m.c ****     uint32_t recvedEvent;
+ 278:../FreeModbus/stm32/portevent_m.c **** 
+ 279:../FreeModbus/stm32/portevent_m.c ****     u32 i;
+ 280:../FreeModbus/stm32/portevent_m.c ****     for ( i=0; i < 2400000; i++ );
+ 510              		.loc 1 280 0
+ 511 000a 0023     		movs	r3, #0
+ 512 000c BB60     		str	r3, [r7, #8]
+ 513 000e 02E0     		b	.L24
+ 514              	.L25:
+ 515              		.loc 1 280 0 is_stmt 0 discriminator 2
+ 516 0010 BB68     		ldr	r3, [r7, #8]
+ 517 0012 0133     		adds	r3, r3, #1
+ 518 0014 BB60     		str	r3, [r7, #8]
+ 519              	.L24:
+ 520              		.loc 1 280 0 discriminator 1
+ 521 0016 BA68     		ldr	r2, [r7, #8]
+ 522 0018 49F6FF63 		movw	r3, #40703
+ 523 001c C0F22403 		movt	r3, 36
+ 524 0020 9A42     		cmp	r2, r3
+ 525 0022 F5D9     		bls	.L25
+ 281:../FreeModbus/stm32/portevent_m.c ****     /* waiting for OS event */
+ 282:../FreeModbus/stm32/portevent_m.c **** //	rt_event_recv(&xMasterOsEvent,
+ 283:../FreeModbus/stm32/portevent_m.c **** //			EV_MASTER_PROCESS_SUCESS | EV_MASTER_ERROR_RESPOND_TIMEOUT
+ 284:../FreeModbus/stm32/portevent_m.c **** //					| EV_MASTER_ERROR_RECEIVE_DATA
+ 285:../FreeModbus/stm32/portevent_m.c **** //					| EV_MASTER_ERROR_EXECUTE_FUNCTION,
+ 286:../FreeModbus/stm32/portevent_m.c **** //			         &recvedEvent);
+ 287:../FreeModbus/stm32/portevent_m.c **** 
+ 288:../FreeModbus/stm32/portevent_m.c **** //  	    if( xEventInQueue )
+ 289:../FreeModbus/stm32/portevent_m.c **** //   	    {
+ 290:../FreeModbus/stm32/portevent_m.c **** //   	    	recvedEvent = eQueuedEvent;
+ 291:../FreeModbus/stm32/portevent_m.c **** //   	    }
+ 292:../FreeModbus/stm32/portevent_m.c ****     recvedEvent = xMasterOsEvent;
+ 526              		.loc 1 292 0 is_stmt 1
+ 527 0024 40F20003 		movw	r3, #:lower16:xMasterOsEvent
+ 528 0028 C0F20003 		movt	r3, #:upper16:xMasterOsEvent
+ 529 002c 1B68     		ldr	r3, [r3]
+ 530 002e 7B60     		str	r3, [r7, #4]
+ 293:../FreeModbus/stm32/portevent_m.c **** 	switch (recvedEvent)
+ 531              		.loc 1 293 0
+ 532 0030 7B68     		ldr	r3, [r7, #4]
+ 533 0032 402B     		cmp	r3, #64
+ 534 0034 09D0     		beq	.L27
+ 535 0036 402B     		cmp	r3, #64
+ 536 0038 01D8     		bhi	.L28
+ 537 003a 202B     		cmp	r3, #32
+ 294:../FreeModbus/stm32/portevent_m.c **** 	{
+ 295:../FreeModbus/stm32/portevent_m.c **** 	case EV_MASTER_PROCESS_SUCESS:
+ 296:../FreeModbus/stm32/portevent_m.c **** 		break;
+ 538              		.loc 1 296 0
+ 539 003c 0EE0     		b	.L26
+ 540              	.L28:
+ 293:../FreeModbus/stm32/portevent_m.c **** 	switch (recvedEvent)
+ 541              		.loc 1 293 0
+ 542 003e 802B     		cmp	r3, #128
+ 543 0040 06D0     		beq	.L30
+ 544 0042 B3F5807F 		cmp	r3, #256
+ 545 0046 06D0     		beq	.L31
+ 546 0048 08E0     		b	.L26
+ 547              	.L27:
+ 297:../FreeModbus/stm32/portevent_m.c **** 	case EV_MASTER_ERROR_RESPOND_TIMEOUT:
+ 298:../FreeModbus/stm32/portevent_m.c **** 	{
+ 299:../FreeModbus/stm32/portevent_m.c **** 		eErrStatus = MB_MRE_TIMEDOUT;
+ 548              		.loc 1 299 0
+ 549 004a 0423     		movs	r3, #4
+ 550 004c FB73     		strb	r3, [r7, #15]
+ 300:../FreeModbus/stm32/portevent_m.c **** 		break;
+ 551              		.loc 1 300 0
+ 552 004e 05E0     		b	.L26
+ 553              	.L30:
+ 301:../FreeModbus/stm32/portevent_m.c **** 	}
+ 302:../FreeModbus/stm32/portevent_m.c **** 	case EV_MASTER_ERROR_RECEIVE_DATA:
+ 303:../FreeModbus/stm32/portevent_m.c **** 	{
+ 304:../FreeModbus/stm32/portevent_m.c **** 		eErrStatus = MB_MRE_REV_DATA;
+ 554              		.loc 1 304 0
+ 555 0050 0323     		movs	r3, #3
+ 556 0052 FB73     		strb	r3, [r7, #15]
+ 305:../FreeModbus/stm32/portevent_m.c **** 		break;
+ 557              		.loc 1 305 0
+ 558 0054 02E0     		b	.L26
+ 559              	.L31:
+ 306:../FreeModbus/stm32/portevent_m.c **** 	}
+ 307:../FreeModbus/stm32/portevent_m.c **** 	case EV_MASTER_ERROR_EXECUTE_FUNCTION:
+ 308:../FreeModbus/stm32/portevent_m.c **** 	{
+ 309:../FreeModbus/stm32/portevent_m.c **** 		eErrStatus = MB_MRE_EXE_FUN;
+ 560              		.loc 1 309 0
+ 561 0056 0623     		movs	r3, #6
+ 562 0058 FB73     		strb	r3, [r7, #15]
+ 310:../FreeModbus/stm32/portevent_m.c **** 		break;
+ 563              		.loc 1 310 0
+ 564 005a 00BF     		nop
+ 565              	.L26:
+ 311:../FreeModbus/stm32/portevent_m.c **** 	}
+ 312:../FreeModbus/stm32/portevent_m.c **** 	}
+ 313:../FreeModbus/stm32/portevent_m.c ****     return eErrStatus;
+ 566              		.loc 1 313 0
+ 567 005c FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 314:../FreeModbus/stm32/portevent_m.c **** }
+ 568              		.loc 1 314 0
+ 569 005e 1846     		mov	r0, r3
+ 570 0060 1437     		adds	r7, r7, #20
+ 571 0062 BD46     		mov	sp, r7
+ 572              		@ sp needed
+ 573 0064 5DF8047B 		ldr	r7, [sp], #4
+ 574 0068 7047     		bx	lr
+ 575              		.cfi_endproc
+ 576              	.LFE39:
+ 578 006a 00BF     		.text
+ 579              	.Letext0:
+ 580              		.file 2 "c:\\tools\\arm-none-eabi\\include\\stdint.h"
+ 581              		.file 3 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\stm32/port.h"
+ 582              		.file 4 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\include/mbport.h"
+ 583              		.file 5 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\include/mb_m.h"
+ 584              		.file 6 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/core_cm3.h"
+ 585              		.file 7 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/stm32f10x.h"
 DEFINED SYMBOLS
                             *ABS*:00000000 portevent_m.c
-C:\Users\Alex\AppData\Local\Temp\cczmFldk.s:21     .bss.eQueuedEvent:00000000 eQueuedEvent
-C:\Users\Alex\AppData\Local\Temp\cczmFldk.s:22     .bss.eQueuedEvent:00000000 $d
-C:\Users\Alex\AppData\Local\Temp\cczmFldk.s:26     .bss.xEventInQueue:00000000 xEventInQueue
-C:\Users\Alex\AppData\Local\Temp\cczmFldk.s:27     .bss.xEventInQueue:00000000 $d
-C:\Users\Alex\AppData\Local\Temp\cczmFldk.s:31     .bss.xMasterRunRes:00000000 xMasterRunRes
-C:\Users\Alex\AppData\Local\Temp\cczmFldk.s:32     .bss.xMasterRunRes:00000000 $d
-C:\Users\Alex\AppData\Local\Temp\cczmFldk.s:34     .text.xMBMasterPortEventInit:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cczmFldk.s:39     .text.xMBMasterPortEventInit:00000000 xMBMasterPortEventInit
-C:\Users\Alex\AppData\Local\Temp\cczmFldk.s:69     .text.xMBMasterPortEventPost:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cczmFldk.s:74     .text.xMBMasterPortEventPost:00000000 xMBMasterPortEventPost
-C:\Users\Alex\AppData\Local\Temp\cczmFldk.s:114    .text.xMBMasterPortEventGet:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cczmFldk.s:119    .text.xMBMasterPortEventGet:00000000 xMBMasterPortEventGet
-C:\Users\Alex\AppData\Local\Temp\cczmFldk.s:172    .text.vMBMasterOsResInit:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cczmFldk.s:177    .text.vMBMasterOsResInit:00000000 vMBMasterOsResInit
-C:\Users\Alex\AppData\Local\Temp\cczmFldk.s:204    .text.xMBMasterRunResTake:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cczmFldk.s:209    .text.xMBMasterRunResTake:00000000 xMBMasterRunResTake
-C:\Users\Alex\AppData\Local\Temp\cczmFldk.s:303    .text.vMBMasterRunResRelease:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cczmFldk.s:308    .text.vMBMasterRunResRelease:00000000 vMBMasterRunResRelease
-C:\Users\Alex\AppData\Local\Temp\cczmFldk.s:339    .text.vMBMasterErrorCBRespondTimeout:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cczmFldk.s:344    .text.vMBMasterErrorCBRespondTimeout:00000000 vMBMasterErrorCBRespondTimeout
-C:\Users\Alex\AppData\Local\Temp\cczmFldk.s:375    .text.vMBMasterErrorCBReceiveData:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cczmFldk.s:380    .text.vMBMasterErrorCBReceiveData:00000000 vMBMasterErrorCBReceiveData
-C:\Users\Alex\AppData\Local\Temp\cczmFldk.s:411    .text.vMBMasterErrorCBExecuteFunction:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cczmFldk.s:416    .text.vMBMasterErrorCBExecuteFunction:00000000 vMBMasterErrorCBExecuteFunction
-C:\Users\Alex\AppData\Local\Temp\cczmFldk.s:447    .text.vMBMasterCBRequestSuccess:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cczmFldk.s:452    .text.vMBMasterCBRequestSuccess:00000000 vMBMasterCBRequestSuccess
-C:\Users\Alex\AppData\Local\Temp\cczmFldk.s:473    .text.eMBMasterWaitRequestFinish:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cczmFldk.s:478    .text.eMBMasterWaitRequestFinish:00000000 eMBMasterWaitRequestFinish
+                            *COM*:00000004 xMasterOsEvent
+C:\Users\Alex\AppData\Local\Temp\ccZ06nN3.s:22     .bss.eQueuedEvent:00000000 eQueuedEvent
+C:\Users\Alex\AppData\Local\Temp\ccZ06nN3.s:23     .bss.eQueuedEvent:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccZ06nN3.s:27     .bss.xEventInQueue:00000000 xEventInQueue
+C:\Users\Alex\AppData\Local\Temp\ccZ06nN3.s:28     .bss.xEventInQueue:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccZ06nN3.s:32     .bss.xMasterRunRes:00000000 xMasterRunRes
+C:\Users\Alex\AppData\Local\Temp\ccZ06nN3.s:33     .bss.xMasterRunRes:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccZ06nN3.s:35     .text.xMBMasterPortEventInit:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccZ06nN3.s:40     .text.xMBMasterPortEventInit:00000000 xMBMasterPortEventInit
+C:\Users\Alex\AppData\Local\Temp\ccZ06nN3.s:70     .text.xMBMasterPortEventPost:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccZ06nN3.s:75     .text.xMBMasterPortEventPost:00000000 xMBMasterPortEventPost
+C:\Users\Alex\AppData\Local\Temp\ccZ06nN3.s:115    .text.xMBMasterPortEventGet:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccZ06nN3.s:120    .text.xMBMasterPortEventGet:00000000 xMBMasterPortEventGet
+C:\Users\Alex\AppData\Local\Temp\ccZ06nN3.s:173    .text.vMBMasterOsResInit:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccZ06nN3.s:178    .text.vMBMasterOsResInit:00000000 vMBMasterOsResInit
+C:\Users\Alex\AppData\Local\Temp\ccZ06nN3.s:205    .text.xMBMasterRunResTake:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccZ06nN3.s:210    .text.xMBMasterRunResTake:00000000 xMBMasterRunResTake
+C:\Users\Alex\AppData\Local\Temp\ccZ06nN3.s:304    .text.vMBMasterRunResRelease:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccZ06nN3.s:309    .text.vMBMasterRunResRelease:00000000 vMBMasterRunResRelease
+C:\Users\Alex\AppData\Local\Temp\ccZ06nN3.s:340    .text.vMBMasterErrorCBRespondTimeout:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccZ06nN3.s:345    .text.vMBMasterErrorCBRespondTimeout:00000000 vMBMasterErrorCBRespondTimeout
+C:\Users\Alex\AppData\Local\Temp\ccZ06nN3.s:379    .text.vMBMasterErrorCBReceiveData:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccZ06nN3.s:384    .text.vMBMasterErrorCBReceiveData:00000000 vMBMasterErrorCBReceiveData
+C:\Users\Alex\AppData\Local\Temp\ccZ06nN3.s:418    .text.vMBMasterErrorCBExecuteFunction:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccZ06nN3.s:423    .text.vMBMasterErrorCBExecuteFunction:00000000 vMBMasterErrorCBExecuteFunction
+C:\Users\Alex\AppData\Local\Temp\ccZ06nN3.s:457    .text.vMBMasterCBRequestSuccess:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccZ06nN3.s:462    .text.vMBMasterCBRequestSuccess:00000000 vMBMasterCBRequestSuccess
+C:\Users\Alex\AppData\Local\Temp\ccZ06nN3.s:488    .text.eMBMasterWaitRequestFinish:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccZ06nN3.s:493    .text.eMBMasterWaitRequestFinish:00000000 eMBMasterWaitRequestFinish
                      .debug_frame:00000010 $d
                            .group:00000000 wm4.1.98ffea2db242cfdb58f411f7407f2b59
                            .group:00000000 wm4.stm32f10x_conf.h.2.f1a8c33f0a763aeef696fee38b2b2dbc

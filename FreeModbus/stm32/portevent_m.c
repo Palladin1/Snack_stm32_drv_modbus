@@ -30,6 +30,9 @@
 /* ----------------------- Variables ----------------------------------------*/
 //static struct rt_semaphore xMasterRunRes;
 //static struct rt_event     xMasterOsEvent;
+
+u32 xMasterOsEvent;
+
 static eMBEventType eQueuedEvent;
 static BOOL     xEventInQueue;
 
@@ -188,7 +191,8 @@ void vMBMasterErrorCBRespondTimeout(UCHAR ucDestAddress, const UCHAR* pucPDUData
 	 * If you don't use OS, you can change it.
 	 */
 //	rt_event_send(&xMasterOsEvent, EV_MASTER_ERROR_RESPOND_TIMEOUT);
-	xMBMasterPortEventPost( EV_MASTER_ERROR_RESPOND_TIMEOUT );
+	//xMBMasterPortEventPost( EV_MASTER_ERROR_RESPOND_TIMEOUT );
+	xMasterOsEvent = EV_MASTER_ERROR_RESPOND_TIMEOUT;
 
 	/* You can add your code under here. */
 
@@ -211,7 +215,8 @@ void vMBMasterErrorCBReceiveData(UCHAR ucDestAddress, const UCHAR* pucPDUData,
 	 * If you don't use OS, you can change it.
 	 */
 //	rt_event_send(&xMasterOsEvent, EV_MASTER_ERROR_RECEIVE_DATA);
-	xMBMasterPortEventPost( EV_MASTER_ERROR_RECEIVE_DATA);
+	//xMBMasterPortEventPost( EV_MASTER_ERROR_RECEIVE_DATA);
+	xMasterOsEvent = EV_MASTER_ERROR_RECEIVE_DATA;
 	/* You can add your code under here. */
 
 }
@@ -233,7 +238,8 @@ void vMBMasterErrorCBExecuteFunction(UCHAR ucDestAddress, const UCHAR* pucPDUDat
 	 * If you don't use OS, you can change it.
 	 */
 	//rt_event_send(&xMasterOsEvent, EV_MASTER_ERROR_EXECUTE_FUNCTION);
-	xMBMasterPortEventPost( EV_MASTER_ERROR_EXECUTE_FUNCTION);
+	//xMBMasterPortEventPost( EV_MASTER_ERROR_EXECUTE_FUNCTION);
+	xMasterOsEvent = EV_MASTER_ERROR_EXECUTE_FUNCTION;
 	/* You can add your code under here. */
 
 }
@@ -250,7 +256,8 @@ void vMBMasterCBRequestSuccess( void ) {
 	 * If you don't use OS, you can change it.
 	 */
 //	rt_event_send(&xMasterOsEvent, EV_MASTER_PROCESS_SUCESS);
-	xMBMasterPortEventPost( EV_MASTER_PROCESS_SUCESS);
+	//xMBMasterPortEventPost( EV_MASTER_PROCESS_SUCESS);
+	xMasterOsEvent = EV_MASTER_PROCESS_SUCESS;
 	/* You can add your code under here. */
 
 }
@@ -269,8 +276,8 @@ eMBMasterReqErrCode eMBMasterWaitRequestFinish( void ) {
 	eMBMasterReqErrCode    eErrStatus = MB_MRE_NO_ERR;
     uint32_t recvedEvent;
 
-    //u32 i;
-    //for (i=0;i<2400000;i++);
+    u32 i;
+    for ( i=0; i < 2400000; i++ );
     /* waiting for OS event */
 //	rt_event_recv(&xMasterOsEvent,
 //			EV_MASTER_PROCESS_SUCESS | EV_MASTER_ERROR_RESPOND_TIMEOUT
@@ -278,16 +285,11 @@ eMBMasterReqErrCode eMBMasterWaitRequestFinish( void ) {
 //					| EV_MASTER_ERROR_EXECUTE_FUNCTION,
 //			         &recvedEvent);
 
-   // BOOL            xEventHappened = FALSE;
-
-    	    if( xEventInQueue )
-   	    {
-   	    	recvedEvent = eQueuedEvent;
-//   	        xEventInQueue = FALSE;
-//   	        xEventHappened = TRUE;
-   	    }
- //   	    return xEventHappened;
-
+//  	    if( xEventInQueue )
+//   	    {
+//   	    	recvedEvent = eQueuedEvent;
+//   	    }
+    recvedEvent = xMasterOsEvent;
 	switch (recvedEvent)
 	{
 	case EV_MASTER_PROCESS_SUCESS:

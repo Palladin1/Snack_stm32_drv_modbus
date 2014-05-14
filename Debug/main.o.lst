@@ -271,7 +271,7 @@
  154              		.loc 1 119 0
  155 000c 0023     		movs	r3, #0
  156 000e FB72     		strb	r3, [r7, #11]
- 157              	.L9:
+ 157              	.L6:
  120:../main.c     **** 	    for( ;; )
  121:../main.c     **** 	    {
  122:../main.c     **** 	        cnt--;
@@ -289,7 +289,7 @@
  168 002a C0F20003 		movt	r3, #:upper16:cnt.6960
  169 002e 1B68     		ldr	r3, [r3]
  170 0030 002B     		cmp	r3, #0
- 171 0032 60D1     		bne	.L4
+ 171 0032 2AD1     		bne	.L4
  124:../main.c     **** 	    		LedToggle(LED_STATUS);
  172              		.loc 1 124 0
  173 0034 4FF48050 		mov	r0, #4096
@@ -310,274 +310,245 @@
  185              		.loc 1 127 0
  186 005a FB68     		ldr	r3, [r7, #12]
  187 005c 002B     		cmp	r3, #0
- 188 005e 4AD1     		bne	.L4
- 128:../main.c     **** 	    		    er = eMBMasterReqWriteCoil( 1, 1, 0xFF00, (-1) );
- 189              		.loc 1 128 0
- 190 0060 0120     		movs	r0, #1
- 191 0062 0121     		movs	r1, #1
- 192 0064 4FF47F42 		mov	r2, #65280
- 193 0068 4FF0FF33 		mov	r3, #-1
- 194 006c FFF7FEFF 		bl	eMBMasterReqWriteCoil
- 195 0070 0346     		mov	r3, r0
- 196 0072 FB72     		strb	r3, [r7, #11]
- 129:../main.c     **** 	    			if ( er == 0)
- 197              		.loc 1 129 0
- 198 0074 FB7A     		ldrb	r3, [r7, #11]	@ zero_extendqisi2
- 199 0076 002B     		cmp	r3, #0
- 200 0078 02D1     		bne	.L5
- 130:../main.c     **** 	    				vTaskDelay(100 / portTICK_RATE_MS);
- 201              		.loc 1 130 0
- 202 007a 6420     		movs	r0, #100
- 203 007c FFF7FEFF 		bl	vTaskDelay
- 204              	.L5:
- 131:../main.c     **** 	    				er = eMBMasterReqWriteCoil( 1, 4, 0xFF00, (-1) );
- 205              		.loc 1 131 0
- 206 0080 0120     		movs	r0, #1
- 207 0082 0421     		movs	r1, #4
- 208 0084 4FF47F42 		mov	r2, #65280
- 209 0088 4FF0FF33 		mov	r3, #-1
- 210 008c FFF7FEFF 		bl	eMBMasterReqWriteCoil
- 211 0090 0346     		mov	r3, r0
- 212 0092 FB72     		strb	r3, [r7, #11]
- 132:../main.c     **** 	    			if ( er != 0)
- 213              		.loc 1 132 0
- 214 0094 FB7A     		ldrb	r3, [r7, #11]	@ zero_extendqisi2
- 215 0096 002B     		cmp	r3, #0
- 216 0098 05D0     		beq	.L6
- 133:../main.c     **** 	    				    			    	    			    	gLedCnt = 2;
- 217              		.loc 1 133 0
- 218 009a 40F20003 		movw	r3, #:lower16:gLedCnt
- 219 009e C0F20003 		movt	r3, #:upper16:gLedCnt
- 220 00a2 0222     		movs	r2, #2
- 221 00a4 1A80     		strh	r2, [r3]	@ movhi
- 222              	.L6:
- 134:../main.c     **** 	    			    er = eMBMasterReqWriteCoil( 1, 3, 0xFF00, (-1) );
- 223              		.loc 1 134 0
- 224 00a6 0120     		movs	r0, #1
- 225 00a8 0321     		movs	r1, #3
- 226 00aa 4FF47F42 		mov	r2, #65280
- 227 00ae 4FF0FF33 		mov	r3, #-1
- 228 00b2 FFF7FEFF 		bl	eMBMasterReqWriteCoil
- 229 00b6 0346     		mov	r3, r0
- 230 00b8 FB72     		strb	r3, [r7, #11]
- 135:../main.c     **** 	    			    if ( er != 0)
- 231              		.loc 1 135 0
- 232 00ba FB7A     		ldrb	r3, [r7, #11]	@ zero_extendqisi2
- 233 00bc 002B     		cmp	r3, #0
- 234 00be 05D0     		beq	.L7
- 136:../main.c     **** 	    			    	    			    	gLedCnt = 2;
- 235              		.loc 1 136 0
- 236 00c0 40F20003 		movw	r3, #:lower16:gLedCnt
- 237 00c4 C0F20003 		movt	r3, #:upper16:gLedCnt
- 238 00c8 0222     		movs	r2, #2
- 239 00ca 1A80     		strh	r2, [r3]	@ movhi
- 240              	.L7:
- 137:../main.c     **** 	    			    er = eMBMasterReqWriteCoil( 1, 2, 0xFF00, (-1) );
- 241              		.loc 1 137 0
- 242 00cc 0120     		movs	r0, #1
- 243 00ce 0221     		movs	r1, #2
- 244 00d0 4FF47F42 		mov	r2, #65280
- 245 00d4 4FF0FF33 		mov	r3, #-1
- 246 00d8 FFF7FEFF 		bl	eMBMasterReqWriteCoil
- 247 00dc 0346     		mov	r3, r0
- 248 00de FB72     		strb	r3, [r7, #11]
- 138:../main.c     **** 	    			    	    			    if ( er != 0)
- 249              		.loc 1 138 0
- 250 00e0 FB7A     		ldrb	r3, [r7, #11]	@ zero_extendqisi2
- 251 00e2 002B     		cmp	r3, #0
- 252 00e4 05D0     		beq	.L8
- 139:../main.c     **** 	    			    	    			    	    			    	gLedCnt = 2;
- 253              		.loc 1 139 0
- 254 00e6 40F20003 		movw	r3, #:lower16:gLedCnt
- 255 00ea C0F20003 		movt	r3, #:upper16:gLedCnt
- 256 00ee 0222     		movs	r2, #2
- 257 00f0 1A80     		strh	r2, [r3]	@ movhi
- 258              	.L8:
- 140:../main.c     **** 	    			    fl = 1;
- 259              		.loc 1 140 0
- 260 00f2 0123     		movs	r3, #1
- 261 00f4 FB60     		str	r3, [r7, #12]
- 262              	.L4:
- 141:../main.c     **** 	    			}
- 142:../main.c     **** 	        }
- 143:../main.c     **** 
- 144:../main.c     ****     	//ValidatorPulseProcessing(5 / portTICK_RATE_MS);
- 145:../main.c     ****     	//ButtonSkan(5 / portTICK_RATE_MS);
- 146:../main.c     **** 
- 147:../main.c     ****         vTaskDelay(100 / portTICK_RATE_MS);
- 263              		.loc 1 147 0
- 264 00f6 6420     		movs	r0, #100
- 265 00f8 FFF7FEFF 		bl	vTaskDelay
- 148:../main.c     ****     }
- 266              		.loc 1 148 0
- 267 00fc 88E7     		b	.L9
- 268              		.cfi_endproc
- 269              	.LFE30:
- 271 00fe 00BF     		.section	.text.vTask2,"ax",%progbits
- 272              		.align	2
- 273              		.global	vTask2
- 274              		.thumb
- 275              		.thumb_func
- 277              	vTask2:
- 278              	.LFB31:
- 149:../main.c     **** 
- 150:../main.c     ****     vTaskDelete (NULL);
- 151:../main.c     **** }
- 152:../main.c     **** 
- 153:../main.c     **** 
+ 188 005e 12D1     		bne	.L5
+ 189              	.LBB2:
+ 128:../main.c     **** 	    	    	u8 i;
+ 129:../main.c     **** 	    	    	//for ( i = 1; i < 5; i++) {
+ 130:../main.c     **** 
+ 131:../main.c     **** 	    		        er = eMBMasterReqWriteCoil( 1, 1, 0xFF00, (-1) );
+ 190              		.loc 1 131 0
+ 191 0060 0120     		movs	r0, #1
+ 192 0062 0121     		movs	r1, #1
+ 193 0064 4FF47F42 		mov	r2, #65280
+ 194 0068 4FF0FF33 		mov	r3, #-1
+ 195 006c FFF7FEFF 		bl	eMBMasterReqWriteCoil
+ 196 0070 0346     		mov	r3, r0
+ 197 0072 FB72     		strb	r3, [r7, #11]
+ 132:../main.c     **** 
+ 133:../main.c     **** 
+ 134:../main.c     **** 	    			    //MB_MRE_NO_ERR,                  /*!< no error. */
+ 135:../main.c     **** 	    			    //MB_MRE_NO_REG,                  /*!< illegal register address. */
+ 136:../main.c     **** 	    			    //MB_MRE_ILL_ARG,                 /*!< illegal argument. */
+ 137:../main.c     **** 	    			    //MB_MRE_REV_DATA,                /*!< receive data error. */
+ 138:../main.c     **** 	    			    //MB_MRE_TIMEDOUT,                /*!< timeout error occurred. */
+ 139:../main.c     **** 	    			    //MB_MRE_MASTER_BUSY,             /*!< master is busy now. */
+ 140:../main.c     **** 	    			    //MB_MRE_EXE_FUN                  /*!< execute function error. */
+ 141:../main.c     **** 	    		//	    if ( er == MB_MRE_NO_ERR )//|| er == MB_MRE_MASTER_BUSY || er == MB_MRE_REV_DATA || e
+ 142:../main.c     **** 	    			//	    break;
+ 143:../main.c     **** 	    		   // }
+ 144:../main.c     **** 
+ 145:../main.c     **** 	    	    if ( i == 5 )
+ 198              		.loc 1 145 0
+ 199 0074 BB7A     		ldrb	r3, [r7, #10]	@ zero_extendqisi2
+ 200 0076 052B     		cmp	r3, #5
+ 201 0078 05D1     		bne	.L5
+ 146:../main.c     **** 	    	    	gLedCnt = 2;
+ 202              		.loc 1 146 0
+ 203 007a 40F20003 		movw	r3, #:lower16:gLedCnt
+ 204 007e C0F20003 		movt	r3, #:upper16:gLedCnt
+ 205 0082 0222     		movs	r2, #2
+ 206 0084 1A80     		strh	r2, [r3]	@ movhi
+ 207              	.L5:
+ 208              	.LBE2:
+ 147:../main.c     **** 	    	   	}
+ 148:../main.c     **** 
+ 149:../main.c     **** 	    	    fl = 1;
+ 209              		.loc 1 149 0
+ 210 0086 0123     		movs	r3, #1
+ 211 0088 FB60     		str	r3, [r7, #12]
+ 212              	.L4:
+ 150:../main.c     **** 	        }
+ 151:../main.c     **** 
+ 152:../main.c     ****     	//ValidatorPulseProcessing(5 / portTICK_RATE_MS);
+ 153:../main.c     ****     	//ButtonSkan(5 / portTICK_RATE_MS);
  154:../main.c     **** 
- 155:../main.c     **** void vTask2( void *pvParameters )
- 156:../main.c     **** {
- 279              		.loc 1 156 0
- 280              		.cfi_startproc
- 281              		@ args = 0, pretend = 0, frame = 520
- 282              		@ frame_needed = 1, uses_anonymous_args = 0
- 283 0000 80B5     		push	{r7, lr}
- 284              		.cfi_def_cfa_offset 8
- 285              		.cfi_offset 7, -8
- 286              		.cfi_offset 14, -4
- 287 0002 ADF5027D 		sub	sp, sp, #520
- 288              		.cfi_def_cfa_offset 528
- 289 0006 00AF     		add	r7, sp, #0
- 290              		.cfi_def_cfa_register 7
- 291 0008 3B1D     		adds	r3, r7, #4
- 292 000a 1860     		str	r0, [r3]
+ 155:../main.c     ****         vTaskDelay(100 / portTICK_RATE_MS);
+ 213              		.loc 1 155 0
+ 214 008a 6420     		movs	r0, #100
+ 215 008c FFF7FEFF 		bl	vTaskDelay
+ 156:../main.c     ****     }
+ 216              		.loc 1 156 0
+ 217 0090 BEE7     		b	.L6
+ 218              		.cfi_endproc
+ 219              	.LFE30:
+ 221 0092 00BF     		.section	.text.vTask2,"ax",%progbits
+ 222              		.align	2
+ 223              		.global	vTask2
+ 224              		.thumb
+ 225              		.thumb_func
+ 227              	vTask2:
+ 228              	.LFB31:
  157:../main.c     **** 
- 158:../main.c     **** 
- 159:../main.c     **** //	extern uint16_t   ucSDiscInBuf[]  ;
- 160:../main.c     **** //	extern uint16_t   ucSCoilBuf[]    ;
- 161:../main.c     **** //	extern uint16_t   usSRegInBuf[]   ;
- 162:../main.c     **** //	extern uint16_t   usSRegHoldBuf[] ;
- 163:../main.c     **** 
- 164:../main.c     **** //	extern uint16_t   usMRegInBuf[16][];
+ 158:../main.c     ****     vTaskDelete (NULL);
+ 159:../main.c     **** }
+ 160:../main.c     **** 
+ 161:../main.c     **** 
+ 162:../main.c     **** 
+ 163:../main.c     **** void vTask2( void *pvParameters )
+ 164:../main.c     **** {
+ 229              		.loc 1 164 0
+ 230              		.cfi_startproc
+ 231              		@ args = 0, pretend = 0, frame = 520
+ 232              		@ frame_needed = 1, uses_anonymous_args = 0
+ 233 0000 80B5     		push	{r7, lr}
+ 234              		.cfi_def_cfa_offset 8
+ 235              		.cfi_offset 7, -8
+ 236              		.cfi_offset 14, -4
+ 237 0002 ADF5027D 		sub	sp, sp, #520
+ 238              		.cfi_def_cfa_offset 528
+ 239 0006 00AF     		add	r7, sp, #0
+ 240              		.cfi_def_cfa_register 7
+ 241 0008 3B1D     		adds	r3, r7, #4
+ 242 000a 1860     		str	r0, [r3]
  165:../main.c     **** 
- 166:../main.c     **** 	eMBErrorCode    eStatus;
- 167:../main.c     **** 	uint16_t errorCount = 0;
- 293              		.loc 1 167 0
- 294 000c 0023     		movs	r3, #0
- 295 000e A7F80632 		strh	r3, [r7, #518]	@ movhi
- 168:../main.c     **** 
- 169:../main.c     **** 	//eStatus = eMBInit( MB_RTU, 10, UART1, 19200, 0 );
- 170:../main.c     **** 	//vMBMasterSetDestAddress( 1 );
- 171:../main.c     **** 	eStatus = eMBMasterInit(MB_RTU, UART1, 19200,  MB_PAR_NONE);
- 296              		.loc 1 171 0
- 297 0012 0020     		movs	r0, #0
- 298 0014 0121     		movs	r1, #1
- 299 0016 4FF49642 		mov	r2, #19200
- 300 001a 0023     		movs	r3, #0
- 301 001c FFF7FEFF 		bl	eMBMasterInit
- 302 0020 0346     		mov	r3, r0
- 303 0022 87F80532 		strb	r3, [r7, #517]
- 172:../main.c     **** 
- 173:../main.c     **** 	/* Enable the Modbus Protocol Stack. */
- 174:../main.c     **** 	//eStatus = eMBEnable(  );
- 175:../main.c     **** 	eStatus = eMBMasterEnable();
- 304              		.loc 1 175 0
- 305 0026 FFF7FEFF 		bl	eMBMasterEnable
- 306 002a 0346     		mov	r3, r0
- 307 002c 87F80532 		strb	r3, [r7, #517]
+ 166:../main.c     **** 
+ 167:../main.c     **** //	extern uint16_t   ucSDiscInBuf[]  ;
+ 168:../main.c     **** //	extern uint16_t   ucSCoilBuf[]    ;
+ 169:../main.c     **** //	extern uint16_t   usSRegInBuf[]   ;
+ 170:../main.c     **** //	extern uint16_t   usSRegHoldBuf[] ;
+ 171:../main.c     **** 
+ 172:../main.c     **** //	extern uint16_t   usMRegInBuf[16][];
+ 173:../main.c     **** 
+ 174:../main.c     **** 	eMBErrorCode    eStatus;
+ 175:../main.c     **** 	uint16_t errorCount = 0;
+ 243              		.loc 1 175 0
+ 244 000c 0023     		movs	r3, #0
+ 245 000e A7F80632 		strh	r3, [r7, #518]	@ movhi
  176:../main.c     **** 
- 177:../main.c     **** 	if ( eStatus == MB_ENOERR) {
- 178:../main.c     **** 
- 179:../main.c     **** 	}
+ 177:../main.c     **** 	//eStatus = eMBInit( MB_RTU, 10, UART1, 19200, 0 );
+ 178:../main.c     **** 	//vMBMasterSetDestAddress( 1 );
+ 179:../main.c     **** 	eStatus = eMBMasterInit(MB_RTU, UART1, 19200,  MB_PAR_NONE);
+ 246              		.loc 1 179 0
+ 247 0012 0020     		movs	r0, #0
+ 248 0014 0121     		movs	r1, #1
+ 249 0016 4FF49642 		mov	r2, #19200
+ 250 001a 0023     		movs	r3, #0
+ 251 001c FFF7FEFF 		bl	eMBMasterInit
+ 252 0020 0346     		mov	r3, r0
+ 253 0022 87F80532 		strb	r3, [r7, #517]
  180:../main.c     **** 
- 181:../main.c     **** 	eMBMasterReqErrCode    errorCode = MB_MRE_NO_ERR;
- 308              		.loc 1 181 0
- 309 0030 0023     		movs	r3, #0
- 310 0032 87F80432 		strb	r3, [r7, #516]
- 182:../main.c     **** 
- 183:../main.c     **** 	USHORT  usModbusUserData[253];
- 184:../main.c     **** 	usModbusUserData[1] = 10;
- 311              		.loc 1 184 0
- 312 0036 07F10803 		add	r3, r7, #8
- 313 003a 0A22     		movs	r2, #10
- 314 003c 5A80     		strh	r2, [r3, #2]	@ movhi
- 315              	.L12:
- 185:../main.c     **** 
- 186:../main.c     **** 	//eMBMasterReqWriteCoil( 1, 1, 0xFF00, (-1) );
- 187:../main.c     **** 
- 188:../main.c     ****     for( ;; )
- 189:../main.c     ****     {
+ 181:../main.c     **** 	/* Enable the Modbus Protocol Stack. */
+ 182:../main.c     **** 	//eStatus = eMBEnable(  );
+ 183:../main.c     **** 	eStatus = eMBMasterEnable();
+ 254              		.loc 1 183 0
+ 255 0026 FFF7FEFF 		bl	eMBMasterEnable
+ 256 002a 0346     		mov	r3, r0
+ 257 002c 87F80532 		strb	r3, [r7, #517]
+ 184:../main.c     **** 
+ 185:../main.c     **** 	if ( eStatus != MB_ENOERR) {
+ 186:../main.c     **** 
+ 187:../main.c     **** 	}
+ 188:../main.c     **** 
+ 189:../main.c     **** 	eMBMasterReqErrCode    errorCode = MB_MRE_NO_ERR;
+ 258              		.loc 1 189 0
+ 259 0030 0023     		movs	r3, #0
+ 260 0032 87F80432 		strb	r3, [r7, #516]
  190:../main.c     **** 
- 191:../main.c     ****     	//( void )eMBPoll(  );
- 192:../main.c     ****     	( void )eMBMasterPoll(  );
- 316              		.loc 1 192 0
- 317 003e FFF7FEFF 		bl	eMBMasterPoll
- 193:../main.c     ****     	/* Here we simply count the number of poll cycles. */
- 194:../main.c     ****     	//usSRegInBuf[0]++;
- 195:../main.c     ****     	//if ( usSRegInBuf[0] == 65535)
- 196:../main.c     ****     	//    usSRegInBuf[0] = 0;
- 197:../main.c     **** 
- 198:../main.c     **** //    	if ( usSRegInBuf[1] > 0)
- 199:../main.c     **** //    		gLedCnt = usSRegInBuf[1];
- 200:../main.c     **** 
+ 191:../main.c     **** 	USHORT  usModbusUserData[253];
+ 192:../main.c     **** 	usModbusUserData[1] = 10;
+ 261              		.loc 1 192 0
+ 262 0036 07F10803 		add	r3, r7, #8
+ 263 003a 0A22     		movs	r2, #10
+ 264 003c 5A80     		strh	r2, [r3, #2]	@ movhi
+ 265              	.L10:
+ 193:../main.c     **** 
+ 194:../main.c     **** 	//eMBMasterReqWriteCoil( 1, 1, 0xFF00, (-1) );
+ 195:../main.c     **** 
+ 196:../main.c     ****     for( ;; )
+ 197:../main.c     ****     {
+ 198:../main.c     **** 
+ 199:../main.c     ****     	//( void )eMBPoll(  );
+ 200:../main.c     ****     	//( void )eMBMasterPoll(  );
  201:../main.c     **** 
- 202:../main.c     ****     	//usSRegInBuf[1] = 'Z';
- 203:../main.c     ****     	//usSRegInBuf[2] = 44;
+ 202:../main.c     ****     	if ( eMBMasterPoll() == MB_MRE_TIMEDOUT )
+ 266              		.loc 1 202 0
+ 267 003e FFF7FEFF 		bl	eMBMasterPoll
+ 268 0042 0346     		mov	r3, r0
+ 269 0044 042B     		cmp	r3, #4
+ 270 0046 05D1     		bne	.L8
+ 203:../main.c     ****     		gLedCnt = 2;
+ 271              		.loc 1 203 0
+ 272 0048 40F20003 		movw	r3, #:lower16:gLedCnt
+ 273 004c C0F20003 		movt	r3, #:upper16:gLedCnt
+ 274 0050 0222     		movs	r2, #2
+ 275 0052 1A80     		strh	r2, [r3]	@ movhi
+ 276              	.L8:
  204:../main.c     **** 
- 205:../main.c     ****     	//errorCode = eMBMasterReqReadInputRegister(10,100,4, (-1));
- 206:../main.c     **** 
- 207:../main.c     ****     	if (errorCode != MB_MRE_NO_ERR) {
- 318              		.loc 1 207 0
- 319 0042 97F80432 		ldrb	r3, [r7, #516]	@ zero_extendqisi2
- 320 0046 002B     		cmp	r3, #0
- 321 0048 04D0     		beq	.L11
- 208:../main.c     ****     	    errorCount++;
- 322              		.loc 1 208 0
- 323 004a B7F80632 		ldrh	r3, [r7, #518]
- 324 004e 0133     		adds	r3, r3, #1
- 325 0050 A7F80632 		strh	r3, [r7, #518]	@ movhi
- 326              	.L11:
- 209:../main.c     ****     	}
- 210:../main.c     **** 
- 211:../main.c     ****      	vTaskDelay(1 / portTICK_RATE_MS);
- 327              		.loc 1 211 0
- 328 0054 0120     		movs	r0, #1
- 329 0056 FFF7FEFF 		bl	vTaskDelay
- 212:../main.c     ****     }
- 330              		.loc 1 212 0
- 331 005a F0E7     		b	.L12
- 332              		.cfi_endproc
- 333              	.LFE31:
- 335              		.section	.data.cnt.6960,"aw",%progbits
- 336              		.align	2
- 339              	cnt.6960:
- 340 0000 32000000 		.word	50
- 341              		.text
- 342              	.Letext0:
- 343              		.file 2 "c:\\tools\\arm-none-eabi\\include\\stdint.h"
- 344              		.file 3 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeRTOS\\Source\\portable\\GCC\\ARM_CM3/por
- 345              		.file 4 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeRTOS\\Source\\include/queue.h"
- 346              		.file 5 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/stm32f10x.h"
- 347              		.file 6 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\stm32/port.h"
- 348              		.file 7 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\include/mbport.h"
- 349              		.file 8 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\include/mb.h"
- 350              		.file 9 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\include/mb_m.h"
- 351              		.file 10 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/core_cm3.h"
- 352              		.file 11 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\bsp/uart.h"
+ 205:../main.c     ****     	/* Here we simply count the number of poll cycles. */
+ 206:../main.c     ****     	//usSRegInBuf[0]++;
+ 207:../main.c     ****     	//if ( usSRegInBuf[0] == 65535)
+ 208:../main.c     ****     	//    usSRegInBuf[0] = 0;
+ 209:../main.c     **** 
+ 210:../main.c     **** //    	if ( usSRegInBuf[1] > 0)
+ 211:../main.c     **** //    		gLedCnt = usSRegInBuf[1];
+ 212:../main.c     **** 
+ 213:../main.c     **** 
+ 214:../main.c     ****     	//usSRegInBuf[1] = 'Z';
+ 215:../main.c     ****     	//usSRegInBuf[2] = 44;
+ 216:../main.c     **** 
+ 217:../main.c     ****     	//errorCode = eMBMasterReqReadInputRegister(10,100,4, (-1));
+ 218:../main.c     **** 
+ 219:../main.c     ****     	if (errorCode != MB_MRE_NO_ERR) {
+ 277              		.loc 1 219 0
+ 278 0054 97F80432 		ldrb	r3, [r7, #516]	@ zero_extendqisi2
+ 279 0058 002B     		cmp	r3, #0
+ 280 005a 04D0     		beq	.L9
+ 220:../main.c     ****     	    errorCount++;
+ 281              		.loc 1 220 0
+ 282 005c B7F80632 		ldrh	r3, [r7, #518]
+ 283 0060 0133     		adds	r3, r3, #1
+ 284 0062 A7F80632 		strh	r3, [r7, #518]	@ movhi
+ 285              	.L9:
+ 221:../main.c     ****     	}
+ 222:../main.c     **** 
+ 223:../main.c     ****      	vTaskDelay(1 / portTICK_RATE_MS);
+ 286              		.loc 1 223 0
+ 287 0066 0120     		movs	r0, #1
+ 288 0068 FFF7FEFF 		bl	vTaskDelay
+ 224:../main.c     ****     }
+ 289              		.loc 1 224 0
+ 290 006c E7E7     		b	.L10
+ 291              		.cfi_endproc
+ 292              	.LFE31:
+ 294 006e 00BF     		.section	.data.cnt.6960,"aw",%progbits
+ 295              		.align	2
+ 298              	cnt.6960:
+ 299 0000 32000000 		.word	50
+ 300              		.text
+ 301              	.Letext0:
+ 302              		.file 2 "c:\\tools\\arm-none-eabi\\include\\stdint.h"
+ 303              		.file 3 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeRTOS\\Source\\portable\\GCC\\ARM_CM3/por
+ 304              		.file 4 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeRTOS\\Source\\include/queue.h"
+ 305              		.file 5 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/stm32f10x.h"
+ 306              		.file 6 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\stm32/port.h"
+ 307              		.file 7 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\include/mbport.h"
+ 308              		.file 8 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\include/mb.h"
+ 309              		.file 9 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\include/mb_m.h"
+ 310              		.file 10 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/core_cm3.h"
+ 311              		.file 11 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\bsp/uart.h"
 DEFINED SYMBOLS
                             *ABS*:00000000 main.c
                             *COM*:00000004 xDataGetQueue
                             *COM*:0000001e DataBuf
-C:\Users\Alex\AppData\Local\Temp\ccVGYg3d.s:25     .data.name0:00000000 name0
-C:\Users\Alex\AppData\Local\Temp\ccVGYg3d.s:22     .data.name0:00000000 $d
-C:\Users\Alex\AppData\Local\Temp\ccVGYg3d.s:33     .data.name7:00000000 name7
-C:\Users\Alex\AppData\Local\Temp\ccVGYg3d.s:30     .data.name7:00000000 $d
-C:\Users\Alex\AppData\Local\Temp\ccVGYg3d.s:41     .data.name1:00000000 name1
-C:\Users\Alex\AppData\Local\Temp\ccVGYg3d.s:38     .data.name1:00000000 $d
-C:\Users\Alex\AppData\Local\Temp\ccVGYg3d.s:49     .data.gLedCnt:00000000 gLedCnt
-C:\Users\Alex\AppData\Local\Temp\ccVGYg3d.s:46     .data.gLedCnt:00000000 $d
-C:\Users\Alex\AppData\Local\Temp\ccVGYg3d.s:52     .rodata:00000000 $d
-C:\Users\Alex\AppData\Local\Temp\ccVGYg3d.s:53     .rodata:00000000 .LC0
-C:\Users\Alex\AppData\Local\Temp\ccVGYg3d.s:56     .rodata:00000008 .LC1
-C:\Users\Alex\AppData\Local\Temp\ccVGYg3d.s:59     .text.main:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\ccVGYg3d.s:64     .text.main:00000000 main
-C:\Users\Alex\AppData\Local\Temp\ccVGYg3d.s:136    .text.vTask1:00000000 vTask1
-C:\Users\Alex\AppData\Local\Temp\ccVGYg3d.s:277    .text.vTask2:00000000 vTask2
-C:\Users\Alex\AppData\Local\Temp\ccVGYg3d.s:131    .text.vTask1:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\ccVGYg3d.s:339    .data.cnt.6960:00000000 cnt.6960
-C:\Users\Alex\AppData\Local\Temp\ccVGYg3d.s:272    .text.vTask2:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\ccVGYg3d.s:336    .data.cnt.6960:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccr7gxcT.s:25     .data.name0:00000000 name0
+C:\Users\Alex\AppData\Local\Temp\ccr7gxcT.s:22     .data.name0:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccr7gxcT.s:33     .data.name7:00000000 name7
+C:\Users\Alex\AppData\Local\Temp\ccr7gxcT.s:30     .data.name7:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccr7gxcT.s:41     .data.name1:00000000 name1
+C:\Users\Alex\AppData\Local\Temp\ccr7gxcT.s:38     .data.name1:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccr7gxcT.s:49     .data.gLedCnt:00000000 gLedCnt
+C:\Users\Alex\AppData\Local\Temp\ccr7gxcT.s:46     .data.gLedCnt:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccr7gxcT.s:52     .rodata:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccr7gxcT.s:53     .rodata:00000000 .LC0
+C:\Users\Alex\AppData\Local\Temp\ccr7gxcT.s:56     .rodata:00000008 .LC1
+C:\Users\Alex\AppData\Local\Temp\ccr7gxcT.s:59     .text.main:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccr7gxcT.s:64     .text.main:00000000 main
+C:\Users\Alex\AppData\Local\Temp\ccr7gxcT.s:136    .text.vTask1:00000000 vTask1
+C:\Users\Alex\AppData\Local\Temp\ccr7gxcT.s:227    .text.vTask2:00000000 vTask2
+C:\Users\Alex\AppData\Local\Temp\ccr7gxcT.s:131    .text.vTask1:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccr7gxcT.s:298    .data.cnt.6960:00000000 cnt.6960
+C:\Users\Alex\AppData\Local\Temp\ccr7gxcT.s:222    .text.vTask2:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccr7gxcT.s:295    .data.cnt.6960:00000000 $d
                      .debug_frame:00000010 $d
                            .group:00000000 wm4.1.98ffea2db242cfdb58f411f7407f2b59
                            .group:00000000 wm4.newlib.h.8.384a112feabb3bef7b573ae48cde2e3b

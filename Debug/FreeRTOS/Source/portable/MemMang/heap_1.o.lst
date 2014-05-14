@@ -356,18 +356,18 @@
  214              		.file 2 "c:\\tools\\lib\\gcc\\arm-none-eabi\\4.8.1\\include\\stddef.h"
 DEFINED SYMBOLS
                             *ABS*:00000000 heap_1.c
-C:\Users\Alex\AppData\Local\Temp\cc7b9BU3.s:19     .bss.xHeap:00000000 $d
-C:\Users\Alex\AppData\Local\Temp\cc7b9BU3.s:22     .bss.xHeap:00000000 xHeap
-C:\Users\Alex\AppData\Local\Temp\cc7b9BU3.s:25     .bss.xNextFreeByte:00000000 $d
-C:\Users\Alex\AppData\Local\Temp\cc7b9BU3.s:28     .bss.xNextFreeByte:00000000 xNextFreeByte
-C:\Users\Alex\AppData\Local\Temp\cc7b9BU3.s:31     .text.pvPortMalloc:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cc7b9BU3.s:36     .text.pvPortMalloc:00000000 pvPortMalloc
-C:\Users\Alex\AppData\Local\Temp\cc7b9BU3.s:120    .text.vPortFree:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cc7b9BU3.s:125    .text.vPortFree:00000000 vPortFree
-C:\Users\Alex\AppData\Local\Temp\cc7b9BU3.s:150    .text.vPortInitialiseBlocks:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cc7b9BU3.s:155    .text.vPortInitialiseBlocks:00000000 vPortInitialiseBlocks
-C:\Users\Alex\AppData\Local\Temp\cc7b9BU3.s:181    .text.xPortGetFreeHeapSize:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cc7b9BU3.s:186    .text.xPortGetFreeHeapSize:00000000 xPortGetFreeHeapSize
+C:\Users\Alex\AppData\Local\Temp\ccdz1l6y.s:19     .bss.xHeap:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccdz1l6y.s:22     .bss.xHeap:00000000 xHeap
+C:\Users\Alex\AppData\Local\Temp\ccdz1l6y.s:25     .bss.xNextFreeByte:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccdz1l6y.s:28     .bss.xNextFreeByte:00000000 xNextFreeByte
+C:\Users\Alex\AppData\Local\Temp\ccdz1l6y.s:31     .text.pvPortMalloc:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccdz1l6y.s:36     .text.pvPortMalloc:00000000 pvPortMalloc
+C:\Users\Alex\AppData\Local\Temp\ccdz1l6y.s:120    .text.vPortFree:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccdz1l6y.s:125    .text.vPortFree:00000000 vPortFree
+C:\Users\Alex\AppData\Local\Temp\ccdz1l6y.s:150    .text.vPortInitialiseBlocks:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccdz1l6y.s:155    .text.vPortInitialiseBlocks:00000000 vPortInitialiseBlocks
+C:\Users\Alex\AppData\Local\Temp\ccdz1l6y.s:181    .text.xPortGetFreeHeapSize:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccdz1l6y.s:186    .text.xPortGetFreeHeapSize:00000000 xPortGetFreeHeapSize
                      .debug_frame:00000010 $d
                            .group:00000000 wm4.1.98ffea2db242cfdb58f411f7407f2b59
                            .group:00000000 wm4.newlib.h.8.384a112feabb3bef7b573ae48cde2e3b

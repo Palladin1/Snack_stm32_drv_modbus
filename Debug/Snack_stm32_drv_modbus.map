@@ -19,6 +19,7 @@ pxMBFrameCBTransmitterEmpty
                     0x4               ./FreeModbus/mb.o
 pxMBPortCBTimerExpired
                     0x4               ./FreeModbus/mb.o
+xMasterOsEvent      0x4               ./FreeModbus/stm32/portevent_m.o
 DataBuf             0x1e              ./main.o
 ucSCoilBuf          0x0               ./FreeModbus/stm32/user_mb_app.o
 xQueueRegistry      0x8               ./FreeRTOS/Source/queue.o
@@ -4908,7 +4909,7 @@ END GROUP
                 0x08000000                g_pfnVectors
                 0x080001d0                . = ALIGN (0x4)
 
-.text           0x080001d0     0x513c
+.text           0x080001d0     0x511c
                 0x080001d0                . = ALIGN (0x4)
  *(.text)
  .text          0x080001d0       0xa8 c:/tools/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2\libc.a(lib_a-memcpy-stub.o)
@@ -5237,319 +5238,319 @@ END GROUP
                 0x08003118       0x28 ./FreeModbus/stm32/portevent_m.o
                 0x08003118                vMBMasterRunResRelease
  .text.vMBMasterErrorCBRespondTimeout
-                0x08003140       0x1c ./FreeModbus/stm32/portevent_m.o
+                0x08003140       0x28 ./FreeModbus/stm32/portevent_m.o
                 0x08003140                vMBMasterErrorCBRespondTimeout
  .text.vMBMasterErrorCBReceiveData
-                0x0800315c       0x1c ./FreeModbus/stm32/portevent_m.o
-                0x0800315c                vMBMasterErrorCBReceiveData
+                0x08003168       0x28 ./FreeModbus/stm32/portevent_m.o
+                0x08003168                vMBMasterErrorCBReceiveData
  .text.vMBMasterErrorCBExecuteFunction
-                0x08003178       0x20 ./FreeModbus/stm32/portevent_m.o
-                0x08003178                vMBMasterErrorCBExecuteFunction
+                0x08003190       0x28 ./FreeModbus/stm32/portevent_m.o
+                0x08003190                vMBMasterErrorCBExecuteFunction
  .text.vMBMasterCBRequestSuccess
-                0x08003198        0xc ./FreeModbus/stm32/portevent_m.o
-                0x08003198                vMBMasterCBRequestSuccess
+                0x080031b8       0x18 ./FreeModbus/stm32/portevent_m.o
+                0x080031b8                vMBMasterCBRequestSuccess
  .text.eMBMasterWaitRequestFinish
-                0x080031a4       0x60 ./FreeModbus/stm32/portevent_m.o
-                0x080031a4                eMBMasterWaitRequestFinish
+                0x080031d0       0x6c ./FreeModbus/stm32/portevent_m.o
+                0x080031d0                eMBMasterWaitRequestFinish
  .text.vMBMasterPortSerialEnable
-                0x08003204       0x6c ./FreeModbus/stm32/portserial_m.o
-                0x08003204                vMBMasterPortSerialEnable
+                0x0800323c       0x6c ./FreeModbus/stm32/portserial_m.o
+                0x0800323c                vMBMasterPortSerialEnable
  .text.xMBMasterPortSerialInit
-                0x08003270      0x110 ./FreeModbus/stm32/portserial_m.o
-                0x08003270                xMBMasterPortSerialInit
+                0x080032a8      0x110 ./FreeModbus/stm32/portserial_m.o
+                0x080032a8                xMBMasterPortSerialInit
  .text.xMBMasterPortSerialPutByte
-                0x08003380       0x28 ./FreeModbus/stm32/portserial_m.o
-                0x08003380                xMBMasterPortSerialPutByte
+                0x080033b8       0x28 ./FreeModbus/stm32/portserial_m.o
+                0x080033b8                xMBMasterPortSerialPutByte
  .text.xMBMasterPortSerialGetByte
-                0x080033a8       0x28 ./FreeModbus/stm32/portserial_m.o
-                0x080033a8                xMBMasterPortSerialGetByte
+                0x080033e0       0x28 ./FreeModbus/stm32/portserial_m.o
+                0x080033e0                xMBMasterPortSerialGetByte
  .text.prvvUARTTxReadyISR
-                0x080033d0       0x14 ./FreeModbus/stm32/portserial_m.o
+                0x08003408       0x14 ./FreeModbus/stm32/portserial_m.o
  .text.prvvUARTRxISR
-                0x080033e4       0x14 ./FreeModbus/stm32/portserial_m.o
+                0x0800341c       0x14 ./FreeModbus/stm32/portserial_m.o
  .text.USART1_IRQHandler
-                0x080033f8       0x64 ./FreeModbus/stm32/portserial_m.o
-                0x080033f8                USART1_IRQHandler
+                0x08003430       0x64 ./FreeModbus/stm32/portserial_m.o
+                0x08003430                USART1_IRQHandler
  .text.prvvTIMERExpiredISR
-                0x0800345c       0x14 ./FreeModbus/stm32/porttimer.o
+                0x08003494       0x14 ./FreeModbus/stm32/porttimer.o
  .text.TIM3_IRQHandler
-                0x08003470       0x4c ./FreeModbus/stm32/porttimer.o
-                0x08003470                TIM3_IRQHandler
+                0x080034a8       0x4c ./FreeModbus/stm32/porttimer.o
+                0x080034a8                TIM3_IRQHandler
  .text.xMBMasterPortTimersInit
-                0x080034bc       0x9c ./FreeModbus/stm32/porttimer_m.o
-                0x080034bc                xMBMasterPortTimersInit
+                0x080034f4       0x9c ./FreeModbus/stm32/porttimer_m.o
+                0x080034f4                xMBMasterPortTimersInit
  .text.vMBMasterPortTimersT35Enable
-                0x08003558       0x68 ./FreeModbus/stm32/porttimer_m.o
-                0x08003558                vMBMasterPortTimersT35Enable
+                0x08003590       0x68 ./FreeModbus/stm32/porttimer_m.o
+                0x08003590                vMBMasterPortTimersT35Enable
  .text.vMBMasterPortTimersConvertDelayEnable
-                0x080035c0       0x64 ./FreeModbus/stm32/porttimer_m.o
-                0x080035c0                vMBMasterPortTimersConvertDelayEnable
+                0x080035f8       0x64 ./FreeModbus/stm32/porttimer_m.o
+                0x080035f8                vMBMasterPortTimersConvertDelayEnable
  .text.vMBMasterPortTimersRespondTimeoutEnable
-                0x08003624       0x64 ./FreeModbus/stm32/porttimer_m.o
-                0x08003624                vMBMasterPortTimersRespondTimeoutEnable
+                0x0800365c       0x64 ./FreeModbus/stm32/porttimer_m.o
+                0x0800365c                vMBMasterPortTimersRespondTimeoutEnable
  .text.vMBMasterPortTimersDisable
-                0x08003688       0x30 ./FreeModbus/stm32/porttimer_m.o
-                0x08003688                vMBMasterPortTimersDisable
+                0x080036c0       0x30 ./FreeModbus/stm32/porttimer_m.o
+                0x080036c0                vMBMasterPortTimersDisable
  .text.prvvTIMERExpiredISR
-                0x080036b8       0x14 ./FreeModbus/stm32/porttimer_m.o
+                0x080036f0       0x14 ./FreeModbus/stm32/porttimer_m.o
  .text.TIM2_IRQHandler
-                0x080036cc       0x40 ./FreeModbus/stm32/porttimer_m.o
-                0x080036cc                TIM2_IRQHandler
+                0x08003704       0x40 ./FreeModbus/stm32/porttimer_m.o
+                0x08003704                TIM2_IRQHandler
  .text.eMBMasterRegInputCB
-                0x0800370c       0xc4 ./FreeModbus/stm32/user_mb_app_m.o
-                0x0800370c                eMBMasterRegInputCB
+                0x08003744       0xc4 ./FreeModbus/stm32/user_mb_app_m.o
+                0x08003744                eMBMasterRegInputCB
  .text.eMBMasterRegHoldingCB
-                0x080037d0      0x108 ./FreeModbus/stm32/user_mb_app_m.o
-                0x080037d0                eMBMasterRegHoldingCB
+                0x08003808      0x108 ./FreeModbus/stm32/user_mb_app_m.o
+                0x08003808                eMBMasterRegHoldingCB
  .text.eMBMasterRegCoilsCB
-                0x080038d8      0x174 ./FreeModbus/stm32/user_mb_app_m.o
-                0x080038d8                eMBMasterRegCoilsCB
+                0x08003910      0x174 ./FreeModbus/stm32/user_mb_app_m.o
+                0x08003910                eMBMasterRegCoilsCB
  .text.eMBMasterRegDiscreteCB
-                0x08003a4c       0xf0 ./FreeModbus/stm32/user_mb_app_m.o
-                0x08003a4c                eMBMasterRegDiscreteCB
+                0x08003a84       0xf0 ./FreeModbus/stm32/user_mb_app_m.o
+                0x08003a84                eMBMasterRegDiscreteCB
  .text.usMBCRC16
-                0x08003b3c       0x70 ./FreeModbus/rtu/mbcrc.o
-                0x08003b3c                usMBCRC16
+                0x08003b74       0x70 ./FreeModbus/rtu/mbcrc.o
+                0x08003b74                usMBCRC16
  .text.eMBMasterRTUInit
-                0x08003bac       0x74 ./FreeModbus/rtu/mbrtu_m.o
-                0x08003bac                eMBMasterRTUInit
+                0x08003be4       0x74 ./FreeModbus/rtu/mbrtu_m.o
+                0x08003be4                eMBMasterRTUInit
  .text.eMBMasterRTUStart
-                0x08003c20       0x28 ./FreeModbus/rtu/mbrtu_m.o
-                0x08003c20                eMBMasterRTUStart
+                0x08003c58       0x28 ./FreeModbus/rtu/mbrtu_m.o
+                0x08003c58                eMBMasterRTUStart
  .text.eMBMasterRTUStop
-                0x08003c48       0x1c ./FreeModbus/rtu/mbrtu_m.o
-                0x08003c48                eMBMasterRTUStop
+                0x08003c80       0x1c ./FreeModbus/rtu/mbrtu_m.o
+                0x08003c80                eMBMasterRTUStop
  .text.eMBMasterRTUReceive
-                0x08003c64       0x88 ./FreeModbus/rtu/mbrtu_m.o
-                0x08003c64                eMBMasterRTUReceive
+                0x08003c9c       0x88 ./FreeModbus/rtu/mbrtu_m.o
+                0x08003c9c                eMBMasterRTUReceive
  .text.eMBMasterRTUSend
-                0x08003cec      0x118 ./FreeModbus/rtu/mbrtu_m.o
-                0x08003cec                eMBMasterRTUSend
+                0x08003d24      0x118 ./FreeModbus/rtu/mbrtu_m.o
+                0x08003d24                eMBMasterRTUSend
  .text.xMBMasterRTUReceiveFSM
-                0x08003e04       0xf0 ./FreeModbus/rtu/mbrtu_m.o
-                0x08003e04                xMBMasterRTUReceiveFSM
+                0x08003e3c       0xf0 ./FreeModbus/rtu/mbrtu_m.o
+                0x08003e3c                xMBMasterRTUReceiveFSM
  .text.xMBMasterRTUTransmitFSM
-                0x08003ef4       0xe0 ./FreeModbus/rtu/mbrtu_m.o
-                0x08003ef4                xMBMasterRTUTransmitFSM
+                0x08003f2c       0xe0 ./FreeModbus/rtu/mbrtu_m.o
+                0x08003f2c                xMBMasterRTUTransmitFSM
  .text.xMBMasterRTUTimerExpired
-                0x08003fd4       0xb4 ./FreeModbus/rtu/mbrtu_m.o
-                0x08003fd4                xMBMasterRTUTimerExpired
+                0x0800400c       0xb4 ./FreeModbus/rtu/mbrtu_m.o
+                0x0800400c                xMBMasterRTUTimerExpired
  .text.vMBMasterGetPDUSndBuf
-                0x08004088       0x1c ./FreeModbus/rtu/mbrtu_m.o
-                0x08004088                vMBMasterGetPDUSndBuf
+                0x080040c0       0x1c ./FreeModbus/rtu/mbrtu_m.o
+                0x080040c0                vMBMasterGetPDUSndBuf
  .text.vMBMasterSetPDUSndLength
-                0x080040a4       0x20 ./FreeModbus/rtu/mbrtu_m.o
-                0x080040a4                vMBMasterSetPDUSndLength
+                0x080040dc       0x20 ./FreeModbus/rtu/mbrtu_m.o
+                0x080040dc                vMBMasterSetPDUSndLength
  .text.usMBMasterGetPDUSndLength
-                0x080040c4       0x1c ./FreeModbus/rtu/mbrtu_m.o
-                0x080040c4                usMBMasterGetPDUSndLength
+                0x080040fc       0x1c ./FreeModbus/rtu/mbrtu_m.o
+                0x080040fc                usMBMasterGetPDUSndLength
  .text.vMBMasterSetCurTimerMode
-                0x080040e0       0x20 ./FreeModbus/rtu/mbrtu_m.o
-                0x080040e0                vMBMasterSetCurTimerMode
+                0x08004118       0x20 ./FreeModbus/rtu/mbrtu_m.o
+                0x08004118                vMBMasterSetCurTimerMode
  .text.xMBMasterRequestIsBroadcast
-                0x08004100       0x1c ./FreeModbus/rtu/mbrtu_m.o
-                0x08004100                xMBMasterRequestIsBroadcast
+                0x08004138       0x1c ./FreeModbus/rtu/mbrtu_m.o
+                0x08004138                xMBMasterRequestIsBroadcast
  .text.eMBMasterFuncReadCoils
-                0x0800411c       0xdc ./FreeModbus/functions/mbfunccoils_m.o
-                0x0800411c                eMBMasterFuncReadCoils
+                0x08004154       0xdc ./FreeModbus/functions/mbfunccoils_m.o
+                0x08004154                eMBMasterFuncReadCoils
  .text.eMBMasterReqWriteCoil
-                0x080041f8       0xb0 ./FreeModbus/functions/mbfunccoils_m.o
-                0x080041f8                eMBMasterReqWriteCoil
+                0x08004230       0xb0 ./FreeModbus/functions/mbfunccoils_m.o
+                0x08004230                eMBMasterReqWriteCoil
  .text.eMBMasterFuncWriteCoil
-                0x080042a8       0xac ./FreeModbus/functions/mbfunccoils_m.o
-                0x080042a8                eMBMasterFuncWriteCoil
+                0x080042e0       0xac ./FreeModbus/functions/mbfunccoils_m.o
+                0x080042e0                eMBMasterFuncWriteCoil
  .text.eMBMasterFuncWriteMultipleCoils
-                0x08004354       0xd8 ./FreeModbus/functions/mbfunccoils_m.o
-                0x08004354                eMBMasterFuncWriteMultipleCoils
+                0x0800438c       0xd8 ./FreeModbus/functions/mbfunccoils_m.o
+                0x0800438c                eMBMasterFuncWriteMultipleCoils
  .text.eMBMasterFuncReadDiscreteInputs
-                0x0800442c       0xdc ./FreeModbus/functions/mbfuncdisc_m.o
-                0x0800442c                eMBMasterFuncReadDiscreteInputs
+                0x08004464       0xdc ./FreeModbus/functions/mbfuncdisc_m.o
+                0x08004464                eMBMasterFuncReadDiscreteInputs
  .text.eMBMasterFuncWriteHoldingRegister
-                0x08004508       0x6c ./FreeModbus/functions/mbfuncholding_m.o
-                0x08004508                eMBMasterFuncWriteHoldingRegister
+                0x08004540       0x6c ./FreeModbus/functions/mbfuncholding_m.o
+                0x08004540                eMBMasterFuncWriteHoldingRegister
  .text.eMBMasterFuncWriteMultipleHoldingRegister
-                0x08004574       0xb4 ./FreeModbus/functions/mbfuncholding_m.o
-                0x08004574                eMBMasterFuncWriteMultipleHoldingRegister
+                0x080045ac       0xb4 ./FreeModbus/functions/mbfuncholding_m.o
+                0x080045ac                eMBMasterFuncWriteMultipleHoldingRegister
  .text.eMBMasterFuncReadHoldingRegister
-                0x08004628       0xb8 ./FreeModbus/functions/mbfuncholding_m.o
-                0x08004628                eMBMasterFuncReadHoldingRegister
+                0x08004660       0xb8 ./FreeModbus/functions/mbfuncholding_m.o
+                0x08004660                eMBMasterFuncReadHoldingRegister
  .text.eMBMasterFuncReadWriteMultipleHoldingRegister
-                0x080046e0      0x104 ./FreeModbus/functions/mbfuncholding_m.o
-                0x080046e0                eMBMasterFuncReadWriteMultipleHoldingRegister
+                0x08004718      0x104 ./FreeModbus/functions/mbfuncholding_m.o
+                0x08004718                eMBMasterFuncReadWriteMultipleHoldingRegister
  .text.eMBMasterFuncReadInputRegister
-                0x080047e4       0xb8 ./FreeModbus/functions/mbfuncinput_m.o
-                0x080047e4                eMBMasterFuncReadInputRegister
+                0x0800481c       0xb8 ./FreeModbus/functions/mbfuncinput_m.o
+                0x0800481c                eMBMasterFuncReadInputRegister
  .text.eMBFuncReportSlaveID
-                0x0800489c       0x44 ./FreeModbus/functions/mbfuncother.o
-                0x0800489c                eMBFuncReportSlaveID
+                0x080048d4       0x44 ./FreeModbus/functions/mbfuncother.o
+                0x080048d4                eMBFuncReportSlaveID
  .text.xMBUtilSetBits
-                0x080048e0       0xa8 ./FreeModbus/functions/mbutils.o
-                0x080048e0                xMBUtilSetBits
+                0x08004918       0xa8 ./FreeModbus/functions/mbutils.o
+                0x08004918                xMBUtilSetBits
  .text.xMBUtilGetBits
-                0x08004988       0x74 ./FreeModbus/functions/mbutils.o
-                0x08004988                xMBUtilGetBits
+                0x080049c0       0x74 ./FreeModbus/functions/mbutils.o
+                0x080049c0                xMBUtilGetBits
  .text.prveMBError2Exception
-                0x080049fc       0x40 ./FreeModbus/functions/mbutils.o
-                0x080049fc                prveMBError2Exception
+                0x08004a34       0x40 ./FreeModbus/functions/mbutils.o
+                0x08004a34                prveMBError2Exception
  .text.eMBMasterInit
-                0x08004a3c       0xf0 ./FreeModbus/mb_m.o
-                0x08004a3c                eMBMasterInit
+                0x08004a74       0xf0 ./FreeModbus/mb_m.o
+                0x08004a74                eMBMasterInit
  .text.eMBMasterEnable
-                0x08004b2c       0x40 ./FreeModbus/mb_m.o
-                0x08004b2c                eMBMasterEnable
+                0x08004b64       0x40 ./FreeModbus/mb_m.o
+                0x08004b64                eMBMasterEnable
  .text.eMBMasterPoll
-                0x08004b6c      0x318 ./FreeModbus/mb_m.o
-                0x08004b6c                eMBMasterPoll
+                0x08004ba4      0x318 ./FreeModbus/mb_m.o
+                0x08004ba4                eMBMasterPoll
  .text.vMBMasterSetCBRunInMasterMode
-                0x08004e84       0x20 ./FreeModbus/mb_m.o
-                0x08004e84                vMBMasterSetCBRunInMasterMode
- .text.ucMBMasterGetDestAddress
-                0x08004ea4       0x18 ./FreeModbus/mb_m.o
-                0x08004ea4                ucMBMasterGetDestAddress
- .text.vMBMasterSetDestAddress
                 0x08004ebc       0x20 ./FreeModbus/mb_m.o
-                0x08004ebc                vMBMasterSetDestAddress
- .text.eMBMasterGetErrorType
+                0x08004ebc                vMBMasterSetCBRunInMasterMode
+ .text.ucMBMasterGetDestAddress
                 0x08004edc       0x18 ./FreeModbus/mb_m.o
-                0x08004edc                eMBMasterGetErrorType
- .text.vMBMasterSetErrorType
+                0x08004edc                ucMBMasterGetDestAddress
+ .text.vMBMasterSetDestAddress
                 0x08004ef4       0x20 ./FreeModbus/mb_m.o
-                0x08004ef4                vMBMasterSetErrorType
- .text.main     0x08004f14       0x7c ./main.o
-                0x08004f14                main
- .text.vTask1   0x08004f90      0x100 ./main.o
-                0x08004f90                vTask1
- .text.vTask2   0x08005090       0x5c ./main.o
-                0x08005090                vTask2
+                0x08004ef4                vMBMasterSetDestAddress
+ .text.eMBMasterGetErrorType
+                0x08004f14       0x18 ./FreeModbus/mb_m.o
+                0x08004f14                eMBMasterGetErrorType
+ .text.vMBMasterSetErrorType
+                0x08004f2c       0x20 ./FreeModbus/mb_m.o
+                0x08004f2c                vMBMasterSetErrorType
+ .text.main     0x08004f4c       0x7c ./main.o
+                0x08004f4c                main
+ .text.vTask1   0x08004fc8       0x94 ./main.o
+                0x08004fc8                vTask1
+ .text.vTask2   0x0800505c       0x70 ./main.o
+                0x0800505c                vTask2
  *(.rodata)
- .rodata        0x080050ec        0x8 ./FreeRTOS/Source/tasks.o
- .rodata        0x080050f4        0x8 ./FreeRTOS/Source/timers.o
- .rodata        0x080050fc       0x10 ./main.o
+ .rodata        0x080050cc        0x8 ./FreeRTOS/Source/tasks.o
+ .rodata        0x080050d4        0x8 ./FreeRTOS/Source/timers.o
+ .rodata        0x080050dc       0x10 ./main.o
  *(.rodata*)
  .rodata.aucCRCHi
-                0x0800510c      0x100 ./FreeModbus/rtu/mbcrc.o
+                0x080050ec      0x100 ./FreeModbus/rtu/mbcrc.o
  .rodata.aucCRCLo
-                0x0800520c      0x100 ./FreeModbus/rtu/mbcrc.o
+                0x080051ec      0x100 ./FreeModbus/rtu/mbcrc.o
  *(.glue_7)
  .glue_7        0x00000000        0x0 linker stubs
  *(.glue_7t)
  .glue_7t       0x00000000        0x0 linker stubs
  *(.init)
  *(.fini)
-                0x0800530c                . = ALIGN (0x4)
-                0x0800530c                _etext = .
+                0x080052ec                . = ALIGN (0x4)
+                0x080052ec                _etext = .
 
-.vfp11_veneer   0x0800530c        0x0
+.vfp11_veneer   0x080052ec        0x0
  .vfp11_veneer  0x00000000        0x0 linker stubs
 
-.v4_bx          0x0800530c        0x0
+.v4_bx          0x080052ec        0x0
  .v4_bx         0x00000000        0x0 linker stubs
 
-.iplt           0x0800530c        0x0
+.iplt           0x080052ec        0x0
  .iplt          0x00000000        0x0 ./bsp/bsp.o
 
-.rel.dyn        0x0800530c        0x0
+.rel.dyn        0x080052ec        0x0
  .rel.iplt      0x00000000        0x0 ./bsp/bsp.o
 
 .ARM.extab
  *(.ARM.extab* .gnu.linkonce.armextab.*)
 
-.ARM            0x0800530c        0x0
-                0x0800530c                __exidx_start = .
+.ARM            0x080052ec        0x0
+                0x080052ec                __exidx_start = .
  *(.ARM.exidx*)
-                0x0800530c                __exidx_end = .
+                0x080052ec                __exidx_end = .
 
 .ARM.attributes
-                0x0800530c       0x31
+                0x080052ec       0x31
  *(.ARM.attributes)
  .ARM.attributes
-                0x0800530c       0x33 ./bsp/bsp.o
+                0x080052ec       0x33 ./bsp/bsp.o
  .ARM.attributes
-                0x0800533f       0x33 ./bsp/led.o
+                0x0800531f       0x33 ./bsp/led.o
  .ARM.attributes
-                0x08005372       0x33 ./Libraries/StdPeripheralDriver/src/misc.o
+                0x08005352       0x33 ./Libraries/StdPeripheralDriver/src/misc.o
  .ARM.attributes
-                0x080053a5       0x33 ./Libraries/StdPeripheralDriver/src/stm32f10x_gpio.o
+                0x08005385       0x33 ./Libraries/StdPeripheralDriver/src/stm32f10x_gpio.o
  .ARM.attributes
-                0x080053d8       0x33 ./Libraries/StdPeripheralDriver/src/stm32f10x_rcc.o
+                0x080053b8       0x33 ./Libraries/StdPeripheralDriver/src/stm32f10x_rcc.o
  .ARM.attributes
-                0x0800540b       0x33 ./Libraries/StdPeripheralDriver/src/stm32f10x_tim.o
+                0x080053eb       0x33 ./Libraries/StdPeripheralDriver/src/stm32f10x_tim.o
  .ARM.attributes
-                0x0800543e       0x33 ./Libraries/StdPeripheralDriver/src/stm32f10x_usart.o
+                0x0800541e       0x33 ./Libraries/StdPeripheralDriver/src/stm32f10x_usart.o
  .ARM.attributes
-                0x08005471       0x21 ./Libraries/CMSIS/startup_stm32f10x_md_vl.o
+                0x08005451       0x21 ./Libraries/CMSIS/startup_stm32f10x_md_vl.o
  .ARM.attributes
-                0x08005492       0x33 ./Libraries/CMSIS/system_stm32f10x.o
+                0x08005472       0x33 ./Libraries/CMSIS/system_stm32f10x.o
  .ARM.attributes
-                0x080054c5       0x33 ./FreeRTOS/Source/portable/MemMang/heap_1.o
+                0x080054a5       0x33 ./FreeRTOS/Source/portable/MemMang/heap_1.o
  .ARM.attributes
-                0x080054f8       0x33 ./FreeRTOS/Source/portable/GCC/ARM_CM3/port.o
+                0x080054d8       0x33 ./FreeRTOS/Source/portable/GCC/ARM_CM3/port.o
  .ARM.attributes
-                0x0800552b       0x33 ./FreeRTOS/Source/list.o
+                0x0800550b       0x33 ./FreeRTOS/Source/list.o
  .ARM.attributes
-                0x0800555e       0x33 ./FreeRTOS/Source/queue.o
+                0x0800553e       0x33 ./FreeRTOS/Source/queue.o
  .ARM.attributes
-                0x08005591       0x33 ./FreeRTOS/Source/tasks.o
+                0x08005571       0x33 ./FreeRTOS/Source/tasks.o
  .ARM.attributes
-                0x080055c4       0x33 ./FreeRTOS/Source/timers.o
+                0x080055a4       0x33 ./FreeRTOS/Source/timers.o
  .ARM.attributes
-                0x080055f7       0x33 ./FreeModbus/stm32/portevent_m.o
+                0x080055d7       0x33 ./FreeModbus/stm32/portevent_m.o
  .ARM.attributes
-                0x0800562a       0x33 ./FreeModbus/stm32/portserial_m.o
+                0x0800560a       0x33 ./FreeModbus/stm32/portserial_m.o
  .ARM.attributes
-                0x0800565d       0x33 ./FreeModbus/stm32/porttimer.o
+                0x0800563d       0x33 ./FreeModbus/stm32/porttimer.o
  .ARM.attributes
-                0x08005690       0x33 ./FreeModbus/stm32/porttimer_m.o
+                0x08005670       0x33 ./FreeModbus/stm32/porttimer_m.o
  .ARM.attributes
-                0x080056c3       0x33 ./FreeModbus/stm32/user_mb_app_m.o
+                0x080056a3       0x33 ./FreeModbus/stm32/user_mb_app_m.o
  .ARM.attributes
-                0x080056f6       0x33 ./FreeModbus/rtu/mbcrc.o
+                0x080056d6       0x33 ./FreeModbus/rtu/mbcrc.o
  .ARM.attributes
-                0x08005729       0x33 ./FreeModbus/rtu/mbrtu_m.o
+                0x08005709       0x33 ./FreeModbus/rtu/mbrtu_m.o
  .ARM.attributes
-                0x0800575c       0x33 ./FreeModbus/functions/mbfunccoils_m.o
+                0x0800573c       0x33 ./FreeModbus/functions/mbfunccoils_m.o
  .ARM.attributes
-                0x0800578f       0x33 ./FreeModbus/functions/mbfuncdisc_m.o
+                0x0800576f       0x33 ./FreeModbus/functions/mbfuncdisc_m.o
  .ARM.attributes
-                0x080057c2       0x33 ./FreeModbus/functions/mbfuncholding_m.o
+                0x080057a2       0x33 ./FreeModbus/functions/mbfuncholding_m.o
  .ARM.attributes
-                0x080057f5       0x33 ./FreeModbus/functions/mbfuncinput_m.o
+                0x080057d5       0x33 ./FreeModbus/functions/mbfuncinput_m.o
  .ARM.attributes
-                0x08005828       0x33 ./FreeModbus/functions/mbfuncother.o
+                0x08005808       0x33 ./FreeModbus/functions/mbfuncother.o
  .ARM.attributes
-                0x0800585b       0x33 ./FreeModbus/functions/mbutils.o
+                0x0800583b       0x33 ./FreeModbus/functions/mbutils.o
  .ARM.attributes
-                0x0800588e       0x33 ./FreeModbus/mb.o
+                0x0800586e       0x33 ./FreeModbus/mb.o
  .ARM.attributes
-                0x080058c1       0x33 ./FreeModbus/mb_m.o
+                0x080058a1       0x33 ./FreeModbus/mb_m.o
  .ARM.attributes
-                0x080058f4       0x33 ./main.o
+                0x080058d4       0x33 ./main.o
  .ARM.attributes
-                0x08005927       0x29 c:/tools/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2\libc.a(lib_a-memcpy-stub.o)
+                0x08005907       0x29 c:/tools/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2\libc.a(lib_a-memcpy-stub.o)
  .ARM.attributes
-                0x08005950       0x29 c:/tools/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2\libc.a(lib_a-memset.o)
+                0x08005930       0x29 c:/tools/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2\libc.a(lib_a-memset.o)
  .ARM.attributes
-                0x08005979       0x29 c:/tools/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2\libc.a(lib_a-strncpy.o)
+                0x08005959       0x29 c:/tools/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2\libc.a(lib_a-strncpy.o)
 
-.preinit_array  0x0800530c        0x0
-                0x0800530c                PROVIDE (__preinit_array_start, .)
+.preinit_array  0x080052ec        0x0
+                0x080052ec                PROVIDE (__preinit_array_start, .)
  *(.preinit_array*)
-                0x0800530c                PROVIDE (__preinit_array_end, .)
+                0x080052ec                PROVIDE (__preinit_array_end, .)
 
-.init_array     0x0800530c        0x0
-                0x0800530c                PROVIDE (__init_array_start, .)
+.init_array     0x080052ec        0x0
+                0x080052ec                PROVIDE (__init_array_start, .)
  *(SORT(.init_array.*))
  *(.init_array*)
-                0x0800530c                PROVIDE (__init_array_end, .)
+                0x080052ec                PROVIDE (__init_array_end, .)
 
-.fini_array     0x0800530c        0x0
-                0x0800530c                PROVIDE (__fini_array_start, .)
+.fini_array     0x080052ec        0x0
+                0x080052ec                PROVIDE (__fini_array_start, .)
  *(.fini_array*)
  *(SORT(.fini_array.*))
-                0x0800530c                PROVIDE (__fini_array_end, .)
-                0x0800530c                _sidata = .
+                0x080052ec                PROVIDE (__fini_array_end, .)
+                0x080052ec                _sidata = .
 
-.data           0x20000000       0xac load address 0x080059a2
+.data           0x20000000       0xac load address 0x08005982
                 0x20000000                . = ALIGN (0x4)
                 0x20000000                _sdata = .
  *(.data)
@@ -5578,11 +5579,11 @@ END GROUP
                 0x200000ac                . = ALIGN (0x4)
                 0x200000ac                _edata = .
 
-.igot.plt       0x200000ac        0x0 load address 0x08005a50
+.igot.plt       0x200000ac        0x0 load address 0x08005a30
  .igot.plt      0x00000000        0x0 ./bsp/bsp.o
                 0x200000ac                . = ALIGN (0x4)
 
-.bss            0x200000b0     0x1884 load address 0x08005a58
+.bss            0x200000b0     0x1888 load address 0x08005a38
                 0x200000b0                _sbss = .
                 0x200000b0                __bss_start__ = _sbss
  *(.bss)
@@ -5722,39 +5723,41 @@ END GROUP
  .bss.eException.6317
                 0x20001857        0x1 ./FreeModbus/mb_m.o
  *(COMMON)
- COMMON         0x20001858       0x90 ./FreeModbus/stm32/user_mb_app_m.o
-                0x20001858                ucMCoilBuf
-                0x20001858                ucMDiscInBuf
-                0x20001868                usMRegInBuf
-                0x20001868                usMRegHoldBuf
- COMMON         0x200018e8       0x14 ./FreeModbus/mb.o
-                0x200018e8                pxMBFrameCBTransmitterEmpty
-                0x200018ec                pxMBPortCBTimerExpired
-                0x200018f0                pxMBFrameCBByteReceived
-                0x200018f4                pxMBFrameCBTransmitFSMCur
-                0x200018f8                pxMBFrameCBReceiveFSMCur
- COMMON         0x200018fc       0x14 ./FreeModbus/mb_m.o
-                0x200018fc                pxMBMasterFrameCBReceiveFSMCur
-                0x20001900                pxMBMasterFrameCBTransmitFSMCur
-                0x20001904                pxMBMasterFrameCBTransmitterEmpty
-                0x20001908                pxMBMasterFrameCBByteReceived
-                0x2000190c                pxMBMasterPortCBTimerExpired
- COMMON         0x20001910       0x24 ./main.o
-                0x20001910                DataBuf
-                0x20001930                xDataGetQueue
-                0x20001934                . = ALIGN (0x4)
-                0x20001934                _ebss = .
-                0x20001934                __bss_end__ = _ebss
-                0x20001934                PROVIDE (end, _ebss)
-                0x20001934                PROVIDE (_end, _ebss)
+ COMMON         0x20001858        0x4 ./FreeModbus/stm32/portevent_m.o
+                0x20001858                xMasterOsEvent
+ COMMON         0x2000185c       0x90 ./FreeModbus/stm32/user_mb_app_m.o
+                0x2000185c                ucMCoilBuf
+                0x2000185c                ucMDiscInBuf
+                0x2000186c                usMRegInBuf
+                0x2000186c                usMRegHoldBuf
+ COMMON         0x200018ec       0x14 ./FreeModbus/mb.o
+                0x200018ec                pxMBFrameCBTransmitterEmpty
+                0x200018f0                pxMBPortCBTimerExpired
+                0x200018f4                pxMBFrameCBByteReceived
+                0x200018f8                pxMBFrameCBTransmitFSMCur
+                0x200018fc                pxMBFrameCBReceiveFSMCur
+ COMMON         0x20001900       0x14 ./FreeModbus/mb_m.o
+                0x20001900                pxMBMasterFrameCBReceiveFSMCur
+                0x20001904                pxMBMasterFrameCBTransmitFSMCur
+                0x20001908                pxMBMasterFrameCBTransmitterEmpty
+                0x2000190c                pxMBMasterFrameCBByteReceived
+                0x20001910                pxMBMasterPortCBTimerExpired
+ COMMON         0x20001914       0x24 ./main.o
+                0x20001914                DataBuf
+                0x20001934                xDataGetQueue
+                0x20001938                . = ALIGN (0x4)
+                0x20001938                _ebss = .
+                0x20001938                __bss_end__ = _ebss
+                0x20001938                PROVIDE (end, _ebss)
+                0x20001938                PROVIDE (_end, _ebss)
 
 ._user_heap_stack
-                0x20001934      0x100 load address 0x080072dc
-                0x20001934                . = ALIGN (0x4)
-                0x20001934                . = (. + MIN_HEAP_SIZE)
-                0x20001a34                . = (. + MIN_STACK_SIZE)
- *fill*         0x20001934      0x100 
-                0x20001a34                . = ALIGN (0x4)
+                0x20001938      0x100 load address 0x080072c0
+                0x20001938                . = ALIGN (0x4)
+                0x20001938                . = (. + MIN_HEAP_SIZE)
+                0x20001a38                . = (. + MIN_STACK_SIZE)
+ *fill*         0x20001938      0x100 
+                0x20001a38                . = ALIGN (0x4)
 
 /DISCARD/
  libc.a(*)
@@ -5762,7 +5765,7 @@ END GROUP
  libgcc.a(*)
 OUTPUT(Snack_stm32_drv_modbus.elf elf32-littlearm)
 
-.debug_info     0x00000000     0xacc3
+.debug_info     0x00000000     0xad03
  .debug_info    0x00000000      0x24e ./bsp/bsp.o
  .debug_info    0x0000024e      0x1e8 ./bsp/led.o
  .debug_info    0x00000436      0x4db ./Libraries/StdPeripheralDriver/src/misc.o
@@ -5778,24 +5781,24 @@ OUTPUT(Snack_stm32_drv_modbus.elf elf32-littlearm)
  .debug_info    0x0000485f      0x820 ./FreeRTOS/Source/queue.o
  .debug_info    0x0000507f      0xd2e ./FreeRTOS/Source/tasks.o
  .debug_info    0x00005dad      0x6e0 ./FreeRTOS/Source/timers.o
- .debug_info    0x0000648d      0x3a9 ./FreeModbus/stm32/portevent_m.o
- .debug_info    0x00006836      0x65e ./FreeModbus/stm32/portserial_m.o
- .debug_info    0x00006e94      0x614 ./FreeModbus/stm32/porttimer.o
- .debug_info    0x000074a8      0x690 ./FreeModbus/stm32/porttimer_m.o
- .debug_info    0x00007b38      0x4b2 ./FreeModbus/stm32/user_mb_app_m.o
- .debug_info    0x00007fea      0x152 ./FreeModbus/rtu/mbcrc.o
- .debug_info    0x0000813c      0x5bd ./FreeModbus/rtu/mbrtu_m.o
- .debug_info    0x000086f9      0x523 ./FreeModbus/functions/mbfunccoils_m.o
- .debug_info    0x00008c1c      0x2de ./FreeModbus/functions/mbfuncdisc_m.o
- .debug_info    0x00008efa      0x629 ./FreeModbus/functions/mbfuncholding_m.o
- .debug_info    0x00009523      0x2d0 ./FreeModbus/functions/mbfuncinput_m.o
- .debug_info    0x000097f3      0x244 ./FreeModbus/functions/mbfuncother.o
- .debug_info    0x00009a37      0x290 ./FreeModbus/functions/mbutils.o
- .debug_info    0x00009cc7      0x5d2 ./FreeModbus/mb.o
- .debug_info    0x0000a299      0x695 ./FreeModbus/mb_m.o
- .debug_info    0x0000a92e      0x395 ./main.o
+ .debug_info    0x0000648d      0x3d3 ./FreeModbus/stm32/portevent_m.o
+ .debug_info    0x00006860      0x65e ./FreeModbus/stm32/portserial_m.o
+ .debug_info    0x00006ebe      0x614 ./FreeModbus/stm32/porttimer.o
+ .debug_info    0x000074d2      0x690 ./FreeModbus/stm32/porttimer_m.o
+ .debug_info    0x00007b62      0x4b2 ./FreeModbus/stm32/user_mb_app_m.o
+ .debug_info    0x00008014      0x152 ./FreeModbus/rtu/mbcrc.o
+ .debug_info    0x00008166      0x5bd ./FreeModbus/rtu/mbrtu_m.o
+ .debug_info    0x00008723      0x523 ./FreeModbus/functions/mbfunccoils_m.o
+ .debug_info    0x00008c46      0x2de ./FreeModbus/functions/mbfuncdisc_m.o
+ .debug_info    0x00008f24      0x629 ./FreeModbus/functions/mbfuncholding_m.o
+ .debug_info    0x0000954d      0x2d0 ./FreeModbus/functions/mbfuncinput_m.o
+ .debug_info    0x0000981d      0x244 ./FreeModbus/functions/mbfuncother.o
+ .debug_info    0x00009a61      0x290 ./FreeModbus/functions/mbutils.o
+ .debug_info    0x00009cf1      0x5d2 ./FreeModbus/mb.o
+ .debug_info    0x0000a2c3      0x695 ./FreeModbus/mb_m.o
+ .debug_info    0x0000a958      0x3ab ./main.o
 
-.debug_abbrev   0x00000000     0x248d
+.debug_abbrev   0x00000000     0x24db
  .debug_abbrev  0x00000000       0xe3 ./bsp/bsp.o
  .debug_abbrev  0x000000e3      0x11a ./bsp/led.o
  .debug_abbrev  0x000001fd      0x159 ./Libraries/StdPeripheralDriver/src/misc.o
@@ -5811,22 +5814,22 @@ OUTPUT(Snack_stm32_drv_modbus.elf elf32-littlearm)
  .debug_abbrev  0x00000e73      0x181 ./FreeRTOS/Source/queue.o
  .debug_abbrev  0x00000ff4      0x1d2 ./FreeRTOS/Source/tasks.o
  .debug_abbrev  0x000011c6      0x178 ./FreeRTOS/Source/timers.o
- .debug_abbrev  0x0000133e      0x145 ./FreeModbus/stm32/portevent_m.o
- .debug_abbrev  0x00001483      0x186 ./FreeModbus/stm32/portserial_m.o
- .debug_abbrev  0x00001609      0x15f ./FreeModbus/stm32/porttimer.o
- .debug_abbrev  0x00001768      0x186 ./FreeModbus/stm32/porttimer_m.o
- .debug_abbrev  0x000018ee       0xd5 ./FreeModbus/stm32/user_mb_app_m.o
- .debug_abbrev  0x000019c3       0xae ./FreeModbus/rtu/mbcrc.o
- .debug_abbrev  0x00001a71      0x14a ./FreeModbus/rtu/mbrtu_m.o
- .debug_abbrev  0x00001bbb       0xf7 ./FreeModbus/functions/mbfunccoils_m.o
- .debug_abbrev  0x00001cb2       0xab ./FreeModbus/functions/mbfuncdisc_m.o
- .debug_abbrev  0x00001d5d       0xe5 ./FreeModbus/functions/mbfuncholding_m.o
- .debug_abbrev  0x00001e42       0xab ./FreeModbus/functions/mbfuncinput_m.o
- .debug_abbrev  0x00001eed       0xc4 ./FreeModbus/functions/mbfuncother.o
- .debug_abbrev  0x00001fb1       0xc5 ./FreeModbus/functions/mbutils.o
- .debug_abbrev  0x00002076      0x15c ./FreeModbus/mb.o
- .debug_abbrev  0x000021d2      0x174 ./FreeModbus/mb_m.o
- .debug_abbrev  0x00002346      0x147 ./main.o
+ .debug_abbrev  0x0000133e      0x18a ./FreeModbus/stm32/portevent_m.o
+ .debug_abbrev  0x000014c8      0x186 ./FreeModbus/stm32/portserial_m.o
+ .debug_abbrev  0x0000164e      0x15f ./FreeModbus/stm32/porttimer.o
+ .debug_abbrev  0x000017ad      0x186 ./FreeModbus/stm32/porttimer_m.o
+ .debug_abbrev  0x00001933       0xd5 ./FreeModbus/stm32/user_mb_app_m.o
+ .debug_abbrev  0x00001a08       0xae ./FreeModbus/rtu/mbcrc.o
+ .debug_abbrev  0x00001ab6      0x14a ./FreeModbus/rtu/mbrtu_m.o
+ .debug_abbrev  0x00001c00       0xf7 ./FreeModbus/functions/mbfunccoils_m.o
+ .debug_abbrev  0x00001cf7       0xab ./FreeModbus/functions/mbfuncdisc_m.o
+ .debug_abbrev  0x00001da2       0xe5 ./FreeModbus/functions/mbfuncholding_m.o
+ .debug_abbrev  0x00001e87       0xab ./FreeModbus/functions/mbfuncinput_m.o
+ .debug_abbrev  0x00001f32       0xc4 ./FreeModbus/functions/mbfuncother.o
+ .debug_abbrev  0x00001ff6       0xc5 ./FreeModbus/functions/mbutils.o
+ .debug_abbrev  0x000020bb      0x15c ./FreeModbus/mb.o
+ .debug_abbrev  0x00002217      0x174 ./FreeModbus/mb_m.o
+ .debug_abbrev  0x0000238b      0x150 ./main.o
 
 .debug_aranges  0x00000000      0xe80
  .debug_aranges
@@ -6023,7 +6026,7 @@ OUTPUT(Snack_stm32_drv_modbus.elf elf32-littlearm)
  .debug_macro   0x0000f1e2      0x2ad ./main.o
  .debug_macro   0x0000f48f       0x69 ./main.o
 
-.debug_line     0x00000000     0x8bdc
+.debug_line     0x00000000     0x8be4
  .debug_line    0x00000000      0x310 ./bsp/bsp.o
  .debug_line    0x00000310      0x2bb ./bsp/led.o
  .debug_line    0x000005cb      0x278 ./Libraries/StdPeripheralDriver/src/misc.o
@@ -6039,24 +6042,24 @@ OUTPUT(Snack_stm32_drv_modbus.elf elf32-littlearm)
  .debug_line    0x00002c3c      0x691 ./FreeRTOS/Source/queue.o
  .debug_line    0x000032cd      0x952 ./FreeRTOS/Source/tasks.o
  .debug_line    0x00003c1f      0x388 ./FreeRTOS/Source/timers.o
- .debug_line    0x00003fa7      0x44e ./FreeModbus/stm32/portevent_m.o
- .debug_line    0x000043f5      0x43c ./FreeModbus/stm32/portserial_m.o
- .debug_line    0x00004831      0x46f ./FreeModbus/stm32/porttimer.o
- .debug_line    0x00004ca0      0x4b3 ./FreeModbus/stm32/porttimer_m.o
- .debug_line    0x00005153      0x45a ./FreeModbus/stm32/user_mb_app_m.o
- .debug_line    0x000055ad      0x331 ./FreeModbus/rtu/mbcrc.o
- .debug_line    0x000058de      0x599 ./FreeModbus/rtu/mbrtu_m.o
- .debug_line    0x00005e77      0x569 ./FreeModbus/functions/mbfunccoils_m.o
- .debug_line    0x000063e0      0x479 ./FreeModbus/functions/mbfuncdisc_m.o
- .debug_line    0x00006859      0x590 ./FreeModbus/functions/mbfuncholding_m.o
- .debug_line    0x00006de9      0x477 ./FreeModbus/functions/mbfuncinput_m.o
- .debug_line    0x00007260      0x453 ./FreeModbus/functions/mbfuncother.o
- .debug_line    0x000076b3      0x44b ./FreeModbus/functions/mbutils.o
- .debug_line    0x00007afe      0x515 ./FreeModbus/mb.o
- .debug_line    0x00008013      0x5a3 ./FreeModbus/mb_m.o
- .debug_line    0x000085b6      0x626 ./main.o
+ .debug_line    0x00003fa7      0x45a ./FreeModbus/stm32/portevent_m.o
+ .debug_line    0x00004401      0x43c ./FreeModbus/stm32/portserial_m.o
+ .debug_line    0x0000483d      0x46f ./FreeModbus/stm32/porttimer.o
+ .debug_line    0x00004cac      0x4b3 ./FreeModbus/stm32/porttimer_m.o
+ .debug_line    0x0000515f      0x45a ./FreeModbus/stm32/user_mb_app_m.o
+ .debug_line    0x000055b9      0x331 ./FreeModbus/rtu/mbcrc.o
+ .debug_line    0x000058ea      0x599 ./FreeModbus/rtu/mbrtu_m.o
+ .debug_line    0x00005e83      0x569 ./FreeModbus/functions/mbfunccoils_m.o
+ .debug_line    0x000063ec      0x479 ./FreeModbus/functions/mbfuncdisc_m.o
+ .debug_line    0x00006865      0x590 ./FreeModbus/functions/mbfuncholding_m.o
+ .debug_line    0x00006df5      0x477 ./FreeModbus/functions/mbfuncinput_m.o
+ .debug_line    0x0000726c      0x453 ./FreeModbus/functions/mbfuncother.o
+ .debug_line    0x000076bf      0x44b ./FreeModbus/functions/mbutils.o
+ .debug_line    0x00007b0a      0x515 ./FreeModbus/mb.o
+ .debug_line    0x0000801f      0x5a3 ./FreeModbus/mb_m.o
+ .debug_line    0x000085c2      0x622 ./main.o
 
-.debug_str      0x00000000    0x4b339
+.debug_str      0x00000000    0x4b348
  .debug_str     0x00000000    0x38475 ./bsp/bsp.o
                               0x385bf (size before relaxing)
  .debug_str     0x00038475       0x44 ./bsp/led.o
@@ -6085,37 +6088,37 @@ OUTPUT(Snack_stm32_drv_modbus.elf elf32-littlearm)
                                0x9242 (size before relaxing)
  .debug_str     0x0004666f      0xaab ./FreeRTOS/Source/timers.o
                                0x550e (size before relaxing)
- .debug_str     0x0004711a     0x1833 ./FreeModbus/stm32/portevent_m.o
-                              0x35a61 (size before relaxing)
- .debug_str     0x0004894d      0x461 ./FreeModbus/stm32/portserial_m.o
+ .debug_str     0x0004711a     0x1842 ./FreeModbus/stm32/portevent_m.o
+                              0x35a70 (size before relaxing)
+ .debug_str     0x0004895c      0x461 ./FreeModbus/stm32/portserial_m.o
                               0x3935e (size before relaxing)
- .debug_str     0x00048dae       0xbf ./FreeModbus/stm32/porttimer.o
+ .debug_str     0x00048dbd       0xbf ./FreeModbus/stm32/porttimer.o
                               0x3d886 (size before relaxing)
- .debug_str     0x00048e6d      0x15a ./FreeModbus/stm32/porttimer_m.o
+ .debug_str     0x00048e7c      0x15a ./FreeModbus/stm32/porttimer_m.o
                               0x3d966 (size before relaxing)
- .debug_str     0x00048fc7      0x494 ./FreeModbus/stm32/user_mb_app_m.o
+ .debug_str     0x00048fd6      0x494 ./FreeModbus/stm32/user_mb_app_m.o
                               0x35b6c (size before relaxing)
- .debug_str     0x0004945b       0x4c ./FreeModbus/rtu/mbcrc.o
+ .debug_str     0x0004946a       0x4c ./FreeModbus/rtu/mbcrc.o
                               0x35473 (size before relaxing)
- .debug_str     0x000494a7      0x3e9 ./FreeModbus/rtu/mbrtu_m.o
+ .debug_str     0x000494b6      0x3e9 ./FreeModbus/rtu/mbrtu_m.o
                               0x3840c (size before relaxing)
- .debug_str     0x00049890      0x604 ./FreeModbus/functions/mbfunccoils_m.o
+ .debug_str     0x0004989f      0x604 ./FreeModbus/functions/mbfunccoils_m.o
                               0x38635 (size before relaxing)
- .debug_str     0x00049e94      0x103 ./FreeModbus/functions/mbfuncdisc_m.o
+ .debug_str     0x00049ea3      0x103 ./FreeModbus/functions/mbfuncdisc_m.o
                               0x382cc (size before relaxing)
- .debug_str     0x00049f97      0x661 ./FreeModbus/functions/mbfuncholding_m.o
+ .debug_str     0x00049fa6      0x661 ./FreeModbus/functions/mbfuncholding_m.o
                               0x3898b (size before relaxing)
- .debug_str     0x0004a5f8       0x9a ./FreeModbus/functions/mbfuncinput_m.o
+ .debug_str     0x0004a607       0x9a ./FreeModbus/functions/mbfuncinput_m.o
                               0x382e8 (size before relaxing)
- .debug_str     0x0004a692       0x97 ./FreeModbus/functions/mbfuncother.o
+ .debug_str     0x0004a6a1       0x97 ./FreeModbus/functions/mbfuncother.o
                               0x37ffd (size before relaxing)
- .debug_str     0x0004a729       0xc6 ./FreeModbus/functions/mbutils.o
+ .debug_str     0x0004a738       0xc6 ./FreeModbus/functions/mbutils.o
                               0x37fb2 (size before relaxing)
- .debug_str     0x0004a7ef      0x237 ./FreeModbus/mb.o
+ .debug_str     0x0004a7fe      0x237 ./FreeModbus/mb.o
                               0x38284 (size before relaxing)
- .debug_str     0x0004aa26      0x233 ./FreeModbus/mb_m.o
+ .debug_str     0x0004aa35      0x233 ./FreeModbus/mb_m.o
                               0x384ec (size before relaxing)
- .debug_str     0x0004ac59      0x6e0 ./main.o
+ .debug_str     0x0004ac68      0x6e0 ./main.o
                               0x3f4c5 (size before relaxing)
 
 .comment        0x00000000       0x30
@@ -6151,7 +6154,7 @@ OUTPUT(Snack_stm32_drv_modbus.elf elf32-littlearm)
  .comment       0x00000000       0x31 ./FreeModbus/mb_m.o
  .comment       0x00000000       0x31 ./main.o
 
-.debug_frame    0x00000000     0x2ca4
+.debug_frame    0x00000000     0x2c98
  .debug_frame   0x00000000       0x4c ./bsp/bsp.o
  .debug_frame   0x0000004c       0xa4 ./bsp/led.o
  .debug_frame   0x000000f0       0x9c ./Libraries/StdPeripheralDriver/src/misc.o
@@ -6166,22 +6169,22 @@ OUTPUT(Snack_stm32_drv_modbus.elf elf32-littlearm)
  .debug_frame   0x00001774      0x25c ./FreeRTOS/Source/queue.o
  .debug_frame   0x000019d0      0x46c ./FreeRTOS/Source/tasks.o
  .debug_frame   0x00001e3c      0x1c4 ./FreeRTOS/Source/timers.o
- .debug_frame   0x00002000      0x154 ./FreeModbus/stm32/portevent_m.o
- .debug_frame   0x00002154      0x100 ./FreeModbus/stm32/portserial_m.o
- .debug_frame   0x00002254       0xa0 ./FreeModbus/stm32/porttimer.o
- .debug_frame   0x000022f4       0xe4 ./FreeModbus/stm32/porttimer_m.o
- .debug_frame   0x000023d8       0x94 ./FreeModbus/stm32/user_mb_app_m.o
- .debug_frame   0x0000246c       0x2c ./FreeModbus/rtu/mbcrc.o
- .debug_frame   0x00002498      0x1b0 ./FreeModbus/rtu/mbrtu_m.o
- .debug_frame   0x00002648       0xd0 ./FreeModbus/functions/mbfunccoils_m.o
- .debug_frame   0x00002718       0x50 ./FreeModbus/functions/mbfuncdisc_m.o
- .debug_frame   0x00002768      0x110 ./FreeModbus/functions/mbfuncholding_m.o
- .debug_frame   0x00002878       0x50 ./FreeModbus/functions/mbfuncinput_m.o
- .debug_frame   0x000028c8       0x50 ./FreeModbus/functions/mbfuncother.o
- .debug_frame   0x00002918       0x64 ./FreeModbus/functions/mbutils.o
- .debug_frame   0x0000297c       0xd4 ./FreeModbus/mb.o
- .debug_frame   0x00002a50      0x160 ./FreeModbus/mb_m.o
- .debug_frame   0x00002bb0       0x70 ./main.o
- .debug_frame   0x00002c20       0x2c c:/tools/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2\libc.a(lib_a-memcpy-stub.o)
- .debug_frame   0x00002c4c       0x2c c:/tools/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2\libc.a(lib_a-memset.o)
- .debug_frame   0x00002c78       0x2c c:/tools/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2\libc.a(lib_a-strncpy.o)
+ .debug_frame   0x00002000      0x148 ./FreeModbus/stm32/portevent_m.o
+ .debug_frame   0x00002148      0x100 ./FreeModbus/stm32/portserial_m.o
+ .debug_frame   0x00002248       0xa0 ./FreeModbus/stm32/porttimer.o
+ .debug_frame   0x000022e8       0xe4 ./FreeModbus/stm32/porttimer_m.o
+ .debug_frame   0x000023cc       0x94 ./FreeModbus/stm32/user_mb_app_m.o
+ .debug_frame   0x00002460       0x2c ./FreeModbus/rtu/mbcrc.o
+ .debug_frame   0x0000248c      0x1b0 ./FreeModbus/rtu/mbrtu_m.o
+ .debug_frame   0x0000263c       0xd0 ./FreeModbus/functions/mbfunccoils_m.o
+ .debug_frame   0x0000270c       0x50 ./FreeModbus/functions/mbfuncdisc_m.o
+ .debug_frame   0x0000275c      0x110 ./FreeModbus/functions/mbfuncholding_m.o
+ .debug_frame   0x0000286c       0x50 ./FreeModbus/functions/mbfuncinput_m.o
+ .debug_frame   0x000028bc       0x50 ./FreeModbus/functions/mbfuncother.o
+ .debug_frame   0x0000290c       0x64 ./FreeModbus/functions/mbutils.o
+ .debug_frame   0x00002970       0xd4 ./FreeModbus/mb.o
+ .debug_frame   0x00002a44      0x160 ./FreeModbus/mb_m.o
+ .debug_frame   0x00002ba4       0x70 ./main.o
+ .debug_frame   0x00002c14       0x2c c:/tools/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2\libc.a(lib_a-memcpy-stub.o)
+ .debug_frame   0x00002c40       0x2c c:/tools/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2\libc.a(lib_a-memset.o)
+ .debug_frame   0x00002c6c       0x2c c:/tools/bin/../lib/gcc/arm-none-eabi/4.8.1/../../../../arm-none-eabi/lib/thumb2\libc.a(lib_a-strncpy.o)

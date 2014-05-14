@@ -125,20 +125,28 @@ void vTask1( void *pvParameters )
 	    		cnt = gLedCnt;
 	    		//USART_SendData(USART1, 'A');
 	    	    if ( fl == 0 ) {
-	    		    er = eMBMasterReqWriteCoil( 1, 1, 0xFF00, (-1) );
-	    			if ( er == 0)
-	    				vTaskDelay(100 / portTICK_RATE_MS);
-	    				er = eMBMasterReqWriteCoil( 1, 4, 0xFF00, (-1) );
-	    			if ( er != 0)
-	    				    			    	    			    	gLedCnt = 2;
-	    			    er = eMBMasterReqWriteCoil( 1, 3, 0xFF00, (-1) );
-	    			    if ( er != 0)
-	    			    	    			    	gLedCnt = 2;
-	    			    er = eMBMasterReqWriteCoil( 1, 2, 0xFF00, (-1) );
-	    			    	    			    if ( er != 0)
-	    			    	    			    	    			    	gLedCnt = 2;
-	    			    fl = 1;
-	    			}
+	    	    	u8 i;
+	    	    	//for ( i = 1; i < 5; i++) {
+
+	    		        er = eMBMasterReqWriteCoil( 1, 1, 0xFF00, (-1) );
+
+
+	    			    //MB_MRE_NO_ERR,                  /*!< no error. */
+	    			    //MB_MRE_NO_REG,                  /*!< illegal register address. */
+	    			    //MB_MRE_ILL_ARG,                 /*!< illegal argument. */
+	    			    //MB_MRE_REV_DATA,                /*!< receive data error. */
+	    			    //MB_MRE_TIMEDOUT,                /*!< timeout error occurred. */
+	    			    //MB_MRE_MASTER_BUSY,             /*!< master is busy now. */
+	    			    //MB_MRE_EXE_FUN                  /*!< execute function error. */
+	    		//	    if ( er == MB_MRE_NO_ERR )//|| er == MB_MRE_MASTER_BUSY || er == MB_MRE_REV_DATA || er == MB_MRE_EXE_FUN)
+	    			//	    break;
+	    		   // }
+
+	    	    if ( i == 5 )
+	    	    	gLedCnt = 2;
+	    	   	}
+
+	    	    fl = 1;
 	        }
 
     	//ValidatorPulseProcessing(5 / portTICK_RATE_MS);
@@ -174,7 +182,7 @@ void vTask2( void *pvParameters )
 	//eStatus = eMBEnable(  );
 	eStatus = eMBMasterEnable();
 
-	if ( eStatus == MB_ENOERR) {
+	if ( eStatus != MB_ENOERR) {
 
 	}
 
@@ -189,7 +197,11 @@ void vTask2( void *pvParameters )
     {
 
     	//( void )eMBPoll(  );
-    	( void )eMBMasterPoll(  );
+    	//( void )eMBMasterPoll(  );
+
+    	if ( eMBMasterPoll() == MB_MRE_TIMEDOUT )
+    		gLedCnt = 2;
+
     	/* Here we simply count the number of poll cycles. */
     	//usSRegInBuf[0]++;
     	//if ( usSRegInBuf[0] == 65535)
