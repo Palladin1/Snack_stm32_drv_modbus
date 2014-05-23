@@ -95,185 +95,194 @@
   69 0066 5A60     		str	r2, [r3, #4]
   28:../bsp/led.c  ****    // GPIO_MULTI_INIT(LED_BUTTON2, GPIO_MODE_OUTPUT2_PUSH_PULL_DOWN);
   29:../bsp/led.c  ****    // GPIO_MULTI_INIT(LED_BUTTON3, GPIO_MODE_OUTPUT2_PUSH_PULL_DOWN);
-  30:../bsp/led.c  ****    // GPIO_MULTI_INIT(LED_BUTTON4, GPIO_MODE_OUTPUT2_PUSH_PULL_DOWN);
+  30:../bsp/led.c  ****     GPIO_MULTI_INIT(LED_BUTTON4, GPIO_MODE_OUTPUT2_OPEN_DRAIN);
+  70              		.loc 1 30 0
+  71 0068 4FF44063 		mov	r3, #3072
+  72 006c C4F20103 		movt	r3, 16385
+  73 0070 4FF44062 		mov	r2, #3072
+  74 0074 C4F20102 		movt	r2, 16385
+  75 0078 5268     		ldr	r2, [r2, #4]
+  76 007a 22F0F002 		bic	r2, r2, #240
+  77 007e 42F06002 		orr	r2, r2, #96
+  78 0082 5A60     		str	r2, [r3, #4]
   31:../bsp/led.c  ****    // GPIO_MULTI_INIT(LED_BUTTON5, GPIO_MODE_OUTPUT2_PUSH_PULL_DOWN);
   32:../bsp/led.c  ****    // GPIO_MULTI_INIT(LED_BUTTON6, GPIO_MODE_OUTPUT2_PUSH_PULL_DOWN);
   33:../bsp/led.c  ****    // GPIO_MULTI_INIT(LED_BUTTON7, GPIO_MODE_OUTPUT2_PUSH_PULL_DOWN);
   34:../bsp/led.c  **** }
-  70              		.loc 1 34 0
-  71 0068 80BD     		pop	{r7, pc}
-  72              		.cfi_endproc
-  73              	.LFE29:
-  75 006a 00BF     		.section	.text.LedInit,"ax",%progbits
-  76              		.align	2
-  77              		.global	LedInit
-  78              		.thumb
-  79              		.thumb_func
-  81              	LedInit:
-  82              	.LFB30:
+  79              		.loc 1 34 0
+  80 0084 80BD     		pop	{r7, pc}
+  81              		.cfi_endproc
+  82              	.LFE29:
+  84 0086 00BF     		.section	.text.LedInit,"ax",%progbits
+  85              		.align	2
+  86              		.global	LedInit
+  87              		.thumb
+  88              		.thumb_func
+  90              	LedInit:
+  91              	.LFB30:
   35:../bsp/led.c  **** 
   36:../bsp/led.c  **** void LedInit(void)
   37:../bsp/led.c  **** {
-  83              		.loc 1 37 0
-  84              		.cfi_startproc
-  85              		@ args = 0, pretend = 0, frame = 0
-  86              		@ frame_needed = 1, uses_anonymous_args = 0
-  87 0000 80B5     		push	{r7, lr}
-  88              		.cfi_def_cfa_offset 8
-  89              		.cfi_offset 7, -8
-  90              		.cfi_offset 14, -4
-  91 0002 00AF     		add	r7, sp, #0
-  92              		.cfi_def_cfa_register 7
+  92              		.loc 1 37 0
+  93              		.cfi_startproc
+  94              		@ args = 0, pretend = 0, frame = 0
+  95              		@ frame_needed = 1, uses_anonymous_args = 0
+  96 0000 80B5     		push	{r7, lr}
+  97              		.cfi_def_cfa_offset 8
+  98              		.cfi_offset 7, -8
+  99              		.cfi_offset 14, -4
+ 100 0002 00AF     		add	r7, sp, #0
+ 101              		.cfi_def_cfa_register 7
   38:../bsp/led.c  ****     led_hw_init();
-  93              		.loc 1 38 0
-  94 0004 FFF7FEFF 		bl	led_hw_init
+ 102              		.loc 1 38 0
+ 103 0004 FFF7FEFF 		bl	led_hw_init
   39:../bsp/led.c  **** 
   40:../bsp/led.c  **** }
-  95              		.loc 1 40 0
-  96 0008 80BD     		pop	{r7, pc}
-  97              		.cfi_endproc
-  98              	.LFE30:
- 100 000a 00BF     		.section	.text.LedOn,"ax",%progbits
- 101              		.align	2
- 102              		.global	LedOn
- 103              		.thumb
- 104              		.thumb_func
- 106              	LedOn:
- 107              	.LFB31:
+ 104              		.loc 1 40 0
+ 105 0008 80BD     		pop	{r7, pc}
+ 106              		.cfi_endproc
+ 107              	.LFE30:
+ 109 000a 00BF     		.section	.text.LedOn,"ax",%progbits
+ 110              		.align	2
+ 111              		.global	LedOn
+ 112              		.thumb
+ 113              		.thumb_func
+ 115              	LedOn:
+ 116              	.LFB31:
   41:../bsp/led.c  **** 
   42:../bsp/led.c  **** void LedOn(GPIO_TypeDef * gpiox, uint16_t gpion)
   43:../bsp/led.c  **** {
- 108              		.loc 1 43 0
- 109              		.cfi_startproc
- 110              		@ args = 0, pretend = 0, frame = 8
- 111              		@ frame_needed = 1, uses_anonymous_args = 0
- 112 0000 80B5     		push	{r7, lr}
- 113              		.cfi_def_cfa_offset 8
- 114              		.cfi_offset 7, -8
- 115              		.cfi_offset 14, -4
- 116 0002 82B0     		sub	sp, sp, #8
- 117              		.cfi_def_cfa_offset 16
- 118 0004 00AF     		add	r7, sp, #0
- 119              		.cfi_def_cfa_register 7
- 120 0006 7860     		str	r0, [r7, #4]
- 121 0008 0B46     		mov	r3, r1
- 122 000a 7B80     		strh	r3, [r7, #2]	@ movhi
+ 117              		.loc 1 43 0
+ 118              		.cfi_startproc
+ 119              		@ args = 0, pretend = 0, frame = 8
+ 120              		@ frame_needed = 1, uses_anonymous_args = 0
+ 121 0000 80B5     		push	{r7, lr}
+ 122              		.cfi_def_cfa_offset 8
+ 123              		.cfi_offset 7, -8
+ 124              		.cfi_offset 14, -4
+ 125 0002 82B0     		sub	sp, sp, #8
+ 126              		.cfi_def_cfa_offset 16
+ 127 0004 00AF     		add	r7, sp, #0
+ 128              		.cfi_def_cfa_register 7
+ 129 0006 7860     		str	r0, [r7, #4]
+ 130 0008 0B46     		mov	r3, r1
+ 131 000a 7B80     		strh	r3, [r7, #2]	@ movhi
   44:../bsp/led.c  **** //    if (led < LED_MAX_NUM)
   45:../bsp/led.c  ****         GPIO_SetBits(gpiox, gpion);
- 123              		.loc 1 45 0
- 124 000c 7B88     		ldrh	r3, [r7, #2]
- 125 000e 7868     		ldr	r0, [r7, #4]
- 126 0010 1946     		mov	r1, r3
- 127 0012 FFF7FEFF 		bl	GPIO_SetBits
+ 132              		.loc 1 45 0
+ 133 000c 7B88     		ldrh	r3, [r7, #2]
+ 134 000e 7868     		ldr	r0, [r7, #4]
+ 135 0010 1946     		mov	r1, r3
+ 136 0012 FFF7FEFF 		bl	GPIO_SetBits
   46:../bsp/led.c  **** }
- 128              		.loc 1 46 0
- 129 0016 0837     		adds	r7, r7, #8
- 130 0018 BD46     		mov	sp, r7
- 131              		@ sp needed
- 132 001a 80BD     		pop	{r7, pc}
- 133              		.cfi_endproc
- 134              	.LFE31:
- 136              		.section	.text.LedOff,"ax",%progbits
- 137              		.align	2
- 138              		.global	LedOff
- 139              		.thumb
- 140              		.thumb_func
- 142              	LedOff:
- 143              	.LFB32:
+ 137              		.loc 1 46 0
+ 138 0016 0837     		adds	r7, r7, #8
+ 139 0018 BD46     		mov	sp, r7
+ 140              		@ sp needed
+ 141 001a 80BD     		pop	{r7, pc}
+ 142              		.cfi_endproc
+ 143              	.LFE31:
+ 145              		.section	.text.LedOff,"ax",%progbits
+ 146              		.align	2
+ 147              		.global	LedOff
+ 148              		.thumb
+ 149              		.thumb_func
+ 151              	LedOff:
+ 152              	.LFB32:
   47:../bsp/led.c  **** 
   48:../bsp/led.c  **** void LedOff(GPIO_TypeDef * gpiox, uint16_t gpion)
   49:../bsp/led.c  **** {
- 144              		.loc 1 49 0
- 145              		.cfi_startproc
- 146              		@ args = 0, pretend = 0, frame = 8
- 147              		@ frame_needed = 1, uses_anonymous_args = 0
- 148 0000 80B5     		push	{r7, lr}
- 149              		.cfi_def_cfa_offset 8
- 150              		.cfi_offset 7, -8
- 151              		.cfi_offset 14, -4
- 152 0002 82B0     		sub	sp, sp, #8
- 153              		.cfi_def_cfa_offset 16
- 154 0004 00AF     		add	r7, sp, #0
- 155              		.cfi_def_cfa_register 7
- 156 0006 7860     		str	r0, [r7, #4]
- 157 0008 0B46     		mov	r3, r1
- 158 000a 7B80     		strh	r3, [r7, #2]	@ movhi
+ 153              		.loc 1 49 0
+ 154              		.cfi_startproc
+ 155              		@ args = 0, pretend = 0, frame = 8
+ 156              		@ frame_needed = 1, uses_anonymous_args = 0
+ 157 0000 80B5     		push	{r7, lr}
+ 158              		.cfi_def_cfa_offset 8
+ 159              		.cfi_offset 7, -8
+ 160              		.cfi_offset 14, -4
+ 161 0002 82B0     		sub	sp, sp, #8
+ 162              		.cfi_def_cfa_offset 16
+ 163 0004 00AF     		add	r7, sp, #0
+ 164              		.cfi_def_cfa_register 7
+ 165 0006 7860     		str	r0, [r7, #4]
+ 166 0008 0B46     		mov	r3, r1
+ 167 000a 7B80     		strh	r3, [r7, #2]	@ movhi
   50:../bsp/led.c  **** //    if (led < LED_MAX_NUM)
   51:../bsp/led.c  ****         GPIO_ResetBits(gpiox, gpion);
- 159              		.loc 1 51 0
- 160 000c 7B88     		ldrh	r3, [r7, #2]
- 161 000e 7868     		ldr	r0, [r7, #4]
- 162 0010 1946     		mov	r1, r3
- 163 0012 FFF7FEFF 		bl	GPIO_ResetBits
+ 168              		.loc 1 51 0
+ 169 000c 7B88     		ldrh	r3, [r7, #2]
+ 170 000e 7868     		ldr	r0, [r7, #4]
+ 171 0010 1946     		mov	r1, r3
+ 172 0012 FFF7FEFF 		bl	GPIO_ResetBits
   52:../bsp/led.c  **** //        GPIO_SET(LED_BUTTON7);
   53:../bsp/led.c  **** }
- 164              		.loc 1 53 0
- 165 0016 0837     		adds	r7, r7, #8
- 166 0018 BD46     		mov	sp, r7
- 167              		@ sp needed
- 168 001a 80BD     		pop	{r7, pc}
- 169              		.cfi_endproc
- 170              	.LFE32:
- 172              		.section	.text.LedToggle,"ax",%progbits
- 173              		.align	2
- 174              		.global	LedToggle
- 175              		.thumb
- 176              		.thumb_func
- 178              	LedToggle:
- 179              	.LFB33:
+ 173              		.loc 1 53 0
+ 174 0016 0837     		adds	r7, r7, #8
+ 175 0018 BD46     		mov	sp, r7
+ 176              		@ sp needed
+ 177 001a 80BD     		pop	{r7, pc}
+ 178              		.cfi_endproc
+ 179              	.LFE32:
+ 181              		.section	.text.LedToggle,"ax",%progbits
+ 182              		.align	2
+ 183              		.global	LedToggle
+ 184              		.thumb
+ 185              		.thumb_func
+ 187              	LedToggle:
+ 188              	.LFB33:
   54:../bsp/led.c  **** 
   55:../bsp/led.c  **** void LedToggle(GPIO_TypeDef * gpiox, uint16_t gpion)
   56:../bsp/led.c  **** {
- 180              		.loc 1 56 0
- 181              		.cfi_startproc
- 182              		@ args = 0, pretend = 0, frame = 8
- 183              		@ frame_needed = 1, uses_anonymous_args = 0
- 184              		@ link register save eliminated.
- 185 0000 80B4     		push	{r7}
- 186              		.cfi_def_cfa_offset 4
- 187              		.cfi_offset 7, -4
- 188 0002 83B0     		sub	sp, sp, #12
- 189              		.cfi_def_cfa_offset 16
- 190 0004 00AF     		add	r7, sp, #0
- 191              		.cfi_def_cfa_register 7
- 192 0006 7860     		str	r0, [r7, #4]
- 193 0008 0B46     		mov	r3, r1
- 194 000a 7B80     		strh	r3, [r7, #2]	@ movhi
+ 189              		.loc 1 56 0
+ 190              		.cfi_startproc
+ 191              		@ args = 0, pretend = 0, frame = 8
+ 192              		@ frame_needed = 1, uses_anonymous_args = 0
+ 193              		@ link register save eliminated.
+ 194 0000 80B4     		push	{r7}
+ 195              		.cfi_def_cfa_offset 4
+ 196              		.cfi_offset 7, -4
+ 197 0002 83B0     		sub	sp, sp, #12
+ 198              		.cfi_def_cfa_offset 16
+ 199 0004 00AF     		add	r7, sp, #0
+ 200              		.cfi_def_cfa_register 7
+ 201 0006 7860     		str	r0, [r7, #4]
+ 202 0008 0B46     		mov	r3, r1
+ 203 000a 7B80     		strh	r3, [r7, #2]	@ movhi
   57:../bsp/led.c  **** //    if (led < LED_MAX_NUM)
   58:../bsp/led.c  **** 	gpiox->ODR ^= gpion;
- 195              		.loc 1 58 0
- 196 000c 7B68     		ldr	r3, [r7, #4]
- 197 000e DA68     		ldr	r2, [r3, #12]
- 198 0010 7B88     		ldrh	r3, [r7, #2]
- 199 0012 5A40     		eors	r2, r2, r3
- 200 0014 7B68     		ldr	r3, [r7, #4]
- 201 0016 DA60     		str	r2, [r3, #12]
+ 204              		.loc 1 58 0
+ 205 000c 7B68     		ldr	r3, [r7, #4]
+ 206 000e DA68     		ldr	r2, [r3, #12]
+ 207 0010 7B88     		ldrh	r3, [r7, #2]
+ 208 0012 5A40     		eors	r2, r2, r3
+ 209 0014 7B68     		ldr	r3, [r7, #4]
+ 210 0016 DA60     		str	r2, [r3, #12]
   59:../bsp/led.c  **** }
- 202              		.loc 1 59 0
- 203 0018 0C37     		adds	r7, r7, #12
- 204 001a BD46     		mov	sp, r7
- 205              		@ sp needed
- 206 001c 5DF8047B 		ldr	r7, [sp], #4
- 207 0020 7047     		bx	lr
- 208              		.cfi_endproc
- 209              	.LFE33:
- 211 0022 00BF     		.text
- 212              	.Letext0:
- 213              		.file 2 "c:\\tools\\arm-none-eabi\\include\\stdint.h"
- 214              		.file 3 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/stm32f10x.h"
- 215              		.file 4 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/core_cm3.h"
+ 211              		.loc 1 59 0
+ 212 0018 0C37     		adds	r7, r7, #12
+ 213 001a BD46     		mov	sp, r7
+ 214              		@ sp needed
+ 215 001c 5DF8047B 		ldr	r7, [sp], #4
+ 216 0020 7047     		bx	lr
+ 217              		.cfi_endproc
+ 218              	.LFE33:
+ 220 0022 00BF     		.text
+ 221              	.Letext0:
+ 222              		.file 2 "c:\\tools\\arm-none-eabi\\include\\stdint.h"
+ 223              		.file 3 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/stm32f10x.h"
+ 224              		.file 4 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/core_cm3.h"
 DEFINED SYMBOLS
                             *ABS*:00000000 led.c
-C:\Users\Alex\AppData\Local\Temp\cc2nU20W.s:19     .text.led_hw_init:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cc2nU20W.s:23     .text.led_hw_init:00000000 led_hw_init
-C:\Users\Alex\AppData\Local\Temp\cc2nU20W.s:76     .text.LedInit:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cc2nU20W.s:81     .text.LedInit:00000000 LedInit
-C:\Users\Alex\AppData\Local\Temp\cc2nU20W.s:101    .text.LedOn:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cc2nU20W.s:106    .text.LedOn:00000000 LedOn
-C:\Users\Alex\AppData\Local\Temp\cc2nU20W.s:137    .text.LedOff:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cc2nU20W.s:142    .text.LedOff:00000000 LedOff
-C:\Users\Alex\AppData\Local\Temp\cc2nU20W.s:173    .text.LedToggle:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\cc2nU20W.s:178    .text.LedToggle:00000000 LedToggle
+C:\Users\Alex\AppData\Local\Temp\ccnBQ7QF.s:19     .text.led_hw_init:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccnBQ7QF.s:23     .text.led_hw_init:00000000 led_hw_init
+C:\Users\Alex\AppData\Local\Temp\ccnBQ7QF.s:85     .text.LedInit:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccnBQ7QF.s:90     .text.LedInit:00000000 LedInit
+C:\Users\Alex\AppData\Local\Temp\ccnBQ7QF.s:110    .text.LedOn:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccnBQ7QF.s:115    .text.LedOn:00000000 LedOn
+C:\Users\Alex\AppData\Local\Temp\ccnBQ7QF.s:146    .text.LedOff:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccnBQ7QF.s:151    .text.LedOff:00000000 LedOff
+C:\Users\Alex\AppData\Local\Temp\ccnBQ7QF.s:182    .text.LedToggle:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccnBQ7QF.s:187    .text.LedToggle:00000000 LedToggle
                      .debug_frame:00000010 $d
                            .group:00000000 wm4.1.98ffea2db242cfdb58f411f7407f2b59
                            .group:00000000 wm4.stm32f10x.h.51.b859cb68ed44ee02c916b41cb8c68f1c
@@ -290,7 +299,7 @@ C:\Users\Alex\AppData\Local\Temp\cc2nU20W.s:178    .text.LedToggle:00000000 LedT
                            .group:00000000 wm4.stm32f10x_gpio.h.25.80c981af0e637567395034c576cfb3ce
                            .group:00000000 wm4.stm32f10x_rcc.h.25.fe8897e7491f2eb0cff54551d08eb765
                            .group:00000000 wm4.gpio_init.h.2.a6dd96fdaf98737019b1d0402db0d0ee
-                           .group:00000000 wm4.led.h.28.2becc48c20363ad4690378d5dc88818c
+                           .group:00000000 wm4.led.h.28.401162a1ef47c2ce4bdcc919318c39a8
 
 UNDEFINED SYMBOLS
 RCC_APB2PeriphClockCmd

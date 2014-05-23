@@ -130,21 +130,23 @@
   64:../main.c     **** void vTask2( void *pvParameters );
   65:../main.c     **** //void vTask3( void *pvParameters );
   66:../main.c     **** 
-  67:../main.c     **** /*
-  68:../main.c     **** ***************************************************************************************************
-  69:../main.c     **** *                                                main()
-  70:../main.c     **** *
-  71:../main.c     **** * Description : This is the standard entry point for C code.
+  67:../main.c     **** void TIM2_IRQHandler(void);
+  68:../main.c     **** int timer_4_init ( void );
+  69:../main.c     **** /*
+  70:../main.c     **** ***************************************************************************************************
+  71:../main.c     **** *                                                main()
   72:../main.c     **** *
-  73:../main.c     **** * Arguments   : none
+  73:../main.c     **** * Description : This is the standard entry point for C code.
   74:../main.c     **** *
-  75:../main.c     **** * Returns     : none
-  76:../main.c     **** ***************************************************************************************************
-  77:../main.c     **** */
-  78:../main.c     **** 
-  79:../main.c     **** int main( void )
-  80:../main.c     **** {
-  67              		.loc 1 80 0
+  75:../main.c     **** * Arguments   : none
+  76:../main.c     **** *
+  77:../main.c     **** * Returns     : none
+  78:../main.c     **** ***************************************************************************************************
+  79:../main.c     **** */
+  80:../main.c     **** 
+  81:../main.c     **** int main( void )
+  82:../main.c     **** {
+  67              		.loc 1 82 0
   68              		.cfi_startproc
   69              		@ args = 0, pretend = 0, frame = 0
   70              		@ frame_needed = 1, uses_anonymous_args = 0
@@ -156,14 +158,14 @@
   76              		.cfi_def_cfa_offset 24
   77 0004 04AF     		add	r7, sp, #16
   78              		.cfi_def_cfa 7, 8
-  81:../main.c     **** 
-  82:../main.c     **** 	bsp_init();
-  79              		.loc 1 82 0
-  80 0006 FFF7FEFF 		bl	bsp_init
   83:../main.c     **** 
-  84:../main.c     **** 	//xDataGetQueue  = xQueueCreate(5, sizeof(cmd_t *));
-  85:../main.c     **** 	xDataGetQueue  = xQueueCreate(5, 6);
-  81              		.loc 1 85 0
+  84:../main.c     **** 	bsp_init();
+  79              		.loc 1 84 0
+  80 0006 FFF7FEFF 		bl	bsp_init
+  85:../main.c     **** 
+  86:../main.c     **** 	//xDataGetQueue  = xQueueCreate(5, sizeof(cmd_t *));
+  87:../main.c     **** 	xDataGetQueue  = xQueueCreate(5, 6);
+  81              		.loc 1 87 0
   82 000a 0520     		movs	r0, #5
   83 000c 0621     		movs	r1, #6
   84 000e 0022     		movs	r2, #0
@@ -172,10 +174,10 @@
   87 0016 40F20003 		movw	r3, #:lower16:xDataGetQueue
   88 001a C0F20003 		movt	r3, #:upper16:xDataGetQueue
   89 001e 1A60     		str	r2, [r3]
-  86:../main.c     **** 
-  87:../main.c     **** 
-  88:../main.c     **** 	xTaskCreate( vTask1, (signed char*) "Task 1", configMINIMAL_STACK_SIZE + 150, NULL, 1, NULL );
-  90              		.loc 1 88 0
+  88:../main.c     **** 
+  89:../main.c     **** 
+  90:../main.c     **** 	xTaskCreate( vTask1, (signed char*) "Task 1", configMINIMAL_STACK_SIZE + 300, NULL, 1, NULL );
+  90              		.loc 1 90 0
   91 0020 0123     		movs	r3, #1
   92 0022 0093     		str	r3, [sp]
   93 0024 0023     		movs	r3, #0
@@ -188,11 +190,11 @@
  100 0034 C0F20000 		movt	r0, #:upper16:vTask1
  101 0038 40F20001 		movw	r1, #:lower16:.LC0
  102 003c C0F20001 		movt	r1, #:upper16:.LC0
- 103 0040 4FF48772 		mov	r2, #270
+ 103 0040 4FF4D272 		mov	r2, #420
  104 0044 0023     		movs	r3, #0
  105 0046 FFF7FEFF 		bl	xTaskGenericCreate
-  89:../main.c     **** 	xTaskCreate( vTask2, (signed char*) "Task 2", configMINIMAL_STACK_SIZE + 300, NULL, 1, NULL );
- 106              		.loc 1 89 0
+  91:../main.c     **** 	xTaskCreate( vTask2, (signed char*) "Task 2", configMINIMAL_STACK_SIZE + 300, NULL, 1, NULL );
+ 106              		.loc 1 91 0
  107 004a 0123     		movs	r3, #1
  108 004c 0093     		str	r3, [sp]
  109 004e 0023     		movs	r3, #0
@@ -208,16 +210,18 @@
  119 006a 4FF4D272 		mov	r2, #420
  120 006e 0023     		movs	r3, #0
  121 0070 FFF7FEFF 		bl	xTaskGenericCreate
-  90:../main.c     **** //	xTaskCreate( vTask3, (signed char*) "Task 3", configMINIMAL_STACK_SIZE + 100, NULL, 1, NULL );
-  91:../main.c     **** 
-  92:../main.c     **** 	/* Çàïóñê øåäóëåðà, ïîñëå ÷åãî çàäà÷è çàïóñòÿòñÿ íà âûïîëíåíèå. */
-  93:../main.c     **** 	vTaskStartScheduler();
- 122              		.loc 1 93 0
+  92:../main.c     **** //	xTaskCreate( vTask3, (signed char*) "Task 3", configMINIMAL_STACK_SIZE + 100, NULL, 1, NULL );
+  93:../main.c     **** 
+  94:../main.c     **** 	/* Çàïóñê øåäóëåðà, ïîñëå ÷åãî çàäà÷è çàïóñòÿòñÿ íà âûïîëíåíèå. */
+  95:../main.c     **** 	vTaskStartScheduler();
+ 122              		.loc 1 95 0
  123 0074 FFF7FEFF 		bl	vTaskStartScheduler
  124              	.L2:
-  94:../main.c     **** 
-  95:../main.c     **** 	for( ;; );
- 125              		.loc 1 95 0 discriminator 1
+  96:../main.c     **** 
+  97:../main.c     **** 
+  98:../main.c     **** 
+  99:../main.c     **** 	for( ;; );
+ 125              		.loc 1 99 0 discriminator 1
  126 0078 FEE7     		b	.L2
  127              		.cfi_endproc
  128              	.LFE29:
@@ -228,27 +232,27 @@
  134              		.thumb_func
  136              	vTask1:
  137              	.LFB30:
-  96:../main.c     **** return (0);
-  97:../main.c     **** }
-  98:../main.c     **** 
-  99:../main.c     **** /*
- 100:../main.c     **** ***************************************************************************************************
- 101:../main.c     **** *                                          LedInit()
- 102:../main.c     **** *
- 103:../main.c     **** * Description : Init the ports for leds
- 104:../main.c     **** *
- 105:../main.c     **** * Argument(s) : none
+ 100:../main.c     **** return (0);
+ 101:../main.c     **** }
+ 102:../main.c     **** 
+ 103:../main.c     **** /*
+ 104:../main.c     **** ***************************************************************************************************
+ 105:../main.c     **** *                                          LedInit()
  106:../main.c     **** *
- 107:../main.c     **** * Return(s)   : none
+ 107:../main.c     **** * Description : Init the ports for leds
  108:../main.c     **** *
- 109:../main.c     **** * Caller(s)   : main()
+ 109:../main.c     **** * Argument(s) : none
  110:../main.c     **** *
- 111:../main.c     **** * Note(s)     : none.
- 112:../main.c     **** ***************************************************************************************************
- 113:../main.c     **** */
- 114:../main.c     **** void vTask1( void *pvParameters )
- 115:../main.c     **** {
- 138              		.loc 1 115 0
+ 111:../main.c     **** * Return(s)   : none
+ 112:../main.c     **** *
+ 113:../main.c     **** * Caller(s)   : main()
+ 114:../main.c     **** *
+ 115:../main.c     **** * Note(s)     : none.
+ 116:../main.c     **** ***************************************************************************************************
+ 117:../main.c     **** */
+ 118:../main.c     **** void vTask1( void *pvParameters )
+ 119:../main.c     **** {
+ 138              		.loc 1 119 0
  139              		.cfi_startproc
  140              		@ args = 0, pretend = 0, frame = 16
  141              		@ frame_needed = 1, uses_anonymous_args = 0
@@ -261,294 +265,599 @@
  148 0004 00AF     		add	r7, sp, #0
  149              		.cfi_def_cfa_register 7
  150 0006 7860     		str	r0, [r7, #4]
- 116:../main.c     **** 	  static u32 cnt = 50;
- 117:../main.c     **** 	  u32 fl = 0;
- 151              		.loc 1 117 0
+ 120:../main.c     **** 	  static u32 cnt = 50;
+ 121:../main.c     **** 	  u32 fl = 0;
+ 151              		.loc 1 121 0
  152 0008 0023     		movs	r3, #0
  153 000a FB60     		str	r3, [r7, #12]
- 118:../main.c     **** 
- 119:../main.c     **** 	  u8 er = 0;
- 154              		.loc 1 119 0
+ 122:../main.c     **** 
+ 123:../main.c     **** 	  u8 er = 0;
+ 154              		.loc 1 123 0
  155 000c 0023     		movs	r3, #0
  156 000e FB72     		strb	r3, [r7, #11]
- 157              	.L6:
- 120:../main.c     **** 	    for( ;; )
- 121:../main.c     **** 	    {
- 122:../main.c     **** 	        cnt--;
- 158              		.loc 1 122 0
- 159 0010 40F20003 		movw	r3, #:lower16:cnt.6960
- 160 0014 C0F20003 		movt	r3, #:upper16:cnt.6960
- 161 0018 1B68     		ldr	r3, [r3]
- 162 001a 5A1E     		subs	r2, r3, #1
- 163 001c 40F20003 		movw	r3, #:lower16:cnt.6960
- 164 0020 C0F20003 		movt	r3, #:upper16:cnt.6960
- 165 0024 1A60     		str	r2, [r3]
- 123:../main.c     **** 	    	if (cnt == 0) {
- 166              		.loc 1 123 0
- 167 0026 40F20003 		movw	r3, #:lower16:cnt.6960
- 168 002a C0F20003 		movt	r3, #:upper16:cnt.6960
- 169 002e 1B68     		ldr	r3, [r3]
- 170 0030 002B     		cmp	r3, #0
- 171 0032 2AD1     		bne	.L4
- 124:../main.c     **** 	    		LedToggle(LED_STATUS);
- 172              		.loc 1 124 0
- 173 0034 4FF48050 		mov	r0, #4096
- 174 0038 C4F20100 		movt	r0, 16385
- 175 003c 4FF40071 		mov	r1, #512
- 176 0040 FFF7FEFF 		bl	LedToggle
- 125:../main.c     **** 	    		cnt = gLedCnt;
- 177              		.loc 1 125 0
- 178 0044 40F20003 		movw	r3, #:lower16:gLedCnt
- 179 0048 C0F20003 		movt	r3, #:upper16:gLedCnt
- 180 004c 1B88     		ldrh	r3, [r3]
- 181 004e 1A46     		mov	r2, r3
- 182 0050 40F20003 		movw	r3, #:lower16:cnt.6960
- 183 0054 C0F20003 		movt	r3, #:upper16:cnt.6960
- 184 0058 1A60     		str	r2, [r3]
- 126:../main.c     **** 	    		//USART_SendData(USART1, 'A');
- 127:../main.c     **** 	    	    if ( fl == 0 ) {
- 185              		.loc 1 127 0
- 186 005a FB68     		ldr	r3, [r7, #12]
- 187 005c 002B     		cmp	r3, #0
- 188 005e 12D1     		bne	.L5
- 189              	.LBB2:
- 128:../main.c     **** 	    	    	u8 i;
- 129:../main.c     **** 	    	    	//for ( i = 1; i < 5; i++) {
- 130:../main.c     **** 
- 131:../main.c     **** 	    		        er = eMBMasterReqWriteCoil( 1, 1, 0xFF00, (-1) );
- 190              		.loc 1 131 0
- 191 0060 0120     		movs	r0, #1
- 192 0062 0121     		movs	r1, #1
- 193 0064 4FF47F42 		mov	r2, #65280
- 194 0068 4FF0FF33 		mov	r3, #-1
- 195 006c FFF7FEFF 		bl	eMBMasterReqWriteCoil
- 196 0070 0346     		mov	r3, r0
- 197 0072 FB72     		strb	r3, [r7, #11]
+ 124:../main.c     **** 
+ 125:../main.c     **** 	  timer_4_init();
+ 157              		.loc 1 125 0
+ 158 0010 FFF7FEFF 		bl	timer_4_init
+ 159              	.L6:
+ 126:../main.c     **** 
+ 127:../main.c     **** 	    for( ;; )
+ 128:../main.c     **** 	    {
+ 129:../main.c     **** 	        cnt--;
+ 160              		.loc 1 129 0
+ 161 0014 40F20003 		movw	r3, #:lower16:cnt.6964
+ 162 0018 C0F20003 		movt	r3, #:upper16:cnt.6964
+ 163 001c 1B68     		ldr	r3, [r3]
+ 164 001e 5A1E     		subs	r2, r3, #1
+ 165 0020 40F20003 		movw	r3, #:lower16:cnt.6964
+ 166 0024 C0F20003 		movt	r3, #:upper16:cnt.6964
+ 167 0028 1A60     		str	r2, [r3]
+ 130:../main.c     **** 	    	if (cnt == 0) {
+ 168              		.loc 1 130 0
+ 169 002a 40F20003 		movw	r3, #:lower16:cnt.6964
+ 170 002e C0F20003 		movt	r3, #:upper16:cnt.6964
+ 171 0032 1B68     		ldr	r3, [r3]
+ 172 0034 002B     		cmp	r3, #0
+ 173 0036 20D1     		bne	.L4
+ 131:../main.c     **** 	    		LedToggle(LED_STATUS);
+ 174              		.loc 1 131 0
+ 175 0038 4FF48050 		mov	r0, #4096
+ 176 003c C4F20100 		movt	r0, 16385
+ 177 0040 4FF40071 		mov	r1, #512
+ 178 0044 FFF7FEFF 		bl	LedToggle
  132:../main.c     **** 
- 133:../main.c     **** 
- 134:../main.c     **** 	    			    //MB_MRE_NO_ERR,                  /*!< no error. */
- 135:../main.c     **** 	    			    //MB_MRE_NO_REG,                  /*!< illegal register address. */
- 136:../main.c     **** 	    			    //MB_MRE_ILL_ARG,                 /*!< illegal argument. */
- 137:../main.c     **** 	    			    //MB_MRE_REV_DATA,                /*!< receive data error. */
- 138:../main.c     **** 	    			    //MB_MRE_TIMEDOUT,                /*!< timeout error occurred. */
- 139:../main.c     **** 	    			    //MB_MRE_MASTER_BUSY,             /*!< master is busy now. */
- 140:../main.c     **** 	    			    //MB_MRE_EXE_FUN                  /*!< execute function error. */
- 141:../main.c     **** 	    		//	    if ( er == MB_MRE_NO_ERR )//|| er == MB_MRE_MASTER_BUSY || er == MB_MRE_REV_DATA || e
- 142:../main.c     **** 	    			//	    break;
- 143:../main.c     **** 	    		   // }
- 144:../main.c     **** 
- 145:../main.c     **** 	    	    if ( i == 5 )
- 198              		.loc 1 145 0
- 199 0074 BB7A     		ldrb	r3, [r7, #10]	@ zero_extendqisi2
- 200 0076 052B     		cmp	r3, #5
- 201 0078 05D1     		bne	.L5
- 146:../main.c     **** 	    	    	gLedCnt = 2;
- 202              		.loc 1 146 0
- 203 007a 40F20003 		movw	r3, #:lower16:gLedCnt
- 204 007e C0F20003 		movt	r3, #:upper16:gLedCnt
- 205 0082 0222     		movs	r2, #2
- 206 0084 1A80     		strh	r2, [r3]	@ movhi
- 207              	.L5:
- 208              	.LBE2:
- 147:../main.c     **** 	    	   	}
- 148:../main.c     **** 
- 149:../main.c     **** 	    	    fl = 1;
- 209              		.loc 1 149 0
- 210 0086 0123     		movs	r3, #1
- 211 0088 FB60     		str	r3, [r7, #12]
- 212              	.L4:
- 150:../main.c     **** 	        }
- 151:../main.c     **** 
- 152:../main.c     ****     	//ValidatorPulseProcessing(5 / portTICK_RATE_MS);
- 153:../main.c     ****     	//ButtonSkan(5 / portTICK_RATE_MS);
- 154:../main.c     **** 
- 155:../main.c     ****         vTaskDelay(100 / portTICK_RATE_MS);
- 213              		.loc 1 155 0
- 214 008a 6420     		movs	r0, #100
- 215 008c FFF7FEFF 		bl	vTaskDelay
- 156:../main.c     ****     }
- 216              		.loc 1 156 0
- 217 0090 BEE7     		b	.L6
- 218              		.cfi_endproc
- 219              	.LFE30:
- 221 0092 00BF     		.section	.text.vTask2,"ax",%progbits
- 222              		.align	2
- 223              		.global	vTask2
- 224              		.thumb
- 225              		.thumb_func
- 227              	vTask2:
- 228              	.LFB31:
- 157:../main.c     **** 
- 158:../main.c     ****     vTaskDelete (NULL);
- 159:../main.c     **** }
- 160:../main.c     **** 
- 161:../main.c     **** 
+ 133:../main.c     **** 	    		cnt = gLedCnt;
+ 179              		.loc 1 133 0
+ 180 0048 40F20003 		movw	r3, #:lower16:gLedCnt
+ 181 004c C0F20003 		movt	r3, #:upper16:gLedCnt
+ 182 0050 1B88     		ldrh	r3, [r3]
+ 183 0052 1A46     		mov	r2, r3
+ 184 0054 40F20003 		movw	r3, #:lower16:cnt.6964
+ 185 0058 C0F20003 		movt	r3, #:upper16:cnt.6964
+ 186 005c 1A60     		str	r2, [r3]
+ 134:../main.c     **** 	    		//USART_SendData(USART1, 'A');
+ 135:../main.c     **** 	    	    if ( fl == 0 ) {
+ 187              		.loc 1 135 0
+ 188 005e FB68     		ldr	r3, [r7, #12]
+ 189 0060 002B     		cmp	r3, #0
+ 190 0062 08D1     		bne	.L5
+ 191              	.LBB2:
+ 136:../main.c     **** 	    	    	u8 i;
+ 137:../main.c     **** 	    	    	//for ( i = 1; i < 5; i++) {
+ 138:../main.c     **** 
+ 139:../main.c     **** 	    		     //   er = eMBMasterReqWriteCoil( 1, 1, 0xFF00, (-1) );
+ 140:../main.c     **** 
+ 141:../main.c     **** 
+ 142:../main.c     **** 	    			    //MB_MRE_NO_ERR,                  /*!< no error. */
+ 143:../main.c     **** 	    			    //MB_MRE_NO_REG,                  /*!< illegal register address. */
+ 144:../main.c     **** 	    			    //MB_MRE_ILL_ARG,                 /*!< illegal argument. */
+ 145:../main.c     **** 	    			    //MB_MRE_REV_DATA,                /*!< receive data error. */
+ 146:../main.c     **** 	    			    //MB_MRE_TIMEDOUT,                /*!< timeout error occurred. */
+ 147:../main.c     **** 	    			    //MB_MRE_MASTER_BUSY,             /*!< master is busy now. */
+ 148:../main.c     **** 	    			    //MB_MRE_EXE_FUN                  /*!< execute function error. */
+ 149:../main.c     **** 	    		//	    if ( er == MB_MRE_NO_ERR )//|| er == MB_MRE_MASTER_BUSY || er == MB_MRE_REV_DATA || e
+ 150:../main.c     **** 	    			//	    break;
+ 151:../main.c     **** 	    		   // }
+ 152:../main.c     **** 
+ 153:../main.c     **** 	    	    if ( i == 5 )
+ 192              		.loc 1 153 0
+ 193 0064 BB7A     		ldrb	r3, [r7, #10]	@ zero_extendqisi2
+ 194 0066 052B     		cmp	r3, #5
+ 195 0068 05D1     		bne	.L5
+ 154:../main.c     **** 	    	    	gLedCnt = 2;
+ 196              		.loc 1 154 0
+ 197 006a 40F20003 		movw	r3, #:lower16:gLedCnt
+ 198 006e C0F20003 		movt	r3, #:upper16:gLedCnt
+ 199 0072 0222     		movs	r2, #2
+ 200 0074 1A80     		strh	r2, [r3]	@ movhi
+ 201              	.L5:
+ 202              	.LBE2:
+ 155:../main.c     **** 	    	   	}
+ 156:../main.c     **** 
+ 157:../main.c     **** 	    	    fl = 1;
+ 203              		.loc 1 157 0
+ 204 0076 0123     		movs	r3, #1
+ 205 0078 FB60     		str	r3, [r7, #12]
+ 206              	.L4:
+ 158:../main.c     **** 	        }
+ 159:../main.c     **** 
+ 160:../main.c     ****     	//ValidatorPulseProcessing(5 / portTICK_RATE_MS);
+ 161:../main.c     ****     	//ButtonSkan(5 / portTICK_RATE_MS);
  162:../main.c     **** 
- 163:../main.c     **** void vTask2( void *pvParameters )
- 164:../main.c     **** {
- 229              		.loc 1 164 0
- 230              		.cfi_startproc
- 231              		@ args = 0, pretend = 0, frame = 520
- 232              		@ frame_needed = 1, uses_anonymous_args = 0
- 233 0000 80B5     		push	{r7, lr}
- 234              		.cfi_def_cfa_offset 8
- 235              		.cfi_offset 7, -8
- 236              		.cfi_offset 14, -4
- 237 0002 ADF5027D 		sub	sp, sp, #520
- 238              		.cfi_def_cfa_offset 528
- 239 0006 00AF     		add	r7, sp, #0
- 240              		.cfi_def_cfa_register 7
- 241 0008 3B1D     		adds	r3, r7, #4
- 242 000a 1860     		str	r0, [r3]
+ 163:../main.c     ****         vTaskDelay(100 / portTICK_RATE_MS);
+ 207              		.loc 1 163 0
+ 208 007a 6420     		movs	r0, #100
+ 209 007c FFF7FEFF 		bl	vTaskDelay
+ 164:../main.c     ****     }
+ 210              		.loc 1 164 0
+ 211 0080 C8E7     		b	.L6
+ 212              		.cfi_endproc
+ 213              	.LFE30:
+ 215 0082 00BF     		.section	.text.vTask2,"ax",%progbits
+ 216              		.align	2
+ 217              		.global	vTask2
+ 218              		.thumb
+ 219              		.thumb_func
+ 221              	vTask2:
+ 222              	.LFB31:
  165:../main.c     **** 
- 166:../main.c     **** 
- 167:../main.c     **** //	extern uint16_t   ucSDiscInBuf[]  ;
- 168:../main.c     **** //	extern uint16_t   ucSCoilBuf[]    ;
- 169:../main.c     **** //	extern uint16_t   usSRegInBuf[]   ;
- 170:../main.c     **** //	extern uint16_t   usSRegHoldBuf[] ;
- 171:../main.c     **** 
- 172:../main.c     **** //	extern uint16_t   usMRegInBuf[16][];
+ 166:../main.c     ****     vTaskDelete (NULL);
+ 167:../main.c     **** }
+ 168:../main.c     **** 
+ 169:../main.c     **** 
+ 170:../main.c     **** 
+ 171:../main.c     **** void vTask2( void *pvParameters )
+ 172:../main.c     **** {
+ 223              		.loc 1 172 0
+ 224              		.cfi_startproc
+ 225              		@ args = 0, pretend = 0, frame = 520
+ 226              		@ frame_needed = 1, uses_anonymous_args = 0
+ 227 0000 80B5     		push	{r7, lr}
+ 228              		.cfi_def_cfa_offset 8
+ 229              		.cfi_offset 7, -8
+ 230              		.cfi_offset 14, -4
+ 231 0002 ADF5027D 		sub	sp, sp, #520
+ 232              		.cfi_def_cfa_offset 528
+ 233 0006 00AF     		add	r7, sp, #0
+ 234              		.cfi_def_cfa_register 7
+ 235 0008 3B1D     		adds	r3, r7, #4
+ 236 000a 1860     		str	r0, [r3]
  173:../main.c     **** 
- 174:../main.c     **** 	eMBErrorCode    eStatus;
- 175:../main.c     **** 	uint16_t errorCount = 0;
- 243              		.loc 1 175 0
- 244 000c 0023     		movs	r3, #0
- 245 000e A7F80632 		strh	r3, [r7, #518]	@ movhi
- 176:../main.c     **** 
- 177:../main.c     **** 	//eStatus = eMBInit( MB_RTU, 10, UART1, 19200, 0 );
- 178:../main.c     **** 	//vMBMasterSetDestAddress( 1 );
- 179:../main.c     **** 	eStatus = eMBMasterInit(MB_RTU, UART1, 19200,  MB_PAR_NONE);
- 246              		.loc 1 179 0
- 247 0012 0020     		movs	r0, #0
- 248 0014 0121     		movs	r1, #1
- 249 0016 4FF49642 		mov	r2, #19200
- 250 001a 0023     		movs	r3, #0
- 251 001c FFF7FEFF 		bl	eMBMasterInit
- 252 0020 0346     		mov	r3, r0
- 253 0022 87F80532 		strb	r3, [r7, #517]
- 180:../main.c     **** 
- 181:../main.c     **** 	/* Enable the Modbus Protocol Stack. */
- 182:../main.c     **** 	//eStatus = eMBEnable(  );
- 183:../main.c     **** 	eStatus = eMBMasterEnable();
- 254              		.loc 1 183 0
- 255 0026 FFF7FEFF 		bl	eMBMasterEnable
- 256 002a 0346     		mov	r3, r0
- 257 002c 87F80532 		strb	r3, [r7, #517]
+ 174:../main.c     **** 
+ 175:../main.c     **** //	extern uint16_t   ucSDiscInBuf[]  ;
+ 176:../main.c     **** //	extern uint16_t   ucSCoilBuf[]    ;
+ 177:../main.c     **** //	extern uint16_t   usSRegInBuf[]   ;
+ 178:../main.c     **** //	extern uint16_t   usSRegHoldBuf[] ;
+ 179:../main.c     **** 
+ 180:../main.c     **** //	extern uint16_t   usMRegInBuf[16][];
+ 181:../main.c     **** 
+ 182:../main.c     **** 	eMBErrorCode    eStatus;
+ 183:../main.c     **** 	uint16_t errorCount = 0;
+ 237              		.loc 1 183 0
+ 238 000c 0023     		movs	r3, #0
+ 239 000e A7F80632 		strh	r3, [r7, #518]	@ movhi
  184:../main.c     **** 
- 185:../main.c     **** 	if ( eStatus != MB_ENOERR) {
- 186:../main.c     **** 
- 187:../main.c     **** 	}
+ 185:../main.c     **** 	//eStatus = eMBInit( MB_RTU, 10, UART1, 19200, 0 );
+ 186:../main.c     **** 	//vMBMasterSetDestAddress( 1 );
+ 187:../main.c     **** 	//eStatus = eMBMasterInit(MB_RTU, UART1, 19200,  MB_PAR_NONE);
  188:../main.c     **** 
- 189:../main.c     **** 	eMBMasterReqErrCode    errorCode = MB_MRE_NO_ERR;
- 258              		.loc 1 189 0
- 259 0030 0023     		movs	r3, #0
- 260 0032 87F80432 		strb	r3, [r7, #516]
- 190:../main.c     **** 
- 191:../main.c     **** 	USHORT  usModbusUserData[253];
- 192:../main.c     **** 	usModbusUserData[1] = 10;
- 261              		.loc 1 192 0
- 262 0036 07F10803 		add	r3, r7, #8
- 263 003a 0A22     		movs	r2, #10
- 264 003c 5A80     		strh	r2, [r3, #2]	@ movhi
- 265              	.L10:
- 193:../main.c     **** 
- 194:../main.c     **** 	//eMBMasterReqWriteCoil( 1, 1, 0xFF00, (-1) );
- 195:../main.c     **** 
- 196:../main.c     ****     for( ;; )
- 197:../main.c     ****     {
+ 189:../main.c     **** 	/* Enable the Modbus Protocol Stack. */
+ 190:../main.c     **** 	//eStatus = eMBEnable(  );
+ 191:../main.c     **** 	//eStatus = eMBMasterEnable();
+ 192:../main.c     **** 
+ 193:../main.c     **** 	if ( eStatus != MB_ENOERR) {
+ 194:../main.c     **** 
+ 195:../main.c     **** 	}
+ 196:../main.c     **** 
+ 197:../main.c     **** 	eMBMasterReqErrCode    errorCode = MB_MRE_NO_ERR;
+ 240              		.loc 1 197 0
+ 241 0012 0023     		movs	r3, #0
+ 242 0014 87F80532 		strb	r3, [r7, #517]
  198:../main.c     **** 
- 199:../main.c     ****     	//( void )eMBPoll(  );
- 200:../main.c     ****     	//( void )eMBMasterPoll(  );
+ 199:../main.c     **** 	USHORT  usModbusUserData[253];
+ 200:../main.c     **** 	usModbusUserData[1] = 10;
+ 243              		.loc 1 200 0
+ 244 0018 07F10803 		add	r3, r7, #8
+ 245 001c 0A22     		movs	r2, #10
+ 246 001e 5A80     		strh	r2, [r3, #2]	@ movhi
+ 247              	.L9:
  201:../main.c     **** 
- 202:../main.c     ****     	if ( eMBMasterPoll() == MB_MRE_TIMEDOUT )
- 266              		.loc 1 202 0
- 267 003e FFF7FEFF 		bl	eMBMasterPoll
- 268 0042 0346     		mov	r3, r0
- 269 0044 042B     		cmp	r3, #4
- 270 0046 05D1     		bne	.L8
- 203:../main.c     ****     		gLedCnt = 2;
- 271              		.loc 1 203 0
- 272 0048 40F20003 		movw	r3, #:lower16:gLedCnt
- 273 004c C0F20003 		movt	r3, #:upper16:gLedCnt
- 274 0050 0222     		movs	r2, #2
- 275 0052 1A80     		strh	r2, [r3]	@ movhi
- 276              	.L8:
- 204:../main.c     **** 
- 205:../main.c     ****     	/* Here we simply count the number of poll cycles. */
- 206:../main.c     ****     	//usSRegInBuf[0]++;
- 207:../main.c     ****     	//if ( usSRegInBuf[0] == 65535)
- 208:../main.c     ****     	//    usSRegInBuf[0] = 0;
+ 202:../main.c     **** 	//eMBMasterReqWriteCoil( 1, 1, 0xFF00, (-1) );
+ 203:../main.c     **** 
+ 204:../main.c     ****     for( ;; )
+ 205:../main.c     ****     {
+ 206:../main.c     **** 
+ 207:../main.c     ****     	//( void )eMBPoll(  );
+ 208:../main.c     ****     	//( void )eMBMasterPoll(  );
  209:../main.c     **** 
- 210:../main.c     **** //    	if ( usSRegInBuf[1] > 0)
- 211:../main.c     **** //    		gLedCnt = usSRegInBuf[1];
+ 210:../main.c     ****     	//if ( eMBMasterPoll() == MB_MRE_TIMEDOUT )
+ 211:../main.c     ****     	//	gLedCnt = 2;
  212:../main.c     **** 
- 213:../main.c     **** 
- 214:../main.c     ****     	//usSRegInBuf[1] = 'Z';
- 215:../main.c     ****     	//usSRegInBuf[2] = 44;
- 216:../main.c     **** 
- 217:../main.c     ****     	//errorCode = eMBMasterReqReadInputRegister(10,100,4, (-1));
- 218:../main.c     **** 
- 219:../main.c     ****     	if (errorCode != MB_MRE_NO_ERR) {
- 277              		.loc 1 219 0
- 278 0054 97F80432 		ldrb	r3, [r7, #516]	@ zero_extendqisi2
- 279 0058 002B     		cmp	r3, #0
- 280 005a 04D0     		beq	.L9
- 220:../main.c     ****     	    errorCount++;
- 281              		.loc 1 220 0
- 282 005c B7F80632 		ldrh	r3, [r7, #518]
- 283 0060 0133     		adds	r3, r3, #1
- 284 0062 A7F80632 		strh	r3, [r7, #518]	@ movhi
- 285              	.L9:
- 221:../main.c     ****     	}
- 222:../main.c     **** 
- 223:../main.c     ****      	vTaskDelay(1 / portTICK_RATE_MS);
- 286              		.loc 1 223 0
- 287 0066 0120     		movs	r0, #1
- 288 0068 FFF7FEFF 		bl	vTaskDelay
- 224:../main.c     ****     }
- 289              		.loc 1 224 0
- 290 006c E7E7     		b	.L10
- 291              		.cfi_endproc
- 292              	.LFE31:
- 294 006e 00BF     		.section	.data.cnt.6960,"aw",%progbits
- 295              		.align	2
- 298              	cnt.6960:
- 299 0000 32000000 		.word	50
- 300              		.text
- 301              	.Letext0:
- 302              		.file 2 "c:\\tools\\arm-none-eabi\\include\\stdint.h"
- 303              		.file 3 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeRTOS\\Source\\portable\\GCC\\ARM_CM3/por
- 304              		.file 4 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeRTOS\\Source\\include/queue.h"
- 305              		.file 5 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/stm32f10x.h"
- 306              		.file 6 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\stm32/port.h"
- 307              		.file 7 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\include/mbport.h"
- 308              		.file 8 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\include/mb.h"
- 309              		.file 9 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\include/mb_m.h"
- 310              		.file 10 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/core_cm3.h"
- 311              		.file 11 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\bsp/uart.h"
+ 213:../main.c     ****     	/* Here we simply count the number of poll cycles. */
+ 214:../main.c     ****     	//usSRegInBuf[0]++;
+ 215:../main.c     ****     	//if ( usSRegInBuf[0] == 65535)
+ 216:../main.c     ****     	//    usSRegInBuf[0] = 0;
+ 217:../main.c     **** 
+ 218:../main.c     **** //    	if ( usSRegInBuf[1] > 0)
+ 219:../main.c     **** //    		gLedCnt = usSRegInBuf[1];
+ 220:../main.c     **** 
+ 221:../main.c     **** 
+ 222:../main.c     ****     	//usSRegInBuf[1] = 'Z';
+ 223:../main.c     ****     	//usSRegInBuf[2] = 44;
+ 224:../main.c     **** 
+ 225:../main.c     ****     	//errorCode = eMBMasterReqReadInputRegister(10,100,4, (-1));
+ 226:../main.c     **** 
+ 227:../main.c     ****     	if (errorCode != MB_MRE_NO_ERR) {
+ 248              		.loc 1 227 0
+ 249 0020 97F80532 		ldrb	r3, [r7, #517]	@ zero_extendqisi2
+ 250 0024 002B     		cmp	r3, #0
+ 251 0026 04D0     		beq	.L8
+ 228:../main.c     ****     	    errorCount++;
+ 252              		.loc 1 228 0
+ 253 0028 B7F80632 		ldrh	r3, [r7, #518]
+ 254 002c 0133     		adds	r3, r3, #1
+ 255 002e A7F80632 		strh	r3, [r7, #518]	@ movhi
+ 256              	.L8:
+ 229:../main.c     ****     	}
+ 230:../main.c     **** 
+ 231:../main.c     ****      	vTaskDelay(100 / portTICK_RATE_MS);
+ 257              		.loc 1 231 0
+ 258 0032 6420     		movs	r0, #100
+ 259 0034 FFF7FEFF 		bl	vTaskDelay
+ 232:../main.c     ****     }
+ 260              		.loc 1 232 0
+ 261 0038 F2E7     		b	.L9
+ 262              		.cfi_endproc
+ 263              	.LFE31:
+ 265 003a 00BF     		.section	.text.timer_4_init,"ax",%progbits
+ 266              		.align	2
+ 267              		.global	timer_4_init
+ 268              		.thumb
+ 269              		.thumb_func
+ 271              	timer_4_init:
+ 272              	.LFB32:
+ 233:../main.c     **** 
+ 234:../main.c     ****     vTaskDelete (NULL);
+ 235:../main.c     **** }
+ 236:../main.c     **** 
+ 237:../main.c     **** 
+ 238:../main.c     **** /*
+ 239:../main.c     **** void vTask3( void *pvParameters )
+ 240:../main.c     **** {
+ 241:../main.c     **** #define RXBUFF_SIZE 20
+ 242:../main.c     **** 
+ 243:../main.c     **** //    static u8 rx_buff[RXBUFF_SIZE];
+ 244:../main.c     **** //    static u8 cnt = 0;
+ 245:../main.c     **** 
+ 246:../main.c     **** //    message_t Message;
+ 247:../main.c     **** 
+ 248:../main.c     **** //   RS485_SET_MODE_RX;
+ 249:../main.c     **** 
+ 250:../main.c     ****     for( ;; )
+ 251:../main.c     ****     {
+ 252:../main.c     **** 
+ 253:../main.c     ****    	    if ( FIFO_RxBuf_Count_Get() > 0 ) {
+ 254:../main.c     ****  //   		 rx_buff[cnt] = FIFO_RxBuf_Char_Get();
+ 255:../main.c     ****  //   		 UartWrByte(UART1, rx_buff[cnt]);
+ 256:../main.c     **** 
+ 257:../main.c     **** 
+ 258:../main.c     ****     	}
+ 259:../main.c     **** 
+ 260:../main.c     ****         vTaskDelay(500 / portTICK_RATE_MS);
+ 261:../main.c     ****    }
+ 262:../main.c     **** 
+ 263:../main.c     ****     vTaskDelete (NULL);
+ 264:../main.c     **** }
+ 265:../main.c     **** */
+ 266:../main.c     **** 
+ 267:../main.c     **** 
+ 268:../main.c     **** ///////////////
+ 269:../main.c     **** /*
+ 270:../main.c     **** eMBErrorCode
+ 271:../main.c     **** eMBRegInputCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs )
+ 272:../main.c     **** {
+ 273:../main.c     ****     eMBErrorCode    eStatus = MB_ENOERR;
+ 274:../main.c     ****     int             iRegIndex;
+ 275:../main.c     **** 
+ 276:../main.c     ****     if( ( usAddress >= REG_INPUT_START )
+ 277:../main.c     ****         && ( usAddress + usNRegs <= REG_INPUT_START + REG_INPUT_NREGS ) )
+ 278:../main.c     ****     {
+ 279:../main.c     ****         iRegIndex = ( int )( usAddress - usRegInputStart );
+ 280:../main.c     ****         while( usNRegs > 0 )
+ 281:../main.c     ****         {
+ 282:../main.c     ****             *pucRegBuffer++ =
+ 283:../main.c     ****                 ( unsigned char )( usRegInputBuf[iRegIndex] >> 8 );
+ 284:../main.c     ****             *pucRegBuffer++ =
+ 285:../main.c     ****                 ( unsigned char )( usRegInputBuf[iRegIndex] & 0xFF );
+ 286:../main.c     ****             iRegIndex++;
+ 287:../main.c     ****             usNRegs--;
+ 288:../main.c     ****         }
+ 289:../main.c     ****     }
+ 290:../main.c     ****     else
+ 291:../main.c     ****     {
+ 292:../main.c     ****         eStatus = MB_ENOREG;
+ 293:../main.c     ****     }
+ 294:../main.c     **** 
+ 295:../main.c     ****     return eStatus;
+ 296:../main.c     **** }
+ 297:../main.c     **** 
+ 298:../main.c     **** eMBErrorCode
+ 299:../main.c     **** eMBRegHoldingCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs,
+ 300:../main.c     ****                  eMBRegisterMode eMode )
+ 301:../main.c     **** {
+ 302:../main.c     ****     return MB_ENOREG;
+ 303:../main.c     **** }
+ 304:../main.c     **** 
+ 305:../main.c     **** 
+ 306:../main.c     **** eMBErrorCode
+ 307:../main.c     **** eMBRegCoilsCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNCoils,
+ 308:../main.c     ****                eMBRegisterMode eMode )
+ 309:../main.c     **** {
+ 310:../main.c     ****     return MB_ENOREG;
+ 311:../main.c     **** }
+ 312:../main.c     **** 
+ 313:../main.c     **** eMBErrorCode
+ 314:../main.c     **** eMBRegDiscreteCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNDiscrete )
+ 315:../main.c     **** {
+ 316:../main.c     ****     return MB_ENOREG;
+ 317:../main.c     **** }
+ 318:../main.c     **** */
+ 319:../main.c     **** 
+ 320:../main.c     **** 
+ 321:../main.c     **** 
+ 322:../main.c     **** #include "port.h"
+ 323:../main.c     **** 
+ 324:../main.c     **** /* ----------------------- Modbus includes ----------------------------------*/
+ 325:../main.c     **** #include "mb.h"
+ 326:../main.c     **** #include "mbport.h"
+ 327:../main.c     **** 
+ 328:../main.c     **** #include "stm32f10x_tim.h"
+ 329:../main.c     **** #include "misc.h"
+ 330:../main.c     **** 
+ 331:../main.c     **** #include "led.h"
+ 332:../main.c     **** 
+ 333:../main.c     **** int timer_4_init ( void ) {
+ 273              		.loc 1 333 0
+ 274              		.cfi_startproc
+ 275              		@ args = 0, pretend = 0, frame = 16
+ 276              		@ frame_needed = 1, uses_anonymous_args = 0
+ 277 0000 80B5     		push	{r7, lr}
+ 278              		.cfi_def_cfa_offset 8
+ 279              		.cfi_offset 7, -8
+ 280              		.cfi_offset 14, -4
+ 281 0002 84B0     		sub	sp, sp, #16
+ 282              		.cfi_def_cfa_offset 24
+ 283 0004 00AF     		add	r7, sp, #0
+ 284              		.cfi_def_cfa_register 7
+ 334:../main.c     **** 
+ 335:../main.c     **** 	uint16_t PrescalerValue = 0;
+ 285              		.loc 1 335 0
+ 286 0006 0023     		movs	r3, #0
+ 287 0008 FB81     		strh	r3, [r7, #14]	@ movhi
+ 336:../main.c     **** 	TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
+ 337:../main.c     **** 	NVIC_InitTypeDef NVIC_InitStructure;
+ 338:../main.c     **** 	//====================================Ê±ÖÓ³õÊ¼»¯===========================
+ 339:../main.c     **** 	//Ê¹ÄÜ¶¨Ê±Æ÷3Ê±ÖÓ
+ 340:../main.c     **** 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
+ 288              		.loc 1 340 0
+ 289 000a 0120     		movs	r0, #1
+ 290 000c 0121     		movs	r1, #1
+ 291 000e FFF7FEFF 		bl	RCC_APB1PeriphClockCmd
+ 341:../main.c     **** 	//====================================¶¨Ê±Æ÷³õÊ¼»¯===========================
+ 342:../main.c     **** 	//¶¨Ê±Æ÷Ê±¼ä»ùÅäÖÃËµÃ÷
+ 343:../main.c     **** 	//HCLKÎª72MHz£¬APB1¾­¹ý2·ÖÆµÎª36MHz
+ 344:../main.c     **** 	//TIM3µÄÊ±ÖÓ±¶ÆµºóÎª72MHz£¨Ó²¼þ×Ô¶¯±¶Æµ,´ïµ½×î´ó£©
+ 345:../main.c     **** 	//TIM3µÄ·ÖÆµÏµÊýÎª3599£¬Ê±¼ä»ùÆµÂÊÎª72 / (1 + Prescaler) = 20KHz,»ù×¼Îª50us
+ 346:../main.c     **** 	//TIM×î´ó¼ÆÊýÖµÎªusTim1Timerout50u
+ 347:../main.c     **** 
+ 348:../main.c     **** 	//PrescalerValue = (uint16_t) (SystemCoreClock / 20000) - 1;
+ 349:../main.c     **** 	PrescalerValue = (uint16_t) (SystemCoreClock / 1000000) - 1;
+ 292              		.loc 1 349 0
+ 293 0012 40F20003 		movw	r3, #:lower16:SystemCoreClock
+ 294 0016 C0F20003 		movt	r3, #:upper16:SystemCoreClock
+ 295 001a 1A68     		ldr	r2, [r3]
+ 296 001c 4DF68363 		movw	r3, #56963
+ 297 0020 C4F21B33 		movt	r3, 17179
+ 298 0024 A3FB0213 		umull	r1, r3, r3, r2
+ 299 0028 9B0C     		lsrs	r3, r3, #18
+ 300 002a 9BB2     		uxth	r3, r3
+ 301 002c 013B     		subs	r3, r3, #1
+ 302 002e FB81     		strh	r3, [r7, #14]	@ movhi
+ 350:../main.c     **** 
+ 351:../main.c     **** 	//¶¨Ê±Æ÷1³õÊ¼»¯
+ 352:../main.c     **** 	//TIM_TimeBaseStructure.TIM_Period = (uint16_t) usTim1Timerout50us;
+ 353:../main.c     **** 	TIM_TimeBaseStructure.TIM_Period = 1;
+ 303              		.loc 1 353 0
+ 304 0030 0123     		movs	r3, #1
+ 305 0032 3B81     		strh	r3, [r7, #8]	@ movhi
+ 354:../main.c     **** 	TIM_TimeBaseStructure.TIM_Prescaler = PrescalerValue;
+ 306              		.loc 1 354 0
+ 307 0034 FB89     		ldrh	r3, [r7, #14]	@ movhi
+ 308 0036 BB80     		strh	r3, [r7, #4]	@ movhi
+ 355:../main.c     **** 	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
+ 309              		.loc 1 355 0
+ 310 0038 0023     		movs	r3, #0
+ 311 003a 7B81     		strh	r3, [r7, #10]	@ movhi
+ 356:../main.c     **** 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
+ 312              		.loc 1 356 0
+ 313 003c 0023     		movs	r3, #0
+ 314 003e FB80     		strh	r3, [r7, #6]	@ movhi
+ 357:../main.c     **** 	TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
+ 315              		.loc 1 357 0
+ 316 0040 3B1D     		adds	r3, r7, #4
+ 317 0042 4FF08040 		mov	r0, #1073741824
+ 318 0046 1946     		mov	r1, r3
+ 319 0048 FFF7FEFF 		bl	TIM_TimeBaseInit
+ 358:../main.c     **** 	//Ô¤×°ÔØÊ¹ÄÜ
+ 359:../main.c     **** 	TIM_ARRPreloadConfig(TIM2, ENABLE);
+ 320              		.loc 1 359 0
+ 321 004c 4FF08040 		mov	r0, #1073741824
+ 322 0050 0121     		movs	r1, #1
+ 323 0052 FFF7FEFF 		bl	TIM_ARRPreloadConfig
+ 360:../main.c     **** 	//====================================ÖÐ¶Ï³õÊ¼»¯===========================
+ 361:../main.c     **** 	//ÉèÖÃNVICÓÅÏÈ¼¶·Ö×éÎªGroup2£º0-3ÇÀÕ¼Ê½ÓÅÏÈ¼¶£¬0-3µÄÏìÓ¦Ê½ÓÅÏÈ¼¶
+ 362:../main.c     **** 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
+ 324              		.loc 1 362 0
+ 325 0056 4FF4A060 		mov	r0, #1280
+ 326 005a FFF7FEFF 		bl	NVIC_PriorityGroupConfig
+ 363:../main.c     **** 	NVIC_InitStructure.NVIC_IRQChannel = TIM2_IRQn;
+ 327              		.loc 1 363 0
+ 328 005e 1C23     		movs	r3, #28
+ 329 0060 3B70     		strb	r3, [r7]
+ 364:../main.c     **** 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
+ 330              		.loc 1 364 0
+ 331 0062 0123     		movs	r3, #1
+ 332 0064 7B70     		strb	r3, [r7, #1]
+ 365:../main.c     **** 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
+ 333              		.loc 1 365 0
+ 334 0066 0123     		movs	r3, #1
+ 335 0068 BB70     		strb	r3, [r7, #2]
+ 366:../main.c     **** 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+ 336              		.loc 1 366 0
+ 337 006a 0123     		movs	r3, #1
+ 338 006c FB70     		strb	r3, [r7, #3]
+ 367:../main.c     **** 	NVIC_Init(&NVIC_InitStructure);
+ 339              		.loc 1 367 0
+ 340 006e 3B46     		mov	r3, r7
+ 341 0070 1846     		mov	r0, r3
+ 342 0072 FFF7FEFF 		bl	NVIC_Init
+ 368:../main.c     **** 	//Çå³ýÒç³öÖÐ¶Ï±êÖ¾Î»
+ 369:../main.c     **** 	TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
+ 343              		.loc 1 369 0
+ 344 0076 4FF08040 		mov	r0, #1073741824
+ 345 007a 0121     		movs	r1, #1
+ 346 007c FFF7FEFF 		bl	TIM_ClearITPendingBit
+ 370:../main.c     **** 	//¶¨Ê±Æ÷3Òç³öÖÐ¶Ï¹Ø±Õ
+ 371:../main.c     **** 	//TIM_ITConfig(TIM2, TIM_IT_Update, DISABLE);
+ 372:../main.c     **** 	//¶¨Ê±Æ÷3½ûÄÜ
+ 373:../main.c     **** 	//TIM_Cmd(TIM2, DISABLE);
+ 374:../main.c     **** 
+ 375:../main.c     **** 	TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
+ 347              		.loc 1 375 0
+ 348 0080 4FF08040 		mov	r0, #1073741824
+ 349 0084 0121     		movs	r1, #1
+ 350 0086 FFF7FEFF 		bl	TIM_ClearITPendingBit
+ 376:../main.c     **** 	TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE);
+ 351              		.loc 1 376 0
+ 352 008a 4FF08040 		mov	r0, #1073741824
+ 353 008e 0121     		movs	r1, #1
+ 354 0090 0122     		movs	r2, #1
+ 355 0092 FFF7FEFF 		bl	TIM_ITConfig
+ 377:../main.c     **** 	TIM_SetCounter(TIM2, 0);
+ 356              		.loc 1 377 0
+ 357 0096 4FF08040 		mov	r0, #1073741824
+ 358 009a 0021     		movs	r1, #0
+ 359 009c FFF7FEFF 		bl	TIM_SetCounter
+ 378:../main.c     **** 
+ 379:../main.c     **** 	//TIM_SetAutoreload(TIM2, (uint16_t) (SystemCoreClock / 36000) - 1);
+ 380:../main.c     **** 
+ 381:../main.c     **** 	TIM_Cmd(TIM2, ENABLE);
+ 360              		.loc 1 381 0
+ 361 00a0 4FF08040 		mov	r0, #1073741824
+ 362 00a4 0121     		movs	r1, #1
+ 363 00a6 FFF7FEFF 		bl	TIM_Cmd
+ 382:../main.c     **** 
+ 383:../main.c     **** 	return TRUE;
+ 364              		.loc 1 383 0
+ 365 00aa 0123     		movs	r3, #1
+ 384:../main.c     **** 
+ 385:../main.c     **** }
+ 366              		.loc 1 385 0
+ 367 00ac 1846     		mov	r0, r3
+ 368 00ae 1037     		adds	r7, r7, #16
+ 369 00b0 BD46     		mov	sp, r7
+ 370              		@ sp needed
+ 371 00b2 80BD     		pop	{r7, pc}
+ 372              		.cfi_endproc
+ 373              	.LFE32:
+ 375              		.section	.text.TIM2_IRQHandler,"ax",%progbits
+ 376              		.align	2
+ 377              		.global	TIM2_IRQHandler
+ 378              		.thumb
+ 379              		.thumb_func
+ 381              	TIM2_IRQHandler:
+ 382              	.LFB33:
+ 386:../main.c     **** 
+ 387:../main.c     **** void TIM2_IRQHandler(void)
+ 388:../main.c     **** {
+ 383              		.loc 1 388 0
+ 384              		.cfi_startproc
+ 385              		@ args = 0, pretend = 0, frame = 0
+ 386              		@ frame_needed = 1, uses_anonymous_args = 0
+ 387 0000 80B5     		push	{r7, lr}
+ 388              		.cfi_def_cfa_offset 8
+ 389              		.cfi_offset 7, -8
+ 390              		.cfi_offset 14, -4
+ 391 0002 00AF     		add	r7, sp, #0
+ 392              		.cfi_def_cfa_register 7
+ 389:../main.c     **** 
+ 390:../main.c     **** 
+ 391:../main.c     **** 	if (TIM_GetITStatus(TIM2, TIM_IT_Update) != RESET)
+ 393              		.loc 1 391 0
+ 394 0004 4FF08040 		mov	r0, #1073741824
+ 395 0008 0121     		movs	r1, #1
+ 396 000a FFF7FEFF 		bl	TIM_GetITStatus
+ 397 000e 0346     		mov	r3, r0
+ 398 0010 002B     		cmp	r3, #0
+ 399 0012 19D0     		beq	.L12
+ 392:../main.c     **** 	{
+ 393:../main.c     **** LedToggle(LED_BUTTON1);
+ 400              		.loc 1 393 0
+ 401 0014 4FF48050 		mov	r0, #4096
+ 402 0018 C4F20100 		movt	r0, 16385
+ 403 001c 4FF48071 		mov	r1, #256
+ 404 0020 FFF7FEFF 		bl	LedToggle
+ 394:../main.c     **** 
+ 395:../main.c     **** LedToggle(LED_BUTTON4);
+ 405              		.loc 1 395 0
+ 406 0024 4FF44060 		mov	r0, #3072
+ 407 0028 C4F20100 		movt	r0, 16385
+ 408 002c 4FF40071 		mov	r1, #512
+ 409 0030 FFF7FEFF 		bl	LedToggle
+ 396:../main.c     **** 
+ 397:../main.c     **** 		TIM_ClearFlag(TIM2, TIM_FLAG_Update);	     //ÇåÖÐ¶Ï±ê¼Ç
+ 410              		.loc 1 397 0
+ 411 0034 4FF08040 		mov	r0, #1073741824
+ 412 0038 0121     		movs	r1, #1
+ 413 003a FFF7FEFF 		bl	TIM_ClearFlag
+ 398:../main.c     **** 		TIM_ClearITPendingBit(TIM2, TIM_IT_Update);	 //Çå³ý¶¨Ê±Æ÷T3Òç³öÖÐ¶Ï±êÖ¾Î»
+ 414              		.loc 1 398 0
+ 415 003e 4FF08040 		mov	r0, #1073741824
+ 416 0042 0121     		movs	r1, #1
+ 417 0044 FFF7FEFF 		bl	TIM_ClearITPendingBit
+ 418              	.L12:
+ 399:../main.c     **** 		//TIM_SetCounter(TIM2, 0);
+ 400:../main.c     **** 	}
+ 401:../main.c     **** //	rt_interrupt_leave();
+ 402:../main.c     **** }
+ 419              		.loc 1 402 0
+ 420 0048 80BD     		pop	{r7, pc}
+ 421              		.cfi_endproc
+ 422              	.LFE33:
+ 424 004a 00BF     		.section	.data.cnt.6964,"aw",%progbits
+ 425              		.align	2
+ 428              	cnt.6964:
+ 429 0000 32000000 		.word	50
+ 430              		.text
+ 431              	.Letext0:
+ 432              		.file 2 "c:\\tools\\arm-none-eabi\\include\\stdint.h"
+ 433              		.file 3 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeRTOS\\Source\\portable\\GCC\\ARM_CM3/por
+ 434              		.file 4 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeRTOS\\Source\\include/queue.h"
+ 435              		.file 5 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/stm32f10x.h"
+ 436              		.file 6 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\stm32/port.h"
+ 437              		.file 7 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\include/mb.h"
+ 438              		.file 8 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\include/mb_m.h"
+ 439              		.file 9 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\StdPeripheralDriver\\inc/stm32f10
+ 440              		.file 10 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\StdPeripheralDriver\\inc/misc.h"
+ 441              		.file 11 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/core_cm3.h"
+ 442              		.file 12 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/system_stm32f10x.h"
 DEFINED SYMBOLS
                             *ABS*:00000000 main.c
                             *COM*:00000004 xDataGetQueue
                             *COM*:0000001e DataBuf
-C:\Users\Alex\AppData\Local\Temp\ccr7gxcT.s:25     .data.name0:00000000 name0
-C:\Users\Alex\AppData\Local\Temp\ccr7gxcT.s:22     .data.name0:00000000 $d
-C:\Users\Alex\AppData\Local\Temp\ccr7gxcT.s:33     .data.name7:00000000 name7
-C:\Users\Alex\AppData\Local\Temp\ccr7gxcT.s:30     .data.name7:00000000 $d
-C:\Users\Alex\AppData\Local\Temp\ccr7gxcT.s:41     .data.name1:00000000 name1
-C:\Users\Alex\AppData\Local\Temp\ccr7gxcT.s:38     .data.name1:00000000 $d
-C:\Users\Alex\AppData\Local\Temp\ccr7gxcT.s:49     .data.gLedCnt:00000000 gLedCnt
-C:\Users\Alex\AppData\Local\Temp\ccr7gxcT.s:46     .data.gLedCnt:00000000 $d
-C:\Users\Alex\AppData\Local\Temp\ccr7gxcT.s:52     .rodata:00000000 $d
-C:\Users\Alex\AppData\Local\Temp\ccr7gxcT.s:53     .rodata:00000000 .LC0
-C:\Users\Alex\AppData\Local\Temp\ccr7gxcT.s:56     .rodata:00000008 .LC1
-C:\Users\Alex\AppData\Local\Temp\ccr7gxcT.s:59     .text.main:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\ccr7gxcT.s:64     .text.main:00000000 main
-C:\Users\Alex\AppData\Local\Temp\ccr7gxcT.s:136    .text.vTask1:00000000 vTask1
-C:\Users\Alex\AppData\Local\Temp\ccr7gxcT.s:227    .text.vTask2:00000000 vTask2
-C:\Users\Alex\AppData\Local\Temp\ccr7gxcT.s:131    .text.vTask1:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\ccr7gxcT.s:298    .data.cnt.6960:00000000 cnt.6960
-C:\Users\Alex\AppData\Local\Temp\ccr7gxcT.s:222    .text.vTask2:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\ccr7gxcT.s:295    .data.cnt.6960:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccbMk4Ey.s:25     .data.name0:00000000 name0
+C:\Users\Alex\AppData\Local\Temp\ccbMk4Ey.s:22     .data.name0:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccbMk4Ey.s:33     .data.name7:00000000 name7
+C:\Users\Alex\AppData\Local\Temp\ccbMk4Ey.s:30     .data.name7:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccbMk4Ey.s:41     .data.name1:00000000 name1
+C:\Users\Alex\AppData\Local\Temp\ccbMk4Ey.s:38     .data.name1:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccbMk4Ey.s:49     .data.gLedCnt:00000000 gLedCnt
+C:\Users\Alex\AppData\Local\Temp\ccbMk4Ey.s:46     .data.gLedCnt:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccbMk4Ey.s:52     .rodata:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\ccbMk4Ey.s:53     .rodata:00000000 .LC0
+C:\Users\Alex\AppData\Local\Temp\ccbMk4Ey.s:56     .rodata:00000008 .LC1
+C:\Users\Alex\AppData\Local\Temp\ccbMk4Ey.s:59     .text.main:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccbMk4Ey.s:64     .text.main:00000000 main
+C:\Users\Alex\AppData\Local\Temp\ccbMk4Ey.s:136    .text.vTask1:00000000 vTask1
+C:\Users\Alex\AppData\Local\Temp\ccbMk4Ey.s:221    .text.vTask2:00000000 vTask2
+C:\Users\Alex\AppData\Local\Temp\ccbMk4Ey.s:131    .text.vTask1:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccbMk4Ey.s:271    .text.timer_4_init:00000000 timer_4_init
+C:\Users\Alex\AppData\Local\Temp\ccbMk4Ey.s:428    .data.cnt.6964:00000000 cnt.6964
+C:\Users\Alex\AppData\Local\Temp\ccbMk4Ey.s:216    .text.vTask2:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccbMk4Ey.s:266    .text.timer_4_init:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccbMk4Ey.s:376    .text.TIM2_IRQHandler:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\ccbMk4Ey.s:381    .text.TIM2_IRQHandler:00000000 TIM2_IRQHandler
+C:\Users\Alex\AppData\Local\Temp\ccbMk4Ey.s:425    .data.cnt.6964:00000000 $d
                      .debug_frame:00000010 $d
                            .group:00000000 wm4.1.98ffea2db242cfdb58f411f7407f2b59
                            .group:00000000 wm4.newlib.h.8.384a112feabb3bef7b573ae48cde2e3b
@@ -596,7 +905,7 @@ C:\Users\Alex\AppData\Local\Temp\ccr7gxcT.s:295    .data.cnt.6960:00000000 $d
                            .group:00000000 wm4.uart.h.41.5eb520a3b4b68680e686a054d8cd56d0
                            .group:00000000 wm4.bsp.h.11.3d7a85c77566d5901ae0285eb87b0f91
                            .group:00000000 wm4.gpio_init.h.2.a6dd96fdaf98737019b1d0402db0d0ee
-                           .group:00000000 wm4.led.h.28.2becc48c20363ad4690378d5dc88818c
+                           .group:00000000 wm4.led.h.28.401162a1ef47c2ce4bdcc919318c39a8
                            .group:00000000 wm4.mbconfig.h.33.2e295d4ff98bc723e2405a40490b5ddb
                            .group:00000000 wm4.assert.h.11.060c3dc511517628fd4f958fa9448dce
                            .group:00000000 wm4.inttypes.h.14.48280a9a5aa6f2f2d5302e2988897736
@@ -604,6 +913,8 @@ C:\Users\Alex\AppData\Local\Temp\ccr7gxcT.s:295    .data.cnt.6960:00000000 $d
                            .group:00000000 wm4.port.h.38.a8cf679bb58c5ad1b387e726c220530e
                            .group:00000000 wm4.mbproto.h.32.da85c2bdd9bdb84e975a92c999a4b490
                            .group:00000000 wm4.mb_m.h.32.f0c90bdd8de56a09521e2eefafb4f11f
+                           .group:00000000 wm4.stm32f10x_tim.h.25.21c6ec062f1e74898cb96a57da276fec
+                           .group:00000000 wm4.misc.h.25.068e106f368fa5369a681ef57c106f4b
 
 UNDEFINED SYMBOLS
 bsp_init
@@ -611,8 +922,16 @@ xQueueGenericCreate
 xTaskGenericCreate
 vTaskStartScheduler
 LedToggle
-eMBMasterReqWriteCoil
 vTaskDelay
-eMBMasterInit
-eMBMasterEnable
-eMBMasterPoll
+RCC_APB1PeriphClockCmd
+SystemCoreClock
+TIM_TimeBaseInit
+TIM_ARRPreloadConfig
+NVIC_PriorityGroupConfig
+NVIC_Init
+TIM_ClearITPendingBit
+TIM_ITConfig
+TIM_SetCounter
+TIM_Cmd
+TIM_GetITStatus
+TIM_ClearFlag

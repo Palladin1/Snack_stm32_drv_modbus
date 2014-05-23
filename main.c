@@ -64,6 +64,8 @@ void vTask1( void *pvParameters );
 void vTask2( void *pvParameters );
 //void vTask3( void *pvParameters );
 
+void TIM2_IRQHandler(void);
+int timer_4_init ( void );
 /*
 *********************************************************************************************************
 *                                                main()
@@ -85,12 +87,14 @@ int main( void )
 	xDataGetQueue  = xQueueCreate(5, 6);
 
 
-	xTaskCreate( vTask1, (signed char*) "Task 1", configMINIMAL_STACK_SIZE + 150, NULL, 1, NULL );
+	xTaskCreate( vTask1, (signed char*) "Task 1", configMINIMAL_STACK_SIZE + 300, NULL, 1, NULL );
 	xTaskCreate( vTask2, (signed char*) "Task 2", configMINIMAL_STACK_SIZE + 300, NULL, 1, NULL );
 //	xTaskCreate( vTask3, (signed char*) "Task 3", configMINIMAL_STACK_SIZE + 100, NULL, 1, NULL );
 
 	/* Çàïóñê øåäóëåğà, ïîñëå ÷åãî çàäà÷è çàïóñòÿòñÿ íà âûïîëíåíèå. */
 	vTaskStartScheduler();
+
+
 
 	for( ;; );
 return (0);
@@ -117,18 +121,22 @@ void vTask1( void *pvParameters )
 	  u32 fl = 0;
 
 	  u8 er = 0;
+
+	  timer_4_init();
+
 	    for( ;; )
 	    {
 	        cnt--;
 	    	if (cnt == 0) {
 	    		LedToggle(LED_STATUS);
+
 	    		cnt = gLedCnt;
 	    		//USART_SendData(USART1, 'A');
 	    	    if ( fl == 0 ) {
 	    	    	u8 i;
 	    	    	//for ( i = 1; i < 5; i++) {
 
-	    		        er = eMBMasterReqWriteCoil( 1, 1, 0xFF00, (-1) );
+	    		     //   er = eMBMasterReqWriteCoil( 1, 1, 0xFF00, (-1) );
 
 
 	    			    //MB_MRE_NO_ERR,                  /*!< no error. */
@@ -176,11 +184,11 @@ void vTask2( void *pvParameters )
 
 	//eStatus = eMBInit( MB_RTU, 10, UART1, 19200, 0 );
 	//vMBMasterSetDestAddress( 1 );
-	eStatus = eMBMasterInit(MB_RTU, UART1, 19200,  MB_PAR_NONE);
+	//eStatus = eMBMasterInit(MB_RTU, UART1, 19200,  MB_PAR_NONE);
 
 	/* Enable the Modbus Protocol Stack. */
 	//eStatus = eMBEnable(  );
-	eStatus = eMBMasterEnable();
+	//eStatus = eMBMasterEnable();
 
 	if ( eStatus != MB_ENOERR) {
 
@@ -199,8 +207,8 @@ void vTask2( void *pvParameters )
     	//( void )eMBPoll(  );
     	//( void )eMBMasterPoll(  );
 
-    	if ( eMBMasterPoll() == MB_MRE_TIMEDOUT )
-    		gLedCnt = 2;
+    	//if ( eMBMasterPoll() == MB_MRE_TIMEDOUT )
+    	//	gLedCnt = 2;
 
     	/* Here we simply count the number of poll cycles. */
     	//usSRegInBuf[0]++;
@@ -220,7 +228,7 @@ void vTask2( void *pvParameters )
     	    errorCount++;
     	}
 
-     	vTaskDelay(1 / portTICK_RATE_MS);
+     	vTaskDelay(100 / portTICK_RATE_MS);
     }
 
     vTaskDelete (NULL);
@@ -308,3 +316,92 @@ eMBRegDiscreteCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNDiscrete )
     return MB_ENOREG;
 }
 */
+
+
+
+#include "port.h"
+
+/* ----------------------- Modbus includes ----------------------------------*/
+#include "mb.h"
+#include "mbport.h"
+
+#include "stm32f10x_tim.h"
+#include "misc.h"
+
+#include "led.h"
+
+int timer_4_init ( void ) {
+
+	uint16_t PrescalerValue = 0;
+	TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
+	NVIC_InitTypeDef NVIC_InitStructure;
+	//====================================Ê±ÖÓ³õÊ¼»¯===========================
+	//Ê¹ÄÜ¶¨Ê±Æ÷3Ê±ÖÓ
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
+	//====================================¶¨Ê±Æ÷³õÊ¼»¯===========================
+	//¶¨Ê±Æ÷Ê±¼ä»ùÅäÖÃËµÃ÷
+	//HCLKÎª72MHz£¬APB1¾­¹ı2·ÖÆµÎª36MHz
+	//TIM3µÄÊ±ÖÓ±¶ÆµºóÎª72MHz£¨Ó²¼ş×Ô¶¯±¶Æµ,´ïµ½×î´ó£©
+	//TIM3µÄ·ÖÆµÏµÊıÎª3599£¬Ê±¼ä»ùÆµÂÊÎª72 / (1 + Prescaler) = 20KHz,»ù×¼Îª50us
+	//TIM×î´ó¼ÆÊıÖµÎªusTim1Timerout50u
+
+	//PrescalerValue = (uint16_t) (SystemCoreClock / 20000) - 1;
+	PrescalerValue = (uint16_t) (SystemCoreClock / 1000000) - 1;
+
+	//¶¨Ê±Æ÷1³õÊ¼»¯
+	//TIM_TimeBaseStructure.TIM_Period = (uint16_t) usTim1Timerout50us;
+	TIM_TimeBaseStructure.TIM_Period = 1;
+	TIM_TimeBaseStructure.TIM_Prescaler = PrescalerValue;
+	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
+	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
+	TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
+	//Ô¤×°ÔØÊ¹ÄÜ
+	TIM_ARRPreloadConfig(TIM2, ENABLE);
+	//====================================ÖĞ¶Ï³õÊ¼»¯===========================
+	//ÉèÖÃNVICÓÅÏÈ¼¶·Ö×éÎªGroup2£º0-3ÇÀÕ¼Ê½ÓÅÏÈ¼¶£¬0-3µÄÏìÓ¦Ê½ÓÅÏÈ¼¶
+	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
+	NVIC_InitStructure.NVIC_IRQChannel = TIM2_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_Init(&NVIC_InitStructure);
+	//Çå³ıÒç³öÖĞ¶Ï±êÖ¾Î»
+	TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
+	//¶¨Ê±Æ÷3Òç³öÖĞ¶Ï¹Ø±Õ
+	//TIM_ITConfig(TIM2, TIM_IT_Update, DISABLE);
+	//¶¨Ê±Æ÷3½ûÄÜ
+	//TIM_Cmd(TIM2, DISABLE);
+
+	TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
+	TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE);
+	TIM_SetCounter(TIM2, 0);
+
+	//TIM_SetAutoreload(TIM2, (uint16_t) (SystemCoreClock / 36000) - 1);
+
+	TIM_Cmd(TIM2, ENABLE);
+
+	return TRUE;
+
+}
+
+void TIM2_IRQHandler(void)
+{
+
+
+	if (TIM_GetITStatus(TIM2, TIM_IT_Update) != RESET)
+	{
+LedToggle(LED_BUTTON1);
+
+LedToggle(LED_BUTTON4);
+
+		TIM_ClearFlag(TIM2, TIM_FLAG_Update);	     //ÇåÖĞ¶Ï±ê¼Ç
+		TIM_ClearITPendingBit(TIM2, TIM_IT_Update);	 //Çå³ı¶¨Ê±Æ÷T3Òç³öÖĞ¶Ï±êÖ¾Î»
+		//TIM_SetCounter(TIM2, 0);
+	}
+//	rt_interrupt_leave();
+}
+
+
+
+
+

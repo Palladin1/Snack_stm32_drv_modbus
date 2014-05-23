@@ -53,7 +53,7 @@ BOOL xMBMasterPortTimersInit(USHORT usTimeOut50us)
 	//HCLKОЄ72MHzЈ¬APB1ѕ­№э2·ЦЖµОЄ36MHz
 	//TIM2µДК±ЦУ±¶ЖµєуОЄ72MHzЈЁУІјюЧФ¶Ї±¶Жµ,ґпµЅЧоґуЈ©
 	//TIM2µД·ЦЖµПµКэОЄ3599Ј¬К±јд»щЖµВКОЄ72 / (1 + Prescaler) = 20KHz,»щЧјОЄ50us
-	//TIMЧоґујЖКэЦµОЄusTim1Timerout50u	
+	//TIMЧоґујЖКэЦµОЄusTim1Timerout50u
 	usPrescalerValue = (uint16_t) (SystemCoreClock / 20000) - 1;
 	//±ЈґжT35¶ЁК±ЖчјЖКэЦµ
 	usT35TimeOut50us = usTimeOut50us;
@@ -146,7 +146,7 @@ void prvvTIMERExpiredISR(void)
 {
 	(void) pxMBMasterPortCBTimerExpired();
 }
-
+/*
 void TIM2_IRQHandler(void)
 {
 	LedToggle(LED_BUTTON1);
@@ -159,5 +159,5 @@ void TIM2_IRQHandler(void)
 		prvvTIMERExpiredISR();
 	}
 }
-
+*/
 #endif

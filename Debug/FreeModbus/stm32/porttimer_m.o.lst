@@ -104,7 +104,7 @@
   53:../FreeModbus/stm32/porttimer_m.c **** 	//HCLKОЄ72MHzЈ¬APB1ѕ­№э2·ЦЖµОЄ36MHz
   54:../FreeModbus/stm32/porttimer_m.c **** 	//TIM2µДК±ЦУ±¶ЖµєуОЄ72MHzЈЁУІјюЧФ¶Ї±¶Жµ,ґпµЅЧоґуЈ©
   55:../FreeModbus/stm32/porttimer_m.c **** 	//TIM2µД·ЦЖµПµКэОЄ3599Ј¬К±јд»щЖµВКОЄ72 / (1 + Prescaler) = 20KHz,»щЧ�
-  56:../FreeModbus/stm32/porttimer_m.c **** 	//TIMЧоґујЖКэЦµОЄusTim1Timerout50u	
+  56:../FreeModbus/stm32/porttimer_m.c **** 	//TIMЧоґујЖКэЦµОЄusTim1Timerout50u
   57:../FreeModbus/stm32/porttimer_m.c **** 	usPrescalerValue = (uint16_t) (SystemCoreClock / 20000) - 1;
   57              		.loc 1 57 0
   58 0012 40F20003 		movw	r3, #:lower16:SystemCoreClock
@@ -522,94 +522,35 @@
  389 0010 80BD     		pop	{r7, pc}
  390              		.cfi_endproc
  391              	.LFE34:
- 393 0012 00BF     		.section	.text.TIM2_IRQHandler,"ax",%progbits
- 394              		.align	2
- 395              		.global	TIM2_IRQHandler
- 396              		.thumb
- 397              		.thumb_func
- 399              	TIM2_IRQHandler:
- 400              	.LFB35:
- 149:../FreeModbus/stm32/porttimer_m.c **** 
- 150:../FreeModbus/stm32/porttimer_m.c **** void TIM2_IRQHandler(void)
- 151:../FreeModbus/stm32/porttimer_m.c **** {
- 401              		.loc 1 151 0
- 402              		.cfi_startproc
- 403              		@ args = 0, pretend = 0, frame = 0
- 404              		@ frame_needed = 1, uses_anonymous_args = 0
- 405 0000 80B5     		push	{r7, lr}
- 406              		.cfi_def_cfa_offset 8
- 407              		.cfi_offset 7, -8
- 408              		.cfi_offset 14, -4
- 409 0002 00AF     		add	r7, sp, #0
- 410              		.cfi_def_cfa_register 7
- 152:../FreeModbus/stm32/porttimer_m.c **** 	LedToggle(LED_BUTTON1);
- 411              		.loc 1 152 0
- 412 0004 4FF48050 		mov	r0, #4096
- 413 0008 C4F20100 		movt	r0, 16385
- 414 000c 4FF48071 		mov	r1, #256
- 415 0010 FFF7FEFF 		bl	LedToggle
- 153:../FreeModbus/stm32/porttimer_m.c **** 
- 154:../FreeModbus/stm32/porttimer_m.c **** 	if (TIM_GetITStatus(TIM2, TIM_IT_Update) != RESET)
- 416              		.loc 1 154 0
- 417 0014 4FF08040 		mov	r0, #1073741824
- 418 0018 0121     		movs	r1, #1
- 419 001a FFF7FEFF 		bl	TIM_GetITStatus
- 420 001e 0346     		mov	r3, r0
- 421 0020 002B     		cmp	r3, #0
- 422 0022 0BD0     		beq	.L8
- 155:../FreeModbus/stm32/porttimer_m.c **** 	{
- 156:../FreeModbus/stm32/porttimer_m.c **** 
- 157:../FreeModbus/stm32/porttimer_m.c **** 		TIM_ClearFlag(TIM2, TIM_FLAG_Update);	     //���жϱ���
- 423              		.loc 1 157 0
- 424 0024 4FF08040 		mov	r0, #1073741824
- 425 0028 0121     		movs	r1, #1
- 426 002a FFF7FEFF 		bl	TIM_ClearFlag
- 158:../FreeModbus/stm32/porttimer_m.c **** 		TIM_ClearITPendingBit(TIM2, TIM_IT_Update);	 //������ʱ��TIM2�����жϱ�
- 427              		.loc 1 158 0
- 428 002e 4FF08040 		mov	r0, #1073741824
- 429 0032 0121     		movs	r1, #1
- 430 0034 FFF7FEFF 		bl	TIM_ClearITPendingBit
- 159:../FreeModbus/stm32/porttimer_m.c **** 		prvvTIMERExpiredISR();
- 431              		.loc 1 159 0
- 432 0038 FFF7FEFF 		bl	prvvTIMERExpiredISR
- 433              	.L8:
- 160:../FreeModbus/stm32/porttimer_m.c **** 	}
- 161:../FreeModbus/stm32/porttimer_m.c **** }
- 434              		.loc 1 161 0
- 435 003c 80BD     		pop	{r7, pc}
- 436              		.cfi_endproc
- 437              	.LFE35:
- 439 003e 00BF     		.text
- 440              	.Letext0:
- 441              		.file 2 "c:\\tools\\arm-none-eabi\\include\\stdint.h"
- 442              		.file 3 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/stm32f10x.h"
- 443              		.file 4 "../FreeModbus/stm32/port.h"
- 444              		.file 5 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\include/mb_m.h"
- 445              		.file 6 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\StdPeripheralDriver\\inc/stm32f10
- 446              		.file 7 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\StdPeripheralDriver\\inc/misc.h"
- 447              		.file 8 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/core_cm3.h"
- 448              		.file 9 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/system_stm32f10x.h"
- 449              		.file 10 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\include/mbport.h"
+ 393 0012 00BF     		.text
+ 394              	.Letext0:
+ 395              		.file 2 "c:\\tools\\arm-none-eabi\\include\\stdint.h"
+ 396              		.file 3 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/stm32f10x.h"
+ 397              		.file 4 "../FreeModbus/stm32/port.h"
+ 398              		.file 5 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\include/mb_m.h"
+ 399              		.file 6 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\StdPeripheralDriver\\inc/stm32f10
+ 400              		.file 7 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\StdPeripheralDriver\\inc/misc.h"
+ 401              		.file 8 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/core_cm3.h"
+ 402              		.file 9 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\Libraries\\CMSIS/system_stm32f10x.h"
+ 403              		.file 10 "D:\\pall\\workspace\\Snack_stm32_drv_modbus\\FreeModbus\\include/mbport.h"
 DEFINED SYMBOLS
                             *ABS*:00000000 porttimer_m.c
-C:\Users\Alex\AppData\Local\Temp\ccTy00VZ.s:19     .bss.usT35TimeOut50us:00000000 $d
-C:\Users\Alex\AppData\Local\Temp\ccTy00VZ.s:22     .bss.usT35TimeOut50us:00000000 usT35TimeOut50us
-C:\Users\Alex\AppData\Local\Temp\ccTy00VZ.s:25     .bss.usPrescalerValue:00000000 $d
-C:\Users\Alex\AppData\Local\Temp\ccTy00VZ.s:28     .bss.usPrescalerValue:00000000 usPrescalerValue
-C:\Users\Alex\AppData\Local\Temp\ccTy00VZ.s:31     .text.xMBMasterPortTimersInit:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\ccTy00VZ.s:36     .text.xMBMasterPortTimersInit:00000000 xMBMasterPortTimersInit
-C:\Users\Alex\AppData\Local\Temp\ccTy00VZ.s:124    .text.vMBMasterPortTimersT35Enable:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\ccTy00VZ.s:129    .text.vMBMasterPortTimersT35Enable:00000000 vMBMasterPortTimersT35Enable
-C:\Users\Alex\AppData\Local\Temp\ccTy00VZ.s:193    .text.vMBMasterPortTimersConvertDelayEnable:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\ccTy00VZ.s:198    .text.vMBMasterPortTimersConvertDelayEnable:00000000 vMBMasterPortTimersConvertDelayEnable
-C:\Users\Alex\AppData\Local\Temp\ccTy00VZ.s:260    .text.vMBMasterPortTimersRespondTimeoutEnable:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\ccTy00VZ.s:265    .text.vMBMasterPortTimersRespondTimeoutEnable:00000000 vMBMasterPortTimersRespondTimeoutEnable
-C:\Users\Alex\AppData\Local\Temp\ccTy00VZ.s:327    .text.vMBMasterPortTimersDisable:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\ccTy00VZ.s:332    .text.vMBMasterPortTimersDisable:00000000 vMBMasterPortTimersDisable
-C:\Users\Alex\AppData\Local\Temp\ccTy00VZ.s:367    .text.prvvTIMERExpiredISR:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\ccTy00VZ.s:371    .text.prvvTIMERExpiredISR:00000000 prvvTIMERExpiredISR
-C:\Users\Alex\AppData\Local\Temp\ccTy00VZ.s:394    .text.TIM2_IRQHandler:00000000 $t
-C:\Users\Alex\AppData\Local\Temp\ccTy00VZ.s:399    .text.TIM2_IRQHandler:00000000 TIM2_IRQHandler
+C:\Users\Alex\AppData\Local\Temp\cc4lMT2a.s:19     .bss.usT35TimeOut50us:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\cc4lMT2a.s:22     .bss.usT35TimeOut50us:00000000 usT35TimeOut50us
+C:\Users\Alex\AppData\Local\Temp\cc4lMT2a.s:25     .bss.usPrescalerValue:00000000 $d
+C:\Users\Alex\AppData\Local\Temp\cc4lMT2a.s:28     .bss.usPrescalerValue:00000000 usPrescalerValue
+C:\Users\Alex\AppData\Local\Temp\cc4lMT2a.s:31     .text.xMBMasterPortTimersInit:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cc4lMT2a.s:36     .text.xMBMasterPortTimersInit:00000000 xMBMasterPortTimersInit
+C:\Users\Alex\AppData\Local\Temp\cc4lMT2a.s:124    .text.vMBMasterPortTimersT35Enable:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cc4lMT2a.s:129    .text.vMBMasterPortTimersT35Enable:00000000 vMBMasterPortTimersT35Enable
+C:\Users\Alex\AppData\Local\Temp\cc4lMT2a.s:193    .text.vMBMasterPortTimersConvertDelayEnable:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cc4lMT2a.s:198    .text.vMBMasterPortTimersConvertDelayEnable:00000000 vMBMasterPortTimersConvertDelayEnable
+C:\Users\Alex\AppData\Local\Temp\cc4lMT2a.s:260    .text.vMBMasterPortTimersRespondTimeoutEnable:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cc4lMT2a.s:265    .text.vMBMasterPortTimersRespondTimeoutEnable:00000000 vMBMasterPortTimersRespondTimeoutEnable
+C:\Users\Alex\AppData\Local\Temp\cc4lMT2a.s:327    .text.vMBMasterPortTimersDisable:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cc4lMT2a.s:332    .text.vMBMasterPortTimersDisable:00000000 vMBMasterPortTimersDisable
+C:\Users\Alex\AppData\Local\Temp\cc4lMT2a.s:367    .text.prvvTIMERExpiredISR:00000000 $t
+C:\Users\Alex\AppData\Local\Temp\cc4lMT2a.s:371    .text.prvvTIMERExpiredISR:00000000 prvvTIMERExpiredISR
                      .debug_frame:00000010 $d
                            .group:00000000 wm4.1.98ffea2db242cfdb58f411f7407f2b59
                            .group:00000000 wm4.stm32f10x_conf.h.2.f1a8c33f0a763aeef696fee38b2b2dbc
@@ -635,7 +576,7 @@ C:\Users\Alex\AppData\Local\Temp\ccTy00VZ.s:399    .text.TIM2_IRQHandler:0000000
                            .group:00000000 wm4.misc.h.25.068e106f368fa5369a681ef57c106f4b
                            .group:00000000 wm4.stm32f10x_gpio.h.25.80c981af0e637567395034c576cfb3ce
                            .group:00000000 wm4.gpio_init.h.2.a6dd96fdaf98737019b1d0402db0d0ee
-                           .group:00000000 wm4.led.h.28.2becc48c20363ad4690378d5dc88818c
+                           .group:00000000 wm4.led.h.28.401162a1ef47c2ce4bdcc919318c39a8
 
 UNDEFINED SYMBOLS
 RCC_APB1PeriphClockCmd
@@ -650,6 +591,3 @@ vMBMasterSetCurTimerMode
 TIM_TimeBaseInit
 TIM_SetCounter
 pxMBMasterPortCBTimerExpired
-LedToggle
-TIM_GetITStatus
-TIM_ClearFlag

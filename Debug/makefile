@@ -8,6 +8,7 @@ RM := cs-rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
+-include wake/subdir.mk
 -include bsp/subdir.mk
 -include Libraries/StdPeripheralDriver/src/subdir.mk
 -include Libraries/CMSIS/subdir.mk
